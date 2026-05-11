@@ -68,25 +68,51 @@ namespaces:
     tables:
       ifc_elements:
         columns:
+          asset_id: String | None
+          asset_source: String | None
           bbox_max: Json | None
           bbox_min: Json | None
+          bis_class: String | None
+          bis_federation_guid: String | None
+          bis_subclass: String | None
+          boq_phase: String | None
           centroid: Json | None
+          cost_last_updated: Timestamp | None
           description: String | None
           elevation_m: Float | None
+          epsg_code: String | None
+          erp_item_id: String | None
+          geom_footprint_wkt: String | None
+          geom_point_wkt: String | None
+          glb_path: String | None
           id: String | None
           ifc_class: String | None
+          ifc_global_id: String | None
           ifc_predefined_type: String | None
           ifc_schema: String | None
+          ifc_version: String | None
           is_marpa_seed: Bool | None
+          latitude: Float | None
+          lod_level: Int | None
           long_name: String | None
+          longitude: Float | None
           name: String | None
           object_type: String | None
           parsed_at: Timestamp | None
+          placeholder_color: String | None
+          placeholder_height_m: Float | None
+          quantity: Float | None
+          quantity_unit: String | None
           raw_attributes: Json | None
+          reference_images: Json | None
+          site_zone_id: String | None
           source_element_id: String | None
           spatial_container_class: String | None
           spatial_container_guid: String | None
           tag: String | None
+          thumbnail_url: String | None
+          unit_cost: Float | None
+          unit_cost_region: String | None
           vw_export_hash: String | None
       ifc_property_sets:
         columns:

@@ -17,6 +17,7 @@ from typing import Any
 OWNED_PARENTS: tuple[str, ...] = (
     "lattice/execution",
     "lattice/bridge",
+    "lattice/genai",
 )
 
 OWNED_BRIDGE_SUBS: tuple[str, ...] = (
@@ -62,6 +63,22 @@ def ensure_table(pxt, path: str, schema: dict[str, Any], dry_run: bool) -> str:
         return "would create"
     pxt.create_table(path, schema, if_exists="ignore")
     return "created"
+
+
+def ensure_column(pxt, table_path: str, col_name: str, col_type, dry_run: bool) -> str:
+    """Idempotent column add. Pixeltable's `add_column(if_exists='ignore')`
+    is the underlying primitive; we wrap it to return a status string that
+    matches the rest of the migration vocabulary ('exists' / 'would add' /
+    'added')."""
+    t = pxt.get_table(table_path)
+    md = t.get_metadata() if hasattr(t, "get_metadata") else {}
+    existing_cols = set(md.get("columns", {}).keys()) if isinstance(md, dict) else set()
+    if col_name in existing_cols:
+        return "exists"
+    if dry_run:
+        return "would add"
+    t.add_column(if_exists="ignore", **{col_name: col_type})
+    return "added"
 
 
 def assert_ownership(pxt, owned: tuple[str, ...]) -> None:

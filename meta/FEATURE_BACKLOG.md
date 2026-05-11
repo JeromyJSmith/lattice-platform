@@ -309,3 +309,60 @@
 - [ ] Project thumbnail generation — capture ThatOpen snapshot of each loaded IFC model and store as project thumbnail in Pixeltable
 - [ ] Historical projects — completed projects shown with greyed-out pins and archive badge; accessible for reference and portfolio
 - [ ] Prospect projects — show prospect pins with dashed boundary; click -> show proposal status and estimated value from OpenConstructionERP
+
+---
+
+## PIXELTABLE EXTENDED SCHEMA (migration 0012)
+# ALL data has a PostGIS location. ALL BIM data has BIS classification.
+# Migration 0012 applied 2026-05-11; this section tracks downstream work.
+
+- [x] Migration 0012 — applied: PostGIS-ish columns on ifc_elements, marpa_projects, site_zones, reference_images, plant_assets, comfyui_jobs, model_registry, training_runs
+- [ ] ifc_elements WKT geometry — populate `geom_point_wkt` from VW IFC export + IfcSite georeferencing; backfill existing rows
+- [ ] ifc_elements BIS columns — populate `bis_class` / `bis_subclass` via IfcOpenShell type mapping (see `itwin/bis-schemas/`)
+- [ ] ifc_elements DDC admin columns — populate from BOQ adapter (cross-references the DDC integration section)
+- [ ] PostGIS spatial extension at the PG layer — `CREATE EXTENSION IF NOT EXISTS postgis` in a sidecar startup hook
+- [ ] WKT-to-PostGIS computed columns — once the extension is on, add `geom_point geometry` computed from `ST_GeomFromText(geom_point_wkt, 4326)`
+- [ ] Spatial join computed column — `ST_Within(ifc_elements.geom_point, site_zones.geom_polygon)` resolves `site_zone_id`
+- [ ] marpa_projects seed script — see `scripts/seed-marpa-projects.ts` + Cesium section
+- [ ] site_zones authoring UI — `/admin` panel to draw zone polygons on the Cesium globe; writes `geom_polygon_wkt`
+- [ ] reference_images embedding — Pixeltable computed column with a vision embedding model
+
+---
+
+## 3D PLANT ASSET CREATION PIPELINE
+# geo-tagged reference image -> ComfyUI -> GLB -> VW Plant Style Manager -> Cesium pin
+# See genai/3d-asset-pipeline/PIPELINE.md for the full diagram.
+
+- [ ] Reference image collection UI — `/globe` map pin drop + photo upload -> `lattice/bridge/reference_images`
+- [ ] Species matching via spatial proximity — nearest `ifc_elements` row via `ST_DWithin` on the photo's `geom_point_wkt`
+- [ ] ComfyUI job dispatch — Pixeltable trigger when `enough_images_for_species(species_code) >= 3` -> insert into `lattice/genai/comfyui_jobs`
+- [ ] ComfyUI dispatcher process — `genai/comfyui/job-dispatcher.py` polls pending rows, runs workflow, writes output paths back
+- [ ] GLB conversion — output mesh -> `assets/plants/lod-300/{species_code}.glb`
+- [ ] Cinema 4D project skeleton — `genai/3d-asset-pipeline/c4d-exporter.py` writes `assets/plants/c4d/{species_code}.c4d` with Redshift materials assigned
+- [ ] VW Plant Style assignment — `vw-style-importer.py` pushes the GLB to VW Plant Style Manager via `vwx-mcp` -> all instances update globally
+- [ ] Pixeltable cascade trigger — when `comfyui_jobs.status='complete'`, update `plant_assets.lod_300_glb` + `ifc_elements.asset_id`
+- [ ] ThatOpen LOD swap — Fragment edit API replaces LOD100 spike geometry with new GLB on next viewer reload
+- [ ] Cesium pin thumbnail — capture ThatOpen snapshot of new asset, write to `marpa_projects.thumbnail_url`
+- [ ] Quality review gate — present generated assets in `/admin` for human score (`quality_score >= 0.7`) before promoting to VW
+
+---
+
+## LOCAL AI / GENAI / GEOAI / ML
+# All models run locally on Apple Silicon. The model router picks per task.
+
+- [ ] Ollama install + 4 models — llama3.3:70b, qwen2.5-coder:32b, mistral-nemo:12b, nomic-embed-text
+- [ ] Model registry sync — `genai/llm/model-router.py --sync-registry` populates `lattice/genai/model_registry` from `ollama list`
+- [ ] Model router runtime — `genai/llm/model-router.py route()` picks per task type, falls back to `claude -p` for unrouted complex tasks
+- [ ] ComfyUI install on Apple Silicon — MPS backend, listen on `:8188`
+- [ ] ComfyUI plant-2d-to-3d workflow — 3-6 reference images -> textured 3D mesh
+- [ ] ComfyUI tree-crown-gen workflow — species params -> procedural crown texture
+- [ ] ComfyUI texture-from-photo workflow — site photo -> tiling PBR texture set
+- [ ] ComfyUI Python client — `genai/comfyui/comfyui-client.py` wraps `/prompt`, `/history/{id}`, websocket progress
+- [ ] GeoAI tree detection — detect crowns from LiDAR + orthophoto -> write to future `lattice/bridge/existing_trees`
+- [ ] GeoAI species classifier — classify plant species from reference photos -> write `reference_images.species_tag`
+- [ ] GeoAI shadow segmentation — shadow polygons from orthophoto -> deck.gl `GeoJsonLayer` in `/analysis`
+- [ ] ML training pipeline — `genai/geoai/tree-detection/train.py` fine-tunes on MARPA project data, writes `lattice/genai/training_runs`
+- [ ] Pixeltable text embedding column — nomic-embed-text on `ifc_elements.user_label || ' ' || bis_subclass`
+- [ ] Pixeltable image embedding column — CLIP-like model on `reference_images.image` for visual similarity search
+- [ ] Local inference endpoint — `POST /v1/genai/infer` on the sidecar, routes via the model registry
+- [ ] Browser agent in Marimo — `@tanstack/ai` connector pointing at local Ollama (no API key)
