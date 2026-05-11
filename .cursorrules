@@ -1,7 +1,30 @@
-# shadcn instructions
+# LATTICE — Cursor rules
 
-Use the latest version of Shadcn to install new components, like this command to add a button component:
+## Live state (2026-05-11)
+- Migrations 0001–0013 applied; next number is 0014 (write-once)
+- 36 Pixeltable tables across `lattice/{execution,bridge,genai,reality}`
+- 33 FastAPI endpoints across 10 routers
+- See `meta/SCHEMA.md` and `meta/API.md` for the canonical reference
 
-```bash
-pnpm dlx shadcn@latest add button
-```
+## Mandatory schema rules
+1. **`pxt.String` for geometry** — Pixeltable 0.6.x has no `pxt.Geometry`. Store WKT or GeoJSON in `pxt.String`.
+2. **Write-once migrations** — never edit a landed migration; always increment the number.
+3. **Migration path is `pixeltable/migrations/`** — NOT `pixeltable/service/migrations/`.
+4. **Owned parents** — adding a new top-level namespace requires extending `OWNED_PARENTS` in `pixeltable/migrations/_helpers.py` and using `ensure_namespace()` for every ancestor.
+
+## Forbidden imports / strings
+- No `@itwin/core-backend`, `SnapshotDb`, `BriefcaseDb`, `IModelHost`
+- No `import Anthropic` in `.ts`/`.tsx` (server functions via `@tanstack/ai` only)
+- No `pxt.Geometry` (doesn't exist in 0.6.x)
+- No Revit / MicroStation / DGN / `rvtconverter` / `dgnconverter` references
+- No `pixeltable/service/migrations` path
+
+## Tooling
+- Python: `uv` only (never pip / conda / poetry)
+- JS/TS: `bun`
+- New shadcn components: `bunx shadcn@latest add <component>`
+
+## Required docs updates
+- Adding a migration → update `meta/SCHEMA.md`, `meta/ARCHITECTURE.md`, root `CLAUDE.md`, `meta/HANDOFF.md` in the same commit
+- Adding an endpoint → update `meta/API.md` and `meta/ARCHITECTURE.md` in the same commit
+- CI workflow `docs-sync-check.yml` blocks merge if counts drift

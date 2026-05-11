@@ -7,8 +7,13 @@ on:
     branches: [main, develop]
 
 jobs:
+  docs-sync-check:
+    name: docs-sync-check (gate)
+    uses: ./.github/workflows/docs-sync-check.yml
+
   frontend:
     name: Frontend (lint + build + test)
+    needs: [docs-sync-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +40,7 @@ jobs:
 
   sidecar:
     name: Sidecar (pyright + tests/no_pxt)
+    needs: [docs-sync-check]
     runs-on: ubuntu-latest
     defaults:
       run:

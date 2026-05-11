@@ -2,7 +2,9 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Last verified against live state: 2026-05-11 (migration 0012 applied, runtime console green, 217 issues tracked).
+Last verified against live state: 2026-05-11 (migration **0013** applied, runtime console green, **36 tables**, **33 FastAPI endpoints**, 226 issues tracked).
+
+> See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 
 ---
 
@@ -129,11 +131,12 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
    │    GET  /v1/runtime/stream-events         poll stream events         │
    │    GET  /v1/runtime/stream-events/sse     EventSource push           │
    │    POST /v1/vw/sidecars                   VW IFC ingest              │
-   │    POST /v1/ingest/reference-image        geo-tagged photo ingest    │
+   │    POST /v1/georef/ingest/*               7 georef ingest stubs      │
+   │    GET  /v1/georef/{project_id}/*         3 georef read endpoints    │
+   │    POST /v1/reality/{drone,splat,pc}/*    4 reality ingest stubs     │
+   │    GET  /v1/reality/mirror/{id}/*         2 mirror read endpoints    │
    │    POST /v1/erp/boq           (future)    OpenConstructionERP BOQ    │
-   │    POST /v1/erp/cost-search   (future)    CWICR semantic search      │
    │    POST /v1/genai/infer       (future)    Local model dispatch       │
-   │    GET  /v1/genai/models      (future)    Model registry             │
    │                                                                       │
    │  Worker loop:  poll agent_runs WHERE status='pending'                │
    │                claim → emit run.started (status='running')           │
@@ -161,6 +164,28 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
    │    useStreamEvents hook → EventSource SSE                            │
    └───────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 3a. FastAPI surface (33 endpoints)
+
+The full live endpoint reference is in [`meta/API.md`](API.md). Summary by router:
+
+| Router | Endpoints | Status |
+|---|---|---|
+| app-level (`/healthz`, `/version`) | 2 | live |
+| `/v1/runtime` | 4 | live (incl. SSE) |
+| `/v1/vw` | 1 | live |
+| `/v1/itwin` | 3 | live |
+| `/v1/marpa` | 1 | live |
+| `/v1/semantic` | 1 | live |
+| `/v1/evidence` | 1 | live |
+| `/v1/health` | 2 | live |
+| `/v1/georef` | 11 | 8 stub-501 + 3 live (read endpoints) |
+| `/v1/reality` | 7 | 5 stub-501 + 2 live (mirror reads) |
+| **Total** | **33** | |
+
+Stub-501 endpoints are intentional placeholders that define the contract for converters/pipelines that haven't landed yet. They are NOT removed when implementation lands — the route stays, the 501 turns into 200.
 
 ---
 
@@ -202,7 +227,9 @@ The active runtime today is the worker in `pixeltable/service/worker.py` — it 
 
 ## 6. Pixeltable schema overview
 
-26 tables across 3 owned namespaces, post migration 0012.
+**36 tables** across **4 owned namespaces** (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`), post migration **0013**.
+
+See [`meta/SCHEMA.md`](SCHEMA.md) for the full canonical schema table reference.
 
 ```
 lattice/
@@ -233,10 +260,19 @@ lattice/
 │   ├── health/schema_drift_events
 │   └── health/bridge_gap_matrix
 │
-└── genai/                          ← NEW (0012): local AI registry (own)
-    ├── comfyui_jobs                ← 2D→3D pipeline jobs
-    ├── model_registry              ← Ollama + ComfyUI + GeoAI checkpoints
-    └── training_runs               ← GeoAI fine-tune runs
+├── genai/                          ← NEW (0012): local AI registry (own)
+│   ├── comfyui_jobs                ← 2D→3D pipeline jobs
+│   ├── model_registry              ← Ollama + ComfyUI + GeoAI checkpoints
+│   └── training_runs               ← GeoAI fine-tune runs
+│
+├── bridge/project_georef           ← NEW (0013): 67-col coordinate authority
+│
+└── reality/                        ← NEW (0013): reality capture (own)
+    ├── drone_flights
+    ├── drone_frames                ← pxt.Image column + computed CLIP/YOLO/blur
+    ├── gaussian_splats
+    ├── point_cloud_sessions
+    └── mirror_state                ← 7 sync flags + divergence score
 
 marpa/                              ← OWNED BY MARPA_PLATFORM (read-only here)
 lattice/{source,qa,budget,worksheet}/   ← other bodies (FORBIDDEN to write)
@@ -273,6 +309,65 @@ WHERE e.project_id = $1;
 ```
 
 Once the PostGIS extension is enabled at the PG layer (issue #185), we'll add Pixeltable computed columns that materialise `geom_point geometry` from `ST_GeomFromText(geom_point_wkt, 4326)`, and queries become first-class.
+
+---
+
+## 7a. The Mirror Invariant — single ground truth across 7 platform layers
+
+LATTICE's digital twin contract: **one ground truth, everywhere, always in sync**. Implemented by two tables added in migration 0013.
+
+### Coordinate authority — `lattice/bridge/project_georef`
+
+One row per project. 67 columns covering:
+- Identity & canonical WGS84 (`project_id`, `name`, canonical lat/lon/elev)
+- Coordinate system (`epsg_code`, `crs_wkt`, `source_priority`)
+- Site boundary (`boundary_geojson`, `boundary_wkt`, source format flags)
+- Survey data (`survey_northing`, `survey_easting`, `survey_control_points_json`)
+- IFC georef (`ifc_site_lat_long`, `ifc_site_world_transform`)
+- VW internal origin (`vw_origin_x/y/z`, `vw_units`)
+- OSM IDs, KML/Shapefile paths, GeoTIFF DEM, orthophoto refs
+- Plus codes / what3words / Google Maps URL
+- Pre-computed 4×4 transform matrices (vw→wgs84, ifc→wgs84, scene→wgs84, wgs84→scene)
+- Admin (timestamps, owning user, source-of-truth audit fields)
+
+**Every** spatial row in Pixeltable resolves its coordinates by joining to `project_georef` via `project_id`. There is no other coordinate authority.
+
+### Sync state — `lattice/reality/mirror_state`
+
+One row per project. Tracks the live sync status of all 7 platform layers:
+
+| Layer | Sync flag | "Synced" means |
+|---|---|---|
+| VW design | `vw_last_export_hash_synced` | latest VW IFC export hash matches |
+| iTwin BIM | `itwin_bis_class_synced` | every `ifc_elements` row has `bis_class` populated |
+| Reality capture | `reality_capture_synced` | latest drone/scan ingested into `lattice/reality/*` |
+| DDC ERP | `erp_boq_last_sync` | BOQ refresh < 24 h old |
+| Cesium globe | `cesium_globe_synced` | pin colors current |
+| ThatOpen viewer | `thatopen_viewer_synced` | Fragment cache regenerated post-change |
+| deck.gl analytics | `deckgl_layer_synced` | Parquet exports current |
+| Potree tiles | `potree_tiles_synced` | octree current |
+
+Plus:
+- `design_reality_divergence_m` — avg CloudComPy C2C divergence between design mesh and latest reality scan
+- `sync_warnings` — JSON array of element_ids exceeding divergence threshold
+- `last_event_at`, `last_event_kind`, `broadcaster_run_id`
+
+### The broadcaster
+
+`reality/mirror/platform-broadcaster.py` is the fan-out hub. Triggered by every ingest event (VW export, IFC parse, drone frame, splat ingest, point cloud session, BOQ refresh). It:
+
+1. Recomputes all 7 sync flags via `sync-checker.py`
+2. POSTs SSE notifications to each subscribed platform layer
+3. Writes one `lattice/execution/agent_outcomes` row per layer notified (auditability)
+4. Updates `mirror_state.last_event_at`
+
+Cesium pins are color-coded by `mirror_state` flags. The admin dashboard shows the full grid of sync flags per project. Any agent or human that observes divergence has a single source of truth to read from.
+
+### The contract
+
+**Every platform layer subscribes to `mirror_state`.** No layer caches its own version of truth. If `vw_last_export_hash_synced=false` for project X, the Cesium pin for project X turns orange, the ThatOpen viewer shows a banner, the admin dashboard flags the row, and the broadcaster queues a re-sync.
+
+This is the invariant that makes the system a digital twin rather than a collection of disconnected viewers.
 
 ---
 
@@ -350,6 +445,8 @@ Every step writes evidence to `lattice/execution/evidence`; the chain is auditab
 |---|---|
 | Project rules | `AGENTS.md`, `CLAUDE.md` (root) |
 | Stack table (this doc, section 1) | `meta/ARCHITECTURE.md` |
+| Canonical schema reference | `meta/SCHEMA.md` |
+| Canonical FastAPI reference | `meta/API.md` |
 | 5-minute boot | `meta/AGENT_ONBOARDING.md` |
 | Phased plan | `meta/ROADMAP.md` |
 | Multi-platform agent handoff | `meta/HANDOFF.md` |

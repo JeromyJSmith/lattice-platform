@@ -1,0 +1,228 @@
+name: docs-sync-check
+
+# Mandatory pre-commit enforcement for LATTICE docs.
+# Blocks merge if SCHEMA/API/CLAUDE/ARCHITECTURE drift from the live code.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  schema-doc-freshness:
+    name: schema-doc-freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Count actual migrations
+        id: count
+        run: |
+          set -euo pipefail
+          ACTUAL=$(find pixeltable/migrations -maxdepth 1 -name '0*.py' -not -name '__init__.py' | wc -l | tr -d ' ')
+          echo "actual=$ACTUAL" >> "$GITHUB_OUTPUT"
+          echo "Actual migration count: $ACTUAL"
+      - name: Verify SCHEMA.md migration trail
+        run: |
+          set -euo pipefail
+          ACTUAL="${{ steps.count.outputs.actual }}"
+          # The literal `0001-0013` or `0001–0013` (en-dash) plus the count itself
+          if ! grep -qE "Migration trail.*0001[–-]00${ACTUAL:0:2}" meta/SCHEMA.md; then
+            echo "❌ meta/SCHEMA.md migration trail does not match actual count ($ACTUAL)"
+            echo "Fix: update 'Migration trail: 0001-XXXX' in meta/SCHEMA.md"
+            exit 1
+          fi
+          echo "✅ SCHEMA.md migration trail consistent with $ACTUAL migrations"
+      - name: Verify ARCHITECTURE.md migration mention
+        run: |
+          set -euo pipefail
+          ACTUAL="${{ steps.count.outputs.actual }}"
+          LAST=$(printf "%04d" "$ACTUAL")
+          if ! grep -q "migration.*$LAST\|0001[–-]$LAST" meta/ARCHITECTURE.md; then
+            echo "❌ meta/ARCHITECTURE.md does not reference migration $LAST"
+            echo "Fix: update meta/ARCHITECTURE.md to reference migration $LAST"
+            exit 1
+          fi
+          echo "✅ ARCHITECTURE.md references migration $LAST"
+      - name: Verify root CLAUDE.md migration mention
+        run: |
+          set -euo pipefail
+          ACTUAL="${{ steps.count.outputs.actual }}"
+          LAST=$(printf "%04d" "$ACTUAL")
+          # Root CLAUDE.md is one directory up from the repo
+          ROOT_CLAUDE="../CLAUDE.md"
+          [ -f "$ROOT_CLAUDE" ] || ROOT_CLAUDE="CLAUDE.md"
+          if [ -f "$ROOT_CLAUDE" ]; then
+            if ! grep -q "0001[–-]$LAST\|$LAST" "$ROOT_CLAUDE"; then
+              echo "❌ root CLAUDE.md does not reference migration $LAST"
+              echo "Fix: update root CLAUDE.md to reference migration $LAST"
+              exit 1
+            fi
+            echo "✅ root CLAUDE.md references migration $LAST"
+          else
+            echo "(skipped — root CLAUDE.md not present in checkout)"
+          fi
+      - name: Verify SCHEMA.md and ARCHITECTURE.md table counts agree
+        run: |
+          set -euo pipefail
+          SCHEMA_COUNT=$(grep -oE '\*\*[0-9]+ tables?\*\*' meta/SCHEMA.md | head -1 | grep -oE '[0-9]+' || echo 0)
+          ARCH_COUNT=$(grep -oE '\*\*[0-9]+ tables?\*\*' meta/ARCHITECTURE.md | head -1 | grep -oE '[0-9]+' || echo 0)
+          if [ "$SCHEMA_COUNT" != "$ARCH_COUNT" ]; then
+            echo "❌ Table count drift: SCHEMA.md=$SCHEMA_COUNT, ARCHITECTURE.md=$ARCH_COUNT"
+            echo "Fix: make both files declare the same table count"
+            exit 1
+          fi
+          echo "✅ Table counts agree across SCHEMA.md and ARCHITECTURE.md ($SCHEMA_COUNT)"
+
+  endpoint-doc-freshness:
+    name: endpoint-doc-freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Count actual endpoint decorators
+        id: count
+        run: |
+          set -euo pipefail
+          ROUTER_COUNT=$(grep -rhE '^@router\.(get|post|put|delete|patch)' pixeltable/service/routes/ | wc -l | tr -d ' ')
+          APP_COUNT=$(grep -E '^@app\.(get|post|put|delete|patch)' pixeltable/service/main.py | wc -l | tr -d ' ')
+          TOTAL=$((ROUTER_COUNT + APP_COUNT))
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "Actual endpoint count: router=$ROUTER_COUNT app=$APP_COUNT total=$TOTAL"
+      - name: Verify API.md and ARCHITECTURE.md endpoint counts agree with code
+        run: |
+          set -euo pipefail
+          ACTUAL="${{ steps.count.outputs.total }}"
+          API_COUNT=$(grep -oE '\*\*[0-9]+ endpoints?\*\*' meta/API.md | head -1 | grep -oE '[0-9]+' || echo 0)
+          ARCH_COUNT=$(grep -oE '\*\*[0-9]+ FastAPI endpoints?\*\*|\*\*[0-9]+ endpoints?\*\*' meta/ARCHITECTURE.md | head -1 | grep -oE '[0-9]+' || echo 0)
+          fail=0
+          if [ "$API_COUNT" != "$ACTUAL" ]; then
+            echo "❌ meta/API.md declares $API_COUNT endpoints, actual is $ACTUAL"
+            fail=1
+          fi
+          if [ "$ARCH_COUNT" != "$ACTUAL" ]; then
+            echo "❌ meta/ARCHITECTURE.md declares $ARCH_COUNT endpoints, actual is $ACTUAL"
+            fail=1
+          fi
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: update meta/API.md and meta/ARCHITECTURE.md to declare $ACTUAL endpoints"
+            exit 1
+          fi
+          echo "✅ Endpoint counts agree ($ACTUAL)"
+
+  claude-md-rules-check:
+    name: claude-md-rules-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify root CLAUDE.md contains all 4 mandatory rules
+        run: |
+          set -euo pipefail
+          ROOT_CLAUDE="../CLAUDE.md"
+          [ -f "$ROOT_CLAUDE" ] || ROOT_CLAUDE="CLAUDE.md"
+          if [ ! -f "$ROOT_CLAUDE" ]; then
+            echo "(skipped — root CLAUDE.md not present in checkout)"
+            exit 0
+          fi
+          fail=0
+          for needle in "pxt.String" "write-once" "pixeltable/migrations/" "create_dir"; do
+            if ! grep -q "$needle" "$ROOT_CLAUDE"; then
+              echo "❌ Root CLAUDE.md missing mandatory rule reference: '$needle'"
+              fail=1
+            fi
+          done
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: ensure root CLAUDE.md contains all 4 mandatory rules in the schema/migration section"
+            exit 1
+          fi
+          echo "✅ Root CLAUDE.md contains all 4 mandatory rules"
+
+  feature-backlog-sections:
+    name: feature-backlog-sections
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify FEATURE_BACKLOG.md retains required sections
+        run: |
+          set -euo pipefail
+          fail=0
+          for section in "GEOREF SYSTEM" "REALITY CAPTURE" "DIGITAL TWIN MIRROR" "PLANT ASSET" "LOCAL AI"; do
+            if ! grep -qi "$section" meta/FEATURE_BACKLOG.md; then
+              echo "❌ meta/FEATURE_BACKLOG.md missing required section: '$section'"
+              fail=1
+            fi
+          done
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: restore the missing section header in meta/FEATURE_BACKLOG.md"
+            exit 1
+          fi
+          echo "✅ All required FEATURE_BACKLOG.md sections present"
+
+  no-forbidden-strings:
+    name: no-forbidden-strings
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Scan changed files for forbidden strings
+        run: |
+          set -euo pipefail
+          # Build the file list — PR vs push
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin "${{ github.base_ref }}" --depth=1 || true
+            FILES=$(git diff --name-only "origin/${{ github.base_ref }}"...HEAD || git ls-files)
+          else
+            FILES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || git ls-files)
+          fi
+          # If diff empty, fall back to full tree
+          [ -n "$FILES" ] || FILES=$(git ls-files)
+
+          fail=0
+          declare -a FORBIDDEN=(
+            "[Rr]evit"
+            "[Mm]icro[Ss]tation"
+            "dgnconverter"
+            "rvtconverter"
+            "@itwin/core-backend"
+            "SnapshotDb"
+            "pxt\\.Geometry"
+            "pixeltable/service/migrations"
+          )
+          # Allowlist paths that legitimately mention forbidden strings as guardrail text
+          ALLOWLIST_REGEX='^(meta/|\\.github/workflows/docs-sync-check\\.yml|scripts/pre-commit-docs-check\\.sh|CLAUDE\\.md|AGENTS\\.md|README\\.md|CONTRIBUTING\\.md|\\.cursorrules)'
+
+          for f in $FILES; do
+            [ -f "$f" ] || continue
+            # Skip allowlisted files (rules + docs)
+            if echo "$f" | grep -qE "$ALLOWLIST_REGEX"; then
+              continue
+            fi
+            for needle in "${FORBIDDEN[@]}"; do
+              if grep -nE "$needle" "$f" >/dev/null 2>&1; then
+                MATCH=$(grep -nE "$needle" "$f" | head -3)
+                echo "❌ Forbidden string '$needle' in $f:"
+                echo "$MATCH"
+                fail=1
+              fi
+            done
+            # Forbid bare 'import Anthropic' in .ts/.tsx (client code)
+            case "$f" in
+              *.ts|*.tsx)
+                if grep -nE '^import\\s+Anthropic' "$f" >/dev/null 2>&1; then
+                  echo "❌ Bare 'import Anthropic' in $f — use @tanstack/ai adapters"
+                  fail=1
+                fi
+                ;;
+            esac
+          done
+          if [ "$fail" -eq 1 ]; then
+            echo ""
+            echo "❌ LATTICE docs-sync-check failed (no-forbidden-strings)"
+            echo ""
+            echo "Forbidden patterns are not allowed outside meta/ docs and rules files."
+            echo "Fix: remove the offending lines, then re-commit."
+            exit 1
+          fi
+          echo "✅ No forbidden strings in changed files"

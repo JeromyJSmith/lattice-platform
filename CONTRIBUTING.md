@@ -13,6 +13,21 @@
 | 3D viewer    | `@thatopen/components` 3.4.6, Three.js 0.184      |
 | Analytics    | deck.gl 9.3.2, DuckDB WASM, MapLibre              |
 
+## Pre-commit hook (mandatory)
+
+After cloning, install the docs-sync pre-commit hook:
+
+```bash
+ln -sf ../../scripts/pre-commit-docs-check.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+This hook runs the same checks as CI (`.github/workflows/docs-sync-check.yml`). If it fails, fix the docs before committing.
+
+**Agents:** this hook is enforced in CI — you cannot bypass it by skipping the local hook. The check verifies migration counts, endpoint counts, mandatory rule references in root `CLAUDE.md`, required `FEATURE_BACKLOG.md` section headers, and the absence of forbidden strings (Revit, MicroStation, `@itwin/core-backend`, `pxt.Geometry`, etc.) outside the allow-listed docs files.
+
+See [`meta/AGENT_ONBOARDING.md` § 9 Mandatory workflow contract](meta/AGENT_ONBOARDING.md#9-mandatory-workflow-contract) for the full contract.
+
 ## First-time setup
 
 ```bash

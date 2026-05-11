@@ -8,6 +8,8 @@ This document is the **one place** every AI agent platform working on LATTICE sh
 
 LATTICE is a local-first AEC digital-twin platform for landscape architecture: **Vectorworks → IFC4.3 → Pixeltable → operator console (TanStack Start) → three rendering contexts (ThatOpen 3D + deck.gl analytical + Cesium globe) → Cinema 4D handoff.** Real agents (Claude via `claude -p` subprocess) write back into Pixeltable as runs stream.
 
+**Current live state (2026-05-11):** migrations 0001–0013 applied · 36 tables across 4 owned namespaces (`lattice/{execution,bridge,genai,reality}`) · 33 FastAPI endpoints across 10 routers · 226 open issues · 12 release tags.
+
 The whole platform fits on one Apple Silicon Mac. There is no cloud database, no Bentley iModelHub, no hosted GenAI for the default agent path. Costs are bounded by the operator's Claude Max subscription and electricity.
 
 See [`AGENTS.md`](../AGENTS.md) for the project-level invariants, [`meta/ROADMAP.md`](ROADMAP.md) for the phased build order, [`meta/ARCHITECTURE.md`](ARCHITECTURE.md) for the data flow + stack table.
@@ -54,6 +56,8 @@ Every agent, regardless of platform, follows this loop:
 | [`meta/ITWIN_MAPPING.md`](ITWIN_MAPPING.md) | Which iTwin packages we use (and which we never install) |
 | [`meta/DDC_MAPPING.md`](DDC_MAPPING.md) | DDC integration plan (cost, BOQ, n8n patterns) |
 | [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) | Cesium ion vs self-hosted; coordinate bridge contract |
+| [`meta/SCHEMA.md`](SCHEMA.md) | Canonical schema reference — 36 tables, migration trail 0001–0013 |
+| [`meta/API.md`](API.md) | Canonical FastAPI endpoint reference — 33 endpoints |
 | [`meta/WORKTREES.md`](WORKTREES.md) | The 6 long-lived feature worktrees and how to switch between them |
 | [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Branch naming, commit format, test workflow |
 
@@ -163,7 +167,8 @@ The data flow that connects everything (see [`meta/ARCHITECTURE.md`](ARCHITECTUR
                     ▼
    ┌──────── Pixeltable (PG 16 + PostGIS + pgvector) ───┐
    │  lattice/execution/*  lattice/bridge/*              │
-   │  lattice/genai/*                                     │
+   │  lattice/genai/*      lattice/reality/*             │
+   │  (36 tables, migrations 0001–0013)                   │
    └────────────────────┬────────────────────────────────┘
                         │
                         ├─→ claude -p subprocess (Claude Max)
@@ -222,3 +227,40 @@ When in doubt: stop and ask. Better to clarify than to roll back an invariant vi
 | Generic agent | This file + [`meta/AGENT_ONBOARDING.md`](AGENT_ONBOARDING.md) |
 
 If your platform isn't here yet, copy the closest match and adapt — then add an entry to this table in your first PR.
+
+---
+
+## Known stubs (HTTP 501)
+
+These FastAPI endpoints are intentionally scaffolded but not yet implemented. They define the contract the implementation must satisfy. **Do not remove them** — fill in the bodies.
+
+### `/v1/georef/ingest/*` (7 stubs)
+
+- `POST /v1/georef/ingest/config` — `georef.config.json` ingest (validated against `georef/schema/georef.config.schema.json`)
+- `POST /v1/georef/ingest/kml` — KML boundary (uses `fiona` or `gdal`)
+- `POST /v1/georef/ingest/shapefile` — Shapefile boundary (uses `pyshp`)
+- `POST /v1/georef/ingest/geotiff` — DEM / orthophoto (uses `gdal`)
+- `POST /v1/georef/ingest/survey-csv` — control points CSV (uses `pyproj`)
+- `POST /v1/georef/ingest/ifc` — extract `IfcSite` georef (uses `ifcopenshell.util.placement`)
+- `POST /v1/georef/ingest/osm` — OSM way/area by ID (Overpass HTTP)
+- `POST /v1/georef/compute-transforms/{project_id}` — populate 4 transform matrices
+
+Tracked: [Implement georef converter stubs → real parsers](https://github.com/JeromyJSmith/lattice-platform/issues) (`georef`, `agent-ready`).
+
+### `/v1/reality/*` (5 stubs)
+
+- `POST /v1/reality/drone/ingest-video` — MP4 → ffmpeg → `drone_frames` rows
+- `POST /v1/reality/drone/ingest-frames` — bulk frame ingest
+- `POST /v1/reality/splat/ingest` — `.ply` / `.splat` → align to `project_georef`
+- `POST /v1/reality/pointcloud/ingest` — `.las` / `.laz` via PDAL
+- `POST /v1/reality/mirror/{project_id}/sync` — trigger full 7-platform broadcaster
+
+Tracked: [Implement reality ingest stubs → real pipelines](https://github.com/JeromyJSmith/lattice-platform/issues) (`reality-capture`, `agent-ready`).
+
+---
+
+## Migration path correction
+
+The migration directory is **`pixeltable/migrations/`** (top of the `pixeltable/` package). It is NOT `pixeltable/service/migrations/` — that path does not exist. Earlier drafts of `CLAUDE.md` referenced the wrong path; the current root `CLAUDE.md` is correct.
+
+Confirmed dependency: `python-multipart>=0.0.18` in `pixeltable/pyproject.toml`. Required for FastAPI `Form()` / `File()` parameters used by the georef ingest endpoints.

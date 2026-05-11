@@ -24,8 +24,11 @@ The platform exists end-to-end as a working operator console.
 - [x] iTwin + DDC + Cesium integration maps — `meta/ITWIN_MAPPING.md`, `meta/DDC_MAPPING.md`, `meta/CESIUM_SETUP.md`
 - [x] Extended Pixeltable schema (migration 0012) — PostGIS WKT, BIS classification, DDC admin, 3D asset linking, MARPA project registry, GenAI namespace
 - [x] genai/ + assets/ folder scaffold
+- [x] **Unified georef + reality + mirror system (migration 0013)** — `project_georef` (67 cols, single coord authority), `lattice/reality/*` namespace (5 tables: drone_flights, drone_frames, gaussian_splats, point_cloud_sessions, mirror_state)
+- [x] **georef/ + reality/ folder scaffold** — schema, templates, 7 converter stubs, drone/splat/pointcloud/mirror pipeline stubs
+- [x] **FastAPI surface grown to 33 endpoints** — 11 `/v1/georef/*` + 7 `/v1/reality/*` added (most stub-501, 5 live reads)
 
-**What runs today:** dispatch a task in the operator console → it streams Claude's real response token-by-token into the EventTimeline → row appears in the table with `agent_kind=claude-cli` and `status=completed`. The data layer is 25 tables + an idempotency store + an embedding index.
+**What runs today:** dispatch a task in the operator console → it streams Claude's real response token-by-token into the EventTimeline → row appears in the table with `agent_kind=claude-cli` and `status=completed`. The data layer is **36 tables** across 4 owned namespaces + an idempotency store + 2 embedding indices, served via **33 FastAPI endpoints**.
 
 ---
 
@@ -37,12 +40,27 @@ The platform learns *where things are* and *what they are in BIM terms*.
 
 **Definition of done:**
 
-- [ ] PostGIS extension live at the PG layer; `geom_point geometry` computed columns populated for every `ifc_elements` row from its WKT
+- [ ] PostGIS extension live at the PG layer; `geom_point geometry` computed columns populated for every `ifc_elements` row from its WKT ([#185](https://github.com/JeromyJSmith/lattice-platform/issues/185))
+- [ ] **Georef converter implementations** — replace the 7 ingest stubs (KML, Shapefile, GeoTIFF, Survey CSV, IFC, OSM, DXF) with real parsers using `gdal`/`pyproj`/`fiona`/`ezdxf`
+- [ ] **`POST /v1/runtime/stream-events/sse`** is the canonical stream channel; polling fallback retained only for non-EventSource clients
+- [ ] **`compute-transforms`** populates all 4 matrices (vw→wgs84, ifc→wgs84, scene→wgs84, wgs84→scene) for at least one project
 - [ ] First real `vectorworks_exports` row written from a VW C++ plugin menu command (placeholder generation in VW → IFC export → POST to sidecar → row in Pixeltable)
 - [ ] `bis_class` / `bis_subclass` populated for every `ifc_elements` row via IfcOpenShell type mapping ([`itwin/bis-schemas/`](../itwin/bis-schemas/))
 - [ ] `lattice/bridge/marpa_projects` seeded with at least one real project (lat/lon, boundary polygon, IFC path)
+- [ ] **Self-hosted Mac runner registered** so `test-pxt` workflow goes green
+- [ ] **Linear workspace setup** completed (per [`meta/LINEAR_SETUP.md`](LINEAR_SETUP.md))
 - [ ] LOD100 placeholder geometry created in VW for one project, exported to IFC, ingested through the pipeline, visible in the operator console runs table
 - [ ] All Phase 1 issues closed or explicitly deferred with reason
+
+**Already landed in Phase 1:**
+
+- [x] Migration trail 0001–0013 applied
+- [x] Agent loop end-to-end (Claude CLI subprocess → Pixeltable → TanStack frontend with SSE push)
+- [x] GitHub infra (workflows, worktrees, 226 issues, 23 labels, project board)
+- [x] DDC scaffold + mapping
+- [x] **Georef system** — `project_georef` (67 cols), 11 endpoints, `georef/` folder + 7 converter stubs
+- [x] **Reality capture schema** — `drone_flights`, `drone_frames` (`pxt.Image`), `gaussian_splats`, `point_cloud_sessions`, `mirror_state`
+- [x] **GenAI pipeline schema** — `comfyui_jobs`, `model_registry`, `training_runs`
 
 ---
 
@@ -54,11 +72,12 @@ The platform becomes visual. Three views, three engines, one data layer.
 
 **Definition of done:**
 
-- [ ] **Context A** at `/viewer` — ThatOpen Fragments rendering an IFC from `lattice/bridge/ifc/ifc_elements`, OrthoPerspectiveCamera + PostproductionRenderer, element selection wired to the property panel
-- [ ] **Context B** at `/analysis` — deck.gl ScatterplotLayer over a MapLibre basemap, fed by DuckDB WASM querying Parquet exports of `ifc_elements`; cost overlay layer present
-- [ ] **Cesium globe** at `/globe` — Cesium ion (free tier) or self-hosted terrain, MARPA project pins, click-to-fly-to, lazy-load IFC Fragment on zoom-in
-- [ ] **Potree integration** — point clouds rendered in the ThatOpen scene (shared canvas), toggleable layer
-- [ ] Cross-context selection state — clicking an element in Context A highlights it in Context B and the globe pin
+- [ ] **ThatOpen viewer route `/viewer`** — Fragments rendering an IFC from `lattice/bridge/ifc/ifc_elements`, OrthoPerspectiveCamera + PostproductionRenderer, element selection wired to the property panel, **Gaussian splat overlay toggle** (gsplat/Brush WebGL viewer from `lattice/reality/gaussian_splats`)
+- [ ] **Cesium globe route `/globe`** — MARPA project pins lazy-loaded from `marpa_projects`, click-to-fly-to, **pin colors driven by `mirror_state` flags**, lazy-load IFC Fragment on zoom-in
+- [ ] **Potree point cloud route `/pointcloud`** — `.las`/`.laz` via laspy + PDAL, octree served from PotreeConverter output, source rows from `lattice/reality/point_cloud_sessions`
+- [ ] **deck.gl analytics route `/analytics`** — DuckDB WASM + Parquet exports of `ifc_elements`, cost ColumnLayer, **C2C divergence HeatmapLayer** sourced from `mirror_state.sync_warnings`
+- [ ] **VW bridge via vwx-mcp** — full round-trip from operator console to VW document automation
+- [ ] Cross-context selection state — clicking an element in `/viewer` highlights it in `/analytics` and the globe pin
 
 ---
 
