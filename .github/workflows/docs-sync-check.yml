@@ -191,7 +191,7 @@ jobs:
             "pixeltable/service/migrations"
           )
           # Allowlist paths that legitimately mention forbidden strings as guardrail text
-          ALLOWLIST_REGEX='^(meta/|\\.github/workflows/docs-sync-check\\.yml|scripts/pre-commit-docs-check\\.sh|CLAUDE\\.md|AGENTS\\.md|README\\.md|CONTRIBUTING\\.md|\\.cursorrules)'
+          ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules)'
 
           for f in $FILES; do
             [ -f "$f" ] || continue
@@ -210,7 +210,7 @@ jobs:
             # Forbid bare 'import Anthropic' in .ts/.tsx (client code)
             case "$f" in
               *.ts|*.tsx)
-                if grep -nE '^import\\s+Anthropic' "$f" >/dev/null 2>&1; then
+                if grep -nE '^import[[:space:]]+Anthropic' "$f" >/dev/null 2>&1; then
                   echo "❌ Bare 'import Anthropic' in $f — use @tanstack/ai adapters"
                   fail=1
                 fi
