@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "infranodus": {
+      "command": "npx",
+      "args": ["-y", "infranodus-mcp-server"],
+      "env": {
+        "INFRANODUS_API_KEY": "${INFRANODUS_API_KEY}"
+      }
+    }
+  }
+}

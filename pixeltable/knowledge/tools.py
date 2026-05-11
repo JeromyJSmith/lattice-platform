@@ -147,3 +147,11 @@ def get_coverage_gaps(tool_name: str | None = None, severity: str | None = None)
     if severity is not None:
         q = q.where(gaps.severity == severity)
     return q.order_by(gaps.detected_at, asc=False).limit(20)
+
+
+# ---------- Aggregator for single-line agent registration ----------------
+
+KNOWLEDGE_TOOLS = pxt.tools(
+    search_tutorials, search_research, get_skill_for_tool,
+    search_docs, search_api_reference, get_coverage_gaps,
+)
