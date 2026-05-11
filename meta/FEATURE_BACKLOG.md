@@ -259,3 +259,53 @@
 - [ ] Redshift material library — starter material set for landscape: grass, bark, stone, water, concrete, wood
 - [ ] Render output evidence — PNG/EXR renders written back to lattice/execution/evidence via drag-drop or watched folder
 - [ ] Fly-through -> Cinema 4D camera — export ThatOpen fly-through keyframes as FBX camera animation for Cinema 4D
+
+---
+
+## CESIUM GLOBE — MARPA PROJECT PORTFOLIO VIEW
+# /globe route — CesiumJS globe with all MARPA projects georeferenced on real terrain.
+# Click project pin -> lazy-load iTwin IFC model draped at correct lat/lon.
+# deck.gl analytical layers float on top as toggleable overlays.
+# This is the executive dashboard AND the field operations view.
+
+### Core Globe Setup
+- [ ] CesiumJS route — src/routes/globe/index.tsx; Cesium globe with terrain (Cesium World Terrain or self-hosted Cesium ion)
+- [ ] Self-hosted Cesium option — evaluate cesium-terrain-builder + quantized-mesh tiles to avoid Cesium ion dependency; document in meta/CESIUM_SETUP.md
+- [ ] MARPA project registry — lattice/bridge/marpa_projects Pixeltable table: project_id, name, address, lat, lon, status (active/complete/prospect), phase, project_manager, start_date, end_date, ifc_path, thumbnail_url
+- [ ] Project pins on globe — CesiumJS entity per MARPA project; color by status (green=active, blue=complete, yellow=prospect); label = project name
+- [ ] Lazy load on click — click project pin -> load only that project's IFC/Fragment model; unload previous project on navigation away; never load all projects simultaneously
+- [ ] Fly-to animation — smooth CesiumJS camera fly-to on project select; configurable flight duration
+- [ ] Project info card — sidebar panel showing project name, phase, PM, schedule status, thumbnail on pin click
+
+### iTwin Georeferenced Overlay
+- [ ] iTwin model draped on terrain — position IFC model at project lat/lon/elevation using @itwin/core-geometry Transform; align to real-world north
+- [ ] ThatOpen Fragment loader in globe context — load .frag model at georeferenced position over Cesium terrain
+- [ ] Coordinate system bridge — convert between Cesium ECEF/WGS84 and iTwin/IFC local coordinate systems via IfcSite georeferencing matrix; write transform util to src/lib/geo-transform.ts
+- [ ] LOD by camera distance — show project pin at globe scale; switch to IFC model when camera within 500m; switch to full Fragment detail within 100m
+- [ ] Multiple projects visible simultaneously — if zoomed to city scale, show all project pins; if zoomed to neighborhood, show simplified IFC outlines for nearby projects
+
+### deck.gl Analytical Layers on Globe
+- [ ] Task status layer — deck.gl IconLayer at each project position; icon = checkmark/clock/warning based on Linear/project status
+- [ ] Schedule progress layer — ColumnLayer extruded by % complete; color = on-track (green) / delayed (red) / complete (grey)
+- [ ] Cost layer — ScatterplotLayer radius = total project value; color = under/over budget from DDC BOQ
+- [ ] Phase layer — GeoJsonLayer showing project site boundary polygon per project; fill opacity by phase
+- [ ] Layer toggle panel — sidebar checkboxes to show/hide each analytical layer; state persisted to TanStack Store
+
+### Project Management Integration
+- [ ] Linear sync — pull Linear project/issue status into marpa_projects via LINEAR_WEBHOOK_URL; update task_count, open_issues, last_activity columns
+- [ ] DDC admin overlay — per-project BOQ status, estimated vs actual cost, quantity takeoff progress from OpenConstructionERP
+- [ ] Schedule timeline — click project -> show Gantt-style mini timeline in sidebar using project phase dates
+- [ ] Photo/document evidence — project photos and key documents stored in lattice/execution/evidence with project_id FK; thumbnail gallery in project info card
+- [ ] Field status updates — mobile-friendly view at /globe/field that shows current project with large status buttons (on-site/off-site, today's tasks, issues to flag)
+
+### Lazy Loading + Performance
+- [ ] Fragment cache per project — .frag binary cached in Pixeltable as blob column; check cache before re-converting IFC; invalidate on IFC update
+- [ ] Tile-based project loading — only fetch projects within current Cesium camera frustum + 20% buffer; unload projects outside 2x frustum
+- [ ] Progressive detail — project loads in 3 stages: (1) pin only, (2) site boundary polygon, (3) full IFC Fragment model
+- [ ] Web Worker for Fragment loading — load .frag bytes off main thread; post to main thread when ready; prevent globe camera jank during load
+
+### MARPA Project Data Seed
+- [ ] Seed script — scripts/seed-marpa-projects.ts that reads a CSV/JSON of MARPA project locations and POSTs to /v1/ingest/marpa-projects
+- [ ] Project thumbnail generation — capture ThatOpen snapshot of each loaded IFC model and store as project thumbnail in Pixeltable
+- [ ] Historical projects — completed projects shown with greyed-out pins and archive badge; accessible for reference and portfolio
+- [ ] Prospect projects — show prospect pins with dashed boundary; click -> show proposal status and estimated value from OpenConstructionERP
