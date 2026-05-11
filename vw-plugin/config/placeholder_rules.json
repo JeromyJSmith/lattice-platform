@@ -1,0 +1,22 @@
+{
+  "$schema": "https://lattice.dev/schemas/placeholder-rules.v1.json",
+  "version": "1",
+  "description": "Category -> placeholder geometry rules for the VW Generate LATTICE Placeholders menu command. Claude-editable via MCP without recompile.",
+  "default": { "shape": "cone", "color": "#888888", "height_m": 1.0, "radius_m": 0.25 },
+  "categories": {
+    "proposed_trees":   { "shape": "cone",       "color": "#2D7A2D", "height_m": 4.0,  "radius_m": 1.2 },
+    "existing_trees":   { "shape": "cone",       "color": "#4B6B4B", "height_m": 5.0,  "radius_m": 1.5 },
+    "shrubs":           { "shape": "hemisphere", "color": "#4FAA4F", "height_m": 1.0,  "radius_m": 0.6 },
+    "perennials":       { "shape": "hemisphere", "color": "#7ECC7E", "height_m": 0.4,  "radius_m": 0.3 },
+    "flowers":          { "shape": "hemisphere", "color": "#E07AB0", "height_m": 0.3,  "radius_m": 0.25 },
+    "ground_cover":     { "shape": "disc",       "color": "#9EC59E", "height_m": 0.05, "radius_m": 0.6 },
+    "boulders":         { "shape": "ellipsoid",  "color": "#6E6E6E", "height_m": 0.6,  "radius_m": 0.5 },
+    "stepping_stones":  { "shape": "disc",       "color": "#A0A0A0", "height_m": 0.08, "radius_m": 0.35 },
+    "flagstones":       { "shape": "slab",       "color": "#B0B0A8", "height_m": 0.05, "radius_m": 0.5 },
+    "pool":             { "shape": "slab",       "color": "#3E8FBC", "height_m": 0.10, "radius_m": 3.0 },
+    "fencing":          { "shape": "slab",       "color": "#7A5A3A", "height_m": 1.8,  "radius_m": 0.05 },
+    "gates":            { "shape": "slab",       "color": "#8B6A43", "height_m": 2.0,  "radius_m": 0.05 },
+    "outdoor_kitchen":  { "shape": "box",        "color": "#5A5A5A", "height_m": 0.95, "radius_m": 0.6 },
+    "outdoor_furniture":{ "shape": "box",        "color": "#7A6A50", "height_m": 0.45, "radius_m": 0.4 }
+  }
+}
