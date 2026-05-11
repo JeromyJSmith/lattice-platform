@@ -1,0 +1,107 @@
+{
+  "generatedAt": "2026-05-11T19:09:22.899Z",
+  "shots": [
+    {
+      "name": "home",
+      "url": "/",
+      "description": "Landing page (TanStack Start template, branded as LATTICE)"
+    },
+    {
+      "name": "runtime",
+      "url": "/runtime",
+      "description": "Operator console — runs table + active stream"
+    },
+    {
+      "name": "runtime-timeline",
+      "url": "/runtime",
+      "description": "Operator console scrolled to EventTimeline + AgentUI panel",
+      "scrollToBottom": true
+    },
+    {
+      "name": "runs",
+      "url": "/runs",
+      "description": "Runs index (placeholder route)"
+    },
+    {
+      "name": "agents",
+      "url": "/agents",
+      "description": "Agents index (route not yet scaffolded — should 404)"
+    },
+    {
+      "name": "threads",
+      "url": "/threads",
+      "description": "Threads index (placeholder route)"
+    },
+    {
+      "name": "evidence",
+      "url": "/evidence",
+      "description": "Evidence ledger (placeholder route)"
+    },
+    {
+      "name": "replay",
+      "url": "/replay",
+      "description": "Run replay (placeholder route)"
+    },
+    {
+      "name": "settings",
+      "url": "/settings",
+      "description": "Settings (placeholder route)"
+    }
+  ],
+  "results": [
+    {
+      "name": "home",
+      "description": "Landing page (TanStack Start template, branded as LATTICE)",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "runtime",
+      "description": "Operator console — runs table + active stream",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "runtime-timeline",
+      "description": "Operator console scrolled to EventTimeline + AgentUI panel",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "runs",
+      "description": "Runs index (placeholder route)",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "agents",
+      "description": "Agents index (route not yet scaffolded — should 404)",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "threads",
+      "description": "Threads index (placeholder route)",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "evidence",
+      "description": "Evidence ledger (placeholder route)",
+      "ok": true,
+      "status": 200
+    },
+    {
+      "name": "replay",
+      "description": "Run replay (placeholder route)",
+      "ok": false,
+      "status": 404
+    },
+    {
+      "name": "settings",
+      "description": "Settings (placeholder route)",
+      "ok": true,
+      "status": 200
+    }
+  ]
+}
