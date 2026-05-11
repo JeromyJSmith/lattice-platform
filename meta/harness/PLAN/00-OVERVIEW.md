@@ -12,6 +12,7 @@ This directory holds the four-phase plan for the LATTICE Meta-Harness build. Not
 | 3 — Docs Delta | [`03-DOCS-DELTA.md`](03-DOCS-DELTA.md) | Diff-level list of every existing doc that needs editing + what gets created where | ✅ amended |
 | 4 — Execution Handoff | [`04-EXECUTION-HANDOFF.md`](04-EXECUTION-HANDOFF.md) | Self-contained handoff for whichever agent executes the build | ✅ amended |
 | 5 — Research Amendment | [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) | MARPA + Meta-Harness research synthesis. **Binding.** Phase 1 blocked until reviewed. | ✅ added |
+| 0.6 — Capability Harvest | [`06-CAPABILITY-HARVEST-AMENDMENT.md`](06-CAPABILITY-HARVEST-AMENDMENT.md) | 3 permanent standards (Capability Harvest Protocol, Zero Dead DNA, Always-Running CI/CD Health) + dependency allowlist + 4 capability registries. **Binding.** | ✅ added |
 
 ## Branch contract
 

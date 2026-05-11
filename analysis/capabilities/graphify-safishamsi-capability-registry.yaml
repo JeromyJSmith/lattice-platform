@@ -1,0 +1,120 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+tool: graphifyy
+tool_version: pinned at Amendment 07 install (uv tool install graphifyy)
+canonical_docs: https://github.com/safishamsi/graphify
+last_harvested: 2026-05-11
+harvested_by: claude-opus-4-7 (Amendment 06)
+
+# Python multi-format graph tool. Note the DOUBLE-Y in the PyPI name (graphifyy)
+# to disambiguate from parisgroup-ai/graphify (Rust). User-approved allowlist entry.
+# Powers the Knowledge Substrate (Amendment 07) — particularly YouTube ingestion.
+
+capabilities:
+  # ─── PRIMARY CAPABILITY: multi-format ingestion ───
+  - id: ingest-youtube-url
+    surface: cli_command
+    name: graphifyy ingest <youtube-url>
+    state: ACTIVE
+    description: Ingest YouTube video URL → extract transcript → emit graph + structured doc
+    wired_at: [scripts/ingest-tutorials.py (stub now; full impl = Issue #20)]
+    invoked_by: [Amendment 07 substrate intake]
+
+  - id: ingest-pdf
+    surface: cli_command
+    name: graphifyy ingest <file.pdf>
+    state: DEFERRED
+    description: PDF text extraction + graph
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-7-research-doc-substrate
+    tracking_issue: 21
+
+  - id: ingest-html
+    surface: cli_command
+    name: graphifyy ingest <url>
+    state: DEFERRED
+    description: HTML web page extraction + graph
+    reason: redundant-with-other-tool
+    target_phase: revisit-if-WebFetch-insufficient
+    tracking_issue: 21
+
+  - id: ingest-markdown
+    surface: cli_command
+    name: graphifyy ingest <file.md>
+    state: DEFERRED
+    description: Markdown doc extraction + graph
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-7-research-doc-substrate
+    tracking_issue: 21
+
+  - id: ingest-audio
+    surface: cli_command
+    name: graphifyy ingest <file.mp3|wav>
+    state: DEFERRED
+    description: Audio transcription + graph
+    reason: redundant-with-other-tool
+    target_phase: never (Pixeltable's whisper.transcribe in migration 0015 supersedes)
+    tracking_issue: 21
+
+  - id: ingest-video
+    surface: cli_command
+    name: graphifyy ingest <file.mp4|mov>
+    state: DEFERRED
+    description: Video extract-audio + transcribe + graph
+    reason: redundant-with-other-tool
+    target_phase: never (Pixeltable's extract_audio + whisper supersedes for local video)
+    tracking_issue: 21
+
+  # ─── EXPORT / QUERY ───
+  - id: export-graph-json
+    surface: cli_command
+    name: graphifyy export --format json
+    state: ACTIVE
+    description: Export graph to JSON for downstream tooling
+    wired_at: [scripts/ingest-tutorials.py]
+    invoked_by: [substrate intake pipeline]
+
+  - id: export-graph-cypher
+    surface: cli_command
+    name: graphifyy export --format cypher
+    state: DEFERRED
+    description: Export to Cypher statements for Neo4j-style stores
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 21
+
+  - id: query-search
+    surface: cli_command
+    name: graphifyy query <text>
+    state: DEFERRED
+    description: Semantic search across all ingested content
+    reason: redundant-with-other-tool
+    target_phase: never (Pixeltable embedding index + retrieve_from_knowledge_base supersedes)
+    tracking_issue: 21
+
+  # ─── BATCH MODES ───
+  - id: batch-ingest-playlist
+    surface: cli_command
+    name: graphifyy batch <playlist-url>
+    state: ACTIVE
+    description: Ingest entire YouTube playlist
+    wired_at: [scripts/ingest-tutorials.py]
+    invoked_by: [substrate intake pipeline for tool tutorial playlists]
+
+  - id: batch-ingest-channel
+    surface: cli_command
+    name: graphifyy batch --channel <channel-url>
+    state: DEFERRED
+    description: Ingest entire YouTube channel
+    reason: cost-prohibitive
+    target_phase: revisit-if-targeted-playlist-insufficient
+    tracking_issue: 21
+
+  # ─── STDLIB INTEGRATION ───
+  - id: python-api
+    surface: cli_command   # Python library callable from scripts
+    name: import graphifyy
+    state: DEFERRED
+    description: Python module API (rather than CLI subprocess)
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-7-if-CLI-overhead-pressure
+    tracking_issue: 21

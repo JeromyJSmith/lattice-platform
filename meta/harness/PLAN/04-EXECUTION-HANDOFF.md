@@ -230,6 +230,12 @@ The original 12 + these 4:
 
 Plus new label: `infranodus` (color `#10B981`) alongside `meta-harness` (color `#8B5CF6`).
 
+### Amendment 06 issues (Phase 8 total: 16 → 19)
+
+17. **Implement `scripts/audit-dead-dna.sh` full check** — parse capability registries, scan codebase for ACTIVE-tool invocations, fail on DEFERRED-past-target. Labels: `meta-harness`, `infra`
+18. **Wire `audit-dead-dna.sh` into `docs-sync-check.yml` as Job 12** — gate every commit on Zero Dead DNA. Labels: `meta-harness`, `infra`
+19. **Capability harvest pass on Graphify (parisgroup) after Phase 1 install** — first real ACTIVE/DEFERRED row reconciliation against installed binary. Labels: `meta-harness`
+
 ## When you finish
 
 1. PR description finalised

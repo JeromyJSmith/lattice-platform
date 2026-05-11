@@ -1,0 +1,272 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+tool: gitnexus
+tool_version: pinned at Phase 1 install (local devDependency)
+canonical_docs: https://github.com/abhigyanpatwari/GitNexus
+last_harvested: 2026-05-11
+harvested_by: claude-opus-4-7 (Amendment 06)
+
+# 16 MCP tools + 5 group tools + 2 prompts + 4 skills + hooks
+# Install scope: LOCAL devDependency (user preference — NOT -g global)
+
+capabilities:
+  # ─── MCP TOOLS (16) ───
+  - id: mcp-analyze
+    surface: mcp_tool
+    name: analyze
+    state: ACTIVE
+    description: Index repo into execution-flow graph (call chains, processes)
+    wired_at: [Phase 1 install step]
+    invoked_by: [autoresearch loop initial indexing]
+
+  - id: mcp-search
+    surface: mcp_tool
+    name: search
+    state: ACTIVE
+    description: Hybrid BM25 + semantic search across indexed repo
+    wired_at: [.mcp.json (gitnexus entry — Phase 1)]
+    invoked_by: [pre-edit context retrieval, section harnesses]
+
+  - id: mcp-impact
+    surface: mcp_tool
+    name: impact
+    state: ACTIVE
+    description: Blast-radius analysis for a file/symbol change
+    wired_at: [.mcp.json]
+    invoked_by: [PreToolUse Write hook + manual queries]
+
+  - id: mcp-detect_changes
+    surface: mcp_tool
+    name: detect_changes
+    state: ACTIVE
+    description: Pre-commit detection of risky changes (touches central nodes)
+    wired_at: [.claude/settings.json (PreToolUse hook — Phase 6)]
+    invoked_by: [pre-commit hook]
+
+  - id: mcp-rename
+    surface: mcp_tool
+    name: rename
+    state: DEFERRED
+    description: Multi-file coordinated rename
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
+
+  - id: mcp-cypher
+    surface: mcp_tool
+    name: cypher
+    state: ACTIVE
+    description: Raw Cypher query against LadybugDB graph; power-user access
+    wired_at: [.mcp.json]
+    invoked_by: [advanced queries from autoresearch loop]
+
+  - id: mcp-call_chain
+    surface: mcp_tool
+    name: call_chain
+    state: ACTIVE
+    description: Trace call chain from entry point to leaf
+    wired_at: [.mcp.json]
+    invoked_by: [debugger workflows, section harnesses]
+
+  - id: mcp-callers
+    surface: mcp_tool
+    name: callers
+    state: ACTIVE
+    description: List all callers of a symbol
+    wired_at: [.mcp.json]
+    invoked_by: [pre-edit reads]
+
+  - id: mcp-callees
+    surface: mcp_tool
+    name: callees
+    state: ACTIVE
+    description: List all callees from a symbol
+    wired_at: [.mcp.json]
+    invoked_by: [pre-edit reads]
+
+  - id: mcp-community_detection
+    surface: mcp_tool
+    name: community_detection
+    state: ACTIVE
+    description: Leiden community detection on call graph; suggests module groupings
+    wired_at: [meta/harness/bootstrap/health-report.py]
+    invoked_by: [graph_execution_health signal]
+
+  - id: mcp-entry_points
+    surface: mcp_tool
+    name: entry_points
+    state: ACTIVE
+    description: List all entry points (CLI, HTTP routes, scheduled jobs)
+    wired_at: [meta/harness/bootstrap/health-report.py]
+    invoked_by: [coverage analysis]
+
+  - id: mcp-dead_code
+    surface: mcp_tool
+    name: dead_code
+    state: ACTIVE
+    description: Find unreachable code paths
+    wired_at: [scripts/audit-dead-dna.sh (Issue #17 full impl)]
+    invoked_by: [dead-DNA audit]
+
+  - id: mcp-test_coverage
+    surface: mcp_tool
+    name: test_coverage
+    state: DEFERRED
+    description: Map tests to code coverage
+    reason: awaiting-upstream-dep
+    target_phase: post-test-pxt-runner-registered
+    tracking_issue: 19
+
+  - id: mcp-process_trace
+    surface: mcp_tool
+    name: process_trace
+    state: DEFERRED
+    description: Live process trace at runtime
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8-observability
+    tracking_issue: 19
+
+  - id: mcp-diff_graphs
+    surface: mcp_tool
+    name: diff_graphs
+    state: ACTIVE
+    description: Diff two graph snapshots (architectural drift)
+    wired_at: [.github/workflows/docs-sync-check.yml (Phase 7)]
+    invoked_by: [CI on PRs]
+
+  - id: mcp-export_graph
+    surface: mcp_tool
+    name: export_graph
+    state: DEFERRED
+    description: Export full graph to external format
+    reason: redundant-with-other-tool
+    target_phase: never (LadybugDB native is sufficient)
+    tracking_issue: 19
+
+  # ─── GROUP TOOLS (5) — batch operations across multiple targets ───
+  - id: group-bulk_search
+    surface: mcp_tool
+    name: group.bulk_search
+    state: ACTIVE
+    description: Run search across multiple queries in one call
+    wired_at: [.mcp.json]
+    invoked_by: [proposer brief construction]
+
+  - id: group-bulk_impact
+    surface: mcp_tool
+    name: group.bulk_impact
+    state: ACTIVE
+    description: Compute impact for a list of files (e.g., entire PR)
+    wired_at: [.claude/settings.json (PreToolUse hook)]
+    invoked_by: [pre-commit blast-radius check]
+
+  - id: group-bulk_callers
+    surface: mcp_tool
+    name: group.bulk_callers
+    state: DEFERRED
+    description: Bulk caller lookup
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
+
+  - id: group-bulk_call_chain
+    surface: mcp_tool
+    name: group.bulk_call_chain
+    state: DEFERRED
+    description: Bulk call-chain trace
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
+
+  - id: group-bulk_explain
+    surface: mcp_tool
+    name: group.bulk_explain
+    state: DEFERRED
+    description: Bulk symbol explanation
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
+
+  # ─── PROMPTS (2, shipped with GitNexus MCP) ───
+  - id: prompt-investigate
+    surface: prompt
+    name: investigate
+    state: ACTIVE
+    description: Guided investigation prompt template
+    wired_at: [.mcp.json]
+    invoked_by: [section harness debug workflows]
+
+  - id: prompt-refactor-plan
+    surface: prompt
+    name: refactor-plan
+    state: DEFERRED
+    description: Refactor plan generation template
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
+
+  # ─── SKILLS (4, auto-generated by gitnexus analyze --skills) ───
+  - id: skill-gitnexus-introduction
+    surface: skill
+    name: gitnexus-introduction
+    state: ACTIVE
+    description: Onboarding skill — when to query gitnexus vs grep
+    wired_at: [.claude/skills/generated/gitnexus-introduction/SKILL.md (auto)]
+    invoked_by: [auto-load post-analyze]
+
+  - id: skill-gitnexus-blast-radius
+    surface: skill
+    name: gitnexus-blast-radius
+    state: ACTIVE
+    description: How to read impact() output and act on it
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [section harnesses pre-edit]
+
+  - id: skill-gitnexus-cypher
+    surface: skill
+    name: gitnexus-cypher
+    state: DEFERRED
+    description: Cypher query authoring guide
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8-advanced-queries
+    tracking_issue: 19
+
+  - id: skill-gitnexus-architecture
+    surface: skill
+    name: gitnexus-architecture
+    state: ACTIVE
+    description: Understand GitNexus's own graph schema
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [autoresearch loop initial training]
+
+  # ─── HOOKS (PreToolUse + PostToolUse) ───
+  - id: hook-pretooluse-file-read
+    surface: hook
+    name: PreToolUse on Read
+    state: ACTIVE
+    description: Auto-enrich every Read with graph context (callers, callees, centrality)
+    wired_at: [.claude/settings.json (Phase 6)]
+    invoked_by: [Claude Code on Read tool]
+
+  - id: hook-pretooluse-grep
+    surface: hook
+    name: PreToolUse on Grep
+    state: ACTIVE
+    description: Auto-enrich every Grep with graph context
+    wired_at: [.claude/settings.json (Phase 6)]
+    invoked_by: [Claude Code on Grep tool]
+
+  - id: hook-pretooluse-write
+    surface: hook
+    name: PreToolUse on Write
+    state: ACTIVE
+    description: Compute blast radius before Write; warn if touches central node
+    wired_at: [.claude/settings.json (Phase 6)]
+    invoked_by: [Claude Code on Write tool]
+
+  - id: hook-posttooluse-write
+    surface: hook
+    name: PostToolUse on Write
+    state: ACTIVE
+    description: Re-index changed file post-Write so subsequent queries reflect change
+    wired_at: [.claude/settings.json (Phase 6)]
+    invoked_by: [Claude Code on Write tool]

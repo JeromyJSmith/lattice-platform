@@ -1,0 +1,317 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+tool: graphify-parisgroup
+tool_version: pinned at Phase 1 install (curl install.sh)
+canonical_docs: https://github.com/parisgroup-ai/graphify
+last_harvested: 2026-05-11
+harvested_by: claude-opus-4-7 (Amendment 06)
+
+# 18 CLI commands + 9 MCP tools + 5 slash commands + 3 skills + 2 agents
+
+capabilities:
+  # ─── CLI COMMANDS (18) ───
+  - id: cli-init
+    surface: cli_command
+    name: graphify init
+    state: ACTIVE
+    description: Generate graphify.toml in current repo
+    wired_at: [graphify.toml]
+    invoked_by: [Phase 1 install step]
+
+  - id: cli-run
+    surface: cli_command
+    name: graphify run
+    state: ACTIVE
+    description: Execute full analysis pass; writes meta/harness/graph-reports/
+    wired_at: [meta/harness/bootstrap/graph-snapshot.sh]
+    invoked_by: [pre-session bootstrap]
+
+  - id: cli-check
+    surface: cli_command
+    name: graphify check
+    state: ACTIVE
+    description: CI gate — fails on cycles or hotspot threshold violations
+    wired_at: [.github/workflows/docs-sync-check.yml (Phase 7 Job 13)]
+    invoked_by: [CI]
+
+  - id: cli-install-integrations
+    surface: cli_command
+    name: graphify install-integrations
+    state: ACTIVE
+    description: Writes .claude/ skills + MCP config (--project-local mode)
+    wired_at: [Phase 1 install step]
+    invoked_by: [Phase 1 install]
+
+  - id: cli-stats
+    surface: cli_command
+    name: graphify stats
+    state: ACTIVE
+    description: Print summary statistics (node count, hotspots, cycles)
+    wired_at: [meta/harness/bootstrap/health-report.py]
+    invoked_by: [health snapshot generation]
+
+  - id: cli-search
+    surface: cli_command
+    name: graphify search <pattern>
+    state: ACTIVE
+    description: Search symbols/files by pattern
+    wired_at: [.claude/skills/lattice-schema/SKILL.md (Phase 6)]
+    invoked_by: [section harnesses]
+
+  - id: cli-explain
+    surface: cli_command
+    name: graphify explain <symbol>
+    state: ACTIVE
+    description: Explain symbol's role in graph (centrality, dependents)
+    wired_at: [.claude/skills/lattice-frontend/SKILL.md (Phase 6)]
+    invoked_by: [frontend harness pre-edit reads]
+
+  - id: cli-hotspots
+    surface: cli_command
+    name: graphify hotspots
+    state: ACTIVE
+    description: List hub vs bridge vs mixed hotspots above threshold
+    wired_at: [meta/harness/bootstrap/health-report.py]
+    invoked_by: [graph_structural_health signal]
+
+  - id: cli-cycles
+    surface: cli_command
+    name: graphify cycles
+    state: ACTIVE
+    description: List import cycles (target: zero)
+    wired_at: [meta/harness/bootstrap/health-report.py]
+    invoked_by: [graph_structural_health signal]
+
+  - id: cli-impact
+    surface: cli_command
+    name: graphify impact <file>
+    state: DEFERRED
+    description: Blast-radius analysis for a file change
+    reason: redundant-with-other-tool
+    target_phase: revisit-if-gitnexus-impact-insufficient
+    tracking_issue: 19
+
+  - id: cli-diff
+    surface: cli_command
+    name: graphify diff <snapshot1> <snapshot2>
+    state: ACTIVE
+    description: Compare two analysis snapshots; detects architectural drift
+    wired_at: [.github/workflows/docs-sync-check.yml (Phase 7 Job 13)]
+    invoked_by: [CI on PRs]
+
+  - id: cli-export
+    surface: cli_command
+    name: graphify export <format>
+    state: ACTIVE
+    description: Export analysis to JSON/CSV/Markdown/HTML/Neo4j
+    wired_at: [graphify.toml (format= setting)]
+    invoked_by: [graphify run]
+
+  - id: cli-policy-check
+    surface: cli_command
+    name: graphify policy-check
+    state: ACTIVE
+    description: Enforce policy rules (no-context-bleed, no-revit-imports)
+    wired_at: [graphify.toml (policy.rule blocks)]
+    invoked_by: [graphify check + CI]
+
+  - id: cli-list-projects
+    surface: cli_command
+    name: graphify list-projects
+    state: DEFERRED
+    description: List configured project sections
+    reason: redundant-with-other-tool
+    target_phase: never (cat graphify.toml achieves same)
+    tracking_issue: 19
+
+  - id: cli-list-hotspots-by-project
+    surface: cli_command
+    name: graphify hotspots --project <name>
+    state: ACTIVE
+    description: Per-project hotspot drill-down
+    wired_at: [meta/harness/sections/*/HARNESS.md (Phase 4)]
+    invoked_by: [section harnesses]
+
+  - id: cli-version
+    surface: cli_command
+    name: graphify version
+    state: ACTIVE
+    description: Print installed version
+    wired_at: [meta/harness/bootstrap/health-report.py (tool_version field)]
+    invoked_by: [tool-version reporting]
+
+  - id: cli-update
+    surface: cli_command
+    name: graphify update
+    state: DEFERRED
+    description: Self-update binary
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8 (manual update only until then)
+    tracking_issue: 19
+
+  - id: cli-uninstall
+    surface: cli_command
+    name: graphify uninstall
+    state: BLOCKED
+    description: Self-uninstall
+    blocker: Not needed; manual rm sufficient
+    blocker_resolution_path: Permanent BLOCKED
+
+  # ─── MCP TOOLS (9) ───
+  - id: mcp-graphify_stats
+    surface: mcp_tool
+    name: graphify_stats
+    state: ACTIVE
+    description: Same as CLI stats but callable from Claude conversation
+    wired_at: [.mcp.json (graphify entry — Phase 1)]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_search
+    surface: mcp_tool
+    name: graphify_search
+    state: ACTIVE
+    description: Same as CLI search
+    wired_at: [.mcp.json]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_explain
+    surface: mcp_tool
+    name: graphify_explain
+    state: ACTIVE
+    description: Same as CLI explain
+    wired_at: [.mcp.json]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_hotspots
+    surface: mcp_tool
+    name: graphify_hotspots
+    state: ACTIVE
+    description: Same as CLI hotspots
+    wired_at: [.mcp.json]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_cycles
+    surface: mcp_tool
+    name: graphify_cycles
+    state: ACTIVE
+    description: Same as CLI cycles
+    wired_at: [.mcp.json]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_diff
+    surface: mcp_tool
+    name: graphify_diff
+    state: ACTIVE
+    description: Same as CLI diff
+    wired_at: [.mcp.json]
+    invoked_by: [Claude inline queries]
+
+  - id: mcp-graphify_run_analysis
+    surface: mcp_tool
+    name: graphify_run_analysis
+    state: ACTIVE
+    description: Trigger graphify run from MCP
+    wired_at: [.mcp.json]
+    invoked_by: [autoresearch pre-propose]
+
+  - id: mcp-graphify_policy_check
+    surface: mcp_tool
+    name: graphify_policy_check
+    state: ACTIVE
+    description: Same as CLI policy-check
+    wired_at: [.mcp.json]
+    invoked_by: [autoresearch ratchet step]
+
+  - id: mcp-graphify_export
+    surface: mcp_tool
+    name: graphify_export
+    state: DEFERRED
+    description: Export from MCP context
+    reason: redundant-with-other-tool
+    target_phase: never (CLI export already wired)
+    tracking_issue: 19
+
+  # ─── SLASH COMMANDS (5) ───
+  - id: slash-graphify-status
+    surface: slash_command
+    name: /graphify-status
+    state: ACTIVE
+    description: Quick status check from Claude Code chat
+    wired_at: [.claude/skills/generated/graphify-status/SKILL.md (auto-generated by install-integrations)]
+    invoked_by: [user interactive]
+
+  - id: slash-graphify-explain
+    surface: slash_command
+    name: /graphify-explain <symbol>
+    state: ACTIVE
+    description: Interactive explain from chat
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [user interactive]
+
+  - id: slash-graphify-hotspots
+    surface: slash_command
+    name: /graphify-hotspots
+    state: ACTIVE
+    description: List top hotspots from chat
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [user interactive]
+
+  - id: slash-graphify-check
+    surface: slash_command
+    name: /graphify-check
+    state: ACTIVE
+    description: Run policy + cycle check from chat
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [user interactive]
+
+  - id: slash-graphify-diff
+    surface: slash_command
+    name: /graphify-diff
+    state: DEFERRED
+    description: Diff two snapshots from chat
+    reason: redundant-with-other-tool
+    target_phase: revisit-if-CI-diff-output-insufficient
+    tracking_issue: 19
+
+  # ─── SKILLS (3) ───
+  - id: skill-graphify-introduction
+    surface: skill
+    name: graphify-introduction
+    state: ACTIVE
+    description: Onboarding skill for new agents (what graphify is, when to query)
+    wired_at: [.claude/skills/generated/graphify-introduction/SKILL.md]
+    invoked_by: [auto-load via install-integrations]
+
+  - id: skill-graphify-architecture-report
+    surface: skill
+    name: graphify-architecture-report
+    state: ACTIVE
+    description: Read & interpret graphify-out/*/architecture-report.md
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [section harness agents]
+
+  - id: skill-graphify-hotspot-triage
+    surface: skill
+    name: graphify-hotspot-triage
+    state: ACTIVE
+    description: Decide if a hotspot needs refactor vs. lives-with annotation
+    wired_at: [.claude/skills/generated/]
+    invoked_by: [section harness pre-propose]
+
+  # ─── SUBAGENTS (2) ───
+  - id: agent-graphify-investigator
+    surface: subagent
+    name: graphify-investigator
+    state: DEFERRED
+    description: Bundled investigator agent (deep-dive on flagged hotspots)
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-5-section-debugging
+    tracking_issue: 19
+
+  - id: agent-graphify-architect
+    surface: subagent
+    name: graphify-architect
+    state: DEFERRED
+    description: Bundled architect agent (proposes refactors for cycles)
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8-deep-refactor-cycles
+    tracking_issue: 19
