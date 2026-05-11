@@ -1,6 +1,8 @@
 <!-- spec-verified: code.claude.com/docs 2026-05-11 -->
 # Phase 2 — Plan
 
+> **AMENDED 2026-05-11** by [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md). Phase 4 file inventory grows by 13 files (DesireRecord/ImprovementGoal schemas, `analysis/infranodus/*`, `analysis/gaps/*`, `gold_goals.md`, `build-gap-analysis.py`). Phase 5 grows by 8 files (one `gold_goals.md` per section). Phase 6 grows by 1 file (`.claude/rules/infranodus-corpus.md`). Phase 8 issue count grows from 12 → 16. **Read `05-RESEARCH-AMENDMENT.md` before executing any phase.**
+
 ## Strategic shape
 
 The Meta-Harness build is **eight discrete execution phases**, each landing as one squash-merge-able commit on `feature/meta-harness`. Every phase has a verifiable exit criterion. Phases run in order; later phases depend on earlier ones.
@@ -210,6 +212,40 @@ Total new + edited files across all phases: **~93**.
 Per phase: `git reset --hard <prev-commit>` (we are on a feature branch).
 Full rollback: delete branch (`git branch -D feature/meta-harness && git push origin --delete feature/meta-harness`).
 Migration 0014 rollback: never edit a landed migration; if Phase 2 lands and we need to undo, add migration 0015 to drop the new tables and update docs.
+
+## Amendment additions to Phase 4 / 5 / 6 file inventory
+
+Per [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) § "New artifacts":
+
+### Phase 4 — add 13 files
+
+| File | Source spec |
+|---|---|
+| `schemas/desire-record.schema.yaml` | `meta-harness-artifacts.md` lines 9-43 — verbatim |
+| `schemas/improvement-goal.schema.yaml` | `meta-harness-artifacts.md` lines 55-98 — verbatim |
+| `analysis/desires/.gitkeep` | new |
+| `analysis/infranodus/desires.graph.json` | `{}` placeholder |
+| `analysis/infranodus/goals.graph.json` | `{}` placeholder |
+| `analysis/infranodus/failures.graph.json` | `{}` placeholder |
+| `analysis/infranodus/goal-vs-implementation.diff.json` | `{}` placeholder |
+| `analysis/infranodus/README.md` | documents 4 optimize modes (gaps / develop / reinforce / latent) |
+| `analysis/gaps/README.md` | gap-report format spec |
+| `analysis/gaps/<section>-gap-report.md` × 8 | 8 stubs (one per section) |
+| `gold_goals.md` (repo root) | global ratchet target |
+| `meta/harness/bootstrap/build-gap-analysis.py` | stub (exits 0, emits valid empty report) |
+| **also** — extend `meta/harness/bootstrap/run-autoresearch.sh` to read `analysis/infranodus/{desires,goals}.graph.json` before each proposer brief; treat `contentGaps` + `conceptualGateways` as RAG hints |
+
+### Phase 5 — add 8 files (one per section)
+
+`<section-root>/gold_goals.md` per section root listed in original Phase 5 inventory. Distinct from `GOAL.md`: gold_goals is the compact ≤20-line stable ratchet contract; GOAL.md is the full fitness function.
+
+### Phase 6 — add 1 file + extend agent frontmatter
+
+| File | Purpose |
+|---|---|
+| `.claude/rules/infranodus-corpus.md` | path-scoped to `analysis/infranodus/**` + `analysis/gaps/**`; 6-point input checklist (define purpose / source quality / normalize / shape / preflight / packaging) |
+
+Each `.claude/agents/<section>-harness.md` frontmatter gains: `section`, `scoring_script`, `gold_goals`, `desire_corpus`, `goal_corpus` keys (additive to required `name` + `description`). AGORA 3-layer model encoded inline in the `description` field per template in [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) § "New artifacts" item 15.
 
 ## Checkpoints requiring user input
 

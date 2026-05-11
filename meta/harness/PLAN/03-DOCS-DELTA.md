@@ -1,6 +1,8 @@
 <!-- spec-verified: code.claude.com/docs 2026-05-11 -->
 # Phase 3 — Docs Delta
 
+> **AMENDED 2026-05-11** — see [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) § "Updated file count" (93 → 109 files). The new files listed in the amendment append to the inventories below.
+
 Existing documentation that requires update + new documentation to be created during execution. This is a delta map, not the edits themselves — execution writes the edits.
 
 ## Existing docs requiring edits
@@ -99,6 +101,32 @@ When the per-section context stacks land (Phase 5), several files will reference
 - `.claude/agents/**`
 
 Without this allowlist extension, Phase 5/6 commits will fail CI.
+
+## Amendment additions (per `05-RESEARCH-AMENDMENT.md`)
+
+| File | Action | Phase |
+|---|---|---|
+| `schemas/desire-record.schema.yaml` | CREATE | 4 |
+| `schemas/improvement-goal.schema.yaml` | CREATE | 4 |
+| `analysis/desires/.gitkeep` | CREATE | 4 |
+| `analysis/infranodus/README.md` | CREATE | 4 |
+| `analysis/infranodus/desires.graph.json` | CREATE (`{}`) | 4 |
+| `analysis/infranodus/goals.graph.json` | CREATE (`{}`) | 4 |
+| `analysis/infranodus/failures.graph.json` | CREATE (`{}`) | 4 |
+| `analysis/infranodus/goal-vs-implementation.diff.json` | CREATE (`{}`) | 4 |
+| `analysis/gaps/README.md` | CREATE | 4 |
+| `analysis/gaps/<section>-gap-report.md` × 8 | CREATE (stub) | 4 |
+| `meta/harness/bootstrap/build-gap-analysis.py` | CREATE (stub) | 4 |
+| `gold_goals.md` (repo root) | CREATE | 4 |
+| `<section-root>/gold_goals.md` × 8 | CREATE | 5 |
+| `.claude/rules/infranodus-corpus.md` | CREATE | 6 |
+
+Plus: MARPA-specific findings F1–F10 (per `05-RESEARCH-AMENDMENT.md`) are folded into:
+- Phase 5 GenAI/Assets section CLAUDE.md (Landscape Semantic Sidecar + CityGML 3.0 ADE alignment)
+- Phase 5 Frontend section CLAUDE.md (DrawAPI mandatory abstraction; deck.gl Tile3DLayer/TerrainExtension preferred path)
+- Phase 5 VW-iTwin section CLAUDE.md (Cesium acquisition risk; generic CameraState; web-ifc for Prototype 1)
+- Phase 5 DDC section GOAL.md action catalog (12 adaptable skills + 3 new modules: LA-ETL/LA-ECO/LA-IRR)
+- Phase 5 vw-plugin section CLAUDE.md (VS 2022 v17.12 + Xcode 16.2 prerequisites; satellite credentials note; `ObjectExample` starting point)
 
 ## Spec-verified comment convention
 

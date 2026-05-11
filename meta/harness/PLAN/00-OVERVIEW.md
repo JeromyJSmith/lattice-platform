@@ -7,10 +7,11 @@ This directory holds the four-phase plan for the LATTICE Meta-Harness build. Not
 
 | Phase | Artifact | Purpose | Status |
 |---|---|---|---|
-| 1 — Research | [`01-RESEARCH.md`](01-RESEARCH.md) | Local-docs queries, spec verification, ground-truth field tables for every system file type | ✅ initial pass complete |
-| 2 — Plan | [`02-PLAN.md`](02-PLAN.md) | Phased execution plan with checkpoints, file inventory, dependency graph, branch strategy | ✅ draft |
-| 3 — Docs Delta | [`03-DOCS-DELTA.md`](03-DOCS-DELTA.md) | Diff-level list of every existing doc that needs editing + what gets created where | ✅ draft |
-| 4 — Execution Handoff | [`04-EXECUTION-HANDOFF.md`](04-EXECUTION-HANDOFF.md) | Self-contained handoff for whichever agent executes the build (Claude / Codex / Copilot / human) | ✅ draft |
+| 1 — Research | [`01-RESEARCH.md`](01-RESEARCH.md) | Local-docs queries (Claude Code spec verification) | ✅ initial pass complete |
+| 2 — Plan | [`02-PLAN.md`](02-PLAN.md) | Phased execution plan with checkpoints, file inventory, dependency graph, branch strategy | ✅ amended |
+| 3 — Docs Delta | [`03-DOCS-DELTA.md`](03-DOCS-DELTA.md) | Diff-level list of every existing doc that needs editing + what gets created where | ✅ amended |
+| 4 — Execution Handoff | [`04-EXECUTION-HANDOFF.md`](04-EXECUTION-HANDOFF.md) | Self-contained handoff for whichever agent executes the build | ✅ amended |
+| 5 — Research Amendment | [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) | MARPA + Meta-Harness research synthesis. **Binding.** Phase 1 blocked until reviewed. | ✅ added |
 
 ## Branch contract
 

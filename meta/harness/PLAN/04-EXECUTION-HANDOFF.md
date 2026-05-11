@@ -1,6 +1,13 @@
 <!-- spec-verified: code.claude.com/docs 2026-05-11 -->
 # Phase 4 — Execution Handoff
 
+> **AMENDED 2026-05-11.** Before executing any phase, read [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) end-to-end. It carries:
+> - The DesireRecord / ImprovementGoal / gold_goals.md verbatim templates from `meta-harness-artifacts.md`
+> - 13 new Phase-4 files + 8 new Phase-5 files + 1 new Phase-6 file
+> - MARPA-specific findings F1–F10 that constrain Phase 5 section CLAUDE.md authoring
+> - 4 additional GitHub follow-up issues (Phase 8 total: 12 → 16)
+> - The corrected `GOAL.md` template (below) that integrates InfraNodus + gold_goals + ranked-gap-report reads
+
 This document is the **self-contained handoff** for whichever agent executes the Meta-Harness build. Read top-to-bottom once before doing anything. No external context required.
 
 ## You are picking up
@@ -168,6 +175,60 @@ Update PR description with: file count, diffstat, list of new GitHub issues, lin
 - Do NOT commit any API key, even in templates. `.env.example` is the only place secrets-shaped strings appear (as empty values).
 - Do NOT delete existing migrations or rename existing tables. Write 0014; everything else is additive.
 - Do NOT skip the pre-commit hook with `--no-verify`. If it fails, fix the docs.
+
+## Amended GOAL.md template (replaces the version implied by prior prompts)
+
+Use this template verbatim when creating every section `GOAL.md` in Phase 5. The header sections (`## Fitness Function`, `## Improvement Loop`, `## Action Catalog`, `## Operating Mode`) are required by `docs-sync-check.yml` Job 9.
+
+```markdown
+# GOAL — <section name>
+
+<!-- spec-verified: code.claude.com/docs 2026-05-11 -->
+
+## Fitness Function
+- Primary metric: output of scripts/score-<section>.sh
+- Baseline: <N>/100
+- Target plateau: <N>/100
+- Composite formula: weighted average of section-specific components (see scoring script)
+
+## Required guardrails
+- Must-not-regress constraints from meta/harness/memory/constraint-registry.md
+- CONSTRAINT_ID_1: <description>
+
+## Improvement Loop
+1. Read <section-root>/gold_goals.md for current winning criteria
+2. Read analysis/infranodus/goals.graph.json for structural gaps (optimize=gaps mode first)
+3. Consult analysis/gaps/<section>-gap-report.md for ranked improvement candidates
+4. Propose ONE harness change (prompting, memory, tool wiring, retrieval logic)
+5. Run scoring script — accept only if score improves AND no guardrail fails
+6. Write result to <section-root>/iterations.jsonl
+7. If stuck for 3+ iterations → switch InfraNodus mode to optimize=reinforce
+
+## Action Catalog
+- Modify own CLAUDE.md / MEMORY.md context
+- Propose schema migrations (draft only — human approves before make migrate)
+- Update gold_goals.md when a new plateau is reached
+- Create GitHub issues for improvements requiring human decision
+- Append to analysis/gaps/<section>-gap-report.md
+
+## Operating Mode
+infranodus_mode: gaps
+last_score: 0
+last_run: never
+iterations_completed: 0
+plateau_detected: false
+```
+
+## Amended Phase 8 issue list (12 → 16)
+
+The original 12 + these 4:
+
+13. **Implement DesireRecord intake pipeline** — `analysis/desires/` + intake script mining from GitHub issues, MEMORY.md files, session logs. Labels: `meta-harness`, `schema`
+14. **Run InfraNodus gap analysis on initial desire corpus** — populate `analysis/infranodus/desires.graph.json`. Labels: `meta-harness`, `infranodus`
+15. **Implement AGORA ImprovementGoal decomposition for schema section** — model first 3 ImprovementGoals from desires using AGORA 3-layer. Labels: `meta-harness`, `schema`
+16. **Build gap analysis tool (`build-gap-analysis.py`)** — full impl of dependency-integrated gap ranking. Labels: `meta-harness`
+
+Plus new label: `infranodus` (color `#10B981`) alongside `meta-harness` (color `#8B5CF6`).
 
 ## When you finish
 
