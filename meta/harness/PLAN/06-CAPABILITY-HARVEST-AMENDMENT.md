@@ -58,6 +58,8 @@ See `.claude/rules/dependency-allowlist.md` for the machine-readable form.
 
 The capability registries reference Pixeltable as a knowledge substrate (see Amendment 07). Capability rows that DEFER to "later phase" must point to the substrate row that will operationalize them.
 
+**Amendment 07 (Knowledge Substrate) extends this:** the `analysis/capabilities/*-capability-registry.yaml` files for each tool will have a companion entry in `lattice/knowledge/skills_registry` (when Issue #22 runs the first harvest). Once both layers are populated, anti-amnesia pre-flight on a tool resolves to: registry tells you *what exists*, substrate tells you *how to use it correctly*.
+
 ## Issues created in Phase 8
 
 - **#17** — Implement `scripts/audit-dead-dna.sh` full check (parse all registries, scan codebase for ACTIVE-tool invocations, fail on DEFERRED-past-target)

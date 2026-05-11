@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Last verified against live state: 2026-05-11 (migration **0013** applied, runtime console green, **36 tables**, **33 FastAPI endpoints**, 226 issues tracked).
+Last verified against live state: 2026-05-11 (migration **0013** applied — **36 tables**, **33 FastAPI endpoints**, 226 issues tracked). Migrations **0014** + **0015** are planning artifacts on `feature/meta-harness` (Phase 2 of the Meta-Harness build will apply them, adding 9 tables for a post-Phase-2 total of 45).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 

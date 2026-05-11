@@ -8,8 +8,8 @@ This file is the primary instruction surface for any AI agent opening this repos
 
 ## LIVE STATE (2026-05-11)
 
-- **Migrations applied: 0001–0013** (13 total, write-once)
-- **Pixeltable tables: 36** across 4 owned namespaces (`lattice/{execution,bridge,genai,reality}`)
+- **Migrations applied: 0001–0013** (13 total, write-once). **Planning artifacts on `feature/meta-harness`: 0014 (harness schema), 0015 (knowledge substrate)** — not yet applied to live Pixeltable; Phase 2 of the Meta-Harness build applies them.
+- **Pixeltable tables: 36** applied across 4 owned namespaces (`lattice/{execution,bridge,genai,reality}`); post-Phase-2 = 45 across 6 namespaces (adds `lattice/harness`, `lattice/knowledge`)
 - **FastAPI endpoints: 33** across 10 routers
 - **Migration path:** `pixeltable/migrations/` (NOT `pixeltable/service/migrations/`)
 - **Canonical schema reference:** [`meta/SCHEMA.md`](meta/SCHEMA.md)

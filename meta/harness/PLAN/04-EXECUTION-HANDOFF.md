@@ -236,6 +236,12 @@ Plus new label: `infranodus` (color `#10B981`) alongside `meta-harness` (color `
 18. **Wire `audit-dead-dna.sh` into `docs-sync-check.yml` as Job 12** — gate every commit on Zero Dead DNA. Labels: `meta-harness`, `infra`
 19. **Capability harvest pass on Graphify (parisgroup) after Phase 1 install** — first real ACTIVE/DEFERRED row reconciliation against installed binary. Labels: `meta-harness`
 
+### Amendment 07 issues (Phase 8 total: 19 → 22)
+
+20. **Full implementation of `scripts/ingest-tutorials.py`** — curated playlist manifests per tool, `graphifyy ingest`, video download, Pixeltable insert. Labels: `meta-harness`, `knowledge-substrate`
+21. **Full implementation of `scripts/ingest-research.py`** — PDF/HTML/markdown fetching, `pxt.Document` row creation. Labels: `meta-harness`, `knowledge-substrate`
+22. **First harvest pass on Graphify + GitNexus + InfraNodus tutorial coverage** — run #20 + #21 against curated source manifests. Labels: `meta-harness`, `knowledge-substrate`
+
 ## When you finish
 
 1. PR description finalised

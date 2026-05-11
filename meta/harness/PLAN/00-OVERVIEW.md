@@ -13,6 +13,7 @@ This directory holds the four-phase plan for the LATTICE Meta-Harness build. Not
 | 4 — Execution Handoff | [`04-EXECUTION-HANDOFF.md`](04-EXECUTION-HANDOFF.md) | Self-contained handoff for whichever agent executes the build | ✅ amended |
 | 5 — Research Amendment | [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) | MARPA + Meta-Harness research synthesis. **Binding.** Phase 1 blocked until reviewed. | ✅ added |
 | 0.6 — Capability Harvest | [`06-CAPABILITY-HARVEST-AMENDMENT.md`](06-CAPABILITY-HARVEST-AMENDMENT.md) | 3 permanent standards (Capability Harvest Protocol, Zero Dead DNA, Always-Running CI/CD Health) + dependency allowlist + 4 capability registries. **Binding.** | ✅ added |
+| 0.7 — Knowledge Substrate | [`07-PIXELTABLE-SUBSTRATE-AMENDMENT.md`](07-PIXELTABLE-SUBSTRATE-AMENDMENT.md) | Migration 0015 (`lattice/knowledge/*`), `pixeltable/knowledge/tools.py` @pxt.query layer, anti-amnesia rule. **Binding.** | ✅ added |
 
 ## Branch contract
 
