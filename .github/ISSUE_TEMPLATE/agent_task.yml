@@ -1,0 +1,83 @@
+name: 🤖 Agent task
+description: A well-scoped task an AI agent can pick up autonomously
+labels: [agent-ready]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: One-paragraph description of what to build. Be specific.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Bullet list — observable outcomes that prove the task is done.
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: LATTICE area
+      options:
+        - operator-console
+        - agent-runtime
+        - data-layer
+        - 3d-viewer
+        - analytics-layer
+        - point-cloud
+        - vw-bridge
+        - plant-geometry
+        - marimo
+        - devex
+    validations:
+      required: true
+
+  - type: textarea
+    id: tables
+    attributes:
+      label: Relevant Pixeltable tables
+      description: e.g. `lattice/execution/agent_runs`, `lattice/bridge/ifc/ifc_elements`
+      placeholder: lattice/...
+
+  - type: textarea
+    id: tools
+    attributes:
+      label: MCP tools / endpoints available
+      description: |
+        Which sidecar endpoints, MCP tools, or skills the agent can use.
+        Example: `POST /v1/runtime/events`, `claude -p`, `ifcopenshell.util.placement`.
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Suggested agent role (from AGENTS.md)
+      options:
+        - backend-developer
+        - frontend-developer
+        - data-engineer
+        - 3d / graphics specialist
+        - vw-plugin developer
+        - mlops / data scientist
+        - devops
+        - generalist
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated complexity
+      options:
+        - S (≤ 1h)
+        - M (1–4h)
+        - L (4h+)
+    validations:
+      required: true

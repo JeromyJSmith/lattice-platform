@@ -1,0 +1,29 @@
+name: linear-sync
+
+# Relays GitHub issue events to a Linear webhook. The webhook URL is added
+# as repository secret LINEAR_WEBHOOK_URL after Linear setup is complete
+# (see meta/LINEAR_SETUP.md). Until the secret exists the job is a no-op.
+
+on:
+  issues:
+    types: [opened, closed, reopened, labeled, unlabeled, assigned, unassigned]
+
+permissions:
+  contents: read
+
+jobs:
+  relay:
+    if: ${{ env.LINEAR_WEBHOOK_URL != '' }}
+    runs-on: ubuntu-latest
+    env:
+      LINEAR_WEBHOOK_URL: ${{ secrets.LINEAR_WEBHOOK_URL }}
+    steps:
+      - name: POST event to Linear webhook
+        run: |
+          curl -sS -X POST "$LINEAR_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: ${{ github.event_name }}" \
+            -H "X-GitHub-Action: ${{ github.event.action }}" \
+            --data @- <<'PAYLOAD'
+          ${{ toJSON(github.event) }}
+          PAYLOAD

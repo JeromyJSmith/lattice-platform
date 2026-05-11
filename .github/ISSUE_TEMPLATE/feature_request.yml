@@ -1,0 +1,41 @@
+name: ✨ Feature request
+description: Propose a new capability or improvement
+labels: [feature]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: LATTICE area
+      options:
+        - operator-console
+        - agent-runtime
+        - data-layer
+        - 3d-viewer
+        - analytics-layer
+        - point-cloud
+        - vw-bridge
+        - plant-geometry
+        - marimo
+        - devex
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What and why
+      description: One paragraph on the capability and the user / agent need it serves.
+    validations:
+      required: true
+
+  - type: input
+    id: backlog-ref
+    attributes:
+      label: Related backlog entry
+      description: If this is already in `meta/FEATURE_BACKLOG.md`, paste the bullet text.
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Implementation notes (optional)
+      description: Files/modules likely affected, schema impact, dependencies.

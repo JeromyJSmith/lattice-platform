@@ -1,0 +1,55 @@
+name: 🐛 Bug report
+description: Something is broken in the running stack
+labels: [bug]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: LATTICE area
+      options:
+        - operator-console
+        - agent-runtime
+        - data-layer
+        - 3d-viewer
+        - analytics-layer
+        - point-cloud
+        - vw-bridge
+        - plant-geometry
+        - marimo
+        - devex
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start the sidecar with `make sidecar-up-tcp`
+        2. `bun run dev` in another shell
+        3. Dispatch a task with prompt "..."
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      placeholder: |
+        **Expected:** Status flips to `completed` within 10s.
+        **Actual:** Status stays `running` indefinitely.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sidecar-log
+    attributes:
+      label: Sidecar log snippet (`tail -50 /tmp/vwbridge-sidecar.log`)
+      render: shell
+
+  - type: textarea
+    id: frontend-log
+    attributes:
+      label: Frontend log snippet (`tail -50 /tmp/vwbridge-frontend.log`)
+      render: shell

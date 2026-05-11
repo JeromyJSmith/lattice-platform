@@ -1,0 +1,45 @@
+name: tests/pxt (self-hosted)
+
+# Only run the heavy Pixeltable integration suite on the integration + release
+# branches. Requires a runner registered with the `lattice-mac` label that has
+# the local Pixeltable instance + `claude` CLI installed.
+
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  pxt:
+    name: tests/pxt
+    runs-on: [self-hosted, lattice-mac]
+    defaults:
+      run:
+        working-directory: pixeltable
+    env:
+      PIXELTABLE_HOME: ${{ runner.temp }}/pxt-home-${{ github.run_id }}
+      BRIDGE_SKIP_EMBEDDINGS: "1"   # don't download HF weights on every CI run
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python deps
+        run: uv sync --extra dev
+
+      - name: Bootstrap (dry-run)
+        run: uv run python scripts/bootstrap.py --dry-run
+
+      - name: Bootstrap (apply, ephemeral PXT_HOME)
+        run: uv run python scripts/bootstrap.py
+
+      - name: Fixtures
+        run: uv run python scripts/load_fixtures.py
+
+      - name: Verify schema
+        run: uv run python scripts/verify.py
+
+      - name: tests/pxt
+        run: uv run pytest -q tests/pxt
+
+      - name: Cleanup ephemeral home
+        if: always()
+        run: rm -rf "$PIXELTABLE_HOME"

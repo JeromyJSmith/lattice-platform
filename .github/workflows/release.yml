@@ -1,0 +1,45 @@
+name: release
+
+# On every push to main, cut a date-based tag and a GitHub Release with an
+# auto-generated changelog from commit messages.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute date-based version
+        id: ver
+        run: |
+          BASE="v$(date -u +%Y.%m.%d)"
+          # If today's base tag already exists, suffix with a counter.
+          TAG="$BASE"
+          N=1
+          while git rev-parse "$TAG" >/dev/null 2>&1; do
+            TAG="${BASE}.${N}"
+            N=$((N + 1))
+          done
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        run: |
+          git tag "${{ steps.ver.outputs.tag }}"
+          git push origin "${{ steps.ver.outputs.tag }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.ver.outputs.tag }}" \
+            --title "${{ steps.ver.outputs.tag }}" \
+            --generate-notes

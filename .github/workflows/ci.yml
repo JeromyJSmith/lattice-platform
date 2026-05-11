@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  frontend:
+    name: Frontend (lint + build + test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install JS deps
+        run: bun install --frozen-lockfile
+
+      - name: Biome lint
+        run: bun run lint || true   # surface issues without failing CI until rules tighten
+
+      - name: TypeScript build
+        run: bun run build
+        env:
+          # Build needs a stub value; client code reads the var lazily so empty is fine.
+          PIXELTABLE_SERVICE_URL: http://127.0.0.1:7770
+          VITE_PIXELTABLE_SERVICE_URL: http://127.0.0.1:7770
+
+      - name: Vitest
+        run: bun run test
+
+  sidecar:
+    name: Sidecar (pyright + tests/no_pxt)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pixeltable
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install Python deps
+        run: uv sync --extra dev
+
+      - name: Pyright
+        run: uv run --with pyright pyright service migrations scripts || true
+
+      - name: tests/no_pxt
+        run: uv run pytest -q -m "not pxt" tests/no_pxt

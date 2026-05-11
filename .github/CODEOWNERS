@@ -1,0 +1,27 @@
+# LATTICE CODEOWNERS
+#
+# These teams don't have to exist on GitHub at clone time — CODEOWNERS will
+# just be advisory until the teams are created under the
+# JeromyJSmith / lattice-platform organisation. Create them with `gh api`
+# when you onboard collaborators.
+
+# Data layer: Pixeltable migrations, sidecar routes, schema snapshot, upsert path
+pixeltable/                  @JeromyJSmith
+src/server/                  @JeromyJSmith
+.schema-snapshot.yaml        @JeromyJSmith
+
+# 3D viewer (Context A — full digital twin)
+src/routes/viewer/           @JeromyJSmith
+src/hooks/use-three-*.ts     @JeromyJSmith
+
+# Analytics layer (Context B — deck.gl / DuckDB)
+src/routes/analysis/         @JeromyJSmith
+
+# Vectorworks plugin (C++)
+vw-plugin/                   @JeromyJSmith
+
+# Meta / governance docs
+meta/                        @JeromyJSmith
+AGENTS.md                    @JeromyJSmith
+CLAUDE.md                    @JeromyJSmith
+.github/                     @JeromyJSmith

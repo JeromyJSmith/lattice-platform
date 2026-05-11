@@ -1,0 +1,63 @@
+name: schema-verify
+
+# On any PR targeting main or develop, run `make migrate-dryrun` and post the
+# plan as a PR comment so reviewers can audit Pixeltable schema changes inline.
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "pixeltable/migrations/**"
+      - "pixeltable/contracts/**"
+      - "pixeltable/.schema-snapshot.yaml"
+      - "pixeltable/service/upsert.py"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dryrun:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pixeltable
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install Python deps
+        run: uv sync --extra dev
+
+      - name: Capture migrate-dryrun output
+        id: dryrun
+        env:
+          PIXELTABLE_HOME: ${{ runner.temp }}/pxt-dryrun-${{ github.run_id }}
+          BRIDGE_SKIP_EMBEDDINGS: "1"
+        run: |
+          mkdir -p "$PIXELTABLE_HOME"
+          {
+            echo "output<<DRYRUN_EOF"
+            uv run python scripts/bootstrap.py --dry-run 2>&1 || true
+            echo "DRYRUN_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Post PR comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          BODY=$(cat <<'BODY_EOF'
+          ### Pixeltable migration plan (dry-run)
+
+          ```
+          ${{ steps.dryrun.outputs.output }}
+          ```
+
+          _Migrations are idempotent — `would create` rows are the diff; `exists` rows are no-ops._
+          BODY_EOF
+          )
+          gh pr comment "$PR_NUMBER" --body "$BODY"

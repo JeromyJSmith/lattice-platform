@@ -1,0 +1,76 @@
+name: agent-pr-review
+
+# Posts a structured "what is this PR touching" comment on every new PR so
+# AI agents (and humans) can see at a glance which LATTICE area is affected,
+# which tests should run, and where to look in AGENTS.md.
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Classify changed files
+        id: cls
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr diff "${{ github.event.pull_request.number }}" --name-only > /tmp/changed.txt
+          declare -A AREAS
+          while IFS= read -r f; do
+            case "$f" in
+              pixeltable/*)               AREAS[data-layer]=1 ;;
+              src/server/*)               AREAS[data-layer]=1 ;;
+              src/routes/viewer/*)        AREAS[3d-viewer]=1 ;;
+              src/routes/analysis/*)      AREAS[analytics]=1 ;;
+              src/routes/pointcloud/*)    AREAS[point-cloud]=1 ;;
+              src/routes/admin/*)         AREAS[admin]=1 ;;
+              vw-plugin/*)                AREAS[vw-bridge]=1 ;;
+              src/runtime/*)              AREAS[agent-runtime]=1 ;;
+              src/routes/runtime*)        AREAS[operator-console]=1 ;;
+              .github/*|Makefile|*.toml|*.json) AREAS[devex]=1 ;;
+            esac
+          done < /tmp/changed.txt
+          {
+            echo "areas<<AEOF"
+            for k in "${!AREAS[@]}"; do echo "- \`$k\`"; done
+            echo "AEOF"
+            echo "files<<FEOF"
+            head -50 /tmp/changed.txt
+            echo "FEOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Post PR review comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$(cat <<'BODY_EOF'
+          ## 🛰  LATTICE PR triage
+
+          **Areas affected:**
+          ${{ steps.cls.outputs.areas }}
+
+          **Suggested checks:**
+          - `make test-no-pxt` (always)
+          - `make test-pxt` (if anything under `pixeltable/` changed)
+          - `bun run build` (if anything under `src/` changed)
+          - Visual smoke test at `/runtime` (if `src/routes/` or `src/components/` changed)
+
+          **Files changed (first 50):**
+          ```
+          ${{ steps.cls.outputs.files }}
+          ```
+
+          See [`AGENTS.md`](../blob/main/AGENTS.md) for the area-specific rules and constraints, and [`meta/FEATURE_BACKLOG.md`](../blob/main/meta/FEATURE_BACKLOG.md) for related queued work.
+          BODY_EOF
+          )"
