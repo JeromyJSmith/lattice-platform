@@ -74,10 +74,32 @@ The threshold can be tuned per-section in `<section-root>/gold_goals.md` if some
 - Does NOT replace human review. A reviewer can still reject content that passed the substrate threshold but doesn't fit the use case.
 - Does NOT mean "if substrate is empty, do nothing". It means "if substrate is empty, harvest first, then write."
 
+## Amendment 08 extension — docs queries are mandatory pre-flight too
+
+In addition to `search_tutorials` and `search_research`, the agent MUST call:
+
+- **`search_docs(query_text, tool_name)`** — before writing any code that calls a tool API. The Documentation Meta-Harness (9th section) keeps upstream tool docs synced into `lattice/knowledge/doc_chunks`. If `search_docs` returns nothing above threshold for the tool you're about to use, the docs-sync layer hasn't covered that tool yet — file or escalate to Issue #24.
+- **`search_api_reference(query_text, tool_name)`** — **mandatory** for implementation code. Stricter than `search_docs` because it returns only the canonical API reference chunks. If empty, do not invent function signatures from memory.
+- **`get_coverage_gaps(tool_name, severity='critical')`** — call before any decision that depends on a tool. A critical-severity gap on the tool you're about to use is a hard stop; harvest the docs first via `scripts/sync-doc-mirrors.sh` + `scripts/ingest-docs.py`.
+
+The three tools compound:
+
+1. `get_skill_for_tool` → reuse existing skill if present
+2. `search_api_reference` → ground new code in the canonical API signature
+3. `search_tutorials` + `search_research` → ground new code in real-world usage
+4. `get_coverage_gaps` → confirm no known gap blocks this work
+
+If any of (2) returns < 0.7 similarity, the agent must:
+- Stop coding
+- Run `bash scripts/sync-doc-mirrors.sh && uv run python scripts/ingest-docs.py`
+- Re-query — and if STILL empty, file a coverage gap rather than proceeding
+
 ## Cross-references
 
-- `pixeltable/migrations/0015_knowledge_substrate.py` — schema this rule depends on
-- `pixeltable/knowledge/tools.py` — the `@pxt.query` tools to call
-- `scripts/ingest-tutorials.py` / `scripts/ingest-research.py` — the harvest pipelines (stubs now)
+- `pixeltable/migrations/0015_knowledge_substrate.py` — tutorials/research/skills schema
+- `pixeltable/migrations/0016_docs_substrate.py` — docs/doc_chunks/sync_log/coverage_gaps schema
+- `pixeltable/knowledge/tools.py` — the `@pxt.query` tools to call (6 total after Amendment 08)
+- `scripts/ingest-tutorials.py` / `scripts/ingest-research.py` / `scripts/ingest-docs.py` / `scripts/sync-doc-mirrors.sh` / `scripts/detect-doc-gaps.py` — the harvest pipelines (stubs now)
+- `meta/harness/docs/` — the 9th-section harness that owns the docs corpus
 - `.claude/rules/capability-harvest-protocol.md` — sibling rule for tool capabilities
 - `.claude/rules/zero-dead-dna.md` — sibling rule for unused capabilities

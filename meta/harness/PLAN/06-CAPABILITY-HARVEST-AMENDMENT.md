@@ -60,6 +60,8 @@ The capability registries reference Pixeltable as a knowledge substrate (see Ame
 
 **Amendment 07 (Knowledge Substrate) extends this:** the `analysis/capabilities/*-capability-registry.yaml` files for each tool will have a companion entry in `lattice/knowledge/skills_registry` (when Issue #22 runs the first harvest). Once both layers are populated, anti-amnesia pre-flight on a tool resolves to: registry tells you *what exists*, substrate tells you *how to use it correctly*.
 
+**Amendment 08 (Docs Meta-Harness) adds the third compounding layer:** `search_docs` / `search_api_reference` / `get_coverage_gaps` are mandatory pre-flight tools when the docs layer is live (post-Issue #24). Capability registries' ACTIVE rows must have matching `lattice/knowledge/doc_chunks` rows above 0.7 similarity, or `detect-doc-gaps.py` (Issue #25) flags them as coverage gaps.
+
 ## Issues created in Phase 8
 
 - **#17** — Implement `scripts/audit-dead-dna.sh` full check (parse all registries, scan codebase for ACTIVE-tool invocations, fail on DEFERRED-past-target)

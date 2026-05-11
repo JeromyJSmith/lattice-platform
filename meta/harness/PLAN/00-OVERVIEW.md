@@ -14,6 +14,7 @@ This directory holds the four-phase plan for the LATTICE Meta-Harness build. Not
 | 5 — Research Amendment | [`05-RESEARCH-AMENDMENT.md`](05-RESEARCH-AMENDMENT.md) | MARPA + Meta-Harness research synthesis. **Binding.** Phase 1 blocked until reviewed. | ✅ added |
 | 0.6 — Capability Harvest | [`06-CAPABILITY-HARVEST-AMENDMENT.md`](06-CAPABILITY-HARVEST-AMENDMENT.md) | 3 permanent standards (Capability Harvest Protocol, Zero Dead DNA, Always-Running CI/CD Health) + dependency allowlist + 4 capability registries. **Binding.** | ✅ added |
 | 0.7 — Knowledge Substrate | [`07-PIXELTABLE-SUBSTRATE-AMENDMENT.md`](07-PIXELTABLE-SUBSTRATE-AMENDMENT.md) | Migration 0015 (`lattice/knowledge/*`), `pixeltable/knowledge/tools.py` @pxt.query layer, anti-amnesia rule. **Binding.** | ✅ added |
+| 0.8 — Docs Meta-Harness | [`08-DOCS-META-HARNESS-AMENDMENT.md`](08-DOCS-META-HARNESS-AMENDMENT.md) | 9th cross-cutting section. Migration 0016 (docs corpus + sync log + coverage gaps), `scripts/doc-mirror-manifest.yaml` (7 mirrors, full YAML), `meta/harness/docs/` section stack, anti-amnesia append. **Section count = 9 (8 tool + 1 cross-cutting docs).** **Binding.** | ✅ added |
 
 ## Branch contract
 

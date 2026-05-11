@@ -1,0 +1,129 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+# LATTICE doc-mirror manifest. NOT A STUB — fully populated per Amendment 08.
+# Authoritative inventory of upstream documentation sources that the docs
+# meta-harness keeps in sync via sparse clone + ingest pipeline.
+#
+# Each mirror entry MUST include:
+#   tool             — short id matching capability registry id where applicable
+#   source_repo      — upstream git source (HTTPS)
+#   sparse_path      — subdirectory to sparse-clone (or "/" for full)
+#   local_path       — where in this repo the mirror lives
+#   llms_txt         — URL of upstream llms.txt index (or null)
+#   doc_base_url     — canonical web URL prefix for citations
+#   version_file     — file in mirror that carries the upstream version (or null)
+#   category_map     — list of doc_category labels we ingest from this mirror
+
+mirrors:
+  - tool: pixeltable
+    source_repo: https://github.com/pixeltable/pixeltable
+    sparse_path: docs/release/
+    local_path: ~/.pixeltable-docs
+    llms_txt: https://docs.pixeltable.com/llms.txt
+    doc_base_url: https://docs.pixeltable.com
+    version_file: docs/release/_version.txt
+    category_map:
+      - api-reference
+      - tutorial
+      - migration-guide
+      - integration-guide
+
+  - tool: claude-code
+    source_repo: https://github.com/ericbuess/claude-code-docs
+    sparse_path: docs/
+    local_path: ~/.claude-code-docs
+    llms_txt: https://code.claude.com/docs/llms.txt
+    doc_base_url: https://code.claude.com/docs/en
+    version_file: docs/docs_manifest.json
+    category_map:
+      - api-reference
+      - tutorial
+      - skill-spec
+      - hook-spec
+      - subagent-spec
+      - memory-spec
+
+  - tool: infranodus
+    source_repo: https://github.com/infranodus/mcp-server-infranodus
+    sparse_path: /
+    local_path: ~/.lattice-doc-mirrors/infranodus
+    llms_txt: null
+    doc_base_url: https://infranodus.com/api/
+    version_file: package.json
+    category_map:
+      - mcp-tool-reference
+      - api-reference
+      - operating-mode-guide
+
+  - tool: graphify-parisgroup
+    source_repo: https://github.com/parisgroup-ai/graphify
+    sparse_path: docs/
+    local_path: ~/.lattice-doc-mirrors/graphify-parisgroup
+    llms_txt: null
+    doc_base_url: https://github.com/parisgroup-ai/graphify
+    version_file: Cargo.toml
+    category_map:
+      - cli-reference
+      - mcp-tool-reference
+      - integration-guide
+      - architecture-report-format
+
+  - tool: gitnexus
+    source_repo: https://github.com/abhigyanpatwari/GitNexus
+    sparse_path: /
+    local_path: ~/.lattice-doc-mirrors/gitnexus
+    llms_txt: null
+    doc_base_url: https://github.com/abhigyanpatwari/GitNexus
+    version_file: package.json
+    key_files:
+      - ARCHITECTURE.md
+      - RUNBOOK.md
+      - GUARDRAILS.md
+      - CONTRIBUTING.md
+    category_map:
+      - architecture
+      - runbook
+      - guardrails
+      - mcp-tool-reference
+      - hook-spec
+
+  - tool: web-ifc
+    source_repo: https://github.com/IFCjs/web-ifc
+    sparse_path: docs/
+    local_path: ~/.lattice-doc-mirrors/web-ifc
+    llms_txt: null
+    doc_base_url: https://ifcjs.github.io/info/docs/Guide/web-ifc/Introduction
+    version_file: package.json
+    category_map:
+      - api-reference
+      - integration-guide
+      - wasm-loader-guide
+
+  - tool: deck-gl
+    source_repo: https://github.com/visgl/deck.gl
+    sparse_path: docs/
+    local_path: ~/.lattice-doc-mirrors/deck-gl
+    llms_txt: null
+    doc_base_url: https://deck.gl/docs
+    version_file: package.json
+    category_map:
+      - api-reference
+      - layer-reference
+      - tile3dlayer-guide
+      - terrain-extension-guide
+      - editable-layers-migration
+
+# Deferred mirrors (tracking-only; sparse-clone feasibility check = Issue #24)
+deferred_mirrors:
+  - tool: itwin
+    rationale: |
+      iTwin repo is huge (~84 sub-repos in the iTwinjs-core organization).
+      Need feasibility study on which sub-repos to sparse-clone and how to
+      avoid pulling in the Bentley-cloud-bound paths (Tier 4 per ITWIN_MAPPING.md).
+    tracking_issue: 24
+
+  - tool: citygml
+    rationale: |
+      CityGML 3.0 Vegetation ADE is at conceptual model stage (no XSD as
+      of 2026-05). Mirror target unclear until ADE publishes a normative
+      schema. Until then, the ISPRS 2024 paper is the canonical reference.
+    tracking_issue: 24

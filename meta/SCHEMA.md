@@ -4,8 +4,8 @@ Canonical human-readable reference for the LATTICE Pixeltable schema.
 
 ## Overview
 
-- **45 tables** total post-Phase-2 (**36 tables** applied today + 9 planned in migrations 0014 + 0015) across 6 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness` *planned*, `lattice/knowledge` *planned*)
-- **Migration trail: 0001-0015** (0001-0013 applied; **0014 + 0015 are planning artifacts** committed to `feature/meta-harness` but not yet executed against live Pixeltable; Phase 2 of the Meta-Harness build runs `make migrate-dryrun` then `make migrate` to land them)
+- **48 tables** total post-Phase-2 (**36 tables** applied today + 12 planned in migrations 0014 + 0015 + 0016) across 6 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness` *planned*, `lattice/knowledge` *planned*)
+- **Migration trail: 0001-0016** (0001-0013 applied; **0014 + 0015 + 0016 are planning artifacts** committed to `feature/meta-harness` but not yet executed against live Pixeltable; Phase 2 of the Meta-Harness build runs `make migrate-dryrun` then `make migrate` to land them)
 - **Pixeltable version: 0.6.0** (pinned via `pixeltable/pyproject.toml`)
 - **Geometry type: `pxt.String`** storing WKT or GeoJSON. Pixeltable 0.6.x has no native Geometry type. PostGIS spatial queries layer on at the DuckDB WASM query layer downstream.
 - **Migration path: `pixeltable/migrations/`** (NOT `pixeltable/service/migrations/`)

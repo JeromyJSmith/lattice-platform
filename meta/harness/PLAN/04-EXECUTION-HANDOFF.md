@@ -242,6 +242,13 @@ Plus new label: `infranodus` (color `#10B981`) alongside `meta-harness` (color `
 21. **Full implementation of `scripts/ingest-research.py`** — PDF/HTML/markdown fetching, `pxt.Document` row creation. Labels: `meta-harness`, `knowledge-substrate`
 22. **First harvest pass on Graphify + GitNexus + InfraNodus tutorial coverage** — run #20 + #21 against curated source manifests. Labels: `meta-harness`, `knowledge-substrate`
 
+### Amendment 08 issues (Phase 8 total: 22 → 26)
+
+23. **Full implementation of `meta/harness/docs/score-docs.sh`** — parse `doc_coverage_gaps` + `doc_sync_log`, compute weighted score per GOAL.md formula. Labels: `meta-harness`, `docs-harness`
+24. **Full implementation of `sync-doc-mirrors.sh` + `ingest-docs.py`** — sparse-clone all 7 active mirrors, write `git_sha_before/after`, insert `pxt.Document` rows; iTwin + CityGML feasibility check. Labels: `meta-harness`, `docs-harness`
+25. **Full implementation of `detect-doc-gaps.py`** — cross-reference capability-registry ACTIVE rows against `doc_chunks` similarity; rank by severity; write to `doc_coverage_gaps` + `analysis/gaps/docs-gap-report.md`. Labels: `meta-harness`, `docs-harness`
+26. **Wire docs-harness scoring into Global Meta-Harness composite** — `lattice/harness/health_snapshots` gets `docs_coverage_pct` column (or docs section gets its own snapshot row). Labels: `meta-harness`, `docs-harness`
+
 ## When you finish
 
 1. PR description finalised

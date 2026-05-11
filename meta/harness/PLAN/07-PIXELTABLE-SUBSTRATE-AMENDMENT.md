@@ -98,3 +98,15 @@ Phase 2 (migrations) is not complete until:
 - After that, every section harness's pre-propose step includes anti-amnesia pre-flight
 
 Until the harvest runs, the substrate is empty and the rule fails-open (no results = no veto). Once content is in, the rule starts veto-ing low-confidence writes.
+
+## Compounding effect with Amendment 08 (Docs Meta-Harness)
+
+Amendment 08 (9th section) adds three more `@pxt.query` tools to `pixeltable/knowledge/tools.py`:
+
+- `search_docs(query, tool_name, doc_category)` — upstream tool docs corpus (separate from `search_research`)
+- `search_api_reference(query, tool_name)` — convenience wrapper, doc_category=api-reference
+- `get_coverage_gaps(tool_name, severity)` — open gaps in `lattice/knowledge/doc_coverage_gaps`
+
+The anti-amnesia rule is extended (in Amendment 08) so `search_api_reference` is **mandatory** pre-flight for implementation code. This closes the loop: registries say what exists, substrate (07) says how it's used in practice, docs substrate (08) says what the canonical spec is.
+
+Migration 0016 (Amendment 08) adds 3 more tables + 1 view to `lattice/knowledge/` — does NOT recreate any 0015 entity. Post-0016 the namespace has 8 entries total.
