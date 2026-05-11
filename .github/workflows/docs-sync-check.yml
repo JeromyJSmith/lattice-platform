@@ -191,7 +191,7 @@ jobs:
             "pixeltable/service/migrations"
           )
           # Allowlist paths that legitimately mention forbidden strings as guardrail text
-          ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules)'
+          ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
 
           for f in $FILES; do
             [ -f "$f" ] || continue
