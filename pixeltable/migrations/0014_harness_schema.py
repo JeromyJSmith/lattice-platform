@@ -14,7 +14,7 @@ What this migration creates:
 
 Type-surface notes (verified against Pixeltable 0.6.x docs):
   - pxt.String, pxt.Float, pxt.Int, pxt.Timestamp, pxt.Bool, pxt.Json — all real
-  - pxt.Geometry does NOT exist — n/a here (no geometry columns)
+  - No native geometry type in 0.6.x — n/a here (no geometry columns)
   - Migration path is pixeltable/migrations/ (verified)
 
 Ordering: applies after 0013 (georef + reality + mirror) and before 0015
