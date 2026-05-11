@@ -13,12 +13,22 @@ permissions:
 
 jobs:
   relay:
-    if: ${{ env.LINEAR_WEBHOOK_URL != '' }}
     runs-on: ubuntu-latest
     env:
       LINEAR_WEBHOOK_URL: ${{ secrets.LINEAR_WEBHOOK_URL }}
     steps:
+      - name: Check webhook configured
+        id: check
+        run: |
+          if [ -z "$LINEAR_WEBHOOK_URL" ]; then
+            echo "LINEAR_WEBHOOK_URL secret not set — skipping (see meta/LINEAR_SETUP.md)"
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: POST event to Linear webhook
+        if: steps.check.outputs.configured == 'true'
         run: |
           curl -sS -X POST "$LINEAR_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
