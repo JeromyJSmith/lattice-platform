@@ -1,0 +1,63 @@
+harness:
+  id: body.vw_itwin_bridge
+  name: TanStack MetaHarness Runtime MVP
+  kind: tanstack_runtime_harness
+  parent: meta.root
+scope:
+  owns:
+    - browser operator interface
+    - runtime event protocol
+    - agent routing UI
+    - local evidence browsing
+    - pixeltable ingestion contract
+    - lattice/execution/* pixeltable namespace
+    - lattice/bridge/* pixeltable namespace (vw, ifc, itwin, marpa, semantic, evidence, health)
+    - pixeltable/ uv sub-project (sidecar + migrations)
+    - vw_export_hash join key registry
+  does_not_own:
+    - vectorworks bridge mapping logic
+    - itwin schema truth
+    - marpa/* pixeltable namespace (owned by MARPA_PLATFORM; read-only here)
+friends:
+  - id: runtime.claude_code
+    relationship: terminal_agent_runtime
+  - id: runtime.pi
+    relationship: terminal_agent_runtime
+  - id: runtime.hermes
+    relationship: terminal_agent_runtime
+  - id: provider.openrouter
+    relationship: server_side_model_provider
+  - id: ledger.pixeltable
+    relationship: reproducibility_substrate
+    pin: "==0.6.0"
+  - id: body.marpa_platform
+    relationship: grammar_and_semantic_authority
+    namespaces_consumed:
+      - marpa/*
+pixeltable_bridge:
+  pin: pixeltable==0.6.0
+  sub_project: pixeltable/
+  sidecar:
+    transport: unix-socket
+    socket_path: /tmp/vwbridge-pxt.sock
+    tcp_fallback_env: PIXELTABLE_SERVICE_URL
+    auth_header: X-Bridge-Token
+    idempotency_header: Idempotency-Key
+  contracts:
+    - pixeltable/contracts/sidecar.schema.json
+    - pixeltable/contracts/runtime-ledger.v1.yaml
+    - pixeltable/contracts/bridge-vw.v1.yaml
+    - pixeltable/contracts/bridge-ifc.v1.yaml
+    - pixeltable/contracts/bridge-itwin.v1.yaml
+    - pixeltable/contracts/bridge-marpa.v1.yaml
+    - pixeltable/contracts/bridge-semantic.v1.yaml
+    - pixeltable/contracts/bridge-evidence.v1.yaml
+    - pixeltable/contracts/bridge-health.v1.yaml
+  grammar:
+    file: pixeltable/grammars/marpa.landscape.v1.bnf
+    actions: pixeltable/grammars/marpa.landscape.v1.actions.py
+    seed_psets: pixeltable/grammars/marpa_seed_psets.yaml
+  drift_gate:
+    snapshot: pixeltable/.schema-snapshot.yaml
+    workflow: .github/workflows/pixeltable.yml
+  ownership_assertion: pixeltable/migrations/_helpers.py::assert_ownership

@@ -1,0 +1,27 @@
+{
+  "itwin_id": "itwin-fixture-0001",
+  "imodel_id": "imodel-fixture-0001",
+  "page": 0,
+  "page_size": 200,
+  "changeset_id": "changeset-fixture-A",
+  "changed_elements": [
+    {
+      "changeset_id": "changeset-fixture-A",
+      "source_element_id": "0FzD1mKqL5Ehv9TBvR9aA0",
+      "change_kind": "Inserted",
+      "bis_class": "BisCore.GeometricElement3d",
+      "bis_subcategory": "LandscapePlanting",
+      "before_hash": "",
+      "after_hash": "sha256:after-tree-0001"
+    },
+    {
+      "changeset_id": "changeset-fixture-A",
+      "source_element_id": "2nMpQ8wRT6FaB1XnLkY7uC",
+      "change_kind": "Inserted",
+      "bis_class": "BisCore.PhysicalElement",
+      "bis_subcategory": "LandscapeIrrigation",
+      "before_hash": "",
+      "after_hash": "sha256:after-irr-0001"
+    }
+  ]
+}

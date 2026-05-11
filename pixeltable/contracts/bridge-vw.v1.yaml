@@ -1,0 +1,18 @@
+# Vectorworks export contract v1
+# A single VWX project export drops a sidecar.json bundle into MARPA_PLATFORM's
+# A-R lane. This bridge accepts a manifest of that bundle and writes one row to
+# lattice.bridge.vw.vectorworks_exports.
+
+contract:
+  id: pixeltable.bridge_vw.v1
+  version: v1
+  source: marpa_platform.AR.export
+  target: lattice.bridge.vw
+
+tables:
+  vectorworks_exports:
+    path: lattice/bridge/vw/vectorworks_exports
+    insert_unit: one row per VWX export bundle
+    upsert_key: [vw_export_hash]
+    sources:
+      - sidecar.export.recorded

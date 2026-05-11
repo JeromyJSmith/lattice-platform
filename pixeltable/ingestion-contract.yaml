@@ -1,0 +1,26 @@
+contract:
+  id: pixeltable.runtime_ledger.v1
+  source: runtime-runs
+  target: pixeltable
+tables:
+  agent_threads:
+    source: thread.created
+  agent_messages:
+    source: message.created
+  agent_runs:
+    source:
+      - run.started
+      - run.completed
+      - run.failed
+  agent_stream_events:
+    source:
+      - stream.delta
+      - tool.started
+      - tool.completed
+  agent_artifacts:
+    source: artifact.created
+  agent_outcomes:
+    source:
+      - run.completed
+      - outcome.md
+      - evidence-manifest.yaml

@@ -1,0 +1,101 @@
+{
+  "schema_version": "vwx-sidecar.v1",
+  "vw_export_hash": "sha256:fixture-export-0001",
+  "vw_export_id": "vw-export-mini-0001",
+  "harness_run_id": "run_mini_0001",
+  "operator_handle": "jeromy",
+  "exported_at": "2026-05-10T14:59:50Z",
+  "vectorworks": {
+    "version": "Vectorworks 2026 SP2",
+    "drawing_name": "mini-fixture.vwx",
+    "sheet_layer": "Landscape Plan",
+    "vwx_filename": "mini-fixture.vwx",
+    "vwx_byte_size": 102400
+  },
+  "ifc": {
+    "filename": "mini-fixture.ifc",
+    "byte_size": 4096,
+    "schema": "IFC4"
+  },
+  "lane_ar_path": "fixtures/lane-ar-mini.json",
+  "exporter_warnings": [],
+  "elements": [
+    {
+      "source_element_id": "0FzD1mKqL5Ehv9TBvR9aA0",
+      "ifc_class": "IfcGeographicElement",
+      "ifc_predefined_type": "PLANT",
+      "name": "Coast Live Oak",
+      "long_name": "Quercus agrifolia",
+      "object_type": "tree",
+      "tag": "TREE-001",
+      "description": "Mature specimen, drought tolerant",
+      "spatial_container_guid": "1xCjQ$5xL9VuV8nm3yvCsM",
+      "spatial_container_class": "IfcSite",
+      "bbox_min": [0.0, 0.0, 0.0],
+      "bbox_max": [4.0, 4.0, 8.0],
+      "centroid": [2.0, 2.0, 4.0],
+      "elevation_m": 4.0,
+      "marpa_seed": true,
+      "raw_attributes": {"GlobalId": "0FzD1mKqL5Ehv9TBvR9aA0", "Name": "Coast Live Oak", "Tag": "TREE-001"},
+      "property_sets": [
+        {
+          "pset_name": "Pset_LandscapePlanting",
+          "is_marpa_seed": true,
+          "record_kind": "planting",
+          "selected_keys": ["BotanicalName", "CommonName", "ContainerSize", "Quantity"],
+          "properties": {
+            "BotanicalName": "Quercus agrifolia",
+            "CommonName": "Coast Live Oak",
+            "ContainerSize": "24-inch box",
+            "Quantity": 1
+          }
+        }
+      ],
+      "semantic": {
+        "common_name": "Coast Live Oak",
+        "botanical_name": "Quercus agrifolia",
+        "container_size": "24-inch box",
+        "irrigation_zone": "Z1",
+        "phenology_notes": "Evergreen, deep root system",
+        "text_blob": "Coast Live Oak Quercus agrifolia 24-inch box drought tolerant"
+      }
+    },
+    {
+      "source_element_id": "2nMpQ8wRT6FaB1XnLkY7uC",
+      "ifc_class": "IfcDistributionElement",
+      "ifc_predefined_type": "DRIPEMITTER",
+      "name": "Drip Emitter Zone 1",
+      "long_name": "",
+      "object_type": "irrigation",
+      "tag": "IRR-Z1-001",
+      "description": "1 GPH drip emitter",
+      "spatial_container_guid": "1xCjQ$5xL9VuV8nm3yvCsM",
+      "spatial_container_class": "IfcSite",
+      "bbox_min": [1.0, 1.0, 0.0],
+      "bbox_max": [1.1, 1.1, 0.05],
+      "centroid": [1.05, 1.05, 0.025],
+      "elevation_m": 0.025,
+      "marpa_seed": true,
+      "raw_attributes": {"GlobalId": "2nMpQ8wRT6FaB1XnLkY7uC"},
+      "property_sets": [
+        {
+          "pset_name": "Pset_LandscapeIrrigation",
+          "is_marpa_seed": true,
+          "record_kind": "irrigation",
+          "selected_keys": ["Zone", "EmitterCount", "FlowRate", "DripType"],
+          "properties": {
+            "Zone": "Z1",
+            "EmitterCount": 1,
+            "FlowRate": "1.0 GPH",
+            "DripType": "in-line"
+          }
+        }
+      ],
+      "semantic": {
+        "irrigation_zone": "Z1",
+        "phenology_notes": "",
+        "text_blob": "Zone Z1 drip emitter 1 GPH inline"
+      }
+    }
+  ]
+}

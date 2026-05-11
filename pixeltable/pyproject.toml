@@ -1,0 +1,58 @@
+[project]
+name = "vw-itwin-bridge-pixeltable"
+version = "0.1.0"
+description = "Pixeltable sidecar + migrations for the VW-iTwin-MARPA bridge (lattice.execution.* + lattice.bridge.*)"
+requires-python = ">=3.11"
+readme = "README.md"
+
+# Pinned per the spec (.cursor/plans/pixeltable_bridge_alignment_05ebcec0.plan.md §0).
+# The pixeltable pin matches the live instance owned by MARPA_PLATFORM
+# (/Volumes/PixelTable/MARPA_PLATFORM/uv.lock) so this body and MARPA agree on the API surface.
+dependencies = [
+    "pixeltable==0.6.0",
+    "ifcopenshell>=0.8.5",
+    "sentence-transformers>=5.4.1",
+    "qdrant-client>=1.17.1",
+    "fastapi>=0.116.0",
+    "uvicorn[standard]>=0.34.0",
+    "httpx>=0.28.1",
+    "pyyaml>=6.0.2",
+    "pydantic>=2.13.3",
+    "typer>=0.25.1",
+    "python-dotenv>=1.0.1",
+    "rich>=13.9.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.7.0",
+    "jsonschema>=4.23.0",
+    "types-pyyaml>=6.0.12.20260510",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "-q"]
+asyncio_mode = "auto"
+markers = [
+    "pxt: tests that require an ephemeral or live Pixeltable instance",
+    "no_pxt: pure-Python tests that must not touch Pixeltable",
+]
+
+[tool.pyrefly]
+# Ensure import resolution uses this project's uv-managed environment.
+python-interpreter-path = ".venv/bin/python3"
+
+[tool.basedpyright]
+# Mirror pyrefly interpreter binding for IDE diagnostics.
+venvPath = "."
+venv = ".venv"
+
+[tool.uv]
+package = false

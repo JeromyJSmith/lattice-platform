@@ -1,0 +1,120 @@
+name: pixeltable-bridge
+
+on:
+  pull_request:
+    paths:
+      - "pixeltable/**"
+      - "src/runtime/pixeltable/**"
+      - "scripts/ingest-run-to-pixeltable.ts"
+      - ".github/workflows/pixeltable.yml"
+  push:
+    branches: [main]
+    paths:
+      - "pixeltable/**"
+      - "src/runtime/pixeltable/**"
+      - "scripts/ingest-run-to-pixeltable.ts"
+      - ".github/workflows/pixeltable.yml"
+
+# Single-flight per branch to keep ephemeral PXT_HOME cheap.
+concurrency:
+  group: pixeltable-bridge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  no-pxt:
+    name: no-pxt (pure-python tier)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: pixeltable
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Pin Python 3.11
+        run: uv python install 3.11
+
+      - name: Install bridge deps (dev extras)
+        run: uv sync --extra dev
+
+      - name: Run pure-Python tier
+        env:
+          PYTHONPATH: ${{ github.workspace }}/pixeltable
+        run: uv run pytest -q -m "not pxt" tests/no_pxt
+
+  pxt-integration:
+    name: pxt (ephemeral PXT_HOME)
+    runs-on: ubuntu-latest
+    needs: no-pxt
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: pixeltable
+    env:
+      PXT_HOME_OVERRIDE: ${{ github.workspace }}/.pxt-ci-home
+      PIXELTABLE_HOME: ${{ github.workspace }}/.pxt-ci-home
+      PYTHONPATH: ${{ github.workspace }}/pixeltable
+      # Skip 0011 (HF model download) in CI; it has its own nightly job.
+      BRIDGE_SKIP_EMBEDDINGS: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Pin Python 3.11
+        run: uv python install 3.11
+
+      - name: Install bridge deps (dev extras)
+        run: uv sync --extra dev
+
+      - name: Make ephemeral PXT_HOME
+        run: mkdir -p "$PXT_HOME_OVERRIDE"
+
+      - name: Migrate (dry-run)
+        run: uv run python scripts/bootstrap.py --dry-run
+
+      - name: Migrate (apply)
+        run: uv run python scripts/bootstrap.py
+
+      - name: Load mini fixtures
+        run: uv run python scripts/load_fixtures.py
+
+      - name: Verify schema (compare to .schema-snapshot.yaml)
+        run: uv run python scripts/verify.py
+
+      - name: Run integration tier
+        run: uv run pytest -q tests/pxt
+
+      - name: Upload PXT_HOME artifact on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pxt-home-${{ github.run_id }}
+          path: ${{ env.PXT_HOME_OVERRIDE }}
+          retention-days: 3
+
+  harness-vitest:
+    name: harness vitest (sidecar-client)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install harness deps
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Run vitest (sidecar-client only)
+        run: bunx vitest run src/runtime/pixeltable/sidecar-client.test.ts

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vw-itwin-bridge.local/schemas/vwx-sidecar.v1.json",
+  "title": "VWX sidecar export bundle (v1)",
+  "description": "JSON manifest emitted by Vectorworks alongside an IFC export. The bridge accepts the entire object verbatim into bronze tables; only the top-level fields below are required for upsert.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "vw_export_hash",
+    "exported_at",
+    "vectorworks",
+    "ifc",
+    "elements"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "vwx-sidecar.v1"
+    },
+    "vw_export_hash": {
+      "type": "string",
+      "minLength": 8,
+      "description": "sha256(sidecar.json bytes); the canonical join key for vectorworks_exports."
+    },
+    "vw_export_id": {
+      "type": "string",
+      "description": "Optional VWX-side UUIDv7."
+    },
+    "harness_run_id": {
+      "type": "string",
+      "description": "Harness run id that produced this sidecar."
+    },
+    "operator_handle": {
+      "type": "string"
+    },
+    "exported_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lane_ar_path": {
+      "type": "string"
+    },
+    "vectorworks": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "version":        { "type": "string" },
+        "drawing_name":   { "type": "string" },
+        "sheet_layer":    { "type": "string" },
+        "vwx_filename":   { "type": "string" },
+        "vwx_byte_size":  { "type": "integer", "minimum": 0 }
+      }
+    },
+    "ifc": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "filename":   { "type": "string" },
+        "byte_size":  { "type": "integer", "minimum": 0 },
+        "schema":     {
+          "type": "string",
+          "enum": ["IFC2X3", "IFC4", "IFC4X3", "IFC4X3_ADD2"]
+        }
+      }
+    },
+    "exporter_warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "elements": {
+      "type": "array",
+      "description": "Per-element bronze records consumed by upsert_vw_sidecar.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["source_element_id"],
+        "properties": {
+          "source_element_id":       { "type": "string", "description": "IfcGloballyUniqueId" },
+          "ifc_class":               { "type": "string" },
+          "ifc_predefined_type":     { "type": "string" },
+          "name":                    { "type": "string" },
+          "long_name":               { "type": "string" },
+          "object_type":             { "type": "string" },
+          "tag":                     { "type": "string" },
+          "description":             { "type": "string" },
+          "spatial_container_guid":  { "type": "string" },
+          "spatial_container_class": { "type": "string" },
+          "bbox_min":                { "type": ["array", "null"], "items": { "type": "number" } },
+          "bbox_max":                { "type": ["array", "null"], "items": { "type": "number" } },
+          "centroid":                { "type": ["array", "null"], "items": { "type": "number" } },
+          "elevation_m":             { "type": "number" },
+          "marpa_seed":              { "type": "boolean" },
+          "raw_attributes":          { "type": "object" },
+          "property_sets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["pset_name", "properties"],
+              "properties": {
+                "pset_name":     { "type": "string" },
+                "is_marpa_seed": { "type": "boolean" },
+                "record_kind":   { "type": "string" },
+                "selected_keys": { "type": "array", "items": { "type": "string" } },
+                "properties":    { "type": "object" }
+              }
+            }
+          },
+          "semantic": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "common_name":      { "type": "string" },
+              "botanical_name":   { "type": "string" },
+              "container_size":   { "type": "string" },
+              "irrigation_zone":  { "type": "string" },
+              "phenology_notes":  { "type": "string" },
+              "text_blob":        { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

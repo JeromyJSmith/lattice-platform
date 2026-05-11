@@ -1,0 +1,305 @@
+namespaces:
+  lattice/bridge/evidence:
+    present: true
+    tables:
+      harness_run_refs:
+        columns:
+          artifact_id: String | None
+          artifact_kind: String | None
+          artifact_table: String | None
+          harness_run_id: String | None
+          id: String | None
+          linked_at: Timestamp | None
+          raw_event: Json | None
+          relation: String | None
+      promotion_events:
+        columns:
+          created_at: Timestamp | None
+          evidence_manifest_parsed: Json | None
+          evidence_manifest_yaml: String | None
+          harness_run_id: String | None
+          id: String | None
+          operator_handle: String | None
+          outcome_md: String | None
+          promotion_event_id: String | None
+          promotion_kind: String | None
+          skill_id: String | None
+          skill_version: String | None
+          target_id: String | None
+          target_kind: String | None
+          triggered_by: String | None
+          verdict: String | None
+  lattice/bridge/health:
+    present: true
+    tables:
+      bridge_gap_matrix:
+        columns:
+          computed_at: Timestamp | None
+          gap_score: Float | None
+          id: String | None
+          ifc_element_count: Int | None
+          itwin_changed_count: Int | None
+          marpa_fail_count: Int | None
+          marpa_partial_count: Int | None
+          marpa_seed_count: Int | None
+          marpa_success_count: Int | None
+          promoted_entity_count: Int | None
+          raw_breakdown: Json | None
+          sidecar_element_count: Int | None
+          supply_demand_ratio: Float | None
+          sync_run_id: String | None
+          vw_element_count: Int | None
+          vw_export_hash: String | None
+      schema_drift_events:
+        columns:
+          after: Json | None
+          before: Json | None
+          detected_at: Timestamp | None
+          detected_by: String | None
+          drift_event_id: String | None
+          drift_kind: String | None
+          harness_run_id: String | None
+          id: String | None
+          scope: String | None
+          severity: String | None
+          summary: String | None
+  lattice/bridge/ifc:
+    present: true
+    tables:
+      ifc_elements:
+        columns:
+          bbox_max: Json | None
+          bbox_min: Json | None
+          centroid: Json | None
+          description: String | None
+          elevation_m: Float | None
+          id: String | None
+          ifc_class: String | None
+          ifc_predefined_type: String | None
+          ifc_schema: String | None
+          is_marpa_seed: Bool | None
+          long_name: String | None
+          name: String | None
+          object_type: String | None
+          parsed_at: Timestamp | None
+          raw_attributes: Json | None
+          source_element_id: String | None
+          spatial_container_class: String | None
+          spatial_container_guid: String | None
+          tag: String | None
+          vw_export_hash: String | None
+      ifc_property_sets:
+        columns:
+          id: String | None
+          is_marpa_seed: Bool | None
+          parsed_at: Timestamp | None
+          properties: Json | None
+          pset_name: String | None
+          record_kind: String | None
+          selected_keys: Json | None
+          source_element_id: String | None
+          vw_export_hash: String | None
+  lattice/bridge/itwin:
+    present: true
+    tables:
+      connector_versions:
+        columns:
+          bridge_assembly: String | None
+          connector_name: String | None
+          connector_version: String | None
+          id: String | None
+          observed_at: Timestamp | None
+          raw_payload: Json | None
+          sync_run_id: String | None
+      itwin_changed_elements:
+        columns:
+          after_hash: String | None
+          before_hash: String | None
+          bis_class: String | None
+          bis_subcategory: String | None
+          change_kind: String | None
+          changeset_id: String | None
+          id: String | None
+          imodel_id: String | None
+          itwin_id: String | None
+          observed_at: Timestamp | None
+          page: Int | None
+          page_size: Int | None
+          raw_payload: Json | None
+          source_element_id: String | None
+      itwin_sync_jobs:
+        columns:
+          connector_count: Int | None
+          duration_ms: Int | None
+          ended_at: Timestamp | None
+          id: String | None
+          imodel_id: String | None
+          itwin_id: String | None
+          observed_at: Timestamp | None
+          raw_payload: Json | None
+          result: String | None
+          started_at: Timestamp | None
+          state: String | None
+          sync_run_id: String | None
+          vw_export_hash: String | None
+  lattice/bridge/marpa:
+    present: true
+    tables:
+      marpa_parse_runs:
+        columns:
+          ambiguity_score: Float | None
+          duration_ms: Int | None
+          ended_at: Timestamp | None
+          error_message: String | None
+          grammar_version: String | None
+          harness_run_id: String | None
+          id: String | None
+          input_tokens: Json | None
+          parse_run_id: String | None
+          parse_status: String | None
+          partial_parse_json: Json | None
+          pset_name: String | None
+          record_kind: String | None
+          runner_kind: String | None
+          source_element_id: String | None
+          started_at: Timestamp | None
+          vw_export_hash: String | None
+  lattice/bridge/semantic:
+    present: true
+    tables:
+      landscape_entities:
+        columns:
+          bis_class: String | None
+          botanical_name: String | None
+          centroid: Json | None
+          common_name: String | None
+          container_size: String | None
+          elevation_m: Float | None
+          entity_id: String | None
+          id: String | None
+          ifc_class: String | None
+          imodel_id: String | None
+          irrigation_zone: String | None
+          kind: String | None
+          promoted_at: Timestamp | None
+          promotion_event_id: String | None
+          quantity: Int | None
+          raw_payload: Json | None
+          source_element_id: String | None
+          summary_text: String | None
+          vw_export_hash: String | None
+      semantic_sidecars:
+        columns:
+          botanical_name: String | None
+          common_name: String | None
+          container_size: String | None
+          harness_run_id: String | None
+          id: String | None
+          ifc_class: String | None
+          ingested_at: Timestamp | None
+          irrigation_zone: String | None
+          marpa_record: Json | None
+          marpa_seed: Bool | None
+          marpa_status: String | None
+          phenology_notes: String | None
+          raw_sidecar_slice: Json | None
+          source_element_id: String | None
+          text_blob: String | None
+          vw_export_hash: String | None
+  lattice/bridge/vw:
+    present: true
+    tables:
+      vectorworks_exports:
+        columns:
+          drawing_name: String | None
+          exported_at: Timestamp | None
+          exporter_warnings: Json | None
+          harness_run_id: String | None
+          id: String | None
+          ifc_byte_size: Int | None
+          ifc_filename: String | None
+          ifc_schema: String | None
+          ingested_at: Timestamp | None
+          ingested_by: String | None
+          lane_ar_path: String | None
+          raw_sidecar: Json | None
+          schema_version: String | None
+          sheet_layer: String | None
+          vw_export_hash: String | None
+          vw_export_id: String | None
+          vw_version: String | None
+          vwx_byte_size: Int | None
+          vwx_filename: String | None
+  lattice/execution:
+    present: true
+    tables:
+      agent_artifacts:
+        columns:
+          artifact_kind: String | None
+          artifact_path: String | None
+          byte_size: Int | None
+          created_at: Timestamp | None
+          id: String | None
+          raw_event: Json | None
+          run_id: String | None
+          sha256: String | None
+      agent_messages:
+        columns:
+          content_md: String | None
+          created_at: Timestamp | None
+          id: String | None
+          message_id: String | None
+          model_id: String | None
+          provider: String | None
+          raw_event: Json | None
+          role: String | None
+          thread_id: String | None
+          tokens_in: Int | None
+          tokens_out: Int | None
+      agent_outcomes:
+        columns:
+          closed_at: Timestamp | None
+          evidence_manifest_parsed: Json | None
+          evidence_manifest_yaml: String | None
+          id: String | None
+          outcome_md: String | None
+          raw_event: Json | None
+          run_id: String | None
+          terminal_status: String | None
+          thread_id: String | None
+      agent_runs:
+        columns:
+          agent_kind: String | None
+          duration_ms: Int | None
+          ended_at: Timestamp | None
+          exit_code: Int | None
+          id: String | None
+          model_id: String | None
+          raw_event: Json | None
+          run_id: String | None
+          started_at: Timestamp | None
+          status: String | None
+          thread_id: String | None
+          tokens_in_total: Int | None
+          tokens_out_total: Int | None
+      agent_stream_events:
+        columns:
+          created_at: Timestamp | None
+          delta_text: String | None
+          event_id: String | None
+          event_kind: String | None
+          id: String | None
+          raw_event: Json | None
+          run_id: String | None
+          seq: Int | None
+          tool_input: Json | None
+          tool_name: String | None
+          tool_output: Json | None
+      agent_threads:
+        columns:
+          created_at: Timestamp | None
+          id: String | None
+          operator_handle: String | None
+          raw_event: Json | None
+          thread_id: String | None
+          title: String | None

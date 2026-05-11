@@ -1,0 +1,38 @@
+# iTwin contract v1
+# Bentley iTwin Platform is the geometric system of record. This body
+# only mirrors sync run metadata + changed-element notifications.
+
+contract:
+  id: pixeltable.bridge_itwin.v1
+  version: v1
+  source: bentley.itwin.platform
+  target: lattice.bridge.itwin
+
+# Auth: OAuth 2.0 client_credentials against
+#   https://ims.bentley.com/connect/token
+# Required scopes (see service/settings.py):
+#   itwin-platform itwins:read imodels:read
+#   synchronization:read synchronization:modify changedelements:read
+
+tables:
+
+  itwin_sync_jobs:
+    path: lattice/bridge/itwin/itwin_sync_jobs
+    insert_unit: one row per Sync run polled from the Synchronization API
+    upsert_key: [itwin_id, imodel_id, sync_run_id]
+    sources:
+      - synchronization.run.observed
+
+  itwin_changed_elements:
+    path: lattice/bridge/itwin/itwin_changed_elements
+    insert_unit: one row per (changeset, element) pair
+    upsert_key: [itwin_id, imodel_id, changeset_id, source_element_id]
+    sources:
+      - changedelements.observed
+
+  connector_versions:
+    path: lattice/bridge/itwin/connector_versions
+    insert_unit: one row per (connector_name, connector_version, sync_run_id)
+    upsert_key: [sync_run_id, connector_name]
+    sources:
+      - synchronization.run.observed

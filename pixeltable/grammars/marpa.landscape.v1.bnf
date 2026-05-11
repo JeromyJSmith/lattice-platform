@@ -1,0 +1,53 @@
+# marpa.landscape.v1
+# Marpa-style BNF for the seed landscape grammar. Consumed by
+# service/deps/marpa_runner.py via either a `Marpa::R3` subprocess (preferred)
+# or the bundled Python recursive-descent fallback (default for CI portability).
+#
+# Inputs: a flat key/value sequence flattened from sidecar property sets.
+# Output: a partial parse tree + ambiguity score (0.0 = unambiguous, 1.0 = full
+# ambiguity stop).
+
+# ---------- top-level rules ----------
+
+LandscapeRecord ::= PlantingRecord
+                  | IrrigationRecord
+                  | TopographyRecord
+                  | HardscapeRecord
+
+# ---------- planting ----------
+
+PlantingRecord ::= 'planting' BotanicalName ContainerSize Quantity OptionalNotes
+
+BotanicalName  ::= LatinGenus LatinSpecies CultivarOpt
+LatinGenus     ::= /[A-Z][a-z]+/
+LatinSpecies   ::= /[a-z][a-z\-]+/
+CultivarOpt    ::= "'" /[A-Z][A-Za-z0-9 \-]+/ "'"
+                 |   # empty
+ContainerSize  ::= /\d+(?:\.\d+)?(?:gal|G|L|cm)/
+Quantity       ::= /\d+/
+OptionalNotes  ::= 'notes:' /[^\n]+/
+                 |   # empty
+
+# ---------- irrigation ----------
+
+IrrigationRecord ::= 'irrigation' Zone EmitterCount FlowRate DripType
+Zone             ::= /Z[0-9]+/
+EmitterCount     ::= /\d+/
+FlowRate         ::= /\d+(?:\.\d+)?gph/
+DripType         ::= 'drip' | 'spray' | 'bubbler' | 'rotor'
+
+# ---------- topography ----------
+
+TopographyRecord ::= 'topography' Slope ElevationStart ElevationEnd Material
+Slope            ::= /\d+(?:\.\d+)?%/
+ElevationStart   ::= /\d+(?:\.\d+)?ft/
+ElevationEnd     ::= /\d+(?:\.\d+)?ft/
+Material         ::= 'soil' | 'mulch' | 'gravel' | 'pavement'
+
+# ---------- hardscape ----------
+
+HardscapeRecord  ::= 'hardscape' SurfaceType DimensionX DimensionY Permeability
+SurfaceType      ::= 'concrete' | 'pavers' | 'decomposed_granite' | 'asphalt'
+DimensionX       ::= /\d+(?:\.\d+)?ft/
+DimensionY       ::= /\d+(?:\.\d+)?ft/
+Permeability     ::= 'permeable' | 'impermeable'

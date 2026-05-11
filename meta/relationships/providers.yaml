@@ -1,0 +1,5 @@
+relationships:
+  - id: provider.openrouter
+    role: llm_provider
+  - id: ledger.pixeltable
+    role: ingestion_target

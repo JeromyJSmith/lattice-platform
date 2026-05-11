@@ -1,0 +1,18 @@
+{
+  "run_inline": true,
+  "vw_export_hash": "sha256:fixture-export-0001",
+  "source_element_id": "0FzD1mKqL5Ehv9TBvR9aA0",
+  "pset_name": "Pset_LandscapePlanting",
+  "record_kind": "planting",
+  "input_tokens": [
+    "planting",
+    "Quercus",
+    "agrifolia",
+    "24-inch-box",
+    "1",
+    "'Heritage'",
+    "notes:",
+    "drought-tolerant"
+  ],
+  "harness_run_id": "run_mini_0001"
+}

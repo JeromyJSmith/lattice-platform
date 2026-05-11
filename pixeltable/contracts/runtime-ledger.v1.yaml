@@ -1,0 +1,66 @@
+# Runtime ledger contract v1
+# Supersedes ../tables.yaml and ../ingestion-contract.yaml.
+# Maps RuntimeEvent kinds emitted by VW_iTwin_Bridge/src/runtime/protocol/agent-event.ts
+# to lattice.execution.* tables. The TanStack/Bun harness produces these events;
+# the FastAPI sidecar consumes /v1/runtime/events:batch and writes one row per event.
+
+contract:
+  id: pixeltable.runtime_ledger.v1
+  version: v1
+  source: runtime-runs            # filesystem layout owned by the harness
+  target: lattice.execution       # PXT namespace owned by this body
+  upsert_strategy: source-of-truth-keys
+
+# Insert unit per table is one event row, except agent_outcomes which is one
+# row per (run_id, run_status_terminal). Upsert keys are enforced server-side
+# in service/upsert.py so the bridge is replay-safe.
+tables:
+
+  agent_threads:
+    path: lattice/execution/agent_threads
+    insert_unit: one row per thread
+    upsert_key: [thread_id]
+    sources:
+      - thread.created
+
+  agent_messages:
+    path: lattice/execution/agent_messages
+    insert_unit: one row per message
+    upsert_key: [thread_id, message_id]
+    sources:
+      - message.created
+
+  agent_runs:
+    path: lattice/execution/agent_runs
+    insert_unit: one row per run (mutable status column)
+    upsert_key: [run_id]
+    sources:
+      - run.started
+      - run.completed
+      - run.failed
+
+  agent_stream_events:
+    path: lattice/execution/agent_stream_events
+    insert_unit: one row per stream event (append-only)
+    upsert_key: [run_id, event_id]
+    sources:
+      - stream.delta
+      - tool.started
+      - tool.completed
+
+  agent_artifacts:
+    path: lattice/execution/agent_artifacts
+    insert_unit: one row per artifact emitted by an agent
+    upsert_key: [run_id, artifact_path]
+    sources:
+      - artifact.created
+
+  agent_outcomes:
+    path: lattice/execution/agent_outcomes
+    insert_unit: one row per terminal run (close)
+    upsert_key: [run_id]
+    sources:
+      - run.completed
+      - run.failed
+      - outcome.md
+      - evidence-manifest.yaml

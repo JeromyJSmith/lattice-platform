@@ -1,0 +1,30 @@
+# Semantic contract v1
+# semantic_sidecars holds the embedding column for landscape-enriched
+# attributes; landscape_entities is the canonical reconciled view.
+
+contract:
+  id: pixeltable.bridge_semantic.v1
+  version: v1
+  source: vw_itwin_bridge.semantic
+  target: lattice.bridge.semantic
+
+# Embedding model: sentence-transformers/all-mpnet-base-v2 (768-d)
+# Indexed via pixeltable.functions.huggingface.sentence_transformer in
+# migrations/0011_add_embedding_indices.py.
+
+tables:
+
+  semantic_sidecars:
+    path: lattice/bridge/semantic/semantic_sidecars
+    insert_unit: one row per (vw_export_hash, source_element_id) sidecar slice
+    upsert_key: [vw_export_hash, source_element_id]
+    sources:
+      - sidecar.element.recorded
+      - marpa.parse.completed
+
+  landscape_entities:
+    path: lattice/bridge/semantic/landscape_entities
+    insert_unit: one row per reconciled landscape entity
+    upsert_key: [entity_id]
+    sources:
+      - reconcile.entity.committed

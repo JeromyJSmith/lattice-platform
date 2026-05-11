@@ -1,0 +1,9 @@
+{"kind":"thread.created","payload":{"thread_id":"thread_mini_0001","title":"mini fixture thread","operator_handle":"jeromy","created_at":"2026-05-10T15:00:00Z"}}
+{"kind":"message.added","payload":{"thread_id":"thread_mini_0001","message_id":"msg_mini_0001","role":"user","content_md":"hello world","tokens_in":3,"tokens_out":0,"model_id":"claude-opus-4.7","provider":"anthropic","created_at":"2026-05-10T15:00:01Z"}}
+{"kind":"run.started","payload":{"run_id":"run_mini_0001","thread_id":"thread_mini_0001","agent_kind":"vw_itwin_bridge","model_id":"claude-opus-4.7","started_at":"2026-05-10T15:00:02Z"}}
+{"kind":"stream.delta","payload":{"run_id":"run_mini_0001","event_id":"evt_mini_delta_0001","seq":1,"delta_text":"working...","created_at":"2026-05-10T15:00:03Z"}}
+{"kind":"tool.started","payload":{"run_id":"run_mini_0001","event_id":"evt_mini_tool_0001","seq":2,"tool_name":"vwx-export","tool_input":{"vw_export_hash":"sha256:fixture-export-0001"},"created_at":"2026-05-10T15:00:04Z"}}
+{"kind":"tool.completed","payload":{"run_id":"run_mini_0001","event_id":"evt_mini_tool_0002","seq":3,"tool_name":"vwx-export","tool_output":{"elements":1},"created_at":"2026-05-10T15:00:05Z"}}
+{"kind":"artifact.added","payload":{"run_id":"run_mini_0001","artifact_path":"fixtures/vwx-sidecar-mini.json","artifact_kind":"sidecar_json","byte_size":2048,"sha256":"sha256:abc123","created_at":"2026-05-10T15:00:06Z"}}
+{"kind":"run.completed","payload":{"run_id":"run_mini_0001","thread_id":"thread_mini_0001","status":"completed","ended_at":"2026-05-10T15:00:07Z","duration_ms":5000,"tokens_in_total":3,"tokens_out_total":12}}
+{"kind":"run.terminal","payload":{"run_id":"run_mini_0001","thread_id":"thread_mini_0001","status":"completed","outcome_md":"# Done\n\nMini run completed successfully.","evidence_manifest_yaml":"version: 1\nartifacts: []\n","closed_at":"2026-05-10T15:00:08Z"}}

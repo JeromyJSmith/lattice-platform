@@ -1,0 +1,18 @@
+# MARPA contract v1
+# Each parse attempt produces exactly one row. Grammar version is taken from
+# pixeltable/grammars/VERSION (semver, source-of-truth on disk).
+
+contract:
+  id: pixeltable.bridge_marpa.v1
+  version: v1
+  source: vw_itwin_bridge.grammars.marpa.landscape.v1
+  target: lattice.bridge.marpa
+
+tables:
+  marpa_parse_runs:
+    path: lattice/bridge/marpa/marpa_parse_runs
+    insert_unit: one row per parse attempt (success, partial, fail)
+    upsert_key: [parse_run_id]
+    sources:
+      - marpa.parse.completed
+      - marpa.parse.failed

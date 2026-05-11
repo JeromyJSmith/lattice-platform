@@ -1,0 +1,55 @@
+# ---- secrets & local env ----
+.env
+.env.local
+.env.*.local
+*.local
+
+# ---- JS / TS ----
+node_modules/
+dist/
+dist-ssr/
+.tanstack/
+.nitro/
+.wrangler/
+.output/
+.vinxi/
+__unconfig*
+todos.json
+*.tsbuildinfo
+
+# ---- Python (sidecar) ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---- Pixeltable runtime state (per-machine, never committed) ----
+.pixeltable/
+pixeltable/.bridge-idempotency.json
+
+# ---- Local run artifacts ----
+runtime-runs/
+public/potree/
+public/exports/
+public/data/*.parquet
+nohup.out
+*.log
+
+# ---- OS noise ----
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
+
+# ---- IDE worktree dust ----
+.vscode/settings.json
+
+# ---- Misc ----
+*.tmp
+*.bak
+.cache/

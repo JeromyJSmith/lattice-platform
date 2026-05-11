@@ -1,0 +1,51 @@
+# marpa_seed_psets.yaml
+# Property sets that the IFC normalizer flags as `is_marpa_seed=true` and
+# forwards to the MARPA runner. Other psets are still persisted in
+# ifc_property_sets but are not auto-fed to the grammar.
+#
+# Match is case-sensitive on `pset_name`. Specific properties (`select`)
+# describe which fields to flatten into the marpa input stream; an empty
+# `select` means "all properties".
+
+seed_psets:
+
+  - pset_name: Pset_PlantingCommon
+    record_kind: planting
+    select:
+      - BotanicalName
+      - Cultivar
+      - ContainerSize
+      - Quantity
+      - Notes
+
+  - pset_name: Pset_VwLandmarkPlanting
+    record_kind: planting
+    select: []
+
+  - pset_name: Pset_IrrigationZone
+    record_kind: irrigation
+    select:
+      - Zone
+      - EmitterCount
+      - FlowRate
+      - DripType
+
+  - pset_name: Pset_VwLandmarkIrrigation
+    record_kind: irrigation
+    select: []
+
+  - pset_name: Pset_TopographySegment
+    record_kind: topography
+    select:
+      - Slope
+      - ElevationStart
+      - ElevationEnd
+      - Material
+
+  - pset_name: Pset_HardscapeSurface
+    record_kind: hardscape
+    select:
+      - SurfaceType
+      - DimensionX
+      - DimensionY
+      - Permeability

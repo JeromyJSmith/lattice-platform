@@ -1,0 +1,39 @@
+# Evidence contract v1
+# Mirrors runtime-runs/<run_id>/evidence-manifest.yaml verbatim and links
+# harness runs to bridge ingestion artifacts.
+
+contract:
+  id: pixeltable.bridge_evidence.v1
+  version: v1
+  source: vw_itwin_bridge.harness.runtime
+  target: lattice.bridge.evidence
+
+# Promotion event triggers (see plan §8):
+#   - verifier.review.v1 skill terminal status
+#   - CI pixeltable.yml gate
+#   - operator UI explicit promote/reject
+#   - inbound iTwin webhook (`changedelements.observed`)
+
+tables:
+
+  promotion_events:
+    path: lattice/bridge/evidence/promotion_events
+    insert_unit: one row per promotion / rejection / withdrawal event
+    upsert_key: [promotion_event_id]
+    sources:
+      - run.completed
+      - verifier.review.v1.completed
+      - ci.pixeltable.gate.completed
+      - operator.promote
+      - operator.reject
+
+  harness_run_refs:
+    path: lattice/bridge/evidence/harness_run_refs
+    insert_unit: one row per (harness_run_id, bridge_artifact)
+    upsert_key: [harness_run_id, artifact_kind, artifact_id]
+    sources:
+      - artifact.created
+      - sidecar.export.recorded
+      - ifc.parsed.element
+      - itwin.synchronization.run.observed
+      - marpa.parse.completed

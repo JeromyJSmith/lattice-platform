@@ -1,0 +1,26 @@
+# Health contract v1
+# Operational signals: schema drift events and the bridge gap matrix.
+
+contract:
+  id: pixeltable.bridge_health.v1
+  version: v1
+  source: vw_itwin_bridge.health
+  target: lattice.bridge.health
+
+tables:
+
+  schema_drift_events:
+    path: lattice/bridge/health/schema_drift_events
+    insert_unit: one row per detected drift (schema diff / missing field / new pset)
+    upsert_key: [drift_event_id]
+    sources:
+      - bootstrap.schema.diff
+      - vw.export.schema.changed
+      - itwin.bis.schema.changed
+
+  bridge_gap_matrix:
+    path: lattice/bridge/health/bridge_gap_matrix
+    insert_unit: one row per (vw_export_hash, sync_run_id) supply/demand window
+    upsert_key: [vw_export_hash, sync_run_id]
+    sources:
+      - verify.gap.computed

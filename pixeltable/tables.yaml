@@ -1,0 +1,7 @@
+tables:
+  - lattice.execution.agent_threads
+  - lattice.execution.agent_messages
+  - lattice.execution.agent_runs
+  - lattice.execution.agent_stream_events
+  - lattice.execution.agent_artifacts
+  - lattice.execution.agent_outcomes

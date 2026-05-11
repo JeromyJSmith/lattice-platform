@@ -1,0 +1,24 @@
+# IFC contract v1
+# Server-side parsing via ifcopenshell>=0.8.5; one row per IFC element and
+# one row per property set instance.
+
+contract:
+  id: pixeltable.bridge_ifc.v1
+  version: v1
+  source: vw.ifc.export
+  target: lattice.bridge.ifc
+
+tables:
+  ifc_elements:
+    path: lattice/bridge/ifc/ifc_elements
+    insert_unit: one row per IFC element (IfcGloballyUniqueId)
+    upsert_key: [vw_export_hash, source_element_id]
+    sources:
+      - ifc.parsed.element
+
+  ifc_property_sets:
+    path: lattice/bridge/ifc/ifc_property_sets
+    insert_unit: one row per IfcPropertySet attached to an element
+    upsert_key: [vw_export_hash, source_element_id, pset_name]
+    sources:
+      - ifc.parsed.pset

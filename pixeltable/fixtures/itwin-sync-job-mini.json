@@ -1,0 +1,12 @@
+{
+  "itwin_id": "itwin-fixture-0001",
+  "imodel_id": "imodel-fixture-0001",
+  "sync_run_id": "sync-fixture-0001",
+  "state": "Completed",
+  "result": "Success",
+  "started_at": "2026-05-10T14:55:00Z",
+  "ended_at":   "2026-05-10T14:57:00Z",
+  "duration_ms": 120000,
+  "vw_export_hash": "sha256:fixture-export-0001",
+  "connector_count": 1
+}
