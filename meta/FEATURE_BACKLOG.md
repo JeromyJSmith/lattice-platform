@@ -366,3 +366,51 @@
 - [ ] Pixeltable image embedding column — CLIP-like model on `reference_images.image` for visual similarity search
 - [ ] Local inference endpoint — `POST /v1/genai/infer` on the sidecar, routes via the model registry
 - [ ] Browser agent in Marimo — `@tanstack/ai` connector pointing at local Ollama (no API key)
+
+---
+
+## GEOREF SYSTEM — Per-Project Coordinate Authority
+# georef.config.json → project_georef table → all coordinates derive from this
+# Survey > IFC > GPS > Google Maps > OSM (source priority, configurable per project)
+- [ ] Migration 0013: project_georef table live and verified (applied 2026-05-11)
+- [ ] georef.config.template.json with all fields: survey, IFC, VW, OSM, KML, Shapefile, GeoTIFF, elevation, imagery, transforms, Google Maps URL, what3words, plus_code
+- [ ] georef ingest pipeline: KML/KMZ, Shapefile (.shp+.prj), GeoPackage, GeoTIFF DEM, Survey CSV (northing/easting), IFC IfcSite, OSM Overpass API, DXF with known origin
+- [ ] pyproj transform computation: all 4x4 matrices (VW→WGS84, WGS84→ECEF, project→UTM, IFC→WGS84)
+- [ ] FastAPI georef endpoints: /v1/georef/ingest/* for all 7 formats + /v1/georef/{id}/boundary.geojson
+- [ ] All ifc_elements coordinates normalized through project_georef transform_ifc_to_wgs84 on ingest
+- [ ] Cesium globe reads boundary.geojson from project_georef for site boundary polygon
+- [ ] deck.gl reads bounding_box_json from project_georef to set initial viewport
+- [ ] VW bridge reads vw_origin + vw_rotation from project_georef for coordinate alignment
+
+---
+
+## REALITY CAPTURE — Drone, Gaussian Splats, Point Clouds
+# As-built reality layer. Streaming video → Pixeltable Image columns. Mirrored everywhere.
+- [ ] Migration 0013: drone_flights, drone_frames, gaussian_splats, point_cloud_sessions, mirror_state (applied 2026-05-11)
+- [ ] Drone video streaming ingest: ffmpeg frame extraction + GPS EXIF → drone_frames.image (pxt.Image)
+- [ ] Live GID streaming: GPS/IMU stream from drone during flight → real-time drone_frames inserts
+- [ ] Pixeltable computed columns on drone_frames: CLIP embedding, YOLO detections, plant/tree detection, blur score
+- [ ] Frame→ifc_elements spatial match: proximity + camera frustum check → matched_element_ids
+- [ ] Gaussian splat ingest: nerfstudio / Luma AI / Polycam .ply/.splat → georef alignment → gaussian_splats
+- [ ] 3DGS browser viewer: serve .splat in ThatOpen /viewer route
+- [ ] Point cloud ingest: .las/.laz → PDAL classify → point_cloud_sessions → PotreeConverter → Potree tiles
+- [ ] Existing tree extraction: DBSCAN on vegetation returns → existing_trees table → VW + Cesium + deck.gl
+- [ ] C2C deviation: CloudComPy design mesh vs reality scan → divergence score + heatmap
+- [ ] mirror_state updated after every ingest event
+- [ ] Platform broadcaster: after any ingest → push events to Cesium, ThatOpen, deck.gl, Potree, VW bridge
+- [ ] Design vs reality divergence warnings on all platform layers
+
+---
+
+## DIGITAL TWIN MIRROR — Platform Sync State
+# One ground truth. Everywhere. Always in sync.
+# VW design + iTwin BIM + DDC admin + Cesium globe + ThatOpen + deck.gl + Potree = one platform
+- [ ] mirror_state table tracks sync status of all 7 platform layers per project (table live 2026-05-11)
+- [ ] Sync checker: compare VW export hash vs reality capture date vs ERP last sync
+- [ ] Divergence score: avg C2C distance between design mesh and reality scan
+- [ ] Cesium globe pin: color-coded by sync status + divergence score badge
+- [ ] ThatOpen viewer: color-code elements by match status (found in scan / not found / new in scan)
+- [ ] deck.gl divergence layer: heatmap of C2C distances across site
+- [ ] VW bridge notification: alert when reality capture detects objects not in design
+- [ ] Admin dashboard: mirror_state table view showing all 7 sync flags per project
+- [ ] Auto-sync trigger: on VW IFC export → run sync check → update all mirror flags

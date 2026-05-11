@@ -1,0 +1,69 @@
+{
+  "$schema": "../schema/georef.config.schema.json",
+  "project": {
+    "project_id":  "marpa-2026-hilltop-residence",
+    "name":        "Hilltop Residence",
+    "address":     "1234 Vista Ridge, Boise, ID 83702, USA",
+    "client_name": "Smith Family Trust"
+  },
+  "coordinate_system": {
+    "epsg_code":      "EPSG:4326",
+    "vertical_datum": "NAVD88",
+    "units":          "meters"
+  },
+  "origin": {
+    "longitude":          -116.2023,
+    "latitude":           43.6150,
+    "elevation_m":        823.5,
+    "true_north_degrees": 0.0,
+    "google_maps_url":    "https://www.google.com/maps/@43.6150,-116.2023,18z",
+    "what3words":         "///example.three.words",
+    "plus_code":          "85HV2X4F+5W"
+  },
+  "vw_internal": {
+    "origin_x":     0.0,
+    "origin_y":     0.0,
+    "scale":        1.0,
+    "rotation_deg": 0.0,
+    "units":        "feet"
+  },
+  "survey": {
+    "easting":               2456789.12,
+    "northing":              789123.45,
+    "elevation_units":       "feet",
+    "benchmark_elevation_m": 823.5,
+    "state_plane_zone":      "Idaho West (EPSG:2243)",
+    "control_points": [
+      { "id": "CP-1", "easting": 2456789.12, "northing": 789123.45, "elevation_ft": 2702.7, "description": "site benchmark" }
+    ],
+    "benchmark_id":   "BM-2026-01",
+    "surveyor_name":  "Acme Surveying LLC",
+    "survey_date":    "2026-03-15",
+    "survey_file_path": "projects/hilltop-residence/survey/2026-03-15.csv"
+  },
+  "site_boundary": {
+    "wkt_wgs84": "POLYGON((-116.2025 43.6148, -116.2020 43.6148, -116.2020 43.6152, -116.2025 43.6152, -116.2025 43.6148))",
+    "area_m2":   18450.0
+  },
+  "elevation": {
+    "dem_file_path":    "projects/hilltop-residence/dem/usgs-3dep-1m.tif",
+    "dem_source":       "USGS_3DEP",
+    "dem_resolution_m": 1.0,
+    "min_elevation_m":  820.1,
+    "max_elevation_m":  828.4
+  },
+  "aerial_imagery": {
+    "orthophoto_file_path":     "projects/hilltop-residence/ortho/2026-04-01.tif",
+    "orthophoto_source":        "drone-survey",
+    "orthophoto_resolution_cm": 2.5,
+    "orthophoto_date":          "2026-04-01",
+    "streetview_lat":           43.6149,
+    "streetview_lon":           -116.2024,
+    "streetview_heading":       180
+  },
+  "metadata": {
+    "source_priority": ["survey", "ifc", "gps", "google_maps", "osm"],
+    "config_version":  "1",
+    "notes":           "Hillside lot with mature oaks on east edge; benchmark at NE corner of foundation."
+  }
+}

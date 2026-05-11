@@ -1,0 +1,40 @@
+{
+  "$schema": "../schema/georef.config.schema.json",
+  "project": {
+    "project_id":  "marpa-2026-ifc-only",
+    "name":        "IFC-only georef example",
+    "address":     "(only IfcSite RefLat/RefLon known)"
+  },
+  "coordinate_system": {
+    "epsg_code": "EPSG:4326",
+    "units":     "meters"
+  },
+  "origin": {
+    "longitude":   -122.4194,
+    "latitude":    37.7749,
+    "elevation_m": 16.0
+  },
+  "ifc_georef": {
+    "ref_latitude":  37.7749,
+    "ref_longitude": -122.4194,
+    "ref_elevation": 16.0,
+    "placement_matrix": [
+      [1, 0, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 1]
+    ]
+  },
+  "vw_internal": {
+    "origin_x":     0.0,
+    "origin_y":     0.0,
+    "scale":        1.0,
+    "rotation_deg": 0.0,
+    "units":        "meters"
+  },
+  "metadata": {
+    "source_priority": ["ifc", "gps", "google_maps", "osm"],
+    "config_version":  "1",
+    "notes":           "Use this template when only IFC IfcSite RefLat/RefLon are known."
+  }
+}

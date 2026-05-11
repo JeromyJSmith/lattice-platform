@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.dev/schemas/georef.config.v1.json",
+  "title": "LATTICE per-project georef config",
+  "type": "object",
+  "required": ["project", "coordinate_system", "origin", "metadata"],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["project_id", "name"],
+      "properties": {
+        "project_id":    { "type": "string" },
+        "name":          { "type": "string" },
+        "address":       { "type": "string" },
+        "client_name":   { "type": "string" }
+      }
+    },
+    "coordinate_system": {
+      "type": "object",
+      "required": ["epsg_code"],
+      "properties": {
+        "epsg_code":      { "type": "string" },
+        "proj_string":    { "type": "string" },
+        "wkt_crs":        { "type": "string" },
+        "vertical_datum": { "type": "string" },
+        "units":          { "type": "string" }
+      }
+    },
+    "origin": {
+      "type": "object",
+      "required": ["longitude", "latitude"],
+      "properties": {
+        "longitude":           { "type": "number" },
+        "latitude":            { "type": "number" },
+        "elevation_m":         { "type": "number" },
+        "true_north_degrees":  { "type": "number" },
+        "google_maps_url":     { "type": "string" },
+        "what3words":          { "type": "string" },
+        "plus_code":           { "type": "string" }
+      }
+    },
+    "ifc_georef": {
+      "type": "object",
+      "properties": {
+        "ref_latitude":     { "type": "number" },
+        "ref_longitude":    { "type": "number" },
+        "ref_elevation":    { "type": "number" },
+        "placement_matrix": { "type": "array" }
+      }
+    },
+    "vw_internal": {
+      "type": "object",
+      "properties": {
+        "origin_x":     { "type": "number" },
+        "origin_y":     { "type": "number" },
+        "scale":        { "type": "number" },
+        "rotation_deg": { "type": "number" },
+        "units":        { "type": "string" }
+      }
+    },
+    "survey": {
+      "type": "object",
+      "properties": {
+        "easting":              { "type": "number" },
+        "northing":             { "type": "number" },
+        "elevation_units":      { "type": "string" },
+        "benchmark_elevation_m":{ "type": "number" },
+        "state_plane_zone":     { "type": "string" },
+        "control_points":       { "type": "array" },
+        "benchmark_id":         { "type": "string" },
+        "surveyor_name":        { "type": "string" },
+        "survey_date":          { "type": "string" },
+        "survey_file_path":     { "type": "string" }
+      }
+    },
+    "site_boundary": {
+      "type": "object",
+      "properties": {
+        "geojson":          { "type": ["object", "string"] },
+        "wkt_wgs84":        { "type": "string" },
+        "wkt_project":      { "type": "string" },
+        "bounding_box":     { "type": "array" },
+        "kml_file":         { "type": "string" },
+        "shapefile":        { "type": "string" },
+        "geopackage":       { "type": "string" },
+        "area_m2":          { "type": "number" }
+      }
+    },
+    "osm": {
+      "type": "object",
+      "properties": {
+        "node_id":      { "type": "string" },
+        "way_id":       { "type": "string" },
+        "relation_id":  { "type": "string" },
+        "geojson_file": { "type": "string" },
+        "last_fetched": { "type": "string" }
+      }
+    },
+    "elevation": {
+      "type": "object",
+      "properties": {
+        "dem_file_path":   { "type": "string" },
+        "dem_source":      { "type": "string" },
+        "dem_resolution_m":{ "type": "number" },
+        "min_elevation_m": { "type": "number" },
+        "max_elevation_m": { "type": "number" }
+      }
+    },
+    "aerial_imagery": {
+      "type": "object",
+      "properties": {
+        "orthophoto_file_path":     { "type": "string" },
+        "orthophoto_source":        { "type": "string" },
+        "orthophoto_resolution_cm": { "type": "number" },
+        "orthophoto_date":          { "type": "string" },
+        "streetview_lat":           { "type": "number" },
+        "streetview_lon":           { "type": "number" },
+        "streetview_heading":       { "type": "number" }
+      }
+    },
+    "transforms": {
+      "type": "object",
+      "description": "Pre-computed 4x4 matrices, row-major. Populated by /v1/georef/compute-transforms.",
+      "properties": {
+        "vw_to_wgs84":      { "type": "array" },
+        "wgs84_to_ecef":    { "type": "array" },
+        "project_to_utm":   { "type": "array" },
+        "ifc_to_wgs84":     { "type": "array" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["source_priority"],
+      "properties": {
+        "source_priority":  {
+          "type": "array",
+          "items": { "type": "string", "enum": ["survey", "ifc", "gps", "google_maps", "osm"] }
+        },
+        "config_version":   { "type": "string" },
+        "created_at":       { "type": "string" },
+        "updated_at":       { "type": "string" },
+        "notes":            { "type": "string" }
+      }
+    }
+  }
+}

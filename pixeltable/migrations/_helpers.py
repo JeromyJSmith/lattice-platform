@@ -18,6 +18,7 @@ OWNED_PARENTS: tuple[str, ...] = (
     "lattice/execution",
     "lattice/bridge",
     "lattice/genai",
+    "lattice/reality",
 )
 
 OWNED_BRIDGE_SUBS: tuple[str, ...] = (

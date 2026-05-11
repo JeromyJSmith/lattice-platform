@@ -1,0 +1,96 @@
+{
+  "$schema": "../schema/georef.config.schema.json",
+  "project": {
+    "project_id":  "PROJECT_ID_HERE",
+    "name":        "Project Name",
+    "address":     "Street, City, State ZIP, Country",
+    "client_name": "Client Name"
+  },
+  "coordinate_system": {
+    "epsg_code":      "EPSG:4326",
+    "proj_string":    "+proj=longlat +datum=WGS84 +no_defs +type=crs",
+    "wkt_crs":        "",
+    "vertical_datum": "NAVD88",
+    "units":          "meters"
+  },
+  "origin": {
+    "longitude":          0.0,
+    "latitude":           0.0,
+    "elevation_m":        0.0,
+    "true_north_degrees": 0.0,
+    "google_maps_url":    "https://www.google.com/maps/@LAT,LON,18z",
+    "what3words":         "///example.words.here",
+    "plus_code":          "00000000+00"
+  },
+  "ifc_georef": {
+    "ref_latitude":     null,
+    "ref_longitude":    null,
+    "ref_elevation":    null,
+    "placement_matrix": null
+  },
+  "vw_internal": {
+    "origin_x":     0.0,
+    "origin_y":     0.0,
+    "scale":        1.0,
+    "rotation_deg": 0.0,
+    "units":        "meters"
+  },
+  "survey": {
+    "easting":               null,
+    "northing":              null,
+    "elevation_units":       "feet",
+    "benchmark_elevation_m": null,
+    "state_plane_zone":      "",
+    "control_points":        [],
+    "benchmark_id":          "",
+    "surveyor_name":         "",
+    "survey_date":           "",
+    "survey_file_path":      ""
+  },
+  "site_boundary": {
+    "geojson":      null,
+    "wkt_wgs84":    "",
+    "wkt_project":  "",
+    "bounding_box": null,
+    "kml_file":     "",
+    "shapefile":    "",
+    "geopackage":   "",
+    "area_m2":      null
+  },
+  "osm": {
+    "node_id":      "",
+    "way_id":       "",
+    "relation_id":  "",
+    "geojson_file": "",
+    "last_fetched": ""
+  },
+  "elevation": {
+    "dem_file_path":    "",
+    "dem_source":       "USGS_3DEP",
+    "dem_resolution_m": 1.0,
+    "min_elevation_m":  null,
+    "max_elevation_m":  null
+  },
+  "aerial_imagery": {
+    "orthophoto_file_path":     "",
+    "orthophoto_source":        "",
+    "orthophoto_resolution_cm": null,
+    "orthophoto_date":          "",
+    "streetview_lat":           null,
+    "streetview_lon":           null,
+    "streetview_heading":       null
+  },
+  "transforms": {
+    "vw_to_wgs84":    null,
+    "wgs84_to_ecef":  null,
+    "project_to_utm": null,
+    "ifc_to_wgs84":   null
+  },
+  "metadata": {
+    "source_priority": ["survey", "ifc", "gps", "google_maps", "osm"],
+    "config_version":  "1",
+    "created_at":      "",
+    "updated_at":      "",
+    "notes":           ""
+  }
+}
