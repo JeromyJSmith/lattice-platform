@@ -17,7 +17,7 @@ This file is a flat, generated-once context export for downstream agents (Copilo
 | Python pkgs | **uv only** (never pip, conda, poetry, pipenv)    |
 | 3D engine   | `@thatopen/components` 3.4.6 + Three.js 0.184     |
 | Analytics   | deck.gl 9.3.2 + DuckDB WASM 1.33.1 + MapLibre 5  |
-| iTwin       | `@itwin/core-geometry` 5.9.2 + `@itwin/core-common` — **never** `@itwin/core-backend** |
+| iTwin       | `@itwin/core-geometry` 5.9.2 + `@itwin/core-common` — never @itwin/core-backend |
 | Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
 
 ## Cardinal Rules (1–23)
