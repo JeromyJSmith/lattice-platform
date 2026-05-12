@@ -6,11 +6,11 @@ Snapshot date: 2026-05-12.
 
 | Area | Current state |
 |---|---|
-| Capability registries | 22 registry files under `analysis/capabilities/` |
-| Capability rows | 193 total: 146 ACTIVE, 44 DEFERRED, 3 BLOCKED |
+| Capability registries | 23 registry files under `analysis/capabilities/` |
+| Capability rows | 200 total: 153 ACTIVE, 44 DEFERRED, 3 BLOCKED |
 | Bootstrap-empty registries | 4: `claude-code`, `deck-gl`, `pixeltable`, `web-ifc` |
 | Pixeltable migrations | 16 landed migrations, next migration is `0017` |
-| Harness docs | Top-level docs now exist for delegation, library, model fit, verifier, benchmarking, drop zones, hooks, sandboxes, and bash safety |
+| Harness docs | Top-level docs now exist for delegation, library, model fit, verifier, benchmarking, drop zones, hooks, sandboxes, DDC, and bash safety |
 | Verification scripts | `scripts/lattice-verify.sh`, `scripts/audit-dead-dna.sh`, `scripts/check-python-docstrings.py`, `scripts/pre-commit-docs-check.sh` |
 | Library catalog | `meta/harness/library.yaml` catalogs prompts, capabilities, references, and jobs |
 | Outer wrapper | `/Volumes/PixelTable/VW_iTWIN_Bridge/meta/` registers this repo as body cell `body.vw_itwin_bridge` |
@@ -30,6 +30,8 @@ Snapshot date: 2026-05-12.
 | uv single-file agents | `meta/harness/single-file-harness-agents.md` |
 | Ephemeral library pattern | `meta/harness/agentics-library.md`, `meta/harness/library.yaml` |
 | Model-fit loop | `meta/harness/model-fit.md`, `meta/harness/benchmarking.md` |
+| DDC capability registry | `analysis/capabilities/ddc-capability-registry.yaml` with six contract-only rows |
+| Capability operator surface | `/harness/capabilities`, `/harness/benchmarks`, `pixeltable/service/routes/harness.py` |
 
 ## What Is Still Stubbed Or Not Live
 
@@ -46,6 +48,7 @@ Snapshot date: 2026-05-12.
 | DuckDB WASM analytical surface over harness data | Not implemented |
 | Legacy Python uplift | Not implemented beyond changed-file docstring ratchet |
 | Standalone Meta-Harness extraction | Not started |
+| DDC proof promotion | Registry exists; no DDC row is proof-backed yet |
 
 ## Important Directional Decisions
 
@@ -71,14 +74,18 @@ Conclusion: we are directionally on track, but the next dry-run task was too ear
 
 ## Verification Snapshot
 
-Last local checks performed during this audit:
+Last local checks performed for commit `c83c8b4`:
 
 ```bash
-bash scripts/lattice-verify.sh HEAD
-bash scripts/pre-commit-docs-check.sh
 bash scripts/audit-dead-dna.sh
 uv run python scripts/check-python-docstrings.py
-ruby -e 'require "yaml"; YAML.load_file("meta/harness/library.yaml"); puts "library.yaml OK"'
+uv run --extra dev pytest tests/no_pxt/test_harness_capability_runs.py
+bun test src/runtime/pixeltable/sidecar-client.test.ts
+bunx biome check src/components/Header.tsx src/runtime/pixeltable/sidecar-client.ts src/runtime/pixeltable/sidecar-client.test.ts src/routes/harness src/server/harness
+bash scripts/pre-commit-docs-check.sh
+bash scripts/lattice-verify.sh HEAD
+bun run build
+git diff --check
 ```
 
-All listed checks passed before this document was added. Run them again before commit.
+All listed checks passed before commit `c83c8b4`. Run them again before the next commit.
