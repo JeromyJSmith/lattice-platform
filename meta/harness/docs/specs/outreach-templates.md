@@ -7,6 +7,8 @@ source: "Synthesized from bentley-ecosystem-deep-dive-20260508.md, marpa-researc
 ---
 # Outreach Templates
 
+> **Gated context note.** This file references content under `meta/harness/docs/research/_gated/bentley-commercial/`. That content is dormant under default doctrine (OSS self-hosted only). Use the references here only for drafting Bentley-facing outreach; **do NOT propagate commercial assumptions into platform documents or PRDs**. See `meta/harness/docs/research/_gated/README.md` for the five-gate dormancy policy and activation procedure.
+
 Canonical voice + framing for the four primary outbound audiences. The human owns every send — the harness uses these as canonical references when proposing copy.
 
 ## Voice and tone constraints (binding for every send)
@@ -210,7 +212,7 @@ Partnership shape:
   - One client project per quarter for the first year
   - IP ownership clarity: MARPA is the platform; your client owns their
     data; you retain client relationship
-  - Pricing model TBD at end of Q1 pilot (see itwin-pricing.md)
+  - Pricing model TBD at end of Q1 pilot (see `meta/harness/docs/research/_gated/bentley-commercial/itwin-pricing.md` — gated; outreach use only)
 
 Looking for one civic / campus / institutional project from your current
 backlog where the owner would value a landscape DT deliverable.
@@ -224,5 +226,8 @@ Jeromy Smith
 
 - `meta/harness/docs/research/marpa-business-intelligence.md` — strategic frame driving every send above
 - `meta/harness/docs/research/bentley-ecosystem-deep-dive-20260508.md` — full Partner Program + Activate detail (cite when prepping for a Design-phase or Sprint-phase conversation)
-- `meta/harness/docs/research/itwin-pricing.md` — pricing-side framing for partner / pilot conversations
+- `meta/harness/docs/research/_gated/bentley-commercial/itwin-pricing.md` — pricing-side framing for partner / pilot conversations (gated commercial content; this outreach file is the **one permitted use** of direct pointing into `_gated/` — do NOT propagate commercial assumptions into platform docs or PRDs)
+- `meta/harness/docs/research/_gated/bentley-commercial/activate-program.md` — iTwin Activate SAFE / cohort / Ventures pipeline (gated; outreach use only)
+- `meta/harness/docs/research/_gated/bentley-commercial/partner-program.md` — Partner Program tier specifics + engagement phases (gated; outreach use only)
+- `meta/harness/docs/research/_gated/README.md` — dormancy policy + five-gate activation procedure
 - `meta/ITWIN_MAPPING.md` — canonical iTwin Tier 1/2/3/4 split (what we use vs. what we don't); cite when the conversation drifts to which Bentley products we are or are not adopting

@@ -91,4 +91,4 @@ This gap persists **within Vectorworks' own parent-company ecosystem**. Strategi
 - `vw-plugin/` (in-repo) — the C++ plugin path that uses this SDK
 - `vw-python/` (in-repo) — the Python `vs.*` API path
 - `meta/harness/docs/research/marpa-business-intelligence.md` — strategic frame
-- `meta/harness/docs/research/itwin-pricing.md` — pricing-side framing for the integration's commercial layer
+- `meta/harness/docs/research/_gated/README.md` — pricing-side framing is gated commercial content; consult only via the dormancy policy

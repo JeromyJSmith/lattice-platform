@@ -58,5 +58,37 @@ Rewritten stubs (4 files, status flipped from `draft` → `reference`):
 |---|---|---|
 | `research/marpa-business-intelligence.md` | TODO scaffold | Strategic synthesis pulling competitive landscape, ASLA data points, target client segments, revenue model, risk register, strategic sequence |
 | `specs/outreach-templates.md` | TODO scaffold | Four full template skeletons with extracted facts ($199 Standard, $250K Activate SAFE, James Kress / Clive Hackforth contacts, etc.) |
-| `research/itwin-pricing.md` | TODO scaffold | Verified pricing tier table (Community / Standard $199 / Premium $499 / Enterprise), credit cost structure, Activate $250K + $100M iTwin Ventures fund details, BDN unknowns flagged |
+| `research/itwin-pricing.md` | TODO scaffold | Verified pricing tier table; **subsequently moved into `_gated/bentley-commercial/itwin-pricing.md` in Phase 1.5 §5.1** (see "Gated content" section below) |
 | `research/vw-2026-toolchain.md` | Partial seed | Verified VW Landmark 2026 capability table + IFC certification status + SDK build prereqs + Nemetschek dTwin gap analysis |
+
+## Gated content (dormant by default)
+
+**Policy:** Commercial-tier vendor content (pricing, accelerator programs, partner programs, developer subscriptions, paid SaaS APIs) is gated under `meta/harness/docs/research/_gated/<vendor>/` and dormant by default per the OSS-self-hosted doctrine. See `meta/harness/docs/research/_gated/README.md` for the full five-gate policy + activation procedure, and `.claude/rules/oss-self-hosted-doctrine.md` for the binding rule.
+
+Landed as Phase 1.5 commits `ad4ff91`, `fc144f4`, plus the cross-ref / doctrine / inventory follow-up commit.
+
+### Subtree layout
+
+| Path | Contents | Status |
+|---|---|---|
+| `_gated/README.md` | Top-level five-gate dormancy policy | gating-policy / dormant |
+| `_gated/bentley-commercial/README.md` | Bentley-specific gate state + activation log + contents inventory | gating-policy / dormant |
+| `_gated/bentley-commercial/itwin-pricing.md` | Moved from `research/itwin-pricing.md` per §5.1 (body unchanged; dormancy frontmatter + gating banner added) | research / dormant |
+| `_gated/bentley-commercial/activate-program.md` | Extracted from `research/bentley-ecosystem-deep-dive-20260508.md` § Pillar 3 per §5.2 (SAFE / cohort / Ventures pipeline) | research / dormant |
+| `_gated/bentley-commercial/partner-program.md` | Extracted from `research/bentley-ecosystem-deep-dive-20260508.md` § Pillar 1 per §5.2 (Standard/Premier tiers / Envision-Design-Sprint / commercial-terms layer) | research / dormant |
+| `_gated/bentley-commercial/bdn-developer-access.md` | Extracted from `research/bentley-ecosystem-deep-dive-20260508.md` § Pillar 2 per §5.2 (Commercial + SELECT Subscription tiers + iTwin Platform paid-tier table); appended LATTICE-specific clarification that BDN is NOT required for iTwin REST API development | research / dormant |
+| `_gated/cesium-commercial/README.md` | Cesium-specific gate state + self-hosting expansion note (mandatory per doctrine) | gating-policy / dormant |
+| `_gated/cesium-commercial/cesium-ion-paid-tiers.md` | Stub — populated only when a real gate fires for Cesium | research / dormant |
+
+### Status changes for files outside `_gated/`
+
+| Path | Change |
+|---|---|
+| `research/bentley-ecosystem-deep-dive-20260508.md` | Pillars 1, 2, 3 replaced with stub paragraphs pointing at the gated extractions; Pillar 4 (GitHub iTwin org, public API changelogs, YII, Bentley Communities) stays in full as OSS-aligned content. File shrank from 453 → 292 lines. |
+| `research/marpa-business-intelligence.md` | Cross-refs to `itwin-pricing.md` now route through `_gated/README.md` (the dormancy policy) and `_gated/bentley-commercial/` (Phase 1.5 §7) |
+| `research/vw-2026-toolchain.md` | Same routing fix |
+| `specs/outreach-templates.md` | Header gating-context note added; cross-refs now point directly at `_gated/bentley-commercial/*.md` files (outreach is the **one permitted use** of direct pointing into `_gated/`) |
+
+### New rule file
+
+`.claude/rules/oss-self-hosted-doctrine.md` codifies the OSS-self-hosted doctrine and the gated-vendor extension language. It operationalizes the cardinal rule `iTwin OSS self-hosted only` from `AGENTS.md` § cardinal rules and generalizes it across vendors.

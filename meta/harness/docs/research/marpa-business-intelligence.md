@@ -56,7 +56,7 @@ The strategic insight: **MARPA does not author landscape data; it normalizes Vec
 ## Revenue / monetization model (working hypothesis)
 
 - **Phase 1 (pilot, no revenue):** LATTICE absorbs build cost. Pilot is the proof-of-concept that opens the Bentley Activate door and the municipal-handoff conversation.
-- **Phase 2 (Activate cohort, ~$250K SAFE note via iTwin Ventures):** non-dilutive (or favorably-dilutive) entry capital. See `itwin-pricing.md`.
+- **Phase 2 (Activate cohort, ~$250K SAFE note via iTwin Ventures):** non-dilutive (or favorably-dilutive) entry capital. Commercial / pricing context is gated — see `_gated/README.md` for the dormancy policy and activation procedure; direct outreach drafts may consult `_gated/bentley-commercial/` via `meta/harness/docs/specs/outreach-templates.md` only.
 - **Phase 3 (follow-on iTwin Ventures or independent commercial):** iTwin Ventures is a $100M fund with $250K-to-$5M check range. Activate is the first filter into the larger pipeline.
 - **Long-term revenue:** per-MARPA-project licensing + per-project sidecar/normalization services + ecological reporting subscriptions (Sustainability Dashboard export). Client pays for LATTICE's value-add, never for Bentley cloud spend (OSS-only stance preserves margin).
 
@@ -75,5 +75,5 @@ The strategic insight: **MARPA does not author landscape data; it normalizes Vec
 - `meta/harness/docs/specs/amended-research-proposal.md` — research framing that produced these reports
 - `meta/harness/docs/specs/itwin-visgl-slide-bullets.md` — 28-slide architecture spec (the source document that v2 verifies)
 - `outreach-templates.md` (sibling spec) — outbound messaging derived from this BI
-- `itwin-pricing.md` (sibling research) — pricing-side competitive intelligence
+- `_gated/README.md` (gated subtree top-level policy) — pricing-side competitive intelligence is gated commercial content; consult only via the dormancy policy
 - `vw-2026-toolchain.md` (sibling research) — technical-stack constraints
