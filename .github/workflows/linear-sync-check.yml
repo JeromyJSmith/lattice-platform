@@ -30,19 +30,21 @@ jobs:
         run: |
           echo "PR title: $PR_TITLE"
 
-          # Allow [LAT-NNN] or [MAR-NNN] prefix (case-insensitive)
-          if echo "$PR_TITLE" | grep -qiE '^\[(LAT|MAR)-[0-9]+\]'; then
+          # Allow [LAT-NNN], [MAR-NNN], or [MARPA-NNN] prefix (case-insensitive)
+          # Note: MARPA-XX is used for platform issues while on the free plan
+          # (see meta/sync-contract.md §Teams for the G1 note)
+          if echo "$PR_TITLE" | grep -qiE '^\[(LAT|MAR|MARPA)-[0-9]+\]'; then
             echo "✓ Linear ID found in PR title."
           else
             echo ""
             echo "✗ PR title must start with a Linear issue ID."
-            echo "  Expected format: [LAT-XX] <type>(<scope>): <description>"
-            echo "  Example:         [LAT-47] feat(sync): add sync-contract.md"
+            echo "  Expected format: [MARPA-XX] <type>(<scope>): <description>"
+            echo "  Example:         [MARPA-47] feat(sync): add sync-contract.md"
             echo ""
             echo "  See meta/sync-contract.md for the full convention."
             echo ""
             echo "  If this PR has no Linear issue yet:"
-            echo "    1. Create an issue in Linear (LATTICE team → LAT-XX)"
+            echo "    1. Create an issue in Linear (MARPA team → MARPA-XX)"
             echo "    2. Update the PR title"
             exit 1
           fi
@@ -102,10 +104,10 @@ jobs:
           BRANCH: ${{ github.head_ref }}
         run: |
           # Advisory only — does not fail the build
-          if echo "$BRANCH" | grep -qiE '(LAT|MAR)-[0-9]+'; then
+          if echo "$BRANCH" | grep -qiE '(LAT|MAR|MARPA)-[0-9]+'; then
             echo "✓ Linear ID found in branch name: $BRANCH"
           else
             echo "⚠ Advisory: branch name does not include a Linear issue ID."
-            echo "  Recommended: <prefix>/LAT-XX-slug (e.g. claude/LAT-47-sync-contract)"
+            echo "  Recommended: <prefix>/MARPA-XX-slug (e.g. claude/MARPA-47-sync-contract)"
             echo "  This check is advisory and does not block merging."
           fi

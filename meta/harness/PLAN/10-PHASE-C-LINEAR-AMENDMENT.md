@@ -40,15 +40,28 @@ this branch landing and the human go/no-go decision per cardinal rule 23.
 
 ---
 
-## Team structure (G1 decision)
+## Team structure (G1 decision — revised 2026-05-12)
 
-| Linear team | Key | Scope |
-|---|---|---|
-| **LATTICE** | LAT | Platform engineering — Phases A through N |
-| **MARPA** | MAR | Customer engagement — Phases O–P |
+| Linear team | Key | Scope | Status |
+|---|---|---|---|
+| **MARPA** | MARPA | All work — platform (Phases A–N) + engagement (O–P) | **Active** — free plan blocked creating LATTICE |
+| **LATTICE** | LAT | Platform engineering (Phases A–N) | **Blocked** — free plan team limit; create when plan upgrades |
 
-All 242 imported GitHub issues go to LATTICE team. MARPA issues are created
-manually as customer-engagement work materialises.
+**Revised G1:** The original G1 plan split LATTICE (platform) and MARPA (engagement). Linear's free plan caps team count; creating LATTICE returned `403 FORBIDDEN`. All 242 GitHub issues were imported into the existing MARPA team, giving them `MARPA-XX` identifiers. When the workspace upgrades or gains a free team slot, a `--rename-prefix` pass through the reconciliation script will migrate `MARPA-XX` → `LAT-XX` for platform issues.
+
+**Free-plan import status (2026-05-12):**
+- 94 issues imported (previous runs, `MARPA-1` through `MARPA-209`)
+- 30 issues imported in final run (`MARPA-210` through `MARPA-212` range)
+- **126 issues blocked** by Linear's `activeIssueCount` limit (GH #87–#310)
+- Resolution: close/archive existing completed MARPA issues to free slots, then re-run:
+  ```bash
+  LINEAR_API_KEY=lin_api_… \
+    uv run python scripts/linear-bootstrap.py \
+    --commit --team-key MARPA \
+    --project-id ed0921d9-09d1-4ade-8d3e-2794c29fe745 \
+    --skip-setup
+  ```
+  The script is idempotent — already-imported issues are detected via `github_issue_id:` in description and skipped.
 
 ---
 
