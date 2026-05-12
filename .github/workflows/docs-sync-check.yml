@@ -233,6 +233,8 @@ jobs:
   nine-section-meta-harness:
     name: nine-section-meta-harness
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Verify Meta-Harness docs canonical sections
@@ -270,6 +272,8 @@ jobs:
   gated-dormancy-check:
     name: gated-dormancy-check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Verify gated research dormancy frontmatter
@@ -305,6 +309,8 @@ jobs:
   detect-doc-gaps-job:
     name: detect-doc-gaps-job
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
@@ -344,6 +350,8 @@ jobs:
   score-docs-job:
     name: score-docs-job
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Run docs scoring
