@@ -14,6 +14,13 @@ from __future__ import annotations
 
 from typing import Any
 
+# Embedding model shared by every migration that adds an embedding index.
+# Selected over all-MiniLM-L6-v2 for higher retrieval fidelity on dense
+# technical corpora (Pixeltable / IFCjs / InfraNodus / Claude Code docs).
+# M3 Max 128 GB RAM makes the ~1.3 GB model footprint negligible.
+# Decision: 2026-05-11 (user-approved Item 6 override).
+EMBEDDING_MODEL_ID: str = "intfloat/e5-large-v2"
+
 OWNED_PARENTS: tuple[str, ...] = (
     "lattice/execution",
     "lattice/bridge",

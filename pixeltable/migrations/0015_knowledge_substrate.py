@@ -35,6 +35,7 @@ lattice/knowledge namespace is independent — no FK dependency on 0014.
 from __future__ import annotations
 
 from migrations._helpers import (
+    EMBEDDING_MODEL_ID,
     OWNED_PARENTS,
     assert_ownership,
     banner,
@@ -43,6 +44,11 @@ from migrations._helpers import (
 )
 
 MIGRATION_ID = "0015_knowledge_substrate"
+
+# Embedding model: intfloat/e5-large-v2 (via shared EMBEDDING_MODEL_ID constant).
+# Selected over all-MiniLM-L6-v2 for higher retrieval fidelity on dense
+# technical corpora. M3 Max 128 GB RAM makes the 1.3 GB model footprint
+# negligible. Decision: 2026-05-11 (user-approved Item 6 override).
 
 
 # ---------- schemas -------------------------------------------------------
@@ -140,7 +146,7 @@ def _wire_views_and_indices(pxt, dry_run: bool) -> dict:
     from pixeltable.iterators.document import DocumentSplitter
     from pixeltable.functions.huggingface import sentence_transformer
 
-    embed = sentence_transformer.using(model_id="intfloat/e5-large-v2")
+    embed = sentence_transformer.using(model_id=EMBEDDING_MODEL_ID)
 
     tutorials = pxt.get_table("lattice/knowledge/tutorials")
     sent_view = pxt.create_view(

@@ -23,6 +23,7 @@ Type-surface notes (verified):
 from __future__ import annotations
 
 from migrations._helpers import (
+    EMBEDDING_MODEL_ID,
     OWNED_PARENTS,
     assert_ownership,
     banner,
@@ -31,6 +32,12 @@ from migrations._helpers import (
 )
 
 MIGRATION_ID = "0016_docs_substrate"
+
+# Embedding model: intfloat/e5-large-v2 (via shared EMBEDDING_MODEL_ID constant).
+# Matches 0015 so doc_chunks + research_chunks + tutorial_sentences share one
+# retrieval space. Selected over all-MiniLM-L6-v2 for higher retrieval fidelity
+# on dense technical corpora. M3 Max 128 GB RAM makes the 1.3 GB model footprint
+# negligible. Decision: 2026-05-11 (user-approved Item 6 override).
 
 
 def _docs_schema(pxt) -> dict[str, object]:
@@ -94,7 +101,7 @@ def _wire_doc_chunks_view(pxt, dry_run: bool) -> dict:
     from pixeltable.iterators.document import DocumentSplitter
     from pixeltable.functions.huggingface import sentence_transformer
 
-    embed = sentence_transformer.using(model_id="intfloat/e5-large-v2")
+    embed = sentence_transformer.using(model_id=EMBEDDING_MODEL_ID)
 
     docs = pxt.get_table("lattice/knowledge/docs")
     chunk_view = pxt.create_view(
