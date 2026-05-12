@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Last verified against live state: 2026-05-11 (migration **0013** applied, runtime console green, **36 tables**, **33 FastAPI endpoints**, 226 issues tracked).
+Last verified against live state: 2026-05-12 (migration **0013** applied, runtime console green, **36 tables**, **38 FastAPI endpoints**, 226 issues tracked).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 
@@ -135,7 +135,11 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
    │    GET  /v1/georef/{project_id}/*         3 georef read endpoints    │
    │    POST /v1/reality/{drone,splat,pc}/*    4 reality ingest stubs     │
    │    GET  /v1/reality/mirror/{id}/*         2 mirror read endpoints    │
-   │    POST /v1/erp/boq           (future)    OpenConstructionERP BOQ    │
+   │    POST /v1/erp/boq                      OpenConstructionERP BOQ      │
+   │    POST /v1/erp/cost-search              CWICR semantic cost lookup   │
+   │    GET  /v1/erp/boq/{project_id}         OpenConstructionERP BOQ read │
+   │    GET  /v1/erp/export/{project_id}      BOQ export download          │
+   │    POST /v1/erp/phases                   OpenConstructionERP 4D/5D    │
    │    POST /v1/genai/infer       (future)    Local model dispatch       │
    │                                                                       │
    │  Worker loop:  poll agent_runs WHERE status='pending'                │
@@ -167,7 +171,7 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
 
 ---
 
-## 3a. FastAPI surface (33 endpoints)
+## 3a. FastAPI surface (38 endpoints)
 
 The full live endpoint reference is in [`meta/API.md`](API.md). Summary by router:
 
@@ -181,9 +185,10 @@ The full live endpoint reference is in [`meta/API.md`](API.md). Summary by route
 | `/v1/semantic` | 1 | live |
 | `/v1/evidence` | 1 | live |
 | `/v1/health` | 2 | live |
+| `/v1/erp` | 5 | 3 live + 2 stub-501 |
 | `/v1/georef` | 11 | 8 stub-501 + 3 live (read endpoints) |
 | `/v1/reality` | 7 | 5 stub-501 + 2 live (mirror reads) |
-| **Total** | **33** | |
+| **Total** | **38** | |
 
 Stub-501 endpoints are intentional placeholders that define the contract for converters/pipelines that haven't landed yet. They are NOT removed when implementation lands — the route stays, the 501 turns into 200.
 
@@ -391,7 +396,7 @@ The one-line insight: LATTICE takes the **schema language** (`bis-schemas`) + th
 
 ## 9. DDC integration map
 
-LATTICE wraps four pieces of the DataDrivenConstruction ecosystem (full detail in [`meta/DDC_MAPPING.md`](DDC_MAPPING.md)):
+LATTICE wraps four pieces of the DataDrivenConstruction ecosystem (full detail in [`meta/DDC_MAPPING.md`](DDC_MAPPING.md) and the structured harvest at [`ddc/capability-matrix.yaml`](../ddc/capability-matrix.yaml)):
 
 | Piece | LATTICE home | Status |
 |---|---|---|

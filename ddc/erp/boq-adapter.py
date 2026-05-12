@@ -13,12 +13,15 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import Any
+
+import httpx
 
 
 ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080")
 
 
-def sync_boq(project_id: str) -> dict:
+def sync_boq(project_id: str, pxt: Any | None = None) -> dict:
     """Walk ifc_elements for the project, upsert into ERP, write IDs back."""
     raise NotImplementedError(
         "boq-adapter stub. See ddc/erp/README.md for the endpoint contract and "
@@ -44,6 +47,19 @@ def sync_boq(project_id: str) -> dict:
     #     # Upsert erp_item_id + unit_cost on the row via upsert_runtime_event-style pattern
     # client.close()
     # return {"updated": len(rows), "project_id": project_id}
+
+
+def fetch_boq(project_id: str) -> dict:
+    with httpx.Client(base_url=ERP_BASE, timeout=30.0) as client:
+        response = client.get(f"/api/boq/{project_id}")
+        response.raise_for_status()
+        payload = response.json()
+    return {
+        "ok": True,
+        "project_id": project_id,
+        "erp_base": ERP_BASE,
+        "boq": payload,
+    }
 
 
 if __name__ == "__main__":

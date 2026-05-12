@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RuntimeRouteImport } from './routes/runtime'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ThreadsIndexRouteImport } from './routes/threads/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as RunsIndexRouteImport } from './routes/runs/index'
@@ -59,6 +60,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThreadsIndexRoute = ThreadsIndexRouteImport.update({
@@ -230,6 +236,7 @@ const DemoApiAiChatRoute = DemoApiAiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin/': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin/': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -347,6 +356,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin/'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin/'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -462,6 +474,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   RuntimeRoute: typeof RuntimeRoute
   AgentsAgentIdRoute: typeof AgentsAgentIdRoute
   DemoAiChatRoute: typeof DemoAiChatRoute
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -758,6 +778,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminIndexRoute: AdminIndexRoute,
   RuntimeRoute: RuntimeRoute,
   AgentsAgentIdRoute: AgentsAgentIdRoute,
   DemoAiChatRoute: DemoAiChatRoute,

@@ -5,7 +5,7 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 ## Overview
 
 - **Base URL:** `http://127.0.0.1:8765` (TCP dev) or `unix:///tmp/vwbridge-pxt.sock` (production)
-- **33 endpoints** across 10 routers (2 app-level + 31 router-level)
+- **38 endpoints** across 11 routers (2 app-level + 36 router-level)
 - **Sidecar entrypoint:** `pixeltable/service/main.py`
 - **Auth:** none (local dev). `LATTICE_API_KEY` header planned for Phase 3.
 - **Idempotency:** all write routes require an `Idempotency-Key` header (8..256 chars). Replays within 24h are returned from cache.
@@ -64,6 +64,16 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 |---|---|---|---|
 | POST | `/v1/health/drift` | live | Record schema drift event |
 | GET | `/v1/health/gap-matrix/{vw_export_hash}` | live | Read bridge gap matrix |
+
+## /v1/erp (5 endpoints)
+
+| Method | Path | Status | Purpose |
+|---|---|---|---|
+| POST | `/v1/erp/boq` | [stub 501] | Create or refresh a project BOQ from local IFC rows |
+| GET | `/v1/erp/boq/{project_id}` | live | Fetch the current project BOQ from OpenConstructionERP |
+| GET | `/v1/erp/export/{project_id}` | live | Stream a BOQ export artifact from `public/exports/` |
+| POST | `/v1/erp/cost-search` | live | Query CWICR semantic unit-cost matches |
+| POST | `/v1/erp/phases` | [stub 501] | Push 4D/5D phase assignments into OpenConstructionERP |
 
 ## /v1/georef (11 endpoints)
 
