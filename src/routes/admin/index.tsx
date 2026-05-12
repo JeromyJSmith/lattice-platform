@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {
+  ddcCapabilityArtifactPath,
   ddcCapabilities,
   ddcExclusions,
   ddcPipelineStages,
@@ -133,7 +134,7 @@ function AdminPage() {
           </ul>
           <p className="mt-5 text-xs text-[var(--sea-ink-soft)]">
             Canonical structured artifact:{' '}
-            <code>/home/runner/work/lattice-platform/lattice-platform/ddc/capability-matrix.yaml</code>
+            <code>{ddcCapabilityArtifactPath}</code>
           </p>
         </article>
       </section>
