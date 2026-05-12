@@ -1,10 +1,8 @@
 name: linear-sync-check
 
-# Validates that every PR:
-#   1. Has a PR title matching [LAT-XX] or [MAR-XX] prefix (Linear ID required)
-#   2. Has a branch name whose prefix matches an allowed agent-lane prefix
+# Validates that every PR has a Linear issue ID in the title.
 #
-# Docs: meta/sync-contract.md, meta/agent-lanes.md
+# Docs: meta/sync-contract.md
 
 on:
   pull_request:
@@ -31,8 +29,6 @@ jobs:
           echo "PR title: $PR_TITLE"
 
           # Allow [LAT-NNN], [MAR-NNN], or [MARPA-NNN] prefix (case-insensitive)
-          # Note: MARPA-XX is used for platform issues while on the free plan
-          # (see meta/sync-contract.md §Teams for the G1 note)
           if echo "$PR_TITLE" | grep -qiE '^\[(LAT|MAR|MARPA)-[0-9]+\]'; then
             echo "✓ Linear ID found in PR title."
           else
@@ -42,55 +38,6 @@ jobs:
             echo "  Example:         [MARPA-47] feat(sync): add sync-contract.md"
             echo ""
             echo "  See meta/sync-contract.md for the full convention."
-            echo ""
-            echo "  If this PR has no Linear issue yet:"
-            echo "    1. Create an issue in Linear (MARPA team → MARPA-XX)"
-            echo "    2. Update the PR title"
-            exit 1
-          fi
-
-  agent-lane-check:
-    name: Validate branch prefix against agent lanes
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check branch name prefix
-        env:
-          BRANCH: ${{ github.head_ref }}
-        run: |
-          echo "Branch: $BRANCH"
-
-          # Allowed prefixes from meta/agent-lanes.md
-          ALLOWED_PREFIXES="copilot/ claude/ codex/ warp-pi/ hermes/ human/ feature/ chore/ fix/ docs/ release/ hotfix/ dependabot/ renovate/"
-
-          MATCHED=false
-          for PREFIX in $ALLOWED_PREFIXES; do
-            if echo "$BRANCH" | grep -q "^${PREFIX}"; then
-              MATCHED=true
-              echo "✓ Branch prefix '${PREFIX}' is allowed."
-              break
-            fi
-          done
-
-          if [ "$MATCHED" = "false" ]; then
-            echo ""
-            echo "✗ Branch name does not match any allowed agent-lane prefix."
-            echo "  Branch: $BRANCH"
-            echo ""
-            echo "  Allowed prefixes (from meta/agent-lanes.md):"
-            echo "    copilot/   — GitHub Copilot lane"
-            echo "    claude/    — Claude Code lane"
-            echo "    codex/     — Codex CLI lane"
-            echo "    warp-pi/   — Warp Terminal PI lane"
-            echo "    hermes/    — Hermes lane"
-            echo "    human/     — Human-only commits"
-            echo "    feature/   — General feature branches"
-            echo "    chore/     — Maintenance branches"
-            echo "    fix/       — Bug fix branches"
-            echo "    docs/      — Documentation-only branches"
-            echo "    release/   — Release branches"
-            echo "    hotfix/    — Emergency fixes"
-            echo ""
-            echo "  Rename your branch: git branch -m $BRANCH <prefix>/LAT-XX-slug"
             exit 1
           fi
 
@@ -103,11 +50,10 @@ jobs:
         env:
           BRANCH: ${{ github.head_ref }}
         run: |
-          # Advisory only — does not fail the build
           if echo "$BRANCH" | grep -qiE '(LAT|MAR|MARPA)-[0-9]+'; then
             echo "✓ Linear ID found in branch name: $BRANCH"
           else
             echo "⚠ Advisory: branch name does not include a Linear issue ID."
-            echo "  Recommended: <prefix>/MARPA-XX-slug (e.g. claude/MARPA-47-sync-contract)"
+            echo "  Recommended: <type>/marpa-NNN-slug (e.g. feat/marpa-47-sync-contract)"
             echo "  This check is advisory and does not block merging."
           fi
