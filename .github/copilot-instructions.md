@@ -92,6 +92,37 @@ If you're picking up an issue, also read [`meta/AGENT_ONBOARDING.md`](../meta/AG
     tested. PR #230 (`feature/meta-harness`) is intentionally kept in Draft
     state until Phase B bootstrap verifies. Do not propose marking it
     Ready-for-Review.
+24. **Issue prefix is MARPA-XX, not LAT-XX.** All Linear issues use the MARPA
+    team (free-plan constraint blocks creating a separate LATTICE team). PR
+    titles must match `[MARPA-NNN] type(scope): description`. Magic Words:
+    `Closes MARPA-NNN`, `Refs MARPA-NNN`. The `linear-sync-check.yml` CI
+    job validates this format and blocks non-conforming PRs.
+25. **Active integration branch is `feature/phase-c-linear`.** All agent PRs
+    target `feature/phase-c-linear`, not `main` or `feature/meta-harness`.
+    Never propose opening a PR against `main` unless the human explicitly
+    requests a merge event.
+26. **Symphony orchestrates the `codex` agent lane.** Symphony polls Linear
+    for issues labeled `codex` in active states (Backlog, Todo, In Progress,
+    Rework) and dispatches Codex CLI (`codex app-server`) to work on them in
+    isolated per-issue workspaces. `WORKFLOW.md` at repo root is the
+    Symphony config. `AGENTS.md` at repo root is the Codex context file.
+    Never propose changes to `WORKFLOW.md` or `AGENTS.md` without
+    understanding how they interact with Symphony's Jinja2 rendering
+    and Codex's `project_doc_max_bytes` limit (32 KiB default).
+
+## Symphony + agent lane quick reference
+
+| Agent | Branch prefix | Linear label | File scope |
+|---|---|---|---|
+| Codex CLI | `codex/` | `codex` | migrations (new), service, server routes, scripts |
+| Claude Code | `claude/` | `claude-code` | multi-file refactors, .claude/, analysis/ |
+| GitHub Copilot | `copilot/` | `copilot` | .github/, scripts (single-file), meta (single-file) |
+| Warp PI | `warp-pi/` | `warp-pi` | scripts/, shell ops, Phase B bootstrap |
+| Hermes | `hermes/` | `hermes` | meta/harness/docs/, analysis/, research |
+| Human only | `human/` | `human-only` | secrets, OAuth, merges, deletions |
+
+Collision prevention: one issue, one lane. If an issue already has another
+agent's label, do not pick it up. Ping `#lattice-sync` instead.
 
 ## Style preferences
 
