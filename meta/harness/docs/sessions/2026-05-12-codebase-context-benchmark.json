@@ -1,0 +1,42 @@
+{
+  "benchmark_name": "Golden Path 001 codebase-context proof",
+  "purpose": "Verify that a Disler-style single-file codebase context agent can be promoted into LATTICE, run through the FastAPI sidecar, and emit verifier-ready evidence.",
+  "base_prompt": "Identify files relevant to adding or changing a FastAPI sidecar route for single-file harness agents and benchmark reports.",
+  "prompt_iterations": [
+    {
+      "capability": "codebase-context-ripgrep",
+      "expected": "selected files include pixeltable/service/routes/harness.py and meta/harness/single-file-harness-agents.md"
+    }
+  ],
+  "models": [
+    {
+      "model": "deterministic-keyword-ripgrep",
+      "provider": "uv-single-file-agent",
+      "results": [
+        {
+          "prompt": "direct script proof run",
+          "success": true,
+          "latency_ms": 16,
+          "cost_usd": 0,
+          "score": 1,
+          "output": "meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json",
+          "failure_mode": null
+        },
+        {
+          "prompt": "FastAPI sidecar registered job run",
+          "success": true,
+          "latency_ms": 466,
+          "cost_usd": 0,
+          "score": 1,
+          "output": "meta/harness/docs/sessions/2026-05-12-codebase-context-sidecar-run.json",
+          "failure_mode": null
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "direct_command": "uv run meta/harness/tools/codebase-context-agent.py --verify meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json --repo-root .",
+    "sidecar_command": "PYTHONPATH=pixeltable uv run --project pixeltable python <FastAPI TestClient harness>",
+    "status": "pass"
+  }
+}

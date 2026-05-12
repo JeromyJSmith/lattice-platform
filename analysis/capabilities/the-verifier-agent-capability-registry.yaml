@@ -1,0 +1,47 @@
+# spec-verified: disler/the-verifier-agent aa18d68 2026-05-12
+tool: the-verifier-agent
+tool_version: aa18d68
+canonical_docs: https://github.com/disler/the-verifier-agent
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: top-down-observer
+    surface: pattern
+    name: Pi top-down observer pattern
+    state: ACTIVE
+    description: Builder Pi emits lifecycle events while child verifier observes session JSONL and returns reports/corrections.
+    wired_at: ["meta/verification/pi-verifier-surface.md"]
+    invoked_by: ["LATTICE Pi delegation surface"]
+
+  - id: verifier-report-contract
+    surface: prompt
+    name: structured verifier Report block
+    state: ACTIVE
+    description: Verifier reports status, confidence, verified evidence, unverifiable gaps, feedback, and metadata.
+    wired_at: ["meta/verification/VERIFIER.md"]
+    invoked_by: ["LATTICE verifier contract"]
+
+  - id: verifier-prompt-correction
+    surface: tool
+    name: verifier_prompt correction channel
+    state: ACTIVE
+    description: Verifier sends bounded corrective feedback back to the builder instead of mutating files directly.
+    wired_at: ["meta/verification/pi-verifier-surface.md"]
+    invoked_by: ["Pi verifier surface"]
+
+  - id: socket-jsonl-lifecycle
+    surface: architecture
+    name: Unix socket plus session JSONL lifecycle
+    state: ACTIVE
+    description: Builder forwards start/stop/error events over socket and writes session JSONL for verifier slice reads.
+    wired_at: ["meta/verification/pi-verifier-surface.md"]
+    invoked_by: ["Pi verifier surface"]
+
+  - id: child-input-locked
+    surface: policy
+    name: input-locked child verifier
+    state: ACTIVE
+    description: Verifier runs as an input-locked child process with read-only/script-only authority.
+    wired_at: ["meta/verification/pi-verifier-surface.md", "meta/harness/bash-safety.md"]
+    invoked_by: ["high-blast-radius harness jobs", "verifier jobs"]

@@ -1,0 +1,39 @@
+# spec-verified: disler/fork-repository-skill ba196f6 2026-05-12
+tool: fork-repository-skill
+tool_version: ba196f6
+canonical_docs: https://github.com/disler/fork-repository-skill
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: fork-terminal-delegation
+    surface: workflow
+    name: fork terminal delegation
+    state: ACTIVE
+    description: Spawn separate terminal sessions to offload context, branch work, and run parallel agents.
+    wired_at: ["meta/harness/fork-and-sandbox.md", "meta/harness/delegation-model.md"]
+    invoked_by: ["LATTICE orchestrator"]
+
+  - id: cli-agent-fanout
+    surface: workflow
+    name: CLI agent fan-out
+    state: ACTIVE
+    description: Dispatch comparable tasks to Claude CLI, Codex CLI, Gemini CLI, or raw CLI in separate terminals.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["model-fit benchmarks", "parallel reviews"]
+
+  - id: context-summary-handoff
+    surface: prompt
+    name: context summary handoff
+    state: ACTIVE
+    description: Forked agents receive a compact summary when the current conversation context matters.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE delegation model"]
+
+  - id: model-modifier-routing
+    surface: doctrine
+    name: fast/default/heavy model modifiers
+    state: ACTIVE
+    description: Forked tasks can request lighter or stronger model choices based on task blast radius.
+    wired_at: ["meta/harness/model-fit.md", "meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE model-fit loop"]

@@ -1,0 +1,47 @@
+# spec-verified: disler/install-and-maintain 558b5c8 2026-05-12
+tool: install-and-maintain
+tool_version: 558b5c8
+canonical_docs: https://github.com/disler/install-and-maintain
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: executable-install-docs
+    surface: doctrine
+    name: living install document that executes
+    state: ACTIVE
+    description: Setup uses deterministic scripts as source of truth, with agents supervising and reporting instead of improvising.
+    wired_at: ["meta/harness/install-maintain.md"]
+    invoked_by: ["Meta-Harness dry run"]
+
+  - id: deterministic-init
+    surface: hook
+    name: deterministic init hook
+    state: ACTIVE
+    description: Fast setup path runs the same script every time and is CI-friendly.
+    wired_at: ["meta/harness/install-maintain.md"]
+    invoked_by: ["LATTICE install mode"]
+
+  - id: agentic-install-report
+    surface: prompt
+    name: agentic install report
+    state: ACTIVE
+    description: Agent reads deterministic install logs, diagnoses failures, and writes a status report.
+    wired_at: ["meta/harness/install-maintain.md"]
+    invoked_by: ["LATTICE install mode"]
+
+  - id: interactive-install
+    surface: prompt
+    name: interactive install mode
+    state: ACTIVE
+    description: Human-in-the-loop setup asks questions only when context matters.
+    wired_at: ["meta/harness/install-maintain.md"]
+    invoked_by: ["LATTICE install mode"]
+
+  - id: maintenance-loop
+    surface: workflow
+    name: deterministic maintenance plus agentic report
+    state: ACTIVE
+    description: Maintenance runs scripted updates/checks, then an agent summarizes successes, failures, and next steps.
+    wired_at: ["meta/harness/install-maintain.md"]
+    invoked_by: ["Meta-Harness maintenance mode"]

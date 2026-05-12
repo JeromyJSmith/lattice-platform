@@ -1,0 +1,48 @@
+# spec-verified: disler/claude-code-is-programmable 3889265 2026-05-12
+tool: claude-code-is-programmable
+tool_version: 3889265
+canonical_docs: https://github.com/disler/claude-code-is-programmable
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: claude-print-utility
+    surface: cli_command
+    name: claude -p as Unix-style utility
+    state: ACTIVE
+    description: Claude Code can be called non-interactively from scripts with selected tools and output formats.
+    wired_at: ["meta/harness/programmable-agents.md"]
+    invoked_by: ["LATTICE programmable-agent doctrine"]
+
+  - id: allowed-tools-contract
+    surface: policy
+    name: allowed tools contract
+    state: ACTIVE
+    description: Programmable calls restrict Claude Code tools per task instead of granting ambient authority.
+    wired_at: ["meta/harness/programmable-agents.md", "meta/harness/bash-safety.md"]
+    invoked_by: ["LATTICE script jobs"]
+
+  - id: stream-json-output
+    surface: interface
+    name: stream-json output
+    state: ACTIVE
+    description: Claude Code script calls can emit text, JSON, or stream-json for machine ingestion.
+    wired_at: ["meta/harness/programmable-agents.md"]
+    invoked_by: ["LATTICE evidence model"]
+
+  - id: python-js-wrappers
+    surface: pattern
+    name: Python and JavaScript wrappers
+    state: ACTIVE
+    description: Programmatic wrappers call Claude Code from Python or JavaScript as one step in larger workflows.
+    wired_at: ["meta/harness/programmable-agents.md"]
+    invoked_by: ["LATTICE one-shot jobs"]
+
+  - id: voice-to-claude
+    surface: workflow
+    name: voice to Claude Code
+    state: DEFERRED
+    description: Speech-driven Claude Code workflow; useful later for operator console input experiments.
+    reason: out-of-scope-for-current-phase
+    target_phase: post-meta-harness-plateau
+    tracking_issue: 19

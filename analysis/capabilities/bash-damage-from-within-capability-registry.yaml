@@ -1,0 +1,66 @@
+# spec-verified: disler/bash-damage-from-within f639414 2026-05-12
+tool: bash-damage-from-within
+tool_version: f639414
+canonical_docs: https://github.com/disler/bash-damage-from-within
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: level-1-safe-mode
+    surface: pattern
+    name: safe-mode skill
+    state: DEFERRED
+    description: User-channel caution skill for agent bash behavior; useful only as a soft accelerator.
+    reason: redundant-with-other-tool
+    target_phase: never-alone
+    tracking_issue: 19
+
+  - id: level-2-system-prompt
+    surface: pattern
+    name: append-system-prompt bash caution
+    state: DEFERRED
+    description: System-prompt bash caution layer; useful only stacked above hard enforcement.
+    reason: redundant-with-other-tool
+    target_phase: never-alone
+    tracking_issue: 19
+
+  - id: level-3-blacklist
+    surface: hook
+    name: bash blacklist hook
+    state: DEFERRED
+    description: Reactive regex blacklist for dangerous bash commands; acceptable as a floor, not production policy.
+    reason: redundant-with-other-tool
+    target_phase: fallback-only
+    tracking_issue: 19
+
+  - id: level-4-whitelist
+    surface: hook
+    name: bash whitelist hook
+    state: ACTIVE
+    description: Default-deny bash policy with anchored allowlist and shell-operator rejection.
+    wired_at: ["meta/harness/bash-safety.md"]
+    invoked_by: ["Pi harness job policy"]
+
+  - id: level-5-no-bash
+    surface: tool_policy
+    name: no bash, custom tools only
+    state: ACTIVE
+    description: Production-grade policy removing arbitrary bash and exposing purpose-built safe tools.
+    wired_at: ["meta/harness/bash-safety.md", "meta/verification/pi-verifier-surface.md"]
+    invoked_by: ["Pi verifier surface", "high-blast-radius harness jobs"]
+
+  - id: pi-tool-call-extension
+    surface: hook
+    name: Pi tool_call event guard
+    state: ACTIVE
+    description: Pi extension intercepts tool calls and can block or replace bash capability.
+    wired_at: ["meta/verification/pi-verifier-surface.md"]
+    invoked_by: ["Pi delegation surface"]
+
+  - id: script-pinning-rule
+    surface: policy
+    name: pin specific scripts
+    state: ACTIVE
+    description: Whitelists must pin repo-owned scripts and never allow arbitrary interpreters or shell scripts.
+    wired_at: ["meta/harness/bash-safety.md"]
+    invoked_by: ["LATTICE delegation model", "Pi harness jobs"]

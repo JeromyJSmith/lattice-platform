@@ -1,0 +1,24 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+tool: <tool>
+tool_version: <version-or-sha>
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/<tool>-capability-harvest.md
+  matrix: analysis/capabilities/<tool>-capability-matrix.md
+harnesses:
+  - harness: <harness-name>
+    capabilities:
+      - id: <capability-id>
+        registry_state: ACTIVE
+        purpose: <why this harness uses it>
+        proof:
+          command: <first successful invocation>
+          evidence: <report, artifact, or table>
+          verified_at: <YYYY-MM-DD>
+          outcome: <desired outcome produced>
+        verification:
+          command: <local command or CI job>
+          evidence: <report, artifact, or table>
+        docs_coverage:
+          required: true
+          source: <doc mirror key or URL>
