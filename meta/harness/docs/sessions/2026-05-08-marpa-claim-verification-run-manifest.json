@@ -1,0 +1,20 @@
+{
+  "version": "3.0.0",
+  "query": "MARPA claim verification and enrichment pass — Vectorworks/Bentley iTwin landscape architecture bridge",
+  "mode": "deep",
+  "started_at": "2026-05-08T20:29:51.059084+00:00",
+  "finished_at": null,
+  "assumptions": [],
+  "provider_config": {
+    "primary": "search-cli",
+    "scholarly": null
+  },
+  "report_dir": "/Users/ojeromyo/Documents/Vectorworks_Bentley_iTwin_MARPA_Research_20260508",
+  "artifact_paths": {
+    "sources": "sources.jsonl",
+    "evidence": "evidence.jsonl",
+    "claims": "claims.jsonl",
+    "report": "report.md"
+  },
+  "continuation": null
+}
