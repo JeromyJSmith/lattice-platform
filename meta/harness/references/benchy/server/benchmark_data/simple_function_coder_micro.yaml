@@ -1,0 +1,54 @@
+benchmark_name: "Simple Function Coder Micro"
+purpose: "Evaluate the ability of a language model to generate and execute a function."
+base_prompt: |
+  <purpose>
+      Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.
+  </purpose>
+  
+  <instructions>
+      <instruction>Generate only the function requested by the user.</instruction>
+      <instruction>Fill in the function body with the appropriate code.</instruction>
+      <instruction>Do not include any other text.</instruction>
+      <instruction>Write code in python 3.</instruction>
+      <instruction>Generate the function, call the function, and print the result.</instruction>
+      <instruction>Code should be clean and readable.</instruction>
+      <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>
+  </instructions>
+  
+  <function-request>
+      {{function}}
+  </function-request>
+
+  <function-arguments>
+      {{arguments}}
+  </function-arguments>
+evaluator: "execute_python_code_with_string_output"
+models: 
+  # - "ollama~mistral-small:latest" 
+  # - "anthropic~claude-3-5-sonnet-latest"
+  - "openai~gpt-4o-mini"
+  - "openai~gpt-4o"
+  - "openai~o1-mini"
+  - "openai~o3-mini:low"
+  - "openai~o3-mini:medium"
+  - "openai~o3-mini:high"
+  - "openai~o1"
+  - "openai~o1-preview"
+  
+prompts:
+  - dynamic_variables:
+      function: "def add(a, b): int - add two numbers"
+      arguments: "1, 2"
+    expectation: "3.0"
+  - dynamic_variables:
+      function: "def multiply_list(numbers: list) -> int - multiply all numbers in a list together"
+      arguments: "[2, 3, 4]"
+    expectation: "24.0"
+  - dynamic_variables:
+      function: "def reverse_string(text: str) -> str - reverse the characters in a string"
+      arguments: "'hello world'"
+    expectation: "dlrow olleh"
+  - dynamic_variables:
+      function: "def count_vowels(text: str) -> int - count the number of vowels in a string"
+      arguments: "'beautiful'"
+    expectation: "5.0"

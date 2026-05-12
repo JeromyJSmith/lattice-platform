@@ -1,0 +1,73 @@
+# spec-verified: disler/single-file-agents ae5826a 2026-05-12
+tool: single-file-agents
+tool_version: ae5826a
+canonical_docs: https://github.com/disler/single-file-agents
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: codebase-context-ripgrep
+    surface: sidecar_job
+    name: codebase context ripgrep agent
+    state: ACTIVE
+    description: LATTICE-owned deterministic adaptation of Disler's codebase context single-file agent pattern.
+    wired_at:
+      - meta/harness/tools/codebase-context-agent.py
+      - pixeltable/service/routes/harness.py
+      - meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json
+      - meta/harness/docs/sessions/2026-05-12-codebase-context-sidecar-run.json
+    invoked_by:
+      - POST /v1/harness/single-file-agents/runs
+      - uv run meta/harness/tools/codebase-context-agent.py
+    proof_evidence:
+      direct: meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json
+      sidecar: meta/harness/docs/sessions/2026-05-12-codebase-context-sidecar-run.json
+      benchmark: meta/harness/docs/sessions/2026-05-12-codebase-context-benchmark.json
+
+  - id: uv-single-file-agent
+    surface: pattern
+    name: uv single-file agent
+    state: ACTIVE
+    description: A focused agent ships as one Python file with embedded uv inline metadata, docstrings, and one clear task.
+    wired_at: ["meta/harness/single-file-harness-agents.md"]
+    invoked_by: ["LATTICE single-file harness agents"]
+
+  - id: python-docstring-rule
+    surface: policy
+    name: Python docstrings required
+    state: ACTIVE
+    description: Python scripts, public functions, classes, and methods require docstrings.
+    wired_at: ["meta/harness/single-file-harness-agents.md", "scripts/check-python-docstrings.py"]
+    invoked_by: ["LATTICE verifier", "pre-commit docs check"]
+
+  - id: data-query-agents
+    surface: pattern
+    name: DuckDB/SQLite/Polars data query agents
+    state: ACTIVE
+    description: Single-file agents can specialize in constrained data querying and transformation tasks.
+    wired_at: ["meta/harness/single-file-harness-agents.md", "meta/harness/model-fit.md"]
+    invoked_by: ["future LATTICE data harness jobs"]
+
+  - id: jq-command-agent
+    surface: pattern
+    name: jq command generator
+    state: ACTIVE
+    description: Single-file agent generates minimal jq commands for JSON processing.
+    wired_at: ["meta/harness/single-file-harness-agents.md"]
+    invoked_by: ["LATTICE file-processing jobs"]
+
+  - id: meta-prompt-agent
+    surface: pattern
+    name: meta prompt generator
+    state: ACTIVE
+    description: Single-file agent generates reusable prompts with purpose, sections, examples, and variables.
+    wired_at: ["meta/harness/single-file-harness-agents.md"]
+    invoked_by: ["LATTICE prompt command creation"]
+
+  - id: provider-variant-agents
+    surface: doctrine
+    name: provider-specific variants
+    state: ACTIVE
+    description: The same task can have OpenAI, Anthropic, Gemini, local, or other model-specific agent variants for benchmarking.
+    wired_at: ["meta/harness/single-file-harness-agents.md", "meta/harness/model-fit.md"]
+    invoked_by: ["LATTICE model-fit loop"]

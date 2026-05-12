@@ -1,0 +1,24 @@
+# spec-verified: disler/single-file-agents ae5826a 2026-05-12
+tool: single-file-agents
+tool_version: ae5826a
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/single-file-agents-capability-harvest.md
+  matrix: analysis/capabilities/single-file-agents-capability-matrix.md
+harnesses:
+  - harness: meta-harness
+    capabilities:
+      - id: codebase-context-ripgrep
+        registry_state: ACTIVE
+        purpose: Select task-relevant files before bounded harness implementation work.
+        proof:
+          command: uv run meta/harness/tools/codebase-context-agent.py --task "Identify files relevant to adding or changing a FastAPI sidecar route for single-file harness agents and benchmark reports." --repo-root . --output meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json --expect-path pixeltable/service/routes/harness.py --expect-path meta/harness/single-file-harness-agents.md
+          evidence: meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json
+          verified_at: 2026-05-12
+          outcome: JSON artifact selected the expected sidecar and harness-doc files.
+        verification:
+          command: uv run meta/harness/tools/codebase-context-agent.py --verify meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json --repo-root .
+          evidence: meta/harness/docs/sessions/2026-05-12-codebase-context-benchmark.json
+        docs_coverage:
+          required: true
+          source: meta/harness/single-file-harness-agents.md

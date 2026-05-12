@@ -1,0 +1,47 @@
+# spec-verified: disler/agentic-drop-zones 16a347b 2026-05-12
+tool: agentic-drop-zones
+tool_version: 16a347b
+canonical_docs: https://github.com/disler/agentic-drop-zones
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: yaml-drop-zone-config
+    surface: workflow
+    name: drops.yaml file-trigger config
+    state: ACTIVE
+    description: File watchers map patterns, directories, events, prompts, agents, models, and MCP files to processing workflows.
+    wired_at: ["meta/harness/drop-zones.md"]
+    invoked_by: ["LATTICE drop-zone doctrine"]
+
+  - id: watchdog-file-events
+    surface: script
+    name: watchdog file event monitor
+    state: ACTIVE
+    description: A single-file script watches directories and triggers agent jobs on create/modify/delete/move events.
+    wired_at: ["meta/harness/drop-zones.md"]
+    invoked_by: ["future LATTICE drop zones"]
+
+  - id: agent-agnostic-drop-processing
+    surface: workflow
+    name: agent-agnostic drop processing
+    state: ACTIVE
+    description: Drops can dispatch to Claude Code, Gemini CLI, Codex CLI, or future model routes.
+    wired_at: ["meta/harness/drop-zones.md", "meta/harness/pi-claude-routing.md"]
+    invoked_by: ["LATTICE drop zones"]
+
+  - id: prompt-template-file-path
+    surface: prompt
+    name: FILE_PATH prompt variable
+    state: ACTIVE
+    description: Prompt templates receive the dropped file path as a variable for repeatable processing.
+    wired_at: ["meta/harness/drop-zones.md"]
+    invoked_by: ["LATTICE drop zones"]
+
+  - id: event-driven-harness-jobs
+    surface: doctrine
+    name: event-driven harness jobs
+    state: ACTIVE
+    description: Drop zones turn file arrival into bounded, configured harness jobs with artifacts and verification.
+    wired_at: ["meta/harness/drop-zones.md", "meta/harness/delegation-model.md"]
+    invoked_by: ["Meta-Harness future intake"]

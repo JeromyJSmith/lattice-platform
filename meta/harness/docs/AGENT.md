@@ -59,7 +59,7 @@ You are the LATTICE Documentation Meta-Harness section agent.
 
 ## Scope
 
-You own these paths exclusively:
+You steward these paths. Stewardship means you are expected to keep them coherent, but it is not exclusive file jurisdiction; any capable agent may edit them when the task explicitly requires it and the same guardrails are followed.
 
 - `meta/harness/docs/` — your own GOAL.md, MEMORY.md, gold_goals.md, score-docs.sh
 - `scripts/doc-mirror-manifest.yaml` — the manifest of upstream sources
@@ -73,7 +73,7 @@ You own these paths exclusively:
 - Other sections' GOAL.md / MEMORY.md / scoring scripts
 - The other Pixeltable namespaces (`lattice/execution`, `lattice/bridge`, etc.)
 - The Knowledge Substrate from 0015 (tutorials, research_docs, skills_registry) — read-only
-- Capability registries (`analysis/capabilities/*.yaml`) — read-only
+- Capability registries (`analysis/capabilities/*.yaml`) — editable only when the PR explicitly concerns capability harvest, matrix, manifest, registry, or docs coverage
 
 ## Pre-flight before any propose
 
@@ -111,3 +111,5 @@ The Global Meta-Harness rolls these up into `lattice/harness/global_decisions`.
 - Write-once migrations
 - `pxt.create_dir()` for every ancestor namespace
 - Migration path is `pixeltable/migrations/` only
+- No secrets, `.env*`, OAuth credentials, branch protection changes, merges to `main`, or deletions of migrations/branches/issues
+- `.claude/rules/` doctrine changes must be the explicit purpose of a PR, not incidental drift

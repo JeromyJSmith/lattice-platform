@@ -23,7 +23,7 @@ capabilities:
     name: search
     state: ACTIVE
     description: Hybrid BM25 + semantic search across indexed repo
-    wired_at: [.mcp.json (gitnexus entry — Phase 1)]
+    wired_at: [".mcp.json (gitnexus entry — Phase 1)"]
     invoked_by: [pre-edit context retrieval, section harnesses]
 
   - id: mcp-impact
@@ -39,7 +39,7 @@ capabilities:
     name: detect_changes
     state: ACTIVE
     description: Pre-commit detection of risky changes (touches central nodes)
-    wired_at: [.claude/settings.json (PreToolUse hook — Phase 6)]
+    wired_at: [".claude/settings.json (PreToolUse hook — Phase 6)"]
     invoked_by: [pre-commit hook]
 
   - id: mcp-rename
@@ -104,7 +104,7 @@ capabilities:
     name: dead_code
     state: ACTIVE
     description: Find unreachable code paths
-    wired_at: [scripts/audit-dead-dna.sh (Issue #17 full impl)]
+    wired_at: ["scripts/audit-dead-dna.sh (Issue #17 full impl)"]
     invoked_by: [dead-DNA audit]
 
   - id: mcp-test_coverage
@@ -130,7 +130,7 @@ capabilities:
     name: diff_graphs
     state: ACTIVE
     description: Diff two graph snapshots (architectural drift)
-    wired_at: [.github/workflows/docs-sync-check.yml (Phase 7)]
+    wired_at: [".github/workflows/docs-sync-check.yml (Phase 7)"]
     invoked_by: [CI on PRs]
 
   - id: mcp-export_graph
@@ -156,7 +156,7 @@ capabilities:
     name: group.bulk_impact
     state: ACTIVE
     description: Compute impact for a list of files (e.g., entire PR)
-    wired_at: [.claude/settings.json (PreToolUse hook)]
+    wired_at: [".claude/settings.json (PreToolUse hook)"]
     invoked_by: [pre-commit blast-radius check]
 
   - id: group-bulk_callers
@@ -210,7 +210,7 @@ capabilities:
     name: gitnexus-introduction
     state: ACTIVE
     description: Onboarding skill — when to query gitnexus vs grep
-    wired_at: [.claude/skills/generated/gitnexus-introduction/SKILL.md (auto)]
+    wired_at: [".claude/skills/generated/gitnexus-introduction/SKILL.md (auto)"]
     invoked_by: [auto-load post-analyze]
 
   - id: skill-gitnexus-blast-radius
@@ -244,7 +244,7 @@ capabilities:
     name: PreToolUse on Read
     state: ACTIVE
     description: Auto-enrich every Read with graph context (callers, callees, centrality)
-    wired_at: [.claude/settings.json (Phase 6)]
+    wired_at: [".claude/settings.json (Phase 6)"]
     invoked_by: [Claude Code on Read tool]
 
   - id: hook-pretooluse-grep
@@ -252,7 +252,7 @@ capabilities:
     name: PreToolUse on Grep
     state: ACTIVE
     description: Auto-enrich every Grep with graph context
-    wired_at: [.claude/settings.json (Phase 6)]
+    wired_at: [".claude/settings.json (Phase 6)"]
     invoked_by: [Claude Code on Grep tool]
 
   - id: hook-pretooluse-write
@@ -260,7 +260,7 @@ capabilities:
     name: PreToolUse on Write
     state: ACTIVE
     description: Compute blast radius before Write; warn if touches central node
-    wired_at: [.claude/settings.json (Phase 6)]
+    wired_at: [".claude/settings.json (Phase 6)"]
     invoked_by: [Claude Code on Write tool]
 
   - id: hook-posttooluse-write
@@ -268,5 +268,5 @@ capabilities:
     name: PostToolUse on Write
     state: ACTIVE
     description: Re-index changed file post-Write so subsequent queries reflect change
-    wired_at: [.claude/settings.json (Phase 6)]
+    wired_at: [".claude/settings.json (Phase 6)"]
     invoked_by: [Claude Code on Write tool]

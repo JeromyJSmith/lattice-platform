@@ -1,0 +1,551 @@
+benchmark_name: "Fine Tuning: Target Math"
+purpose: "Evaluate the model's ability to create an arithmetic equation that reaches a given target-number using provided numbers."
+base_prompt: |
+  <purpose>
+      Create an equation that equals the target-number given the numbers-provided.
+  </purpose>
+
+  <instructions>
+      <instruction>You can only use basic arithmetic operations (+, -, *, /)</instruction>
+      <instruction>Do not use = in your equation. Simply output the equation we can paste directly into a calculator.</instruction>
+      <instruction>Each number can only be used once</instruction>
+      <instruction>Don't use latex or any fancy formatting. Use basic arithmetic operations.</instruction>
+      <instruction>Output your equation without any other text</instruction>
+  </instructions>
+
+  <target-number>{{target-number}}</target-number>
+
+  <numbers-provided>{{numbers-provided}}</numbers-provided>
+
+evaluator: "python_print_execution_with_num_output"
+
+models:
+  # - "ollama~mistral-small:latest"
+  
+  - "openai~gpt-4o-mini"
+  - "openai~gpt-4o-2024-08-06"
+  - "openai~ft:gpt-4o-2024-08-06:personal::AvpWC04B"
+  - "openai~ft:gpt-4o-mini-2024-07-18:personal::AvpRtnmR"
+  - "openai~o1-mini"
+  - "openai~o3-mini"
+  - "anthropic~claude-3-5-sonnet-latest"
+  # - "openai~o1"
+
+  # - "deepseek~deepseek-chat"
+  # - "deepseek~deepseek-reasoner"
+
+prompts:
+  - dynamic_variables:
+      target-number: "53"
+      numbers-provided: "45,61,37"
+    expectation: "53"
+
+  - dynamic_variables:
+      target-number: "69"
+      numbers-provided: "20,92,3"
+    expectation: "69"
+
+  - dynamic_variables:
+      target-number: "79"
+      numbers-provided: "95,58,3,6"
+    expectation: "79"
+
+  - dynamic_variables:
+      target-number: "53"
+      numbers-provided: "45,61,37"
+    expectation: "53"
+
+  - dynamic_variables:
+      target-number: "69"
+      numbers-provided: "20,92,3"
+    expectation: "69"
+
+  - dynamic_variables:
+      target-number: "79"
+      numbers-provided: "95,58,3,6"
+    expectation: "79"
+
+  - dynamic_variables:
+      target-number: "70"
+      numbers-provided: "27,59,16"
+    expectation: "70"
+
+  - dynamic_variables:
+      target-number: "95"
+      numbers-provided: "88,29,75,53"
+    expectation: "95"
+
+  - dynamic_variables:
+      target-number: "21"
+      numbers-provided: "11,9,41,40"
+    expectation: "21"
+
+  - dynamic_variables:
+      target-number: "64"
+      numbers-provided: "8,72,1"
+    expectation: "64"
+
+  - dynamic_variables:
+      target-number: "19"
+      numbers-provided: "76,46,11"
+    expectation: "19"
+
+  - dynamic_variables:
+      target-number: "60"
+      numbers-provided: "28,38,11,60"
+    expectation: "60"
+
+  - dynamic_variables:
+      target-number: "57"
+      numbers-provided: "31,25,51"
+    expectation: "57"
+
+  - dynamic_variables:
+      target-number: "58"
+      numbers-provided: "20,49,29"
+    expectation: "58"
+
+  - dynamic_variables:
+      target-number: "47"
+      numbers-provided: "59,24,82"
+    expectation: "47"
+
+  - dynamic_variables:
+      target-number: "97"
+      numbers-provided: "38,79,98,41"
+    expectation: "97"
+
+  - dynamic_variables:
+      target-number: "41"
+      numbers-provided: "44,21,27,51"
+    expectation: "41"
+
+  - dynamic_variables:
+      target-number: "50"
+      numbers-provided: "10,2,15"
+    expectation: "50"
+
+  - dynamic_variables:
+      target-number: "33"
+      numbers-provided: "68,65,99"
+    expectation: "33"
+
+  - dynamic_variables:
+      target-number: "42"
+      numbers-provided: "88,96,50"
+    expectation: "42"
+
+  - dynamic_variables:
+      target-number: "79"
+      numbers-provided: "6,95,96"
+    expectation: "79"
+
+  - dynamic_variables:
+      target-number: "98"
+      numbers-provided: "17,35,18,62"
+    expectation: "98"
+
+  - dynamic_variables:
+      target-number: "84"
+      numbers-provided: "14,32,3,23"
+    expectation: "84"
+
+  - dynamic_variables:
+      target-number: "78"
+      numbers-provided: "48,56,91,21"
+    expectation: "78"
+
+  - dynamic_variables:
+      target-number: "88"
+      numbers-provided: "66,4,18"
+    expectation: "88"
+
+  - dynamic_variables:
+      target-number: "46"
+      numbers-provided: "60,66,91,51"
+    expectation: "46"
+
+  - dynamic_variables:
+      target-number: "81"
+      numbers-provided: "38,81,39"
+    expectation: "81"
+
+  - dynamic_variables:
+      target-number: "12"
+      numbers-provided: "22,9,90"
+    expectation: "12"
+
+  - dynamic_variables:
+      target-number: "80"
+      numbers-provided: "1,46,42,77"
+    expectation: "80"
+
+  - dynamic_variables:
+      target-number: "13"
+      numbers-provided: "67,66,14"
+    expectation: "13"
+
+  - dynamic_variables:
+      target-number: "86"
+      numbers-provided: "55,54,58,28"
+    expectation: "86"
+
+  - dynamic_variables:
+      target-number: "75"
+      numbers-provided: "65,2,12"
+    expectation: "75"
+
+  - dynamic_variables:
+      target-number: "70"
+      numbers-provided: "66,27,28,84"
+    expectation: "70"
+
+  - dynamic_variables:
+      target-number: "94"
+      numbers-provided: "64,70,50,90"
+    expectation: "94"
+
+  - dynamic_variables:
+      target-number: "86"
+      numbers-provided: "89,2,6"
+    expectation: "86"
+
+  - dynamic_variables:
+      target-number: "18"
+      numbers-provided: "64,20,62,59"
+    expectation: "18"
+
+  - dynamic_variables:
+      target-number: "93"
+      numbers-provided: "33,95,11,6"
+    expectation: "93"
+
+  - dynamic_variables:
+      target-number: "72"
+      numbers-provided: "99,13,40"
+    expectation: "72"
+
+  - dynamic_variables:
+      target-number: "25"
+      numbers-provided: "7,5,65,4"
+    expectation: "25"
+
+  - dynamic_variables:
+      target-number: "70"
+      numbers-provided: "10,23,4,8"
+    expectation: "70"
+
+  - dynamic_variables:
+      target-number: "33"
+      numbers-provided: "6,39,66"
+    expectation: "33"
+
+  - dynamic_variables:
+      target-number: "31"
+      numbers-provided: "66,4,31"
+    expectation: "31"
+
+  - dynamic_variables:
+      target-number: "14"
+      numbers-provided: "59,34,48,58"
+    expectation: "14"
+
+  - dynamic_variables:
+      target-number: "33"
+      numbers-provided: "99,49,40,23"
+    expectation: "33"
+
+  - dynamic_variables:
+      target-number: "86"
+      numbers-provided: "90,30,64,90"
+    expectation: "86"
+
+  - dynamic_variables:
+      target-number: "45"
+      numbers-provided: "34,39,9"
+    expectation: "45"
+
+  - dynamic_variables:
+      target-number: "45"
+      numbers-provided: "24,75,88,83"
+    expectation: "45"
+
+  - dynamic_variables:
+      target-number: "52"
+      numbers-provided: "28,8,16"
+    expectation: "52"
+
+  - dynamic_variables:
+      target-number: "56"
+      numbers-provided: "3,23,35,64"
+    expectation: "56"
+
+  - dynamic_variables:
+      target-number: "94"
+      numbers-provided: "17,84,15,18"
+    expectation: "94"
+
+  - dynamic_variables:
+      target-number: "44"
+      numbers-provided: "2,51,58"
+    expectation: "44"
+
+  - dynamic_variables:
+      target-number: "93"
+      numbers-provided: "50,71,50,64"
+    expectation: "93"
+
+  - dynamic_variables:
+      target-number: "74"
+      numbers-provided: "5,56,33,59"
+    expectation: "74"
+
+  - dynamic_variables:
+      target-number: "24"
+      numbers-provided: "17,63,5,27"
+    expectation: "24"
+
+  - dynamic_variables:
+      target-number: "79"
+      numbers-provided: "49,54,20,83"
+    expectation: "79"
+
+  - dynamic_variables:
+      target-number: "38"
+      numbers-provided: "6,26,58"
+    expectation: "38"
+
+  - dynamic_variables:
+      target-number: "17"
+      numbers-provided: "17,72,38"
+    expectation: "17"
+
+  - dynamic_variables:
+      target-number: "86"
+      numbers-provided: "76,82,70,51"
+    expectation: "86"
+
+  - dynamic_variables:
+      target-number: "28"
+      numbers-provided: "52,6,86"
+    expectation: "28"
+
+  - dynamic_variables:
+      target-number: "44"
+      numbers-provided: "51,74,76,73"
+    expectation: "44"
+
+  - dynamic_variables:
+      target-number: "55"
+      numbers-provided: "7,13,36"
+    expectation: "55"
+
+  - dynamic_variables:
+      target-number: "26"
+      numbers-provided: "78,45,42"
+    expectation: "26"
+
+  - dynamic_variables:
+      target-number: "23"
+      numbers-provided: "2,27,70,22"
+    expectation: "23"
+
+  - dynamic_variables:
+      target-number: "39"
+      numbers-provided: "27,51,12,37"
+    expectation: "39"
+
+  - dynamic_variables:
+      target-number: "43"
+      numbers-provided: "45,9,74,92"
+    expectation: "43"
+
+  - dynamic_variables:
+      target-number: "21"
+      numbers-provided: "14,64,25,54"
+    expectation: "21"
+
+  - dynamic_variables:
+      target-number: "11"
+      numbers-provided: "58,54,44"
+    expectation: "11"
+
+  - dynamic_variables:
+      target-number: "61"
+      numbers-provided: "36,9,57"
+    expectation: "61"
+
+  - dynamic_variables:
+      target-number: "90"
+      numbers-provided: "12,77,68,18"
+    expectation: "90"
+
+  - dynamic_variables:
+      target-number: "81"
+      numbers-provided: "23,67,37"
+    expectation: "81"
+
+  - dynamic_variables:
+      target-number: "65"
+      numbers-provided: "26,12,97,6"
+    expectation: "65"
+
+  - dynamic_variables:
+      target-number: "41"
+      numbers-provided: "16,21,46"
+    expectation: "41"
+
+  - dynamic_variables:
+      target-number: "46"
+      numbers-provided: "36,44,34"
+    expectation: "46"
+
+  - dynamic_variables:
+      target-number: "19"
+      numbers-provided: "60,20,31,88"
+    expectation: "19"
+
+  - dynamic_variables:
+      target-number: "55"
+      numbers-provided: "11,81,8,78"
+    expectation: "55"
+
+  - dynamic_variables:
+      target-number: "33"
+      numbers-provided: "40,78,12,32"
+    expectation: "33"
+
+  - dynamic_variables:
+      target-number: "21"
+      numbers-provided: "53,52,79,23"
+    expectation: "21"
+
+  - dynamic_variables:
+      target-number: "77"
+      numbers-provided: "69,34,55,81"
+    expectation: "77"
+
+  - dynamic_variables:
+      target-number: "35"
+      numbers-provided: "74,4,75,38"
+    expectation: "35"
+
+  - dynamic_variables:
+      target-number: "98"
+      numbers-provided: "79,48,59,70"
+    expectation: "98"
+
+  - dynamic_variables:
+      target-number: "100"
+      numbers-provided: "93,31,10,72"
+    expectation: "100"
+
+  - dynamic_variables:
+      target-number: "81"
+      numbers-provided: "32,55,6"
+    expectation: "81"
+
+  - dynamic_variables:
+      target-number: "75"
+      numbers-provided: "19,28,84"
+    expectation: "75"
+
+  - dynamic_variables:
+      target-number: "37"
+      numbers-provided: "26,27,21,2"
+    expectation: "37"
+
+  - dynamic_variables:
+      target-number: "12"
+      numbers-provided: "68,22,78"
+    expectation: "12"
+
+  - dynamic_variables:
+      target-number: "74"
+      numbers-provided: "48,15,41"
+    expectation: "74"
+
+  - dynamic_variables:
+      target-number: "71"
+      numbers-provided: "6,29,25,32"
+    expectation: "71"
+
+  - dynamic_variables:
+      target-number: "49"
+      numbers-provided: "30,16,3"
+    expectation: "49"
+
+  - dynamic_variables:
+      target-number: "69"
+      numbers-provided: "90,53,32"
+    expectation: "69"
+
+  - dynamic_variables:
+      target-number: "66"
+      numbers-provided: "1,49,12,30"
+    expectation: "66"
+
+  - dynamic_variables:
+      target-number: "13"
+      numbers-provided: "96,45,56,59"
+    expectation: "13"
+
+  - dynamic_variables:
+      target-number: "79"
+      numbers-provided: "80,86,10,1"
+    expectation: "79"
+
+  - dynamic_variables:
+      target-number: "95"
+      numbers-provided: "46,3,52"
+    expectation: "95"
+
+  - dynamic_variables:
+      target-number: "92"
+      numbers-provided: "34,53,73"
+    expectation: "92"
+
+  - dynamic_variables:
+      target-number: "66"
+      numbers-provided: "76,34,73,49"
+    expectation: "66"
+
+  - dynamic_variables:
+      target-number: "55"
+      numbers-provided: "92,36,73"
+    expectation: "55"
+
+  - dynamic_variables:
+      target-number: "34"
+      numbers-provided: "99,31,85,11"
+    expectation: "34"
+
+  - dynamic_variables:
+      target-number: "71"
+      numbers-provided: "16,15,72"
+    expectation: "71"
+
+  - dynamic_variables:
+      target-number: "31"
+      numbers-provided: "97,77,87,98"
+    expectation: "31"
+
+  - dynamic_variables:
+      target-number: "100"
+      numbers-provided: "85,80,26,42"
+    expectation: "100"
+
+  - dynamic_variables:
+      target-number: "15"
+      numbers-provided: "24,84,51,5"
+    expectation: "15"
+
+  - dynamic_variables:
+      target-number: "76"
+      numbers-provided: "78,54,52"
+    expectation: "76"
+
+  - dynamic_variables:
+      target-number: "93"
+      numbers-provided: "71,21,43"
+    expectation: "93"

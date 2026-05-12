@@ -1,0 +1,39 @@
+# spec-verified: disler/agent-sandbox-skill ac460ee 2026-05-12
+tool: agent-sandbox-skill
+tool_version: ac460ee
+canonical_docs: https://github.com/disler/agent-sandbox-skill
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: e2b-isolated-execution
+    surface: workflow
+    name: E2B isolated execution
+    state: ACTIVE
+    description: Run agent forks in isolated, gated sandboxes away from the local filesystem and production environment.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE sandbox jobs"]
+
+  - id: plan-build-host-test
+    surface: workflow
+    name: plan-build-host-test lifecycle
+    state: ACTIVE
+    description: Orchestrates plan, build, host, and browser-test phases for sandboxed application work.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["Meta-Harness dry-run candidates"]
+
+  - id: sandbox-backslash-commands
+    surface: prompt
+    name: reprogrammed backslash commands
+    state: ACTIVE
+    description: Backslash commands map to reusable skill prompts for sandbox workflows.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE prompt command model"]
+
+  - id: browser-validation-workflows
+    surface: workflow
+    name: sandbox browser validation
+    state: ACTIVE
+    description: Hosted sandbox outputs can be tested with explicit browser workflow prompts.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE verification"]

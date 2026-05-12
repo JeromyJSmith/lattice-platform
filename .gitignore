@@ -9,6 +9,7 @@ node_modules/
 dist/
 dist-ssr/
 .tanstack/
+.vite/
 .nitro/
 .wrangler/
 .output/
@@ -53,3 +54,4 @@ Thumbs.db
 *.tmp
 *.bak
 .cache/
+.gstack/

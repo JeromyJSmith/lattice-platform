@@ -112,3 +112,29 @@ Landed as Phase 1.5 commits `ad4ff91`, `fc144f4`, plus the cross-ref / doctrine 
 ### New rule file
 
 `.claude/rules/oss-self-hosted-doctrine.md` codifies the OSS-self-hosted doctrine and the gated-vendor extension language. It operationalizes the cardinal rule `iTwin OSS self-hosted only` from `AGENTS.md` § cardinal rules and generalizes it across vendors.
+
+## 2026-05-12 addendum — Meta-Harness audit and substrate orientation
+
+This pass added a current-state map for the Meta-Harness incubation work on `feature/meta-harness`. These files are operational orientation docs, not historical session transcripts.
+
+| File | Type | Purpose |
+|---|---|---|
+| `meta/harness/README.md` | Operational entrypoint | Current doctrine, hard stops, entrypoints, and checks |
+| `meta/harness/CURRENT-STATE.md` | Audit snapshot | Inventory of capability registries, verification scripts, Pixeltable migrations, wired surfaces, and open gaps |
+| `meta/harness/TODO.md` | Work queue | Prioritized tasks for the first dry run, Pixeltable substrate, capability coverage, legacy Python uplift, and portable extraction |
+| `meta/harness/pixeltable-operational-substrate.md` | Doctrine note | Pixeltable as LATTICE operational substrate; DuckDB WASM over Pixeltable-served Arrow/Parquet |
+| `scripts/check-python-docstrings.py` | Verification script | Changed-file Python docstring ratchet with `--all` for deliberate full legacy uplift |
+| `scripts/lattice-verify.sh` | Verification script | Repo-wide deterministic verifier entrypoint for humans, CI, and Pi-backed verification |
+
+Current capability registry audit:
+
+| Metric | Value |
+|---|---|
+| Registry files | 22 |
+| Capability rows | 193 |
+| ACTIVE | 146 |
+| DEFERRED | 44 |
+| BLOCKED | 3 |
+| Bootstrap-empty registries | 4 |
+
+The four bootstrap-empty registries are `claude-code`, `deck-gl`, `pixeltable`, and `web-ifc`; they remain high-priority coverage gaps before the Meta-Harness can claim full capability awareness.
