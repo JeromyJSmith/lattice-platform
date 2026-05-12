@@ -1,0 +1,111 @@
+name: linear-sync-check
+
+# Validates that every PR:
+#   1. Has a PR title matching [LAT-XX] or [MAR-XX] prefix (Linear ID required)
+#   2. Has a branch name whose prefix matches an allowed agent-lane prefix
+#
+# Docs: meta/sync-contract.md, meta/agent-lanes.md
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+    branches:
+      - main
+      - feature/meta-harness
+      - feature/phase-c-linear
+      - develop
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  linear-id-check:
+    name: Require Linear ID in PR title
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title format
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR title: $PR_TITLE"
+
+          # Allow [LAT-NNN] or [MAR-NNN] prefix (case-insensitive)
+          if echo "$PR_TITLE" | grep -qiE '^\[(LAT|MAR)-[0-9]+\]'; then
+            echo "✓ Linear ID found in PR title."
+          else
+            echo ""
+            echo "✗ PR title must start with a Linear issue ID."
+            echo "  Expected format: [LAT-XX] <type>(<scope>): <description>"
+            echo "  Example:         [LAT-47] feat(sync): add sync-contract.md"
+            echo ""
+            echo "  See meta/sync-contract.md for the full convention."
+            echo ""
+            echo "  If this PR has no Linear issue yet:"
+            echo "    1. Create an issue in Linear (LATTICE team → LAT-XX)"
+            echo "    2. Update the PR title"
+            exit 1
+          fi
+
+  agent-lane-check:
+    name: Validate branch prefix against agent lanes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name prefix
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          echo "Branch: $BRANCH"
+
+          # Allowed prefixes from meta/agent-lanes.md
+          ALLOWED_PREFIXES="copilot/ claude/ codex/ warp-pi/ hermes/ human/ feature/ chore/ fix/ docs/ release/ hotfix/ dependabot/ renovate/"
+
+          MATCHED=false
+          for PREFIX in $ALLOWED_PREFIXES; do
+            if echo "$BRANCH" | grep -q "^${PREFIX}"; then
+              MATCHED=true
+              echo "✓ Branch prefix '${PREFIX}' is allowed."
+              break
+            fi
+          done
+
+          if [ "$MATCHED" = "false" ]; then
+            echo ""
+            echo "✗ Branch name does not match any allowed agent-lane prefix."
+            echo "  Branch: $BRANCH"
+            echo ""
+            echo "  Allowed prefixes (from meta/agent-lanes.md):"
+            echo "    copilot/   — GitHub Copilot lane"
+            echo "    claude/    — Claude Code lane"
+            echo "    codex/     — Codex CLI lane"
+            echo "    warp-pi/   — Warp Terminal PI lane"
+            echo "    hermes/    — Hermes lane"
+            echo "    human/     — Human-only commits"
+            echo "    feature/   — General feature branches"
+            echo "    chore/     — Maintenance branches"
+            echo "    fix/       — Bug fix branches"
+            echo "    docs/      — Documentation-only branches"
+            echo "    release/   — Release branches"
+            echo "    hotfix/    — Emergency fixes"
+            echo ""
+            echo "  Rename your branch: git branch -m $BRANCH <prefix>/LAT-XX-slug"
+            exit 1
+          fi
+
+  linear-id-in-branch:
+    name: Recommend Linear ID in branch name (advisory)
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Check for Linear ID in branch name
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          # Advisory only — does not fail the build
+          if echo "$BRANCH" | grep -qiE '(LAT|MAR)-[0-9]+'; then
+            echo "✓ Linear ID found in branch name: $BRANCH"
+          else
+            echo "⚠ Advisory: branch name does not include a Linear issue ID."
+            echo "  Recommended: <prefix>/LAT-XX-slug (e.g. claude/LAT-47-sync-contract)"
+            echo "  This check is advisory and does not block merging."
+          fi
