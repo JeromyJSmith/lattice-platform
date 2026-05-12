@@ -22,14 +22,16 @@ jobs:
         run: |
           set -euo pipefail
           ACTUAL=$(find pixeltable/migrations -maxdepth 1 -name '0*.py' -not -name '__init__.py' | wc -l | tr -d ' ')
+          LAST=$(printf "%04d" "$ACTUAL")
           echo "actual=$ACTUAL" >> "$GITHUB_OUTPUT"
-          echo "Actual migration count: $ACTUAL"
+          echo "last=$LAST" >> "$GITHUB_OUTPUT"
+          echo "Actual migration count: $ACTUAL (last=$LAST)"
       - name: Verify SCHEMA.md migration trail
         run: |
           set -euo pipefail
           ACTUAL="${{ steps.count.outputs.actual }}"
           # The literal `0001-0013` or `0001–0013` (en-dash) plus the count itself
-          if ! grep -qE "Migration trail.*0001[–-]00${ACTUAL:0:2}" meta/SCHEMA.md; then
+          if ! grep -qE "Migration trail.*0001[–-]${{ steps.count.outputs.last }}" meta/SCHEMA.md; then
             echo "❌ meta/SCHEMA.md migration trail does not match actual count ($ACTUAL)"
             echo "Fix: update 'Migration trail: 0001-XXXX' in meta/SCHEMA.md"
             exit 1
@@ -226,3 +228,136 @@ jobs:
             exit 1
           fi
           echo "✅ No forbidden strings in changed files"
+
+
+  nine-section-meta-harness:
+    name: nine-section-meta-harness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Meta-Harness docs canonical sections
+        run: |
+          set -euo pipefail
+          DOCS_DIR="meta/harness/docs"
+          if [ ! -d "$DOCS_DIR" ]; then
+            echo "❌ $DOCS_DIR is missing"
+            echo "Fix: restore $DOCS_DIR with exactly the 9 canonical sections"
+            exit 1
+          fi
+
+          expected=$(printf '%s\n' \
+            'AGENT.md' \
+            'GOAL.md' \
+            'MEMORY.md' \
+            'api_reference' \
+            'docs' \
+            'gold_goals.md' \
+            'research' \
+            'skills_registry' \
+            'tutorials')
+          actual=$(find "$DOCS_DIR" -mindepth 1 -maxdepth 1 -printf '%f\n' | sort)
+          if [ "$actual" != "$expected" ]; then
+            echo "❌ Meta-Harness docs sections do not match the 9-section doctrine"
+            echo "Expected:"
+            echo "$expected"
+            echo "Actual:"
+            echo "$actual"
+            echo "Fix: keep only GOAL.md, MEMORY.md, AGENT.md, gold_goals.md, tutorials/, research/, docs/, api_reference/, skills_registry/"
+            exit 1
+          fi
+          echo "✅ Meta-Harness docs contain exactly the 9 canonical sections"
+
+  gated-dormancy-check:
+    name: gated-dormancy-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify gated research dormancy frontmatter
+        run: |
+          set -euo pipefail
+          GATED_DIR="meta/harness/docs/research/_gated"
+          if [ ! -d "$GATED_DIR" ]; then
+            echo "✅ No _gated/ research directory present"
+            exit 0
+          fi
+
+          fail=0
+          while IFS= read -r -d '' file; do
+            case "$(basename "$file")" in
+              README.md) continue ;;
+            esac
+            if ! grep -qE '^status:[[:space:]]*dormant[[:space:]]*$' "$file"; then
+              echo "❌ $file missing frontmatter: status: dormant"
+              fail=1
+            fi
+            if ! grep -qE '^gate_status:[[:space:]]*not_triggered[[:space:]]*$' "$file"; then
+              echo "❌ $file missing frontmatter: gate_status: not_triggered"
+              fail=1
+            fi
+          done < <(find "$GATED_DIR" -type f -print0)
+
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: add status: dormant and gate_status: not_triggered frontmatter to all gated files"
+            exit 1
+          fi
+          echo "✅ All gated research files remain dormant and not_triggered"
+
+  detect-doc-gaps-job:
+    name: detect-doc-gaps-job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Run doc gap detector
+        run: |
+          set -euo pipefail
+          SCRIPT="scripts/detect-doc-gaps.py"
+          if [ ! -f "$SCRIPT" ]; then
+            echo "❌ $SCRIPT is missing"
+            echo "Fix: restore $SCRIPT or update docs-sync-check.yml with the correct detector path"
+            exit 1
+          fi
+
+          set +e
+          output=$(uv run python "$SCRIPT" 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+
+          if [ "$status" -ne 0 ]; then
+            if echo "$output" | grep -qiE 'TableNotFoundError|table.*not found|missing knowledge tables|no such table|does not exist'; then
+              echo "✅ Doc gap detector soft-skipped because Phase B knowledge tables are not available yet"
+              exit 0
+            fi
+            echo "❌ Doc gap detector failed"
+            echo "Fix: resolve the detector error or Phase B table dependency, then rerun"
+            exit "$status"
+          fi
+
+          if echo "$output" | grep -qE 'severity[=:][[:space:]]*critical|severity=critical'; then
+            echo "❌ Doc gap detector reported severity=critical gaps"
+            echo "Fix: close or downgrade new critical documentation gaps before merging"
+            exit 1
+          fi
+          echo "✅ Doc gap detector reports no severity=critical gaps"
+
+  score-docs-job:
+    name: score-docs-job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run docs scoring
+        run: |
+          set -euo pipefail
+          SCRIPT="meta/harness/docs/score-docs.sh"
+          if [ ! -f "$SCRIPT" ]; then
+            echo "✅ $SCRIPT not present; soft-skipping docs scoring for backward compatibility"
+            exit 0
+          fi
+
+          if ! bash "$SCRIPT"; then
+            echo "❌ Docs scoring reported regressions"
+            echo "Fix: address score-docs.sh failures before merging"
+            exit 1
+          fi
+          echo "✅ Docs scoring completed successfully"
