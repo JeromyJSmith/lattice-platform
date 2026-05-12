@@ -1,17 +1,29 @@
 # Summary
 
+<!-- One sentence: what changed and why. -->
 
+## Linear + Agent Lane
+
+<!-- Required. linear-sync-check CI fails without these. -->
+
+- **Linear issue:** <!-- LAT-XX or MAR-XX -->
+- **Agent lane:** <!-- copilot | claude-code | codex | warp-pi | hermes | human-only -->
+- **Branch:** <!-- <agent-prefix>/LAT-XX-slug — must match lane prefix in meta/agent-lanes.md -->
 
 ## LATTICE Area
 
-- [ ] vw-bridge (Vectorworks plugin / IFC ingest)
-- [ ] 3d-viewer (ThatOpen / Three.js / R3F — Context A)
-- [ ] analytics-layer (deck.gl / DuckDB WASM — Context B)
-- [ ] data-layer (Pixeltable schema / sidecar routes)
-- [ ] agent-runtime (worker, dispatch, streaming)
-- [ ] operator-console (`/runtime` UI)
-- [ ] plant-geometry (LOD 100 → LOD 300 pipeline)
-- [ ] point-cloud (Potree / PDAL / Open3D)
+- [ ] vw-bridge (Phase D — Vectorworks plugin / IFC ingest)
+- [ ] 3d-viewer (Phase F — ThatOpen / Three.js / R3F — Context A)
+- [ ] analytics-layer (Phase G — deck.gl / DuckDB WASM — Context B)
+- [ ] data-layer (Phase B — Pixeltable schema / sidecar routes)
+- [ ] agent-runtime (Phase J — worker, dispatch, streaming)
+- [ ] operator-console (Phase J — `/runtime` UI)
+- [ ] plant-geometry (Phase H — LOD 100 → LOD 300 pipeline)
+- [ ] point-cloud (Phase I — Potree / PDAL / Open3D)
+- [ ] cesium / reality-capture (Phase K)
+- [ ] ddc-skills (Phase M — DDC skills library integration)
+- [ ] knowledge-ops (Phase N — substrate production operations)
+- [ ] outreach / pilot (Phases O–P — MARPA engagement)
 - [ ] devex / infra / CI
 - [ ] meta-harness (docs substrate, 9-section structure, ingestion)
 
@@ -28,7 +40,7 @@
 
 ## Pixeltable schema changes
 
-- [ ] Yes — new migration file in `pixeltable/migrations/` (next sequential number; 0001–0016 are write-once)
+- [ ] Yes — new migration file in `pixeltable/migrations/` (next sequential number; 0001–0016 are write-once; **next = 0017**)
 - [ ] Yes — `.schema-snapshot.yaml` regenerated via `make snapshot`
 - [ ] No
 
@@ -69,3 +81,14 @@ If this PR touches `meta/harness/docs/research/_gated/`, confirm:
 
 ## Related issues
 
+<!-- Use Magic Words to link: "Fixes LAT-XX", "Closes LAT-XX", "Refs LAT-XX" -->
+<!-- LAT-XX closes the Linear issue on merge. Refs LAT-XX keeps it In Progress. -->
+
+## Agent quality checklist
+
+If this PR was authored by an agent, confirm:
+
+- [ ] Branch prefix matches lane (`copilot/`, `claude/`, `codex/`, `warp-pi/`, `hermes/`)
+- [ ] No files were touched outside the lane's allowed paths (see `meta/agent-lanes.md`)
+- [ ] `bash scripts/pre-commit-docs-check.sh` passed before commit (Claude Code lane)
+- [ ] N/A — this is a human-authored PR

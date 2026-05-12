@@ -15,6 +15,8 @@ This directory holds the four-phase plan for the LATTICE Meta-Harness build. Not
 | 0.6 — Capability Harvest | [`06-CAPABILITY-HARVEST-AMENDMENT.md`](06-CAPABILITY-HARVEST-AMENDMENT.md) | 3 permanent standards (Capability Harvest Protocol, Zero Dead DNA, Always-Running CI/CD Health) + dependency allowlist + 4 capability registries. **Binding.** | ✅ added |
 | 0.7 — Knowledge Substrate | [`07-PIXELTABLE-SUBSTRATE-AMENDMENT.md`](07-PIXELTABLE-SUBSTRATE-AMENDMENT.md) | Migration 0015 (`lattice/knowledge/*`), `pixeltable/knowledge/tools.py` @pxt.query layer, anti-amnesia rule. **Binding.** | ✅ added |
 | 0.8 — Docs Meta-Harness | [`08-DOCS-META-HARNESS-AMENDMENT.md`](08-DOCS-META-HARNESS-AMENDMENT.md) | 9th cross-cutting section. Migration 0016 (docs corpus + sync log + coverage gaps), `scripts/doc-mirror-manifest.yaml` (7 mirrors, full YAML), `meta/harness/docs/` section stack, anti-amnesia append. **Section count = 9 (8 tool + 1 cross-cutting docs).** **Binding.** | ✅ added |
+| 0.9 — Polymorphic Architecture | [`09-POLYMORPHIC-ARCHITECTURE-AMENDMENT.md`](09-POLYMORPHIC-ARCHITECTURE-AMENDMENT.md) | Vendored skill genome (12 mattpocock skills), `_INVENTORY.md` reorg, `analysis/capabilities/` registry stubs, `.claude/rules/vendored-skills.md`. **Binding.** | ✅ added |
+| Phase C — Linear Infrastructure | [`10-PHASE-C-LINEAR-AMENDMENT.md`](10-PHASE-C-LINEAR-AMENDMENT.md) | Linear ↔ GitHub sync contract, 5 agent lanes + human-only, 17-milestone structure, PR template v2, `linear-sync-check.yml`, reconciliation script, post-commit Linear notify hook. Branch: `feature/phase-c-linear`. **Binding.** | 🔄 in progress |
 
 ## Branch contract
 

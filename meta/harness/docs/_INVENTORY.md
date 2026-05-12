@@ -40,6 +40,26 @@ Output of the §1.1 inventory pass from Phase 1 Amendment (09-Polymorphic-Genome
 
 Worst case for any future file in this tree is `archive/`. Deletion requires an explicit follow-up commit with the human's approval per the Hard Stops in the Phase 1 Amendment.
 
+## 2026-05-11 addendum — Phase C Linear Infrastructure (feature/phase-c-linear)
+
+Phase C delivered on branch `feature/phase-c-linear` (off `feature/meta-harness`).
+Files created outside `meta/harness/docs/` but listed here for cross-reference.
+
+| File | Type | Purpose |
+|---|---|---|
+| `meta/sync-contract.md` | New | Canonical field-direction table, Magic Words, conflict resolution policy |
+| `meta/agent-lanes.md` | New | 5 agent lanes + human-only category |
+| `meta/harness/PLAN/10-PHASE-C-LINEAR-AMENDMENT.md` | New | Phase C planning artifact |
+| `.github/PULL_REQUEST_TEMPLATE.md` | Extended | Linear + Agent Lane header; updated phase labels; agent quality checklist |
+| `scripts/agent-context-regenerate.sh` | New | Idempotent regeneration of `.github/agent-context.md` |
+| `scripts/linear-reconciliation.py` | New | Stage 5b reconciliation; `--dry-run` default; CSV output here |
+| `scripts/linear-notify-commit.sh` | New | Post-commit Linear comment hook |
+| `.github/workflows/linear-sync-check.yml` | New | PR title + branch prefix validation CI |
+| `.claude/settings.json` | Extended | `linear-notify-commit.sh` added as PostToolUse hook |
+
+Reconciliation output (Stage 5b) will land in:
+`sessions/<YYYY-MM-DD>-linear-import-reconciliation.md` (written by `scripts/linear-reconciliation.py`)
+
 ## 2026-05-12 addendum — MARPA research trove imported
 
 After the initial reorg, the user pointed to the canonical external research folder at `/Volumes/PixelTable/VW_iTWIN_Bridge/Vectorworks_Bentley_iTwin_MARPA_Research_20260508/`. Five additional source files were copied into the repo tree (not moved — originals remain in the external folder as the authoritative source). The four Phase A stubs created in commit 24cc5f4 were rewritten with real extracted content sourced from these files.
