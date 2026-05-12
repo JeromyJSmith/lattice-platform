@@ -104,7 +104,7 @@ capabilities:
     capability: BOQ retrieval
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: GET /v1/erp/boq/{project_id}
-    current_state: planned only
+    current_state: Planned only
     gap: Return project BOQ documents from OpenConstructionERP
     priority: high
     wave: wave-2
@@ -140,7 +140,7 @@ capabilities:
     capability: Admin dashboard route
     local_home: /home/runner/work/lattice-platform/lattice-platform/src/routes/admin/index.tsx
     target_surface: /admin
-    current_state: planned only
+    current_state: Planned only
     gap: Render the DDC capability map and dashboard surface in the UI
     priority: high
     wave: wave-3
@@ -167,7 +167,7 @@ capabilities:
     capability: Quantity takeoff agent
     local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
     target_surface: runtime agent + evidence ledger
-    current_state: planned only
+    current_state: Planned only
     gap: Orchestrate quantities, cost search, BOQ writeback, and evidence capture
     priority: high
     wave: wave-2
@@ -185,7 +185,7 @@ capabilities:
     capability: n8n to FastAPI translation
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/pipeline-templates/
     target_surface: pixeltable/service/routes/*
-    current_state: planned only
+    current_state: Planned only
     gap: Convert priority DAGs into native route handlers and templates
     priority: high
     wave: wave-2
@@ -212,7 +212,7 @@ capabilities:
     capability: Mirror-state ERP sync health
     local_home: /home/runner/work/lattice-platform/lattice-platform/reality/mirror/README.md
     target_surface: lattice/reality/mirror_state
-    current_state: mirror concept exists
+    current_state: Mirror concept exists
     gap: Feed ERP and DDC freshness into mirror-state checks
     priority: medium
     wave: wave-4
