@@ -14,79 +14,56 @@ deck.gl + Cesium 3D Tiles → Pixeltable knowledge substrate
 **Repo:** https://github.com/JeromyJSmith/lattice-platform
 **Active branch:** `feature/phase-c-linear` (integration branch — PRs target this, not main)
 **Linear board:** https://linear.app/00-command-center/project/lattice-fa64d0d31078
-**Issue prefix:** `MARPA-XX` (all platform and engagement issues use MARPA team, free-plan constraint)
+**Issue prefix:** `MARPA-XX` (all platform and engagement issues use MARPA team)
+
+Any capable coding agent can pick up any open issue. Attribution is by Linear
+comment and PR author, not by file-path jurisdiction.
 
 ---
 
-## Agent lanes — who does what
+## Hard prohibitions (apply to every agent, no exceptions)
 
-| Agent | Branch prefix | What it owns |
-|---|---|---|
-| **Codex CLI** | `codex/` | `pixeltable/migrations/` (new only), `pixeltable/service/`, `src/server/runtime/`, `src/routes/`, `scripts/*.py` |
-| **Claude Code** | `claude/` | Multi-file refactors ≥3 dirs, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, `CLAUDE.md`, `AGENTS.md` |
-| **GitHub Copilot** | `copilot/` | `.github/`, `scripts/*.sh`, `meta/*.md` (single-file) |
-| **Warp PI** | `warp-pi/` | Shell scripts, `uv` ops, Phase B M3 Max bootstrap |
-| **Hermes** | `hermes/` | `meta/harness/docs/`, `analysis/`, research/synthesis |
-| **Human only** | `human/` | Secrets, OAuth, merges to main, deletions, Linear milestone changes |
+The only things no agent — human or AI — may do without an explicit, separate
+human decision:
 
-Before picking up a Linear issue, confirm it has your lane label. If another lane's label is set, stop.
+1. **Edit a landed migration.** Migrations `pixeltable/migrations/0001`–`0016`
+   are immutable. To change schema, add the next sequential file (next = `0017`).
+2. **Touch secrets, `.env*`, or OAuth credentials.** Always human.
+3. **Modify branch protection rules.** Always human.
+4. **Merge to `main`.** Always human.
+5. **Delete migrations, branches, or Linear issues.** Always human.
+6. **Change `.claude/rules/` doctrine files as a side-effect.** Doctrine changes
+   are the explicit point of a PR or they don't happen.
 
----
-
-## If you are Codex — read this section carefully
-
-### Your scope (hard boundaries)
-
-**Allowed:**
-- `pixeltable/migrations/*.py` — **new files only** (write-once rule — see below)
-- `pixeltable/service/**` — FastAPI sidecar services, workers, ingest
-- `src/server/runtime/**` — TanStack server functions
-- `src/routes/**` — new route files only
-- `scripts/*.py` — Python utility scripts
-
-**Prohibited (stop immediately if the task requires these):**
-- Editing any file in `pixeltable/migrations/` that already exists
-- Touching `.claude/rules/`, `.claude/skills/` (Claude Code lane)
-- Touching `.github/workflows/` (Copilot lane)
-- Touching `meta/harness/docs/` (Hermes lane)
-- Architectural decisions not already in `meta/ARCHITECTURE.md`
-
-If a task genuinely requires files in two lanes, post a comment on the Linear issue and stop.
-Do not cross lane boundaries. The human will split the issue.
-
-### Label guard — run this check first
-
-Check your Linear issue's labels. If `codex` is not present:
-1. Post a workpad comment: "Skipping — not labeled `codex`. Returning to Todo."
-2. Move issue back to **Todo** via `linear_graphql`.
-3. Stop. Make no file changes.
+Everything else — any file, any directory — is in scope for any agent that
+picks up the issue.
 
 ---
 
 ## Non-negotiable code rules
 
-### 1. Pixeltable geometry — no exceptions
+### 1. Pixeltable geometry
 
 ```python
-# CORRECT — always pxt.String with WKT or GeoJSON
+# CORRECT
 centroid = pxt.String   # stores "POINT(-105.2705 40.0150)"
 
 # WRONG — pxt.Geometry does not exist in Pixeltable 0.6.x — runtime crash
-centroid = pxt.Geometry  # ← NEVER write this
+centroid = pxt.Geometry
 ```
 
 ### 2. Write-once migrations
 
-- Migrations 0001–0016 are **immutable**. Never edit, rename, or delete them.
-- **Next migration number: 0017**
+- Migrations `0001`–`0016` are immutable.
+- **Next migration number: `0017`**
 - File format: `pixeltable/migrations/0017_<description>.py`
-- Always use helpers, never raw Pixeltable create calls:
+- Always use the helpers — never raw `pxt.create_*`:
 
 ```python
 from pixeltable.migrations._helpers import (
     ensure_namespace, ensure_table, ensure_column, OWNED_PARENTS
 )
-# If creating a new top-level namespace, add it to OWNED_PARENTS first
+# New top-level namespace? Add it to OWNED_PARENTS first.
 ```
 
 ### 3. When you add a migration — update all four files in the same commit
@@ -96,7 +73,7 @@ from pixeltable.migrations._helpers import (
 - `CLAUDE.md` (repo root) — LIVE STATE block migration count
 - `meta/HANDOFF.md` — current-state header
 
-CI (`docs-sync-check.yml`) will block the PR if these drift.
+`docs-sync-check.yml` will block the PR if these drift.
 
 ### 4. When you add an endpoint — update both files in the same commit
 
@@ -106,84 +83,82 @@ CI (`docs-sync-check.yml`) will block the PR if these drift.
 ### 5. Python: uv only
 
 ```bash
-uv run python script.py    # run scripts
-uv add package             # add dependency
-uv sync                    # sync environment
+uv run python script.py
+uv add package
+uv sync
 
-# NEVER: pip install / pip3 / conda / poetry / pipenv
+# NEVER: pip / pip3 / conda / poetry / pipenv
 ```
 
 ### 6. iTwin: OSS only
 
 ```ts
-// ALLOWED — open-source iTwin geometry and BIS vocabulary
+// ALLOWED
 import { Point3d, Transform } from "@itwin/core-geometry";
 import { Code, ElementProps } from "@itwin/core-common";
 
-// FORBIDDEN — these pull in the SQLite persistence layer
-import { IModelHost } from "@itwin/core-backend";  // ← NEVER
-import { SnapshotDb } from "@itwin/core-backend";   // ← NEVER
-import { BriefcaseDb } from "@itwin/core-backend";  // ← NEVER
+// FORBIDDEN — pulls in the SQLite persistence layer
+import { IModelHost, SnapshotDb, BriefcaseDb } from "@itwin/core-backend";
 ```
 
 Commercial Bentley tiers (BDN, iTwin Activate, Partner Program) are gated under
 `meta/harness/docs/research/_gated/bentley-commercial/` and dormant by default.
-Never architect against them.
 
 ### 7. No Anthropic SDK in client code
 
 ```ts
-// WRONG — never import Anthropic SDK in .ts/.tsx client files
+// WRONG — never in .ts/.tsx client files
 import Anthropic from "@anthropic-ai/sdk";
 
-// RIGHT — use TanStack AI adapters or server functions only
+// RIGHT — TanStack AI adapters or server functions only
 import { useAIStream } from "@tanstack/ai";
 ```
 
 ### 8. All coordinates EPSG-normalised before Pixeltable write
 
-Never write raw Vectorworks internal coordinates to any Pixeltable table.
-Always normalize through `ifcopenshell.util.placement` or PDAL reprojection first.
+Never write raw Vectorworks internal coordinates. Normalize through
+`ifcopenshell.util.placement` or PDAL reprojection first.
 
 ### 9. No comments unless the WHY is non-obvious
 
-Default: write zero comments. Add one line only when there is a hidden constraint,
-a workaround for a specific external bug, or behavior that would surprise a reader.
-Never explain WHAT the code does — well-named identifiers do that.
+Default: write zero comments. Add one only when there is a hidden constraint,
+a workaround for a specific external bug, or behavior that would surprise a
+reader. Never explain WHAT the code does.
 
 ---
 
 ## Mandatory pre-commit check
 
-Before **every** `git commit`, run:
+Before **every** `git commit`:
 
 ```bash
 bash scripts/pre-commit-docs-check.sh
 ```
 
-If it fails, fix the docs/counts first. Do not commit until it passes.
-`docs-sync-check.yml` CI enforces the same check and will block your PR if skipped.
+If it fails, fix the docs/counts first. `docs-sync-check.yml` CI enforces the
+same check and will block the PR.
 
 ---
 
 ## Branch and PR format
 
-**Branch:** `codex/marpa-<NNN>-<2-4-word-slug>`
-Example: `codex/marpa-47-0017-scene-graph-embeddings`
+**Branch:** `<type>/marpa-<NNN>-<2-4-word-slug>`
+where `<type>` is `feat`, `fix`, `chore`, `refactor`, or `test`.
+Example: `feat/marpa-47-0017-scene-graph-embeddings`
 
 **PR title:** `[MARPA-NNN] type(scope): description`
 - type: `feat` | `fix` | `chore` | `refactor` | `test`
-- scope: `migration` | `service` | `routes` | `scripts`
+- scope: `migration` | `service` | `routes` | `scripts` | `docs` | `ci`
 - Example: `[MARPA-47] feat(migration): 0017_scene_graph_embeddings`
 
-**PR base branch:** `feature/phase-c-linear` (not main — never main)
+**PR base branch:** `feature/phase-c-linear` (never `main`)
 
 **Magic Words in PR body:**
 - `Closes MARPA-NNN` → closes the Linear issue on merge
 - `Refs MARPA-NNN` → links without closing
 
-**PR template:** `.github/PULL_REQUEST_TEMPLATE.md` — it auto-populates.
-Fill in the Linear issue field and check `codex` in the Agent Lane section.
+**PR template:** `.github/PULL_REQUEST_TEMPLATE.md` auto-populates. Fill in the
+Linear issue number.
 
 **CI that must pass before marking Done:**
 - `docs-sync-check` — migration/endpoint counts, forbidden strings
@@ -191,15 +166,16 @@ Fill in the Linear issue field and check `codex` in the Agent Lane section.
 
 ---
 
-## Linear workpad pattern (Symphony mode)
+## Linear workpad pattern
 
-When running under Symphony orchestration, maintain exactly **one** persistent
-comment on the issue throughout your entire work session.
+When working an issue, maintain exactly **one** persistent comment on the
+Linear issue throughout your work session.
 
 - **Create** it with `commentCreate` on your first turn
-- **Update** it with `commentUpdate` (never create additional comments)
+- **Update** it with `commentUpdate` on every subsequent turn — never create
+  additional comments
 
-Required sections in the workpad comment:
+Required sections:
 
 ```
 ## Plan
@@ -212,7 +188,7 @@ Required sections in the workpad comment:
 [Current step — what's done, what's next]
 
 ## Confusions / Blockers
-[Anything needing human input — stop and surface these immediately]
+[Anything needing human input — surface immediately, don't bury]
 ```
 
 ---
@@ -224,20 +200,19 @@ Required sections in the workpad comment:
 | `meta/ARCHITECTURE.md` | System overview, namespace map, FastAPI surface, iTwin tier map |
 | `meta/SCHEMA.md` | Pixeltable table reference and migration trail (source of truth for migration numbers) |
 | `meta/API.md` | FastAPI endpoint table (update when adding routes) |
-| `meta/agent-lanes.md` | Full lane definitions, collision prevention, quality gates |
 | `meta/sync-contract.md` | Linear ↔ GitHub field directions, Magic Words, PR title convention |
-| `.github/copilot-instructions.md` | Full cardinal rules 1–24 (authoritative for all agents) |
+| `.github/copilot-instructions.md` | Full cardinal rules (authoritative) |
 | `.github/agent-context.md` | Flat snapshot of locked stack + cardinal rules (use when meta/ tree is unavailable) |
 
 If the task requires an architectural decision not covered by these files,
-post a blocker comment on the Linear issue and move it back to Todo.
-Do not invent architecture.
+post a blocker comment on the Linear issue and move it back to Todo. Do not
+invent architecture.
 
 ---
 
 ## What LATTICE is NOT
 
-Do not propose or implement any of the following — they violate cardinal rules:
+Do not propose or implement any of the following:
 
 - Revit, MicroStation, DGN, or `.rvt` file handling
 - `@itwin/core-backend`, `SnapshotDb`, `BriefcaseDb`, `IModelHost`
@@ -257,12 +232,13 @@ Do not propose or implement any of the following — they violate cardinal rules
 Before substantive work, verify:
 
 ```bash
-curl -s http://localhost:8001/health    # FastAPI sidecar (start if not running)
-git status                              # confirm clean working tree
-git fetch origin                        # sync with remote
+curl -s http://localhost:8001/health    # FastAPI sidecar
+git status                              # clean tree
+git fetch origin                        # sync remote
 ```
 
 If the sidecar is not running:
+
 ```bash
 cd pixeltable/service
 PIXELTABLE_HOME=/Volumes/PixelTable/.pixeltable \

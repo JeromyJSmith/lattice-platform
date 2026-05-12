@@ -2,13 +2,12 @@
 
 <!-- One sentence: what changed and why. -->
 
-## Linear + Agent Lane
+## Linear issue
 
-<!-- Required. linear-sync-check CI fails without these. -->
+<!-- Required. linear-sync-check CI fails without this. -->
 
-- **Linear issue:** <!-- LAT-XX or MAR-XX -->
-- **Agent lane:** <!-- copilot | claude-code | codex | warp-pi | hermes | human-only -->
-- **Branch:** <!-- <agent-prefix>/LAT-XX-slug — must match lane prefix in meta/agent-lanes.md -->
+- **Linear issue:** <!-- MARPA-XX -->
+- **Branch:** <!-- <type>/marpa-NNN-slug — type is feat | fix | chore | refactor | test -->
 
 ## LATTICE Area
 
@@ -84,11 +83,11 @@ If this PR touches `meta/harness/docs/research/_gated/`, confirm:
 <!-- Use Magic Words to link: "Fixes LAT-XX", "Closes LAT-XX", "Refs LAT-XX" -->
 <!-- LAT-XX closes the Linear issue on merge. Refs LAT-XX keeps it In Progress. -->
 
-## Agent quality checklist
+## Hard prohibitions check (every PR)
 
-If this PR was authored by an agent, confirm:
-
-- [ ] Branch prefix matches lane (`copilot/`, `claude/`, `codex/`, `warp-pi/`, `hermes/`)
-- [ ] No files were touched outside the lane's allowed paths (see `meta/agent-lanes.md`)
-- [ ] `bash scripts/pre-commit-docs-check.sh` passed before commit (Claude Code lane)
-- [ ] N/A — this is a human-authored PR
+- [ ] No edits to landed migrations `pixeltable/migrations/0001`–`0016`
+- [ ] No secrets, `.env*`, or OAuth credentials touched
+- [ ] No branch protection or `main` merge changes
+- [ ] No migration / branch / issue deletions
+- [ ] Any `.claude/rules/` change is the explicit purpose of this PR (not a side-effect)
+- [ ] `bash scripts/pre-commit-docs-check.sh` passed before commit

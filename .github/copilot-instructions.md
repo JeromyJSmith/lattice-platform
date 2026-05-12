@@ -97,32 +97,42 @@ If you're picking up an issue, also read [`meta/AGENT_ONBOARDING.md`](../meta/AG
     titles must match `[MARPA-NNN] type(scope): description`. Magic Words:
     `Closes MARPA-NNN`, `Refs MARPA-NNN`. The `linear-sync-check.yml` CI
     job validates this format and blocks non-conforming PRs.
-25. **Active integration branch is `feature/phase-c-linear`.** All agent PRs
-    target `feature/phase-c-linear`, not `main` or `feature/meta-harness`.
-    Never propose opening a PR against `main` unless the human explicitly
-    requests a merge event.
-26. **Symphony orchestrates the `codex` agent lane.** Symphony polls Linear
-    for issues labeled `codex` in active states (Backlog, Todo, In Progress,
-    Rework) and dispatches Codex CLI (`codex app-server`) to work on them in
-    isolated per-issue workspaces. `WORKFLOW.md` at repo root is the
-    Symphony config. `AGENTS.md` at repo root is the Codex context file.
-    Never propose changes to `WORKFLOW.md` or `AGENTS.md` without
-    understanding how they interact with Symphony's Jinja2 rendering
-    and Codex's `project_doc_max_bytes` limit (32 KiB default).
+25. **Active integration branch is `feature/phase-c-linear`.** All PRs target
+    `feature/phase-c-linear`, not `main` or `feature/meta-harness`. Never
+    propose opening a PR against `main` unless the human explicitly requests
+    a merge event.
+26. **Any capable agent picks up any issue.** There are no exclusive file-path
+    "lanes." Hard prohibitions (write-once migrations 0001-0016, secrets
+    and `.env*`, branch protection, merges to `main`, deletions) apply to
+    every agent without exception. Doctrine changes under `.claude/rules/`
+    must be the explicit purpose of a PR, not a side-effect.
+27. **Symphony orchestrates Codex execution.** Symphony polls Linear for
+    issues in active states (Backlog, Todo, In Progress, Rework) and
+    dispatches Codex CLI (`codex app-server`) to work on them in isolated
+    per-issue workspaces. `WORKFLOW.md` at repo root is the Symphony config.
+    `AGENTS.md` at repo root is the Codex context file. Both files must
+    stay under Codex's `project_doc_max_bytes` limit (32 KiB default).
 
-## Symphony + agent lane quick reference
+## Branch naming
 
-| Agent | Branch prefix | Linear label | File scope |
-|---|---|---|---|
-| Codex CLI | `codex/` | `codex` | migrations (new), service, server routes, scripts |
-| Claude Code | `claude/` | `claude-code` | multi-file refactors, .claude/, analysis/ |
-| GitHub Copilot | `copilot/` | `copilot` | .github/, scripts (single-file), meta (single-file) |
-| Warp PI | `warp-pi/` | `warp-pi` | scripts/, shell ops, Phase B bootstrap |
-| Hermes | `hermes/` | `hermes` | meta/harness/docs/, analysis/, research |
-| Human only | `human/` | `human-only` | secrets, OAuth, merges, deletions |
+Branches use a `<type>/marpa-<NNN>-<slug>` pattern where `<type>` is `feat`,
+`fix`, `chore`, `refactor`, or `test`. Example: `feat/marpa-47-0017-embeddings`.
+Agent name does not appear in the branch — attribution is by Linear comment
+and PR author.
 
-Collision prevention: one issue, one lane. If an issue already has another
-agent's label, do not pick it up. Ping `#lattice-sync` instead.
+## Hard prohibitions (apply to every agent — no exceptions)
+
+- Editing landed migrations `pixeltable/migrations/0001`–`0016`
+- Touching secrets, `.env*`, or OAuth credentials
+- Modifying branch protection rules
+- Merging to `main`
+- Deleting migrations, branches, or Linear issues
+- Modifying `.claude/rules/` doctrine files as a side-effect (must be the
+  explicit purpose of a PR)
+
+Everything else — any file, any directory — is fair game for any agent that
+picks up the issue. Attribution is by Linear comment + PR author, not by
+file-path jurisdiction.
 
 ## Style preferences
 

@@ -34,7 +34,6 @@ Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA
 | Parent / child | **Linear only** | Linear wins |
 | Customer linkage | **Linear only** | Linear wins |
 | Labels | Bidirectional sync enabled; taxonomy defined below | Linear wins |
-| Agent assignment | **Linear only** (agent-lane label) | Linear wins |
 | Comments | Bidirectional | Append-only; no overwrite |
 | GitHub PR link | **GitHub → Linear** (auto-linked via branch name + Magic Words) | GitHub wins |
 | GitHub issue number | **Metadata in Linear** (custom field `github_issue_id`) | GitHub wins |
@@ -63,24 +62,24 @@ and commit messages. Case-insensitive. Multiple IDs on one line all fire.
 ## Branch naming convention
 
 ```
-<agent-prefix>/<LAT|MAR>-XX-<slug>
+<type>/marpa-<NNN>-<slug>
 ```
+
+`<type>` is one of: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`, `ci`.
 
 Examples:
 ```
-claude/LAT-47-sync-contract
-copilot/LAT-52-pr-template-v2
-codex/LAT-88-migration-0014-harness-schema
-warp-pi/LAT-101-pixeltable-bootstrap
-hermes/LAT-115-ddc-skills-harvest
-human/LAT-200-gate-a-activation
+feat/marpa-47-sync-contract
+chore/marpa-52-pr-template-v2
+feat/marpa-88-migration-0017-embeddings
+docs/marpa-115-ddc-skills-harvest
 ```
 
 Rules:
-- Agent prefix must match the agent-lane table in `meta/agent-lanes.md`.
-- Linear ID must be valid and assigned to the committer's lane.
+- Linear ID must be valid and visible to the picker.
 - Slug is kebab-case, max 40 chars, from the Linear issue title.
-- Linear auto-generates branch suggestions in the format above — copy from Linear's UI.
+- Linear auto-generates branch suggestions — copy from Linear's UI.
+- Agent attribution is by Linear comment + PR author. No agent name in the branch.
 
 ---
 
@@ -125,12 +124,7 @@ label-sync feature. Do not create GitHub-only labels. Add labels in Linear first
 | `meta-harness` | Touches `meta/harness/` or the doctrine layer |
 | `docs-harness` | Touches the documentation substrate |
 | `knowledge-substrate` | Touches `lattice/knowledge/*` Pixeltable tables |
-| `copilot` | Assigned to GitHub Copilot lane |
-| `claude-code` | Assigned to Claude Code lane |
-| `codex` | Assigned to Codex CLI lane |
-| `warp-pi` | Assigned to Warp Terminal PI lane |
-| `hermes` | Assigned to Hermes lane |
-| `human-only` | Requires human action; no agent may self-assign |
+| `human-only` | Requires human action (secrets, OAuth, merges to main, deletions, branch protection) — no agent may self-assign |
 | `vw-bridge` | Phase D — Vectorworks plugin / IFC ingest |
 | `3d-viewer` | Phase F — ThatOpen / Three.js / R3F |
 | `analytics-layer` | Phase G — deck.gl / DuckDB WASM |
@@ -149,7 +143,7 @@ label-sync feature. Do not create GitHub-only labels. Add labels in Linear first
 
 ## Conflict resolution policy
 
-### Planning fields (priority, cycle, estimate, milestone, parent, agent label)
+### Planning fields (priority, cycle, estimate, milestone, parent)
 **Linear always wins.** If these are edited on the GitHub side (e.g., via the
 GitHub issue UI), the next Linear sync overwrites them. Do not edit planning
 fields on GitHub.
@@ -201,7 +195,7 @@ the canonical reference. Always cite `LAT-XX` in code, not `#242`.
 - **GitHub Milestones** — not used. Linear Milestones are the only milestone surface.
 - **GitHub Projects** — not used. Linear Projects are the only project surface.
 - **GitHub Assignees** — not used for planning. Linear assignee = responsible human.
-  Agent-lane label indicates which agent picks up the work.
+  Any capable agent picks up issues; attribution is by Linear comment and PR author.
 - **GitHub Reactions** — not synced.
 - **Linear Cycles** — Linear-only; no GitHub equivalent.
 - **Linear Customer links** — Linear-only.

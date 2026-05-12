@@ -1,7 +1,7 @@
 ## LATTICE Agent Context (v1, static)
 
 Generated: 2026-05-12 (UTC)
-Branch: `feature/phase-c-linear` @ `ea61af7`
+Branch: `feature/phase-c-linear` @ `5ebff79`
 Source of truth: `meta/harness/docs/` on `feature/meta-harness`
 Sourced from: `.github/copilot-instructions.md` (locked stack + cardinal rules),
   `meta/sync-contract.md` (teams + field directions),
@@ -29,6 +29,12 @@ This file is a flat, generated-once context export for downstream agents
 ## Cardinal Rules (1–23)
 
 
+
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
 2. **Never import the Anthropic SDK in client code.** It's removed from `pixeltable/pyproject.toml` for this reason; the CLI subprocess is the live path.
 3. **Never use pip, conda, poetry.** All Python ops go through `uv`.
