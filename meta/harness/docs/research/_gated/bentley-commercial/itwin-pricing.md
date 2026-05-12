@@ -1,11 +1,18 @@
 ---
 title: "iTwin Pricing — Verified Tiers and Strategic Implications"
 type: research
-status: reference
+status: dormant
+gate_required: ["Gate A: Accelerator", "Gate B: Partner Program", "Gate C: Developer Subscription", "Gate D: External Funding", "Gate E: Client-Funded Seat"]
+gate_status: not_triggered
+activation_log: []
+doctrine_default: "iTwin OSS self-hosted only — paid-tier content is dormant"
+vendor: "Bentley Systems"
+source: "Moved from meta/harness/docs/research/itwin-pricing.md in Phase 1.5 §5.1; original cited bentley-ecosystem-deep-dive-20260508.md § Pillar 2.4 (verified against developer.bentley.com/pricing 2026-05-08)"
 historical_only: false
-source: "bentley-ecosystem-deep-dive-20260508.md § Pillar 2.4 (verified against developer.bentley.com/pricing 2026-05-08)"
 ---
-# iTwin Pricing — Verified
+# iTwin Pricing — Verified (Dormant)
+
+> **Gated content.** Read `_gated/README.md` (top-level dormancy policy) and `_gated/bentley-commercial/README.md` (vendor-specific gate state) before using anything below for architectural purposes. The only permitted use of this file in dormant state is **drafting outreach to Bentley** (see `meta/harness/docs/specs/outreach-templates.md`).
 
 Pricing structure for the **commercial / API-usage / accelerator** layers of the iTwin ecosystem. The free / OSS layer is unchanged and well-known.
 
