@@ -1,11 +1,17 @@
 ## LATTICE Agent Context (v1, static)
 
 Generated: 2026-05-12 (UTC)
+Branch: `feature/phase-c-linear` @ `ea61af7`
 Source of truth: `meta/harness/docs/` on `feature/meta-harness`
-Sourced from: `.github/copilot-instructions.md` at PR #244 head `cfacd0c` (locked stack + cardinal rules)
-Regeneration cadence: manual until Phase D docs site lands
+Sourced from: `.github/copilot-instructions.md` (locked stack + cardinal rules),
+  `meta/sync-contract.md` (teams + field directions),
+  `meta/agent-lanes.md` (lane assignments)
+Regeneration: `bash scripts/agent-context-regenerate.sh`
 
-This file is a flat, generated-once context export for downstream agents (Copilot, Cursor, Codex CLI, etc.) that cannot or should not traverse the full `meta/harness/` tree. It is NOT a replacement for `CLAUDE.md` or `AGENT.md` — it is a snapshot of the rules in effect at generation time.
+This file is a flat, generated-once context export for downstream agents
+(Copilot, Cursor, Codex CLI, etc.) that cannot or should not traverse the full
+`meta/harness/` tree. It is NOT a replacement for `CLAUDE.md` or `AGENTS.md`
+— it is a snapshot of the rules in effect at generation time.
 
 ## Locked Stack
 
@@ -21,6 +27,7 @@ This file is a flat, generated-once context export for downstream agents (Copilo
 | Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
 
 ## Cardinal Rules (1–23)
+
 
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
 2. **Never import the Anthropic SDK in client code.** It's removed from `pixeltable/pyproject.toml` for this reason; the CLI subprocess is the live path.
@@ -93,39 +100,49 @@ This file is a flat, generated-once context export for downstream agents (Copilo
     state until Phase B bootstrap verifies. Do not propose marking it
     Ready-for-Review.
 
-## Substrate Map
+## Teams (Linear ↔ GitHub)
 
-- `.claude/rules/`         — runtime rule loader inputs
-- `analysis/capabilities/` — capability registry (Harvest Protocol outputs)
-- `meta/harness/docs/`     — 9-section meta-harness specification
-- `scripts/doc-mirror-manifest.yaml` — docs-sync source of truth
-- `pixeltable/knowledge/tools.py`    — knowledge tool registry
-- `migrations/0001–0016`   — write-once schema history
+| Team | Linear ID prefix | Scope | Notes |
+|---|---|---|---|
+| **MARPA** | `MARPA-XX` | Platform engineering — Phases A through N **and** customer engagement O–P | Free-plan team limit blocked creating a separate LATTICE team; all issues use MARPA for now |
+**G1 note (2026-05-12):** The original plan called for a LATTICE team (`LAT-XX`) for platform work and MARPA (`MAR-XX`) for customer engagement. Linear's free plan blocked creating a second team. All 242 GitHub issues were imported into the existing MARPA team instead; they carry `MARPA-XX` identifiers. When the plan upgrades or the workspace gains a second team slot, platform issues can be migrated to `LAT-XX` via the reconciliation script with a `--rename-prefix` flag (to be added). Until then, treat `MARPA-XX` as the canonical identifier for all issues.
+Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA-XX`.
 
-## Prohibited
+## Agent Lane Assignments
 
-- Revit / DGN / MicroStation imports (IFC4.3 only at boundary)
-- Any database other than Pixeltable
-- iTwin or Cesium commercial SaaS without Five-Gate Dormancy approval
-- deck.gl as a 3D scene layer (analytical overlay only)
-- Anthropic SDK in client code (Claude CLI is the agent backend)
-- `pxt.Geometry` (does not exist — use `pxt.String` WKT)
-- Editing migrations 0001–0016 (write-once)
-- YAML frontmatter in CLAUDE.md
-- SKILL.md as a single file (must be a directory)
+| Agent | Branch prefix | Linear label | File-path scope | Strength profile |
+|---|---|---|---|---|
+| GitHub Copilot | `copilot/` | `copilot` | `.github/`, `scripts/`, `meta/`, workflow YAML | Web-task completion, GitHub API, CodeQL self-fix, PR descriptions, issue triage, single-file edits |
+| Claude Code | `claude/` | `claude-code` | `pixeltable/`, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, multi-file refactors touching ≥3 files | Long-context reasoning, doctrine implementation, capability registries, CLAUDE.md / AGENTS.md maintenance, TanStack + sidecar integration |
+| Codex CLI | `codex/` | `codex` | `pixeltable/migrations/`, `pixeltable/service/`, `src/server/`, Python module scaffolding | Heavy code generation, migration authoring, Python-heavy tasks, schema-first implementations |
+| Warp Terminal PI | `warp-pi/` | `warp-pi` | `scripts/`, bootstrap shell scripts, Phase B M3 Max ops | Terminal-bound ops, `uv` runs, embeddings pipelines, shell-level diagnostics, Phase B M3 Max bootstrap |
+| Hermes | `hermes/` | `hermes` | `meta/harness/docs/`, `analysis/`, `ddc/`, capability harvests | Research and analysis, doc-mirror sync, InfraNodus graph analysis, DDC skills indexing, knowledge-substrate harvest |
+| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, any deletion | Any action requiring credentials, irreversibility, or cross-team coordination |
 
-## Reference Docs
+## Key Doctrine References
 
-The numbered docs spec'd by the original B1 design has not yet been created on `feature/meta-harness`. Pending docs are flagged; live docs that serve the equivalent purpose are linked alongside.
+- Sync contract (field directions, conflict policy, Magic Words): `meta/sync-contract.md`
+- Agent lane definitions (scopes, branch prefixes, prohibited zones): `meta/agent-lanes.md`
+- OSS self-hosted doctrine: `.claude/rules/oss-self-hosted-doctrine.md`
+- Capability harvest protocol: `.claude/rules/capability-harvest-protocol.md`
+- Zero Dead DNA: `.claude/rules/zero-dead-dna.md`
+- Anti-amnesia rule: `.claude/rules/anti-amnesia.md`
+- Pre-commit docs check (mandatory before every commit): `bash scripts/pre-commit-docs-check.sh`
 
-- `meta/harness/docs/01-overview.md` — **pending PR #230 merge**. Live substitute: `meta/harness/docs/README.md` (navigation index) + `meta/harness/HANDOFF-PHASE-2.md` (cold-start orientation).
-- `meta/harness/docs/02-capability-harvest-protocol.md` — **pending PR #230 merge**. Live substitute: `.claude/rules/capability-harvest-protocol.md`.
-- `meta/harness/docs/03-anti-amnesia.md` — **pending PR #230 merge**. Live substitute: `.claude/rules/anti-amnesia.md`.
-- `meta/harness/docs/04-zero-dead-dna.md` — **pending PR #230 merge**. Live substitute: `.claude/rules/zero-dead-dna.md`.
-- `meta/harness/docs/05-five-gate-dormancy.md` — **pending PR #230 merge**. Live substitute: `meta/harness/docs/research/_gated/README.md`.
-- `meta/harness/docs/06-embedding-policy.md` — **pending PR #230 merge**. Live substitute: `pixeltable/migrations/_helpers.py` (`EMBEDDING_MODEL_ID` shared constant + rationale comment block).
-- `meta/harness/docs/07-migration-discipline.md` — **pending PR #230 merge**. Live substitute: cardinal rule 15 above + `pixeltable/migrations/_helpers.py::OWNED_PARENTS` + `assert_ownership`.
-- `meta/harness/docs/08-doc-mirror.md` — **pending PR #230 merge**. Live substitute: `scripts/doc-mirror-manifest.yaml` + `meta/harness/docs/AGENT.md` (docs-harness section AGORA spec).
-- `meta/harness/docs/09-agent-routing.md` — **pending PR #230 merge**. Live substitute: `.claude/rules/vendored-skills.md` + `meta/harness/PLAN/09-POLYMORPHIC-ARCHITECTURE-AMENDMENT.md`.
+## Phase B acknowledgement
 
-When PR #230 merges to `main`, this section will be regenerated to point at the canonical numbered docs.
+Phase B M3 Max bootstrap has NOT run. The following Pixeltable query tools
+return empty results until Phase B completes:
+  `search_tutorials`, `search_research`, `search_docs`,
+  `search_api_reference`, `get_coverage_gaps`
+
+Do not write code that assumes these tools return data.
+
+## Quick-start for new agents
+
+1. Read `CLAUDE.md` (repo root) — mandatory schema and migration rules
+2. Read `meta/AGENT_ONBOARDING.md` — 5-minute boot checklist
+3. Read `meta/agent-lanes.md` — confirm your lane before touching files
+4. Run `curl -s http://localhost:8001/health` — confirm FastAPI sidecar
+5. Run `bash scripts/pre-commit-docs-check.sh` before every commit
+

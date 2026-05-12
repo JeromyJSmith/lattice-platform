@@ -1,113 +1,291 @@
-<!-- intent-skills:start -->
-## Skill Loading
+# LATTICE Platform — Agent Instructions
+# Read by: Codex CLI (every session), GitHub Copilot, Cursor, any AI agent
+# Keep under 32 KiB — Codex truncates silently above project_doc_max_bytes
 
-Before substantial work:
-- Skill check: run `npx @tanstack/intent@latest list`, or use skills already listed in context.
-- Skill guidance: if one local skill clearly matches the task, run `npx @tanstack/intent@latest load <package>#<skill>` and follow the returned `SKILL.md`.
-- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
-- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
-<!-- intent-skills:end -->
+---
 
-## AGENTS.md — TanStack MetaHarness Runtime MVP
+## Project identity
 
-This project is the first runtime/control surface for the VW iTwin Bridge MetaHarness.
+LATTICE is an AI-native landscape-architecture digital twin:
 
-## Commands run
-Scaffold (requested command; fails because TanStack CLI disallows capitals):
-`npx @tanstack/cli@latest create VW_iTwin_Bridge --agent --add-ons ai,shadcn,store,better-auth`
+**Pipeline:** Vectorworks 2026 → IFC4.3 → iTwin OSS BIS/geometry (self-hosted) →
+deck.gl + Cesium 3D Tiles → Pixeltable knowledge substrate
 
-Workaround used to satisfy final path request:
-1. `npx @tanstack/cli@latest create vw_itwin_bridge --agent --add-ons ai,shadcn,store,better-auth`
-2. Rename folder to `VW_iTwin_Bridge`
+**Repo:** https://github.com/JeromyJSmith/lattice-platform
+**Active branch:** `feature/phase-c-linear` (integration branch — PRs target this, not main)
+**Linear board:** https://linear.app/00-command-center/project/lattice-fa64d0d31078
+**Issue prefix:** `MARPA-XX` (all platform and engagement issues use MARPA team, free-plan constraint)
 
-Intent:
-- `npx @tanstack/intent@latest install`
-- `npx @tanstack/intent@latest list`
+---
 
-## Required TanStack surface
-- TanStack Start
-- TanStack Router
-- TanStack CLI
-- TanStack Intent
-- TanStack Query
-- TanStack Table
-- TanStack Form
-- TanStack Store
-- TanStack DB
-- TanStack AI
-- TanStack Hotkeys
-- TanStack Pacer
-- TanStack Virtual
+## Agent lanes — who does what
 
-## Runtime purpose
-The app routes agent work between:
-- Claude Code CLI
-- Pi runtime
-- Hermes runtime
-- OpenRouter server-side provider adapter
+| Agent | Branch prefix | What it owns |
+|---|---|---|
+| **Codex CLI** | `codex/` | `pixeltable/migrations/` (new only), `pixeltable/service/`, `src/server/runtime/`, `src/routes/`, `scripts/*.py` |
+| **Claude Code** | `claude/` | Multi-file refactors ≥3 dirs, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, `CLAUDE.md`, `AGENTS.md` |
+| **GitHub Copilot** | `copilot/` | `.github/`, `scripts/*.sh`, `meta/*.md` (single-file) |
+| **Warp PI** | `warp-pi/` | Shell scripts, `uv` ops, Phase B M3 Max bootstrap |
+| **Hermes** | `hermes/` | `meta/harness/docs/`, `analysis/`, research/synthesis |
+| **Human only** | `human/` | Secrets, OAuth, merges to main, deletions, Linear milestone changes |
 
-All runs must be represented as normalized `RuntimeEvent` records.
+Before picking up a Linear issue, confirm it has your lane label. If another lane's label is set, stop.
 
-## Reproducibility
-Every task run should produce:
-- run directory
-- `events.jsonl`
-- `prompt.md`
-- `outcome.md`
-- `evidence-manifest.yaml`
+---
 
-Pixeltable boundary artifacts:
-- `pixeltable/tables.yaml`
-- `pixeltable/ingestion-contract.yaml`
+## If you are Codex — read this section carefully
 
-## Pixeltable bridge sub-project (`pixeltable/`)
+### Your scope (hard boundaries)
 
-The harness no longer talks to Pixeltable directly. All ledger writes go through a Python sidecar that owns the `lattice/execution/*` and `lattice/bridge/*` namespaces. The sidecar lives in `pixeltable/` and is governed by:
+**Allowed:**
+- `pixeltable/migrations/*.py` — **new files only** (write-once rule — see below)
+- `pixeltable/service/**` — FastAPI sidecar services, workers, ingest
+- `src/server/runtime/**` — TanStack server functions
+- `src/routes/**` — new route files only
+- `scripts/*.py` — Python utility scripts
 
-- `pixeltable/pyproject.toml` — pinned to `pixeltable==0.6.0` to match the live `/Volumes/PixelTable/.pixeltable` instance and the `MARPA_PLATFORM` body.
-- `pixeltable/migrations/0001-0011_*.py` — idempotent, ownership-asserted Pixeltable schema. `migrations/_helpers.py::assert_ownership` blocks any write outside the owned namespaces (`marpa/*` and other foreign roots are never touched).
-- `pixeltable/contracts/*.yaml` + `pixeltable/contracts/sidecar.schema.json` — the public ingestion contract. Bumping a contract requires bumping the matching migration.
-- `pixeltable/grammars/marpa.landscape.v1.bnf` + `actions.py` + `marpa_seed_psets.yaml` — landscape grammar + seed PSET registry.
-- `pixeltable/service/` — FastAPI sidecar (default UDS `/tmp/vwbridge-pxt.sock`, TCP fallback). The harness reaches it through `src/runtime/pixeltable/sidecar-client.ts` (auto SHA256 idempotency keys).
-- `pixeltable/scripts/{bootstrap,verify,doctor,load_fixtures}.py` + `Makefile` — local control plane (`make bootstrap migrate-dryrun migrate fixture-load verify`).
-- `pixeltable/.schema-snapshot.yaml` — schema drift baseline, enforced by `.github/workflows/pixeltable.yml`.
+**Prohibited (stop immediately if the task requires these):**
+- Editing any file in `pixeltable/migrations/` that already exists
+- Touching `.claude/rules/`, `.claude/skills/` (Claude Code lane)
+- Touching `.github/workflows/` (Copilot lane)
+- Touching `meta/harness/docs/` (Hermes lane)
+- Architectural decisions not already in `meta/ARCHITECTURE.md`
 
-### Ownership rules (do not violate)
-- `lattice/execution/*` and `lattice/bridge/*` are owned by **this** harness.
-- `marpa/*` is owned by `MARPA_PLATFORM` and is read-only here.
-- Cross-namespace joins use `vw_export_hash` (VW side) and `source_element_id` (IFC GUID, iTwin side).
-- `evidence/manifest.yaml` artifacts surface in Pixeltable as rows in `lattice/bridge/evidence/promotion_events`; they are not duplicated, only referenced via `harness_run_refs`.
+If a task genuinely requires files in two lanes, post a comment on the Linear issue and stop.
+Do not cross lane boundaries. The human will split the issue.
 
-### Test tiers
-- `pixeltable/tests/no_pxt/*` — pure-Python; runs on every PR (`make test-no-pxt`).
-- `pixeltable/tests/pxt/*` — full integration against an ephemeral `PXT_HOME` created by the `ephemeral_pxt_home` fixture; runs on every PR through CI and locally via `make test-pxt`.
-- `src/runtime/pixeltable/sidecar-client.test.ts` — vitest contract for the harness-side client.
+### Label guard — run this check first
 
-### CI gate
-`.github/workflows/pixeltable.yml` runs three jobs on any change under `pixeltable/`, `src/runtime/pixeltable/`, or the ingest script:
-1. `no-pxt` — `pytest -m "not pxt"` over `tests/no_pxt`.
-2. `pxt-integration` — provisions an ephemeral `PXT_HOME`, runs `bootstrap.py --dry-run` then `bootstrap.py` (with `BRIDGE_SKIP_EMBEDDINGS=1` so 0011 doesn't pull HF weights), `load_fixtures.py`, `verify.py`, then `pytest tests/pxt`.
-3. `harness-vitest` — `vitest run src/runtime/pixeltable/sidecar-client.test.ts`.
+Check your Linear issue's labels. If `codex` is not present:
+1. Post a workpad comment: "Skipping — not labeled `codex`. Returning to Todo."
+2. Move issue back to **Todo** via `linear_graphql`.
+3. Stop. Make no file changes.
 
-Schema drift surfaces as a non-zero exit from `verify.py` (with a unified diff in the log).
+---
 
-## Safety
-- Never expose `OPENROUTER_API_KEY` to client code.
-- OpenRouter is a server-side provider adapter, not the terminal-agent router.
-- Preserve generated TanStack conventions and add-ons.
+## Non-negotiable code rules
 
-## Deployment Notes
-- Build: `bun run build`
-- Preview: `bun run preview`
-- Runtime evidence path defaults to `./runtime-runs` unless `RUNTIME_RUNS_DIR` is set.
-- Pixeltable ingestion is contract-first in this MVP (`pixeltable/ingestion-contract.yaml`) and should be wired to your service endpoint separately.
+### 1. Pixeltable geometry — no exceptions
 
-## Known Gotchas
-- TanStack CLI currently rejects project names with uppercase characters; scaffold lowercase then rename folder if uppercase path is required.
-- Keep OpenRouter usage in server modules/routes only.
-- TanStack Intent output can change as dependencies update; rerun `bun run intent:list` after package upgrades.
+```python
+# CORRECT — always pxt.String with WKT or GeoJSON
+centroid = pxt.String   # stores "POINT(-105.2705 40.0150)"
 
-## Next Steps
-1. Replace adapter placeholders with real Claude/Pi/Hermes process streaming.
-2. Connect `scripts/ingest-run-to-pixeltable.ts` to the actual Pixeltable ingestion service.
-3. Add auth-gated operator mode using Better Auth session checks.
+# WRONG — pxt.Geometry does not exist in Pixeltable 0.6.x — runtime crash
+centroid = pxt.Geometry  # ← NEVER write this
+```
+
+### 2. Write-once migrations
+
+- Migrations 0001–0016 are **immutable**. Never edit, rename, or delete them.
+- **Next migration number: 0017**
+- File format: `pixeltable/migrations/0017_<description>.py`
+- Always use helpers, never raw Pixeltable create calls:
+
+```python
+from pixeltable.migrations._helpers import (
+    ensure_namespace, ensure_table, ensure_column, OWNED_PARENTS
+)
+# If creating a new top-level namespace, add it to OWNED_PARENTS first
+```
+
+### 3. When you add a migration — update all four files in the same commit
+
+- `meta/SCHEMA.md` — table reference + migration trail entry
+- `meta/ARCHITECTURE.md` — schema overview + verified-state header
+- `CLAUDE.md` (repo root) — LIVE STATE block migration count
+- `meta/HANDOFF.md` — current-state header
+
+CI (`docs-sync-check.yml`) will block the PR if these drift.
+
+### 4. When you add an endpoint — update both files in the same commit
+
+- `meta/API.md` — endpoint table (current count: 33)
+- `meta/ARCHITECTURE.md` — FastAPI surface table + endpoint count
+
+### 5. Python: uv only
+
+```bash
+uv run python script.py    # run scripts
+uv add package             # add dependency
+uv sync                    # sync environment
+
+# NEVER: pip install / pip3 / conda / poetry / pipenv
+```
+
+### 6. iTwin: OSS only
+
+```ts
+// ALLOWED — open-source iTwin geometry and BIS vocabulary
+import { Point3d, Transform } from "@itwin/core-geometry";
+import { Code, ElementProps } from "@itwin/core-common";
+
+// FORBIDDEN — these pull in the SQLite persistence layer
+import { IModelHost } from "@itwin/core-backend";  // ← NEVER
+import { SnapshotDb } from "@itwin/core-backend";   // ← NEVER
+import { BriefcaseDb } from "@itwin/core-backend";  // ← NEVER
+```
+
+Commercial Bentley tiers (BDN, iTwin Activate, Partner Program) are gated under
+`meta/harness/docs/research/_gated/bentley-commercial/` and dormant by default.
+Never architect against them.
+
+### 7. No Anthropic SDK in client code
+
+```ts
+// WRONG — never import Anthropic SDK in .ts/.tsx client files
+import Anthropic from "@anthropic-ai/sdk";
+
+// RIGHT — use TanStack AI adapters or server functions only
+import { useAIStream } from "@tanstack/ai";
+```
+
+### 8. All coordinates EPSG-normalised before Pixeltable write
+
+Never write raw Vectorworks internal coordinates to any Pixeltable table.
+Always normalize through `ifcopenshell.util.placement` or PDAL reprojection first.
+
+### 9. No comments unless the WHY is non-obvious
+
+Default: write zero comments. Add one line only when there is a hidden constraint,
+a workaround for a specific external bug, or behavior that would surprise a reader.
+Never explain WHAT the code does — well-named identifiers do that.
+
+---
+
+## Mandatory pre-commit check
+
+Before **every** `git commit`, run:
+
+```bash
+bash scripts/pre-commit-docs-check.sh
+```
+
+If it fails, fix the docs/counts first. Do not commit until it passes.
+`docs-sync-check.yml` CI enforces the same check and will block your PR if skipped.
+
+---
+
+## Branch and PR format
+
+**Branch:** `codex/marpa-<NNN>-<2-4-word-slug>`
+Example: `codex/marpa-47-0017-scene-graph-embeddings`
+
+**PR title:** `[MARPA-NNN] type(scope): description`
+- type: `feat` | `fix` | `chore` | `refactor` | `test`
+- scope: `migration` | `service` | `routes` | `scripts`
+- Example: `[MARPA-47] feat(migration): 0017_scene_graph_embeddings`
+
+**PR base branch:** `feature/phase-c-linear` (not main — never main)
+
+**Magic Words in PR body:**
+- `Closes MARPA-NNN` → closes the Linear issue on merge
+- `Refs MARPA-NNN` → links without closing
+
+**PR template:** `.github/PULL_REQUEST_TEMPLATE.md` — it auto-populates.
+Fill in the Linear issue field and check `codex` in the Agent Lane section.
+
+**CI that must pass before marking Done:**
+- `docs-sync-check` — migration/endpoint counts, forbidden strings
+- `linear-sync-check` — PR title format `[MARPA-NNN]`
+
+---
+
+## Linear workpad pattern (Symphony mode)
+
+When running under Symphony orchestration, maintain exactly **one** persistent
+comment on the issue throughout your entire work session.
+
+- **Create** it with `commentCreate` on your first turn
+- **Update** it with `commentUpdate` (never create additional comments)
+
+Required sections in the workpad comment:
+
+```
+## Plan
+[What you are doing and why]
+
+## Acceptance Criteria
+[How you will verify completion]
+
+## Progress
+[Current step — what's done, what's next]
+
+## Confusions / Blockers
+[Anything needing human input — stop and surface these immediately]
+```
+
+---
+
+## Canonical reference files — read before writing any code
+
+| File | Contents |
+|---|---|
+| `meta/ARCHITECTURE.md` | System overview, namespace map, FastAPI surface, iTwin tier map |
+| `meta/SCHEMA.md` | Pixeltable table reference and migration trail (source of truth for migration numbers) |
+| `meta/API.md` | FastAPI endpoint table (update when adding routes) |
+| `meta/agent-lanes.md` | Full lane definitions, collision prevention, quality gates |
+| `meta/sync-contract.md` | Linear ↔ GitHub field directions, Magic Words, PR title convention |
+| `.github/copilot-instructions.md` | Full cardinal rules 1–24 (authoritative for all agents) |
+| `.github/agent-context.md` | Flat snapshot of locked stack + cardinal rules (use when meta/ tree is unavailable) |
+
+If the task requires an architectural decision not covered by these files,
+post a blocker comment on the Linear issue and move it back to Todo.
+Do not invent architecture.
+
+---
+
+## What LATTICE is NOT
+
+Do not propose or implement any of the following — they violate cardinal rules:
+
+- Revit, MicroStation, DGN, or `.rvt` file handling
+- `@itwin/core-backend`, `SnapshotDb`, `BriefcaseDb`, `IModelHost`
+- `pxt.Geometry` anywhere in migration files
+- Any Bentley cloud-hosted API (iTwin SaaS, BDN, Activate cohort) unless a gate has fired
+- Cesium ion paid endpoints unless Gate E has fired
+- `pip install` / `conda install` / `poetry add` for Python deps
+- SQLite, PostgreSQL, or Redis as a primary store — Pixeltable only
+- Raw Vectorworks internal coordinates written to Pixeltable
+- Anthropic SDK imported in `.ts` or `.tsx` client files
+- Editing an existing migration file
+
+---
+
+## Session start checklist
+
+Before substantive work, verify:
+
+```bash
+curl -s http://localhost:8001/health    # FastAPI sidecar (start if not running)
+git status                              # confirm clean working tree
+git fetch origin                        # sync with remote
+```
+
+If the sidecar is not running:
+```bash
+cd pixeltable/service
+PIXELTABLE_HOME=/Volumes/PixelTable/.pixeltable \
+PYTHONPATH=/Volumes/PixelTable/schemas \
+uv run python main.py &
+```
+
+---
+
+## Tech stack quick reference
+
+| Layer | Choice | Version |
+|---|---|---|
+| JS runtime | Bun | latest |
+| Frontend | TanStack Start + React 19 + Vite 8 | — |
+| State/data | TanStack Query + TanStack DB | — |
+| Sidecar | FastAPI + uvicorn + asyncio | pixeltable==0.6.x |
+| Python env | uv | only tool allowed |
+| 3D engine | @thatopen/components + Three.js | 3.4.6 / 0.184 |
+| Analytics | deck.gl + DuckDB WASM + MapLibre | 9.3.2 / 1.33.1 / 5 |
+| iTwin | @itwin/core-geometry + @itwin/core-common | 5.9.2 |
+| Point cloud | Laspy + PDAL + Open3D + PotreeConverter | — |
+| IFC | IfcOpenShell | — |
+| Agent runtime | claude -p CLI subprocess (Claude Max) | — |
+| Orchestration | Symphony + Codex CLI (codex app-server) | 0.130.0 |
+| Issue tracker | Linear / MARPA team | MARPA-XX prefix |
