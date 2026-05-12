@@ -75,7 +75,7 @@ done
 # ---- 6. No forbidden strings in staged files ----
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
 if [ -n "$STAGED" ]; then
-  ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.cursor/|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
+  ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|\.github/agent-context\.md|\.github/copilot-instructions\.md|\.github/PULL_REQUEST_TEMPLATE\.md|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.cursor/|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
   while IFS= read -r f; do
     [ -f "$f" ] || continue
     case "$f" in

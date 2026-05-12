@@ -193,7 +193,7 @@ jobs:
             "pixeltable/service/migrations"
           )
           # Allowlist paths that legitimately mention forbidden strings as guardrail text
-          ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
+          ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|\.github/agent-context\.md|\.github/copilot-instructions\.md|\.github/PULL_REQUEST_TEMPLATE\.md|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
 
           for f in $FILES; do
             [ -f "$f" ] || continue
@@ -243,31 +243,52 @@ jobs:
           DOCS_DIR="meta/harness/docs"
           if [ ! -d "$DOCS_DIR" ]; then
             echo "❌ $DOCS_DIR is missing"
-            echo "Fix: restore $DOCS_DIR with exactly the 9 canonical sections"
+            echo "Fix: restore $DOCS_DIR with the 9th-section docs-harness operational files (AGENT.md, GOAL.md, MEMORY.md, gold_goals.md, score-docs.sh) and the Phase 1 reorg subdirectories (amendments/, specs/, research/, sessions/, archive/)"
             exit 1
           fi
 
-          expected=$(printf '%s\n' \
-            'AGENT.md' \
-            'GOAL.md' \
-            'MEMORY.md' \
-            'api_reference' \
-            'docs' \
-            'gold_goals.md' \
-            'research' \
-            'skills_registry' \
-            'tutorials')
-          actual=$(find "$DOCS_DIR" -mindepth 1 -maxdepth 1 -printf '%f\n' | sort)
-          if [ "$actual" != "$expected" ]; then
-            echo "❌ Meta-Harness docs sections do not match the 9-section doctrine"
-            echo "Expected:"
-            echo "$expected"
-            echo "Actual:"
-            echo "$actual"
-            echo "Fix: keep only GOAL.md, MEMORY.md, AGENT.md, gold_goals.md, tutorials/, research/, docs/, api_reference/, skills_registry/"
+          # The "9 sections" of the LATTICE Meta-Harness are a META concept:
+          # 8 tool sections (Schema, API, Frontend, Georef/Reality, GenAI/Assets,
+          # VW Bridge/iTwin, DDC, CI/Infra) + 1 cross-cutting Docs Meta-Harness.
+          # Per the Phase 1 reorg + Phase 1.5 amendment, meta/harness/docs/
+          # contains:
+          #   - Operational files for the 9th section (docs-harness):
+          #       AGENT.md, GOAL.md, MEMORY.md, gold_goals.md, score-docs.sh
+          #   - Phase 1 reorg subdirectories (historical + reference):
+          #       amendments/, specs/, research/, sessions/, archive/
+          #   - Navigation files:
+          #       README.md, _INVENTORY.md
+          # The check verifies these are present; additional files are allowed.
+
+          required=(
+            'AGENT.md'
+            'GOAL.md'
+            'MEMORY.md'
+            'gold_goals.md'
+            'score-docs.sh'
+            'README.md'
+            '_INVENTORY.md'
+            'amendments'
+            'specs'
+            'research'
+            'sessions'
+            'archive'
+          )
+          missing=()
+          for entry in "${required[@]}"; do
+            if [ ! -e "$DOCS_DIR/$entry" ]; then
+              missing+=("$entry")
+            fi
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "❌ Meta-Harness docs structure incomplete — missing required entries:"
+            for m in "${missing[@]}"; do
+              echo "  - $DOCS_DIR/$m"
+            done
+            echo "Fix: restore the missing entries per Phase 1 reorg + Phase 1.5 amendment doctrine"
             exit 1
           fi
-          echo "✅ Meta-Harness docs contain exactly the 9 canonical sections"
+          echo "✅ Meta-Harness docs contain the required 9th-section operational files + Phase 1 reorg subdirectories"
 
   gated-dormancy-check:
     name: gated-dormancy-check
