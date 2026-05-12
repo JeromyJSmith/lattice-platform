@@ -15,7 +15,6 @@ COPILOT_INSTRUCTIONS="$REPO_ROOT/.github/copilot-instructions.md"
 AGENT_ONBOARDING="$REPO_ROOT/meta/AGENT_ONBOARDING.md"
 AGENTS_MD="$REPO_ROOT/AGENTS.md"
 SYNC_CONTRACT="$REPO_ROOT/meta/sync-contract.md"
-AGENT_LANES="$REPO_ROOT/meta/agent-lanes.md"
 
 DRY_RUN=false
 if [[ "${1:-}" == "--dry-run" ]]; then
@@ -36,11 +35,11 @@ HEAD_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 
 # Extract locked stack table from copilot-instructions.md
 # Assumes the table starts after "## Locked Stack" and ends before the next ##
-LOCKED_STACK=$(awk '/^## Locked Stack/{found=1; next} found && /^## /{exit} found{print}' \
+LOCKED_STACK=$(awk 'tolower($0) ~ /^## locked stack/{found=1; next} found && /^## /{exit} found{print}' \
   "$COPILOT_INSTRUCTIONS" | sed '/^[[:space:]]*$/d')
 
 # Extract cardinal rules section from copilot-instructions.md
-CARDINAL_RULES=$(awk '/^## Cardinal Rules|^## CARDINAL RULES/{found=1; next} found && /^## /{exit} found{print}' \
+CARDINAL_RULES=$(awk 'tolower($0) ~ /^## cardinal rules/{found=1; next} found && /^## /{exit} found{print}' \
   "$COPILOT_INSTRUCTIONS" | head -80)
 
 # If copilot-instructions doesn't have these sections, fall back to agent-context sections
@@ -58,10 +57,6 @@ fi
 TEAM_SUMMARY=$(awk '/^## Teams/{found=1; next} found && /^---/{exit} found{print}' \
   "$SYNC_CONTRACT" 2>/dev/null | sed '/^[[:space:]]*$/d' || echo "_sync-contract.md not found_")
 
-# Build agent lane summary (lane table only)
-LANE_TABLE=$(awk '/^## Lane table/{found=1; next} found && /^---/{exit} found{print}' \
-  "$AGENT_LANES" 2>/dev/null | sed '/^[[:space:]]*$/d' || echo "_agent-lanes.md not found_")
-
 CONTENT="## LATTICE Agent Context (v1, static)
 
 Generated: $GENERATED_AT
@@ -69,7 +64,7 @@ Branch: \`$BRANCH\` @ \`$HEAD_SHA\`
 Source of truth: \`meta/harness/docs/\` on \`feature/meta-harness\`
 Sourced from: \`.github/copilot-instructions.md\` (locked stack + cardinal rules),
   \`meta/sync-contract.md\` (teams + field directions),
-  \`meta/agent-lanes.md\` (lane assignments)
+  \`AGENTS.md\` (hard prohibitions + execution rules)
 Regeneration: \`bash scripts/agent-context-regenerate.sh\`
 
 This file is a flat, generated-once context export for downstream agents
@@ -89,14 +84,19 @@ $CARDINAL_RULES
 
 $TEAM_SUMMARY
 
-## Agent Lane Assignments
+## Agent Execution Model
 
-$LANE_TABLE
+Any capable coding agent can pick up any open issue. Attribution is by Linear
+comment and PR author, not by file-path jurisdiction.
+
+Hard prohibitions apply to every agent: landed migrations are write-once,
+secrets and \`.env*\` are human-only, branch protection and merges to \`main\`
+are human-only, deletions of migrations/issues/branches are human-only, and
+\`.claude/rules/\` doctrine changes must be the explicit purpose of a PR.
 
 ## Key Doctrine References
 
 - Sync contract (field directions, conflict policy, Magic Words): \`meta/sync-contract.md\`
-- Agent lane definitions (scopes, branch prefixes, prohibited zones): \`meta/agent-lanes.md\`
 - OSS self-hosted doctrine: \`.claude/rules/oss-self-hosted-doctrine.md\`
 - Capability harvest protocol: \`.claude/rules/capability-harvest-protocol.md\`
 - Zero Dead DNA: \`.claude/rules/zero-dead-dna.md\`
@@ -116,9 +116,8 @@ Do not write code that assumes these tools return data.
 
 1. Read \`CLAUDE.md\` (repo root) — mandatory schema and migration rules
 2. Read \`meta/AGENT_ONBOARDING.md\` — 5-minute boot checklist
-3. Read \`meta/agent-lanes.md\` — confirm your lane before touching files
-4. Run \`curl -s http://localhost:8001/health\` — confirm FastAPI sidecar
-5. Run \`bash scripts/pre-commit-docs-check.sh\` before every commit
+3. Run \`curl -s http://localhost:8001/health\` — confirm FastAPI sidecar
+4. Run \`bash scripts/pre-commit-docs-check.sh\` before every commit
 "
 
 if [[ "$DRY_RUN" == "true" ]]; then
