@@ -16,6 +16,7 @@ from service.deps import (
     require_idempotency_key,
     require_local_socket_or_token,
 )
+from service.idempotency import IdempotencyStore
 from service.routes._idempotent import with_idempotency
 
 router = APIRouter(dependencies=[Depends(require_local_socket_or_token)])
@@ -49,8 +50,8 @@ def _as_http_error(exc: Exception, detail: str) -> HTTPException:
 @router.post("/boq")
 def post_boq(
     body: dict[str, Any] = Body(...),
-    pxt = Depends(get_pxt),
-    store = Depends(get_idem_store),
+    pxt: Any = Depends(get_pxt),
+    store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
     project_id = (body.get("project_id") or "").strip()
@@ -113,7 +114,7 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
 @router.post("/phases")
 def post_phases(
     body: dict[str, Any] = Body(...),
-    store = Depends(get_idem_store),
+    store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
     project_id = (body.get("project_id") or "").strip()

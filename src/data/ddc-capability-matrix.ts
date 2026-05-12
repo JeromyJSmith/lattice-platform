@@ -356,6 +356,8 @@ export const ddcExclusions = [
   'converter-first ingest is excluded because IfcOpenShell plus ezdxf remains the primary path.',
 ]
 
+export const ddcCapabilityArtifactPath = 'ddc/capability-matrix.yaml'
+
 export const ddcSummary = {
   capabilityCount: ddcCapabilities.length,
   surfaceCount: ddcSurfaces.length,
