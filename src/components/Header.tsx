@@ -40,6 +40,13 @@ export default function Header() {
             Runtime
           </Link>
           <Link
+            to="/admin"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Admin
+          </Link>
+          <Link
             to="/runs"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}
