@@ -1,7 +1,7 @@
 ## LATTICE Agent Context (v1, static)
 
 Generated: 2026-05-12 (UTC)
-Branch: `feature/phase-c-linear` @ `ea61af7`
+Branch: `codex/marpa-378-symphony-label-issues` @ `5ebff79`
 Source of truth: `meta/harness/docs/` on `feature/meta-harness`
 Sourced from: `.github/copilot-instructions.md` (locked stack + cardinal rules),
   `meta/sync-contract.md` (teams + field directions),
@@ -27,6 +27,7 @@ This file is a flat, generated-once context export for downstream agents
 | Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
 
 ## Cardinal Rules (1–23)
+
 
 
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
@@ -110,14 +111,14 @@ Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA
 
 ## Agent Lane Assignments
 
-| Agent | Branch prefix | Linear label | File-path scope | Strength profile |
+| Agent | Branch prefix | Linear label | Stewardship | Strength profile |
 |---|---|---|---|---|
 | GitHub Copilot | `copilot/` | `copilot` | `.github/`, `scripts/`, `meta/`, workflow YAML | Web-task completion, GitHub API, CodeQL self-fix, PR descriptions, issue triage, single-file edits |
 | Claude Code | `claude/` | `claude-code` | `pixeltable/`, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, multi-file refactors touching ≥3 files | Long-context reasoning, doctrine implementation, capability registries, CLAUDE.md / AGENTS.md maintenance, TanStack + sidecar integration |
 | Codex CLI | `codex/` | `codex` | `pixeltable/migrations/`, `pixeltable/service/`, `src/server/`, Python module scaffolding | Heavy code generation, migration authoring, Python-heavy tasks, schema-first implementations |
 | Warp Terminal PI | `warp-pi/` | `warp-pi` | `scripts/`, bootstrap shell scripts, Phase B M3 Max ops | Terminal-bound ops, `uv` runs, embeddings pipelines, shell-level diagnostics, Phase B M3 Max bootstrap |
 | Hermes | `hermes/` | `hermes` | `meta/harness/docs/`, `analysis/`, `ddc/`, capability harvests | Research and analysis, doc-mirror sync, InfraNodus graph analysis, DDC skills indexing, knowledge-substrate harvest |
-| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, any deletion | Any action requiring credentials, irreversibility, or cross-team coordination |
+| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, protected deletions | Any action requiring credentials, irreversibility, or cross-team coordination |
 
 ## Key Doctrine References
 

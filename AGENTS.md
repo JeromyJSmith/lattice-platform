@@ -20,7 +20,11 @@ deck.gl + Cesium 3D Tiles → Pixeltable knowledge substrate
 
 ## Agent lanes — who does what
 
-| Agent | Branch prefix | What it owns |
+Lane labels dispatch work to the best-fit agent and identify stewardship. They
+do not create exclusive file-path jurisdiction, except for the hard prohibitions
+listed below.
+
+| Agent | Branch prefix | What it stewards |
 |---|---|---|
 | **Codex CLI** | `codex/` | `pixeltable/migrations/` (new only), `pixeltable/service/`, `src/server/runtime/`, `src/routes/`, `scripts/*.py` |
 | **Claude Code** | `claude/` | Multi-file refactors ≥3 dirs, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, `CLAUDE.md`, `AGENTS.md` |
@@ -31,13 +35,19 @@ deck.gl + Cesium 3D Tiles → Pixeltable knowledge substrate
 
 Before picking up a Linear issue, confirm it has your lane label. If another lane's label is set, stop.
 
+Hard prohibitions survive the stewardship model: migrations are write-once
+(`pixeltable/migrations/0001`-`0016` cannot be edited), secrets and `.env*`
+files are human-only, branch protection and merges to `main` are human-only,
+and deletions of migrations, issues, or branches are human-only. Changes under
+`.claude/rules/` must be the explicit purpose of the PR, not incidental drift.
+
 ---
 
 ## If you are Codex — read this section carefully
 
-### Your scope (hard boundaries)
+### Your stewardship
 
-**Allowed:**
+**Stewarded paths:**
 - `pixeltable/migrations/*.py` — **new files only** (write-once rule — see below)
 - `pixeltable/service/**` — FastAPI sidecar services, workers, ingest
 - `src/server/runtime/**` — TanStack server functions
@@ -46,13 +56,9 @@ Before picking up a Linear issue, confirm it has your lane label. If another lan
 
 **Prohibited (stop immediately if the task requires these):**
 - Editing any file in `pixeltable/migrations/` that already exists
-- Touching `.claude/rules/`, `.claude/skills/` (Claude Code lane)
+- Touching `.claude/rules/`, `.claude/skills/` unless the PR is explicitly a doctrine/skill change
 - Touching `.github/workflows/` (Copilot lane)
-- Touching `meta/harness/docs/` (Hermes lane)
 - Architectural decisions not already in `meta/ARCHITECTURE.md`
-
-If a task genuinely requires files in two lanes, post a comment on the Linear issue and stop.
-Do not cross lane boundaries. The human will split the issue.
 
 ### Label guard — run this check first
 
