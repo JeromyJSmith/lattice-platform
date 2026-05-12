@@ -36,10 +36,11 @@ COMMIT_BODY=$(git -C "$REPO_ROOT" log -1 --format="%b" 2>/dev/null) || true
 COMMIT_AUTHOR=$(git -C "$REPO_ROOT" log -1 --format="%an" 2>/dev/null) || exit 0
 COMMIT_URL="https://github.com/${REPO_SLUG}/commit/${CURRENT_SHA}"
 
-# Extract LAT-XX and MAR-XX identifiers from subject + body
+# Extract MARPA-XX, LAT-XX, and MAR-XX identifiers from subject + body
+# Note: MARPA-XX is the active prefix (free-plan; see meta/sync-contract.md §Teams)
 FULL_MESSAGE="$COMMIT_SUBJECT
 $COMMIT_BODY"
-LINEAR_IDS=$(echo "$FULL_MESSAGE" | grep -oE '(LAT|MAR)-[0-9]+' | sort -u) || true
+LINEAR_IDS=$(echo "$FULL_MESSAGE" | grep -oE '(MARPA|LAT|MAR)-[0-9]+' | sort -u) || true
 
 [[ -z "$LINEAR_IDS" ]] && exit 0
 

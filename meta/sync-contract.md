@@ -10,13 +10,13 @@ but this file in the repo is authoritative.
 
 ## Teams
 
-| Team | Linear ID prefix | Scope |
-|---|---|---|
-| **LATTICE** | `LAT-XX` | Platform engineering — Phases A through N |
-| **MARPA** | `MAR-XX` | Customer engagement — Phases O and P (Boulder pilot, outreach) |
+| Team | Linear ID prefix | Scope | Notes |
+|---|---|---|---|
+| **MARPA** | `MARPA-XX` | Platform engineering — Phases A through N **and** customer engagement O–P | Free-plan team limit blocked creating a separate LATTICE team; all issues use MARPA for now |
 
-All 242 imported GitHub issues go to the **LATTICE** team. MARPA issues are created
-manually as customer-engagement work materialises.
+**G1 note (2026-05-12):** The original plan called for a LATTICE team (`LAT-XX`) for platform work and MARPA (`MAR-XX`) for customer engagement. Linear's free plan blocked creating a second team. All 242 GitHub issues were imported into the existing MARPA team instead; they carry `MARPA-XX` identifiers. When the plan upgrades or the workspace gains a second team slot, platform issues can be migrated to `LAT-XX` via the reconciliation script with a `--rename-prefix` flag (to be added). Until then, treat `MARPA-XX` as the canonical identifier for all issues.
+
+Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA-XX`.
 
 ---
 
