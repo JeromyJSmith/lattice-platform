@@ -39,3 +39,24 @@ Output of the §1.1 inventory pass from Phase 1 Amendment (09-Polymorphic-Genome
 ## Operating rule
 
 Worst case for any future file in this tree is `archive/`. Deletion requires an explicit follow-up commit with the human's approval per the Hard Stops in the Phase 1 Amendment.
+
+## 2026-05-12 addendum — MARPA research trove imported
+
+After the initial reorg, the user pointed to the canonical external research folder at `/Volumes/PixelTable/VW_iTWIN_Bridge/Vectorworks_Bentley_iTwin_MARPA_Research_20260508/`. Five additional source files were copied into the repo tree (not moved — originals remain in the external folder as the authoritative source). The four Phase A stubs created in commit 24cc5f4 were rewritten with real extracted content sourced from these files.
+
+| Original (external) | Copied to | Status |
+|---|---|---|
+| `bentley_ecosystem_deep_dive_20260508.md` | `research/bentley-ecosystem-deep-dive-20260508.md` | reference (frontmatter pre-existing) |
+| `research_report_v2_20260508_verified.md` | `research/marpa-research-report-v2-20260508-verified.md` | reference (frontmatter pre-existing) |
+| `research_report_20260508_vectorworks_itwin_marpa.md` | `research/marpa-research-report-v1-20260508.md` | superseded → `marpa-research-report-v2-20260508-verified.md` |
+| `Dev_Stack/amended_research_proposal.md` | `specs/amended-research-proposal.md` | reference (frontmatter added) |
+| `Dev_Stack/itwin-visgl-slide-bullets.md` | `specs/itwin-visgl-slide-bullets.md` | reference (frontmatter added) — the 28-slide platform architecture spec |
+
+Rewritten stubs (4 files, status flipped from `draft` → `reference`):
+
+| File | Before | After |
+|---|---|---|
+| `research/marpa-business-intelligence.md` | TODO scaffold | Strategic synthesis pulling competitive landscape, ASLA data points, target client segments, revenue model, risk register, strategic sequence |
+| `specs/outreach-templates.md` | TODO scaffold | Four full template skeletons with extracted facts ($199 Standard, $250K Activate SAFE, James Kress / Clive Hackforth contacts, etc.) |
+| `research/itwin-pricing.md` | TODO scaffold | Verified pricing tier table (Community / Standard $199 / Premium $499 / Enterprise), credit cost structure, Activate $250K + $100M iTwin Ventures fund details, BDN unknowns flagged |
+| `research/vw-2026-toolchain.md` | Partial seed | Verified VW Landmark 2026 capability table + IFC certification status + SDK build prereqs + Nemetschek dTwin gap analysis |
