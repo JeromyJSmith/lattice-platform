@@ -1,10 +1,11 @@
 <!-- spec-verified: code.claude.com/docs + docs.github.com 2026-05-11 -->
 # LATTICE Agent Lanes
 
-Agent lanes prevent collision and make agent output attributable. Each agent
-owns a branch prefix, a Linear label, a file-path scope, and a strength profile.
-An agent MUST NOT push to a branch outside its prefix or touch files outside its
-scope without an explicit human override recorded in the PR body.
+Agent lanes prevent collision and make agent output attributable. Each lane has
+a branch prefix, a Linear label, a stewardship profile, and a strength profile.
+Lane labels dispatch work to the best-fit agent; they do not create exclusive
+file-path jurisdiction, except for the hard prohibitions in this document.
+An agent MUST NOT push to a branch outside its prefix.
 
 Reference: `meta/sync-contract.md` for branch naming and PR title conventions.
 
@@ -12,14 +13,14 @@ Reference: `meta/sync-contract.md` for branch naming and PR title conventions.
 
 ## Lane table
 
-| Agent | Branch prefix | Linear label | File-path scope | Strength profile |
+| Agent | Branch prefix | Linear label | Stewardship | Strength profile |
 |---|---|---|---|---|
 | GitHub Copilot | `copilot/` | `copilot` | `.github/`, `scripts/`, `meta/`, workflow YAML | Web-task completion, GitHub API, CodeQL self-fix, PR descriptions, issue triage, single-file edits |
 | Claude Code | `claude/` | `claude-code` | `pixeltable/`, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, multi-file refactors touching ≥3 files | Long-context reasoning, doctrine implementation, capability registries, CLAUDE.md / AGENTS.md maintenance, TanStack + sidecar integration |
 | Codex CLI | `codex/` | `codex` | `pixeltable/migrations/`, `pixeltable/service/`, `src/server/`, Python module scaffolding | Heavy code generation, migration authoring, Python-heavy tasks, schema-first implementations |
 | Warp Terminal PI | `warp-pi/` | `warp-pi` | `scripts/`, bootstrap shell scripts, Phase B M3 Max ops | Terminal-bound ops, `uv` runs, embeddings pipelines, shell-level diagnostics, Phase B M3 Max bootstrap |
 | Hermes | `hermes/` | `hermes` | `meta/harness/docs/`, `analysis/`, `ddc/`, capability harvests | Research and analysis, doc-mirror sync, InfraNodus graph analysis, DDC skills indexing, knowledge-substrate harvest |
-| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, any deletion | Any action requiring credentials, irreversibility, or cross-team coordination |
+| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, protected deletions | Any action requiring credentials, irreversibility, or cross-team coordination |
 
 ---
 
@@ -31,7 +32,7 @@ Reference: `meta/sync-contract.md` for branch naming and PR title conventions.
 the GitHub surface — PR descriptions, issue triage, `.github/workflows/*.yml`
 edits, CODEOWNERS, single-file script edits, CodeQL auto-fix suggestions.
 
-**Allowed paths:**
+**Stewarded paths:**
 - `.github/**`
 - `scripts/*.sh`, `scripts/*.py`, `scripts/*.ts` (single-file edits only)
 - `meta/*.md` (single-file updates)
@@ -41,8 +42,8 @@ edits, CODEOWNERS, single-file script edits, CodeQL auto-fix suggestions.
 
 **Prohibited:**
 - Multi-file refactors spanning more than one directory
-- Anything touching `pixeltable/migrations/` (schema is Codex lane)
-- Anything touching `.claude/rules/` (doctrine is Claude Code lane)
+- Editing existing files in `pixeltable/migrations/` (write-once rule)
+- Touching `.claude/rules/` unless the PR is explicitly a doctrine change
 - Merges to `main` or `feature/meta-harness`
 
 **Quality gate:** PR must pass `linear-sync-check` + `docs-sync-check`.
@@ -52,10 +53,10 @@ edits, CODEOWNERS, single-file script edits, CodeQL auto-fix suggestions.
 ### Claude Code (`claude/`)
 
 **Strength:** Multi-file reasoning, doctrine implementation, long-context
-architectural work. Claude Code owns anything that requires understanding the
+architectural work. Claude Code stewards work that requires understanding the
 full system state across files.
 
-**Allowed paths:**
+**Stewarded paths:**
 - `pixeltable/**` (except `pixeltable/migrations/` — Codex lane)
 - `.claude/rules/**`
 - `.claude/skills/**`
@@ -82,7 +83,7 @@ commit. PR must pass `docs-sync-check` + `linear-sync-check`.
 modules, migrations, and server routes from a precise spec. It does not have
 long conversational memory — every Codex task must be self-contained.
 
-**Allowed paths:**
+**Stewarded paths:**
 - `pixeltable/migrations/*.py` (new files only; never edit existing)
 - `pixeltable/service/**`
 - `src/server/runtime/**`
@@ -93,7 +94,7 @@ long conversational memory — every Codex task must be self-contained.
 
 **Prohibited:**
 - Editing existing migrations (write-once rule)
-- Touching `.claude/rules/` or `.claude/skills/`
+- Touching `.claude/rules/` or `.claude/skills/` unless the PR is explicitly a doctrine or skill change
 - Any architectural decision that is not already spec'd in `meta/ARCHITECTURE.md`
 
 **Quality gate:** `pixeltable.yml` CI must pass. `schema-verify.yml` must pass.
@@ -107,7 +108,7 @@ and excels at shell-level work — `uv` syncs, embeddings batch jobs, PDAL
 pipelines, bootstrap sequences, and anything that needs to be observed live
 in a terminal.
 
-**Allowed paths:**
+**Stewarded paths:**
 - `scripts/**` (shell scripts, Python scripts, TS scripts)
 - Phase B M3 Max bootstrap operations (no code write — ops only)
 - `runtime-runs/<run-id>/` (write-only; never read other agents' run dirs)
@@ -115,9 +116,9 @@ in a terminal.
 **Branch prefix:** `warp-pi/LAT-XX-slug`
 
 **Prohibited:**
-- Writing to `pixeltable/migrations/` (schema is Codex lane)
-- Touching `.claude/` (doctrine is Claude Code lane)
-- Any action that requires GitHub API access (use Copilot lane)
+- Editing existing files in `pixeltable/migrations/` (write-once rule)
+- Touching `.claude/rules/` unless the PR is explicitly a doctrine change
+- Protected deletions or credential changes
 
 **Quality gate:** `test-pxt.yml` must pass after any Pixeltable-touching op.
 
@@ -129,7 +130,7 @@ in a terminal.
 InfraNodus, aggregates doc-mirror content, synthesises capability harvests, and
 maintains the knowledge substrate in `meta/harness/docs/`.
 
-**Allowed paths:**
+**Stewarded paths:**
 - `meta/harness/docs/**`
 - `analysis/**`
 - `ddc/**`
@@ -138,8 +139,8 @@ maintains the knowledge substrate in `meta/harness/docs/`.
 **Branch prefix:** `hermes/LAT-XX-slug`
 
 **Prohibited:**
-- Writing code to `src/` or `pixeltable/` (implementation is other lanes)
-- Touching `.claude/rules/` (doctrine is Claude Code lane)
+- Incidental implementation changes outside the issue purpose
+- Touching `.claude/rules/` unless the PR is explicitly a doctrine change
 - Any destructive file operation
 
 **Quality gate:** `docs-sync-check.yml` nine-section-meta-harness job must pass.
@@ -157,7 +158,7 @@ hands on keyboard with full credential access and deliberate intent.
 - Creating or rotating secrets (`gh secret set …`)
 - Approving OAuth application access
 - Activating any `_gated/` vendor gate
-- Deleting files, branches, or issues
+- Deleting migrations, branches, or issues
 - Changing Linear milestone dates or reordering milestones
 - Any action inside `.env.local` or other credential files
 - Approving agent PRs (a human must click Merge)
@@ -181,13 +182,14 @@ don't fit an agent lane, e.g., credential rotation documentation)
    to `feature/phase-c-linear` (or the active integration branch) via PR, never
    by direct push.
 
-3. **File-path scope is hard.** If a task genuinely requires touching files in
-   two different lanes, the human assigns two sub-issues — one per lane — and
-   the PRs are merged in dependency order.
+3. **Stewardship is not jurisdiction.** File-path scopes guide dispatch,
+   review, and collision prevention. They do not block the assigned agent from
+   touching ordinary files required by the issue.
 
 4. **`linear-sync-check.yml` enforces prefix.** Every PR's branch name is
-   validated against the lane table. A PR from `copilot/` that touches
-   `pixeltable/migrations/` fails CI.
+   validated against the lane table. Hard prohibitions still apply: write-once
+   migrations, secrets/`.env*`, branch protection, merges to `main`, and
+   deletions of migrations, issues, or branches.
 
 ---
 

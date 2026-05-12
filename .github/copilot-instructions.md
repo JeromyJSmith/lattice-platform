@@ -112,17 +112,26 @@ If you're picking up an issue, also read [`meta/AGENT_ONBOARDING.md`](../meta/AG
 
 ## Symphony + agent lane quick reference
 
-| Agent | Branch prefix | Linear label | File scope |
+Lane labels dispatch work and identify stewardship. They do not create exclusive
+file-path jurisdiction for ordinary implementation artifacts.
+
+| Agent | Branch prefix | Linear label | Stewardship |
 |---|---|---|---|
 | Codex CLI | `codex/` | `codex` | migrations (new), service, server routes, scripts |
 | Claude Code | `claude/` | `claude-code` | multi-file refactors, .claude/, analysis/ |
 | GitHub Copilot | `copilot/` | `copilot` | .github/, scripts (single-file), meta (single-file) |
 | Warp PI | `warp-pi/` | `warp-pi` | scripts/, shell ops, Phase B bootstrap |
 | Hermes | `hermes/` | `hermes` | meta/harness/docs/, analysis/, research |
-| Human only | `human/` | `human-only` | secrets, OAuth, merges, deletions |
+| Human only | `human/` | `human-only` | secrets, OAuth, branch protection, merges, protected deletions |
 
 Collision prevention: one issue, one lane. If an issue already has another
 agent's label, do not pick it up. Ping `#lattice-sync` instead.
+
+Hard prohibitions survive the stewardship model: existing migrations are
+write-once, secrets and `.env*` are human-only, branch protection and merges to
+`main` are human-only, and deletions of migrations, issues, or branches are
+human-only. Changes under `.claude/rules/` must be the explicit purpose of a PR,
+not incidental drift.
 
 ## Style preferences
 
