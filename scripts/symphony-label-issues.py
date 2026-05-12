@@ -118,7 +118,7 @@ def fetch_marpa_issues(
     limit: int | None,
 ) -> list[dict[str, Any]]:
     query = """
-    query FetchMarpaIssues($teamId: String!, $first: Int!, $after: String) {
+    query FetchMarpaIssues($teamId: ID!, $first: Int!, $after: String) {
       issues(
         filter: { team: { id: { eq: $teamId } } }
         first: $first
@@ -163,7 +163,7 @@ def fetch_marpa_issues(
 
 def fetch_label_ids(api_key: str, team_id: str, required_labels: set[str]) -> dict[str, str]:
     query = """
-    query FetchIssueLabels($teamId: String!, $first: Int!, $after: String) {
+    query FetchIssueLabels($teamId: ID!, $first: Int!, $after: String) {
       issueLabels(
         filter: { team: { id: { eq: $teamId } } }
         first: $first
