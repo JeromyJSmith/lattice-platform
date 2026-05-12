@@ -66,6 +66,26 @@ allowlist:
     justification: InfraNodus's bundled Claude skills (Cognitive Variability, Ontology Creator, etc.)
     phase_added: 1
     capability_registry: analysis/capabilities/infranodus-capability-registry.yaml  # listed under "skills" surface
+
+  - id: mattpocock-skills
+    name: mattpocock-skills
+    upstream: "github.com/mattpocock/skills"
+    pinned_commit: "9f2e0bd0ea776eb6372eb81fa8a4a47814a8404a"
+    language: markdown_bundle
+    install_method: git_clone_to_tmp_plain_copy
+    install_target: "/.claude/skills/<skill-name>/"
+    vendor_strategy: plain-copy
+    scope: project-local
+    justification: |
+      12 vendored skills (setup-matt-pocock-skills, grill-with-docs, to-prd,
+      to-issues, triage, tdd, diagnose, prototype, improve-codebase-architecture,
+      zoom-out, handoff, write-a-skill) form the seed of the polymorphic skill
+      genome (Phase 1 Amendment §2). Source provenance + adaptation registry
+      in .claude/rules/vendored-skills.md. Never installed via
+      `npx skills@latest add` — always plain-copy from a pinned git clone.
+    phase_added: 1
+    rule_reference: .claude/rules/vendored-skills.md
+    capability_registry: null  # vendored skill bundle, not a runtime tool with MCP surface
 ```
 
 ## Adding a new dependency

@@ -32,6 +32,26 @@ model: sonnet
 permissionMode: acceptEdits
 maxTurns: 50
 color: blue
+skills:
+  # Polymorphic skill genome — vendored from mattpocock/skills@9f2e0bd0...
+  # plus lattice-internal cell-divide + propose-decomposition. Mandatory unless
+  # marked optional. See meta/harness/PLAN/09-POLYMORPHIC-ARCHITECTURE-AMENDMENT.md
+  mandatory:
+    - to-prd                # decompose a desire into a PRD
+    - to-issues             # PRD → GitHub issues
+    - tdd                   # red-green-refactor for any new code
+    - diagnose              # root-cause analysis for incidents
+    - triage                # incident / issue prioritization
+    - handoff               # inter-session handoff (writes MEMORY.md)
+  optional:
+    - setup-matt-pocock-skills
+    - grill-with-docs
+    - prototype
+    - improve-codebase-architecture
+    - zoom-out
+    - write-a-skill
+    - cell-divide           # INERT in Phase 1
+    - propose-decomposition # INERT in Phase 1
 ---
 <!-- spec-verified: code.claude.com/docs 2026-05-11 -->
 
