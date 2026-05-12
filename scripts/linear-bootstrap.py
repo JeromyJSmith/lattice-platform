@@ -358,20 +358,23 @@ def fetch_github_issues(repo: str, limit: int, offset: int) -> list[dict]:
 
 def already_imported(api_key: str, team_id: str, gh_number: int) -> str | None:
     """Returns Linear issue ID if already imported, else None."""
+    needle = f"github_issue_id: {gh_number}"
     data = gql(api_key, """
-        query($teamId: String!, $query: String!) {
+        query($teamId: ID!, $desc: String!) {
           issues(
-            filter: { team: { id: { eq: $teamId } } }
-            first: 5
+            filter: {
+              team: { id: { eq: $teamId } }
+              description: { contains: $desc }
+            }
+            first: 1
           ) {
             nodes { id description }
           }
         }
-    """, {"teamId": team_id, "query": f"github_issue_id: {gh_number}"})
-    for issue in data.get("issues", {}).get("nodes", []):
-        desc = issue.get("description") or ""
-        if f"github_issue_id: {gh_number}" in desc:
-            return issue["id"]
+    """, {"teamId": team_id, "desc": needle})
+    nodes = data.get("issues", {}).get("nodes", [])
+    if nodes:
+        return nodes[0]["id"]
     return None
 
 
@@ -555,6 +558,10 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=250)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--repo", default=REPO)
+    parser.add_argument("--team-key", default=None,
+                        help="Use existing team by key instead of creating (e.g. MARPA)")
+    parser.add_argument("--project-id", default=None,
+                        help="Use existing project UUID instead of creating")
     args = parser.parse_args()
 
     dry_run = not args.commit
@@ -582,14 +589,36 @@ def main() -> None:
     label_map: dict[str, str] = {}
     milestone_map: dict[str, str] = {}
 
+    # Resolve team: --team-key takes precedence over auto-create
+    if args.team_key:
+        data = gql(api_key, "{ teams { nodes { id key name } } }")
+        matched = next((t for t in data["teams"]["nodes"] if t["key"] == args.team_key), None)
+        if not matched:
+            print(f"ERROR: team with key '{args.team_key}' not found.", file=sys.stderr)
+            print(f"  Available: {[t['key'] for t in data['teams']['nodes']]}", file=sys.stderr)
+            sys.exit(1)
+        team_id = matched["id"]
+        print(f"Using existing team: {matched['name']} ({matched['key']}) id={team_id}")
+
+    # Resolve project: --project-id takes precedence over auto-create
+    if args.project_id:
+        project_id = args.project_id
+        print(f"Using existing project id={project_id}")
+
     if not args.skip_setup:
         print("── Stage 4: Project setup ──────────────────────────")
 
-        print("\n[1/4] Team…")
-        team_id, _ = get_or_create_team(api_key, dry_run)
+        if not team_id:
+            print("\n[1/4] Team…")
+            team_id, _ = get_or_create_team(api_key, dry_run)
+        else:
+            print("\n[1/4] Team… (using provided --team-key, skipping create)")
 
-        print("\n[2/4] Project…")
-        project_id = get_or_create_project(api_key, team_id, dry_run)
+        if not project_id:
+            print("\n[2/4] Project…")
+            project_id = get_or_create_project(api_key, team_id, dry_run)
+        else:
+            print("\n[2/4] Project… (using provided --project-id, skipping create)")
 
         print("\n[3/4] Milestones…")
         milestone_map = get_or_create_milestones(api_key, project_id, dry_run)
@@ -601,8 +630,10 @@ def main() -> None:
     else:
         # In skip-setup mode, fetch existing IDs
         print("── Fetching existing project state (--skip-setup) ──")
-        team_id, _ = get_or_create_team(api_key, dry_run=True)
-        project_id = get_or_create_project(api_key, team_id, dry_run=True)
+        if not team_id:
+            team_id, _ = get_or_create_team(api_key, dry_run=True)
+        if not project_id:
+            project_id = get_or_create_project(api_key, team_id, dry_run=True)
         milestone_map = get_or_create_milestones(api_key, project_id, dry_run=True)
         label_map = get_or_create_labels(api_key, team_id, dry_run=True)
 
