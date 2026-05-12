@@ -119,7 +119,7 @@ LABEL_TO_PRIORITY: dict[str, int] = {
 
 CANONICAL_LABELS = {
     "agent-ready", "meta-harness", "docs-harness", "knowledge-substrate",
-    "copilot", "claude-code", "codex", "warp-pi", "hermes", "human-only",
+    "human-only",
     "vw-bridge", "3d-viewer", "analytics-layer", "plant-geometry",
     "point-cloud", "agent-runtime", "cesium", "ddc-skills", "knowledge-ops",
     "outreach", "pilot", "blocked", "triage",

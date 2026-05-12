@@ -86,14 +86,14 @@ Rules:
 ## PR title convention
 
 ```
-[LAT-XX] <type>(<scope>): <description>
+[MARPA-XX] <type>(<scope>): <description>
 ```
 
 Examples:
 ```
-[LAT-47] feat(sync): add sync-contract.md and agent-lanes
-[LAT-52] chore(ci): PR template v2 with agent-lane header
-[LAT-88] feat(db): migration 0014 harness schema
+[MARPA-47] feat(sync): add sync-contract.md
+[MARPA-52] chore(ci): update PR template
+[MARPA-88] feat(db): migration 0014 harness schema
 ```
 
 Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`, `perf`.

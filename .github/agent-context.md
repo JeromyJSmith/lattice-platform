@@ -1,11 +1,11 @@
 ## LATTICE Agent Context (v1, static)
 
 Generated: 2026-05-12 (UTC)
-Branch: `feature/phase-c-linear` @ `5ebff79`
+Branch: `fix/marpa-378-remove-agent-lane-remnants` @ `320aaa6`
 Source of truth: `meta/harness/docs/` on `feature/meta-harness`
 Sourced from: `.github/copilot-instructions.md` (locked stack + cardinal rules),
   `meta/sync-contract.md` (teams + field directions),
-  `meta/agent-lanes.md` (lane assignments)
+  `AGENTS.md` (hard prohibitions + execution rules)
 Regeneration: `bash scripts/agent-context-regenerate.sh`
 
 This file is a flat, generated-once context export for downstream agents
@@ -23,18 +23,12 @@ This file is a flat, generated-once context export for downstream agents
 | Python pkgs | **uv only** (never pip, conda, poetry, pipenv)    |
 | 3D engine   | `@thatopen/components` 3.4.6 + Three.js 0.184     |
 | Analytics   | deck.gl 9.3.2 + DuckDB WASM 1.33.1 + MapLibre 5  |
-| iTwin       | `@itwin/core-geometry` 5.9.2 + `@itwin/core-common` — never @itwin/core-backend |
+| iTwin       | `@itwin/core-geometry` 5.9.2 + `@itwin/core-common` — **never** `@itwin/core-backend** |
 | Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
 
 ## Cardinal Rules (1–23)
 
 
-
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
 2. **Never import the Anthropic SDK in client code.** It's removed from `pixeltable/pyproject.toml` for this reason; the CLI subprocess is the live path.
 3. **Never use pip, conda, poetry.** All Python ops go through `uv`.
@@ -105,6 +99,15 @@ This file is a flat, generated-once context export for downstream agents
     tested. PR #230 (`feature/meta-harness`) is intentionally kept in Draft
     state until Phase B bootstrap verifies. Do not propose marking it
     Ready-for-Review.
+24. **Issue prefix is MARPA-XX, not LAT-XX.** All Linear issues use the MARPA
+    team (free-plan constraint blocks creating a separate LATTICE team). PR
+    titles must match `[MARPA-NNN] type(scope): description`. Magic Words:
+    `Closes MARPA-NNN`, `Refs MARPA-NNN`. The `linear-sync-check.yml` CI
+    job validates this format and blocks non-conforming PRs.
+25. **Active integration branch is `feature/phase-c-linear`.** All PRs target
+    `feature/phase-c-linear`, not `main` or `feature/meta-harness`. Never
+    propose opening a PR against `main` unless the human explicitly requests
+    a merge event.
 
 ## Teams (Linear ↔ GitHub)
 
@@ -114,21 +117,19 @@ This file is a flat, generated-once context export for downstream agents
 **G1 note (2026-05-12):** The original plan called for a LATTICE team (`LAT-XX`) for platform work and MARPA (`MAR-XX`) for customer engagement. Linear's free plan blocked creating a second team. All 242 GitHub issues were imported into the existing MARPA team instead; they carry `MARPA-XX` identifiers. When the plan upgrades or the workspace gains a second team slot, platform issues can be migrated to `LAT-XX` via the reconciliation script with a `--rename-prefix` flag (to be added). Until then, treat `MARPA-XX` as the canonical identifier for all issues.
 Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA-XX`.
 
-## Agent Lane Assignments
+## Agent Execution Model
 
-| Agent | Branch prefix | Linear label | File-path scope | Strength profile |
-|---|---|---|---|---|
-| GitHub Copilot | `copilot/` | `copilot` | `.github/`, `scripts/`, `meta/`, workflow YAML | Web-task completion, GitHub API, CodeQL self-fix, PR descriptions, issue triage, single-file edits |
-| Claude Code | `claude/` | `claude-code` | `pixeltable/`, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, multi-file refactors touching ≥3 files | Long-context reasoning, doctrine implementation, capability registries, CLAUDE.md / AGENTS.md maintenance, TanStack + sidecar integration |
-| Codex CLI | `codex/` | `codex` | `pixeltable/migrations/`, `pixeltable/service/`, `src/server/`, Python module scaffolding | Heavy code generation, migration authoring, Python-heavy tasks, schema-first implementations |
-| Warp Terminal PI | `warp-pi/` | `warp-pi` | `scripts/`, bootstrap shell scripts, Phase B M3 Max ops | Terminal-bound ops, `uv` runs, embeddings pipelines, shell-level diagnostics, Phase B M3 Max bootstrap |
-| Hermes | `hermes/` | `hermes` | `meta/harness/docs/`, `analysis/`, `ddc/`, capability harvests | Research and analysis, doc-mirror sync, InfraNodus graph analysis, DDC skills indexing, knowledge-substrate harvest |
-| Human only | `human/` | `human-only` | Secrets, `.env*`, OAuth flows, branch protection, merge to `main`, milestone changes, any deletion | Any action requiring credentials, irreversibility, or cross-team coordination |
+Any capable coding agent can pick up any open issue. Attribution is by Linear
+comment and PR author, not by file-path jurisdiction.
+
+Hard prohibitions apply to every agent: landed migrations are write-once,
+secrets and `.env*` are human-only, branch protection and merges to `main`
+are human-only, deletions of migrations/issues/branches are human-only, and
+`.claude/rules/` doctrine changes must be the explicit purpose of a PR.
 
 ## Key Doctrine References
 
 - Sync contract (field directions, conflict policy, Magic Words): `meta/sync-contract.md`
-- Agent lane definitions (scopes, branch prefixes, prohibited zones): `meta/agent-lanes.md`
 - OSS self-hosted doctrine: `.claude/rules/oss-self-hosted-doctrine.md`
 - Capability harvest protocol: `.claude/rules/capability-harvest-protocol.md`
 - Zero Dead DNA: `.claude/rules/zero-dead-dna.md`
@@ -148,7 +149,6 @@ Do not write code that assumes these tools return data.
 
 1. Read `CLAUDE.md` (repo root) — mandatory schema and migration rules
 2. Read `meta/AGENT_ONBOARDING.md` — 5-minute boot checklist
-3. Read `meta/agent-lanes.md` — confirm your lane before touching files
-4. Run `curl -s http://localhost:8001/health` — confirm FastAPI sidecar
-5. Run `bash scripts/pre-commit-docs-check.sh` before every commit
+3. Run `curl -s http://localhost:8001/health` — confirm FastAPI sidecar
+4. Run `bash scripts/pre-commit-docs-check.sh` before every commit
 

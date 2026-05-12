@@ -77,11 +77,6 @@ LABELS: list[dict[str, str]] = [
     {"name": "meta-harness",       "color": "#9C27B0"},
     {"name": "docs-harness",       "color": "#673AB7"},
     {"name": "knowledge-substrate","color": "#3F51B5"},
-    {"name": "copilot",            "color": "#2196F3"},
-    {"name": "claude-code",        "color": "#FF9800"},
-    {"name": "codex",              "color": "#009688"},
-    {"name": "warp-pi",            "color": "#F44336"},
-    {"name": "hermes",             "color": "#E91E63"},
     {"name": "human-only",         "color": "#607D8B"},
     {"name": "vw-bridge",          "color": "#8BC34A"},
     {"name": "3d-viewer",          "color": "#00BCD4"},
@@ -155,7 +150,7 @@ Claude CLI runtime.
 **Locked stack:** Bun · TanStack Start · React 19 · FastAPI · Pixeltable 0.6 · \
 @thatopen/components · Three.js · deck.gl · DuckDB WASM · MapLibre · iTwin OSS (no core-backend).
 
-**Doctrine refs:** meta/sync-contract.md · meta/agent-lanes.md · AGENTS.md · CLAUDE.md · \
+**Doctrine refs:** meta/sync-contract.md · AGENTS.md · CLAUDE.md · \
 meta/ARCHITECTURE.md · meta/SCHEMA.md · meta/API.md · .github/copilot-instructions.md
 
 **Teams:** LATTICE (LAT-XX, platform Phases A–N) · MARPA (MAR-XX, Phases O–P)
