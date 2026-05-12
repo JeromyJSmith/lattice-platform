@@ -27,11 +27,16 @@ _REPO_ROOT = Path(__file__).resolve().parents[3]
 
 def _load_module(name: str, relative_path: str):
     path = _REPO_ROOT / relative_path
+    if not path.exists():
+        raise RuntimeError(f"required DDC adapter missing: {path}")
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"unable to load module from {path}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    try:
+        spec.loader.exec_module(module)
+    except Exception as exc:
+        raise RuntimeError(f"failed to load DDC adapter {path}: {exc!s}") from exc
     return module
 
 
