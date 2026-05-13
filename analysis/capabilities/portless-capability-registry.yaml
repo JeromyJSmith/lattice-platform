@@ -1,0 +1,226 @@
+# spec-verified: vercel-labs/portless 0.9.4 2026-05-13
+tool: portless
+tool_version: 0.9.4
+canonical_docs: https://github.com/vercel-labs/portless/blob/main/README.md
+last_harvested: 2026-05-13
+harvested_by: claude-haiku-4-5
+generated_from:
+  harvest: analysis/capabilities/portless-capability-harvest.md
+  matrix: analysis/capabilities/portless-capability-matrix.md
+
+capabilities:
+  - id: portless-cli-run
+    surface: cli_command
+    name: portless <name> <cmd>
+    state: DEFERRED
+    description: Run dev command with auto-assigned ephemeral PORT and HTTPS subdomain routing
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-cli-run
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-cli-auto-infer
+    surface: cli_command
+    name: portless run <cmd>
+    state: DEFERRED
+    description: Auto-infer service name from Git worktree or package.json
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-cli-auto-infer
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-cli-alias
+    surface: cli_command
+    name: portless alias <name> <port>
+    state: DEFERRED
+    description: Register static port-to-subdomain mapping for external services
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-cli-alias
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-cli-list
+    surface: cli_command
+    name: portless list
+    state: DEFERRED
+    description: Display active routes and port assignments
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-cli-list
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-cli-proxy-control
+    surface: cli_command
+    name: portless proxy {start|stop|restart}
+    state: DEFERRED
+    description: Explicit daemon lifecycle management with optional LAN and TLS flags
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-cli-proxy-control
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-cli-service-install
+    surface: cli_command
+    name: portless service {install|uninstall}
+    state: DEFERRED
+    description: Register proxy daemon for OS-level startup via systemd or launchd
+    reason: out-of-scope-for-current-phase
+    target_phase: post-phase-1-operations
+    tracking_issue: TBD-portless-cli-service-install
+    owner_harness: meta-harness
+    value: low
+    risk: low
+
+  - id: portless-config-json
+    surface: pattern
+    name: .portless.json config file
+    state: DEFERRED
+    description: Per-service configuration for name, appPort, script, and proxy settings
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-config-json
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-config-pkg-json
+    surface: pattern
+    name: package.json "portless" key
+    state: DEFERRED
+    description: Inline portless configuration in package.json as alternative to .portless.json
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-monorepo
+    tracking_issue: TBD-portless-config-pkg-json
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-config-monorepo
+    surface: pattern
+    name: Monorepo workspace mapping
+    state: DEFERRED
+    description: Config maps workspace paths to subdomain names; single proxy serves multiple apps
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-monorepo
+    tracking_issue: TBD-portless-config-monorepo
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+
+  - id: portless-hostname-routing
+    surface: pattern
+    name: Subdomain-to-port routing by HOSTNAME
+    state: DEFERRED
+    description: Routes by HTTP Host header (subdomain of .localhost or custom TLD) instead of path
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-hostname-routing
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-https-auto-cert
+    surface: pattern
+    name: Auto-generated trusted HTTPS certificates
+    state: DEFERRED
+    description: Generates root CA on first run and adds to OS trust store; per-subdomain leaf certs
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-https-auto-cert
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-port-env-injection
+    surface: pattern
+    name: $PORT environment variable injection
+    state: DEFERRED
+    description: Portless assigns ephemeral PORT; dev server reads via env var instead of CLI flag
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-port-env-injection
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-custom-tld
+    surface: pattern
+    name: Configurable TLD override
+    state: DEFERRED
+    description: Override default .localhost with .dev, .local, or custom domain
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-3-team-config
+    tracking_issue: TBD-portless-custom-tld
+    owner_harness: meta-harness
+    value: low
+    risk: low
+
+  - id: portless-git-worktree-prefix
+    surface: pattern
+    name: Git worktree branch-name prefix
+    state: DEFERRED
+    description: Auto-prefix subdomains with Git branch name (e.g., fix-ui.myapp.localhost)
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-git-worktree-prefix
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-mdn-discovery
+    surface: pattern
+    name: LAN mode via mDNS
+    state: DEFERRED
+    description: Optional mDNS resolution for device-to-device access on local network
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-3-mobile-testing
+    tracking_issue: TBD-portless-mdn-discovery
+    owner_harness: meta-harness
+    value: low
+    risk: low
+
+  - id: portless-tailscale-integration
+    surface: pattern
+    name: Tailscale Funnel sharing
+    state: DEFERRED
+    description: Optional integration with Tailscale CLI for team and public link sharing
+    reason: awaiting-upstream-dep
+    target_phase: phase-3-team-sharing
+    tracking_issue: TBD-portless-tailscale-integration
+    owner_harness: meta-harness
+    value: low
+    risk: medium
+
+  - id: portless-framework-auto-flags
+    surface: pattern
+    name: Framework-specific flag injection
+    state: DEFERRED
+    description: Auto-detects Node frameworks (Vite, Next, Astro, etc.) and injects build flags
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-framework-auto-flags
+    owner_harness: meta-harness
+    value: high
+    risk: low
+
+  - id: portless-env-vars-portless-prefix
+    surface: pattern
+    name: PORTLESS_* environment variable configuration
+    state: DEFERRED
+    description: Runtime config via env vars (PORTLESS_NAME, PORTLESS_PROXY_PORT, etc.)
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-portless-env-vars-portless-prefix
+    owner_harness: meta-harness
+    value: medium
+    risk: low
