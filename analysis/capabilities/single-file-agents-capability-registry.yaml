@@ -71,3 +71,33 @@ capabilities:
     description: The same task can have OpenAI, Anthropic, Gemini, local, or other model-specific agent variants for benchmarking.
     wired_at: ["meta/harness/single-file-harness-agents.md", "meta/harness/model-fit.md"]
     invoked_by: ["LATTICE model-fit loop"]
+
+  - id: sfa-duckdb-local-v1
+    surface: sidecar_job
+    name: DuckDB single-file agent (local-model variant)
+    state: ACTIVE
+    description: LATTICE port of disler/single-file-agents sfa_duckdb_openai_v2.py. OpenAI client points at llama-swap (https://llm.localhost/v1 or http://localhost:9090/v1); driver model bonsai-8b; Qwen-style <tool_call> fallback parser included for mlx_lm.server compatibility.
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_duckdb_local_v1.py
+      - meta/harness/state/cache/sfa-eval.duckdb
+    invoked_by:
+      - uv run meta/harness/tools/sfa-eval/sfa_duckdb_local_v1.py
+    proof_evidence:
+      first_proof: meta/harness/docs/sessions/2026-05-13-200436-browser-bonsai-test1-text-duckdb.json
+      marker: meta/harness/state/_duckdb_local_v1.done.json
+    notes: First proven 2026-05-13 (PR #386). The Qwen-style fallback parser pattern in this SFA is the bridge that makes every other Qwen-derived local-model SFA work through llama-swap.
+
+  - id: sfa-sqlite-local-v1
+    surface: sidecar_job
+    name: SQLite single-file agent (local-model variant)
+    state: ACTIVE
+    description: LATTICE port of disler/single-file-agents sfa_sqlite_openai_v2.py. Preserves the 5-tool Disler surface (ListTables, DescribeTable, SampleTable, RunTestSQLQuery, RunFinalSQLQuery). OpenAI client points at llama-swap; driver model bonsai-8b; Qwen-style <tool_call> fallback parser; auto-seeds an 8-plant fixture on first run.
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_sqlite_local_v1.py
+      - meta/harness/state/cache/sfa-eval.sqlite
+    invoked_by:
+      - uv run meta/harness/tools/sfa-eval/sfa_sqlite_local_v1.py
+    proof_evidence:
+      first_proof: meta/harness/docs/sessions/2026-05-13-211909-sqlite-local-tallest-plant.json
+      marker: meta/harness/state/_sqlite_local_v1.done.json
+    notes: First proven 2026-05-13. Six-iteration loop, 6.81s elapsed, recovered cleanly from a Bonsai-8B validation error on iter 2 (model dropped table_name field). Also a path to query .bim files (SQLite under the hood per CLAUDE.md cardinal rules).
