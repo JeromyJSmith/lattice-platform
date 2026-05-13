@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bonsai in-tab — LATTICE</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    font-family: ui-monospace, "SF Mono", Monaco, Menlo, Consolas, monospace;
+    background: #0a0a0a; color: #e5e5e5;
+    margin: 0; padding: 24px;
+    line-height: 1.5;
+  }
+  h1 { font-size: 14px; font-weight: 600; margin: 0 0 16px; letter-spacing: 0.02em; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; letter-spacing: 0.05em;
+    background: #1a1a1a; border: 1px solid #333;
+  }
+  .badge.ready { background: #053b1f; border-color: #1e7a3e; color: #6ee7b7; }
+  .badge.loading { background: #3b2c05; border-color: #7a5d1e; color: #fbbf24; }
+  .badge.error { background: #3b0808; border-color: #7a1e1e; color: #fca5a5; }
+  pre { background: #131313; padding: 12px; border-radius: 6px; overflow: auto; font-size: 12px; }
+  .row { display: flex; gap: 16px; align-items: center; margin: 8px 0; }
+  .k { color: #888; min-width: 120px; }
+  .v { color: #e5e5e5; word-break: break-all; }
+  #progress {
+    width: 100%; height: 8px;
+    background: #1a1a1a; border-radius: 4px;
+    overflow: hidden; margin-top: 4px;
+  }
+  #progress > div {
+    height: 100%; background: linear-gradient(90deg, #1e7a3e, #6ee7b7);
+    width: 0%; transition: width 0.2s ease;
+  }
+  .log { font-size: 11px; color: #888; max-height: 200px; overflow-y: auto; }
+  .log > div { padding: 2px 0; }
+</style>
+</head>
+<body>
+<h1>Bonsai in-tab WebGPU host (LATTICE)</h1>
+
+<div class="row"><span class="k">status</span><span id="status-badge" class="badge loading">loading</span></div>
+<div class="row"><span class="k">model_id</span><span class="v" id="model-id">onnx-community/Ternary-Bonsai-1.7B-ONNX</span></div>
+<div class="row"><span class="k">device</span><span class="v" id="device">detecting…</span></div>
+<div class="row"><span class="k">backend</span><span class="v" id="backend">@huggingface/transformers</span></div>
+
+<div id="progress"><div></div></div>
+<pre id="last-output" style="display:none"></pre>
+
+<div class="log" id="log"></div>
+
+<script type="module">
+// LATTICE WebGPU Bonsai host.
+//
+// Exposes window.bonsai for browser-harness js() to call:
+//   window.bonsai.status     → "loading" | "ready" | "error"
+//   window.bonsai.model_id   → string
+//   window.bonsai.device     → "webgpu" | "wasm"
+//   window.bonsai.error      → string | null
+//   window.bonsai.generate(prompt, opts?) → Promise<string>
+//
+// Driver model (bonsai-8b on llama-swap) sees this through the
+// RunInBrowserLLM tool in sfa_in_tab_bonsai_v1.py — it never touches
+// the weights, just calls generate() and reads the answer.
+
+const MODEL_ID = "onnx-community/Ternary-Bonsai-1.7B-ONNX";
+const CDN_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
+
+const $ = (id) => document.getElementById(id);
+const log = (msg) => {
+  const row = document.createElement("div");
+  row.textContent = `[${new Date().toISOString().slice(11, 19)}] ${msg}`;
+  $("log").appendChild(row);
+  $("log").scrollTop = $("log").scrollHeight;
+};
+
+const setStatus = (s, klass = null) => {
+  $("status-badge").textContent = s;
+  $("status-badge").className = "badge " + (klass || s);
+};
+
+const setProgress = (pct) => {
+  $("progress").firstElementChild.style.width = `${Math.min(100, pct)}%`;
+};
+
+window.bonsai = {
+  status: "loading",
+  model_id: MODEL_ID,
+  device: null,
+  error: null,
+  generate: null,
+};
+
+async function detectWebGPU() {
+  if (!("gpu" in navigator)) return false;
+  try {
+    const adapter = await navigator.gpu.requestAdapter();
+    return !!adapter;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function boot() {
+  try {
+    log(`importing transformers.js from ${CDN_URL}`);
+    const tjs = await import(CDN_URL);
+    log(`transformers.js loaded — env.version=${tjs.env?.version ?? "unknown"}`);
+
+    const hasWebGPU = await detectWebGPU();
+    const device = hasWebGPU ? "webgpu" : "wasm";
+    $("device").textContent = device + (hasWebGPU ? "" : " (WebGPU not available — falling back to WASM)");
+    window.bonsai.device = device;
+    log(`device=${device}`);
+
+    log(`loading pipeline: text-generation / ${MODEL_ID} — this downloads weights on first run (~hundreds of MB)`);
+
+    const generator = await tjs.pipeline("text-generation", MODEL_ID, {
+      device,
+      progress_callback: (info) => {
+        if (info.status === "progress" && info.progress != null) {
+          setProgress(info.progress);
+        }
+        if (info.status === "ready") {
+          setProgress(100);
+        }
+        if (info.file) {
+          log(`[${info.status}] ${info.file} ${info.progress != null ? Math.round(info.progress) + "%" : ""}`);
+        }
+      },
+    });
+
+    log("pipeline ready");
+    setStatus("ready", "ready");
+    setProgress(100);
+
+    window.bonsai.status = "ready";
+    window.bonsai.generate = async (prompt, opts = {}) => {
+      const max_new_tokens = opts.max_new_tokens ?? 128;
+      const temperature = opts.temperature ?? 0.7;
+      const do_sample = opts.do_sample ?? false;
+      const t0 = performance.now();
+      const out = await generator(prompt, { max_new_tokens, temperature, do_sample });
+      const elapsed_ms = Math.round(performance.now() - t0);
+      // text-generation pipeline returns [{ generated_text: "..." }]
+      const generated_text = Array.isArray(out) ? out[0]?.generated_text : out?.generated_text;
+      const result = {
+        prompt,
+        generated_text,
+        elapsed_ms,
+        max_new_tokens,
+        temperature,
+        do_sample,
+        device,
+        model_id: MODEL_ID,
+      };
+      $("last-output").style.display = "block";
+      $("last-output").textContent = JSON.stringify(result, null, 2);
+      log(`generated ${generated_text?.length ?? 0} chars in ${elapsed_ms}ms`);
+      return result;
+    };
+  } catch (e) {
+    window.bonsai.status = "error";
+    window.bonsai.error = String(e?.message || e);
+    setStatus("error", "error");
+    log(`ERROR: ${e?.message || e}`);
+    if (e?.stack) log(e.stack);
+  }
+}
+
+boot();
+</script>
+</body>
+</html>

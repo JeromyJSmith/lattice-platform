@@ -99,6 +99,22 @@ allowlist:
     phase_added: 2
     capability_registry: analysis/capabilities/fastmcp-capability-registry.yaml
 
+  - id: transformersjs
+    name: "@huggingface/transformers"
+    upstream: github.com/huggingface/transformers.js
+    language: javascript
+    install_method: cdn_esm_import
+    install_target: "https://cdn.jsdelivr.net/npm/@huggingface/transformers (no bundler, no node_modules)"
+    scope: browser-only — loaded into the user's Chrome tab via meta/harness/in-tab-llm/bonsai-host.html
+    justification: |
+      Runs ONNX-exported HF models in the browser with WebGPU acceleration.
+      Used to host onnx-community/Ternary-Bonsai-1.7B-ONNX inside Chrome
+      so the server SFA at sfa_in_tab_bonsai_v1.py can drive it through
+      browser-harness js(). The driver model never touches the in-tab
+      model's weights — they live entirely on the user's device.
+    phase_added: 2
+    capability_registry: analysis/capabilities/transformersjs-capability-registry.yaml
+
 ## Adding a new dependency
 
 1. Open a PR that appends a row to the YAML above
