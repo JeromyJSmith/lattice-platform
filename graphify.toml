@@ -1,0 +1,49 @@
+# graphify.toml — LATTICE repository graph configuration
+# Used by graphify CLI (parisgroup/graphify) for code graph analysis.
+#
+# graphify update src/ — rebuild graph from source
+# graphify watch src/  — watch mode during development
+# graphify query "..."  — BFS traversal
+# graphify cluster-only graphify-out/ — re-run clustering
+
+[graph]
+# Output directory for graph.json + cluster reports
+output = "graphify-out"
+# Format for graph output: json | dot | mermaid
+format = "json"
+
+[source]
+# Directories to include in the code graph
+include = [
+  "src",
+  "pixeltable/service",
+  "pixeltable/migrations",
+  "scripts",
+  "meta/harness/tools",
+]
+# Glob patterns to exclude
+exclude = [
+  "node_modules",
+  ".pnp",
+  "dist",
+  ".git",
+  "graphify-out",
+  "**/*.min.js",
+  "**/__pycache__",
+]
+
+[policy]
+# Hotspot detection: flag nodes with degree > threshold
+hotspot_degree_threshold = 10
+# Cycle detection: surface dependency cycles for review
+detect_cycles = true
+# Dead code: flag unreferenced nodes
+detect_dead_code = true
+# Max depth for dependency traversal
+max_depth = 8
+
+[skill]
+# Platform where graphify skills are installed (claude | codex | cursor | etc.)
+platform = "claude"
+# Output dir for generated skills (relative to repo root)
+generated_skills_dir = ".claude/skills/generated"
