@@ -6,10 +6,10 @@ This file is the primary instruction surface for any AI agent opening this repos
 
 ---
 
-## LIVE STATE (2026-05-11)
+## LIVE STATE (2026-05-13)
 
-- **Migrations applied: 0001–0013** (13 total, write-once). **Planning artifacts on `feature/meta-harness`: 0014 (harness schema), 0015 (knowledge substrate), 0016 (docs substrate)** — not yet applied to live Pixeltable; Phase 2 of the Meta-Harness build applies them.
-- **Pixeltable tables: 36** applied across 4 owned namespaces (`lattice/{execution,bridge,genai,reality}`); post-Phase-2 = 48 across 6 namespaces (adds `lattice/harness`, `lattice/knowledge`)
+- **Migrations applied: 0001–0014** (14 total, write-once). **Planning artifacts: 0015 (knowledge substrate), 0016 (docs substrate)** — committed but not yet applied to live Pixeltable; Phase 2 of the Meta-Harness build applies them. Also `_0014_harness_schema.py` parked as an alternate analytics-flavor schema (underscore prefix excludes it from the runner).
+- **Pixeltable tables: 40** applied across 5 owned namespaces (`lattice/{execution,bridge,genai,reality,harness}`); post-Phase-2 = 48 across 6 namespaces (adds `lattice/knowledge`)
 - **FastAPI endpoints: 33** across 10 routers
 - **Migration path:** `pixeltable/migrations/` (NOT `pixeltable/service/migrations/`)
 - **Canonical schema reference:** [`meta/SCHEMA.md`](meta/SCHEMA.md)
@@ -19,7 +19,7 @@ This file is the primary instruction surface for any AI agent opening this repos
 ## MANDATORY SCHEMA + MIGRATION RULES
 
 1. **`pxt.String` for geometry.** Pixeltable 0.6.x has NO `pxt.Geometry` type. All geometry columns are `pxt.String` storing WKT (`POINT(lon lat)`) or GeoJSON. PostGIS spatial queries layer on at the DuckDB WASM query layer downstream. **Never write `pxt.Geometry` in a migration — it will fail.**
-2. **Write-once migrations.** Never edit a landed migration in `pixeltable/migrations/`. Always increment the number. Migrations 0001–0013 are immutable; the next one is `0014`.
+2. **Write-once migrations.** Never edit a landed migration in `pixeltable/migrations/`. Always increment the number. Migrations 0001–0016 are immutable (0001–0014 applied; 0015–0016 committed planning artifacts); the next one is `0017`. `_0014_harness_schema.py` is a parked alternate schema — the leading underscore excludes it from the runner.
 3. **Migration path is `pixeltable/migrations/`.** Not `pixeltable/service/migrations/` — that path does not exist. The `docs-sync-check` CI workflow will block any PR that references the wrong path.
 4. **Owned-parents rule.** Before creating tables in a new namespace (e.g. `lattice/reality`), `pxt.create_dir()` every ancestor first AND add the new top-level namespace to `OWNED_PARENTS` in `pixeltable/migrations/_helpers.py`. Always use the `ensure_namespace()` / `ensure_table()` / `ensure_column()` helpers — never raw `create_*` calls.
 
@@ -41,10 +41,19 @@ The `docs-sync-check.yml` CI workflow enforces the same checks. It will block me
 
 See [`meta/AGENT_ONBOARDING.md` § 9 Mandatory workflow contract](meta/AGENT_ONBOARDING.md) for the contract.
 
+## MODEL ROUTING
+
+LLM calls go through the model router at [`meta/harness/bin/llm`](meta/harness/bin/llm). The router reads [`meta/harness/config/models.json`](meta/harness/config/models.json) to decide which backend (Claude / Codex / Copilot / Ollama) handles each task, with automatic fallback. No backend is privileged — swap any for any by editing the JSON. Full docs: [`meta/harness/MODELS.md`](meta/harness/MODELS.md).
+
+Pin a single model for one harness run:
+```bash
+HARNESS_BACKEND=ollama:qwen2.5-coder:7b bash meta/harness/bootstrap/run-autoresearch.sh schema
+```
+
 ## CARDINAL CODE RULES
 
 - **No `@itwin/core-backend`** — Pixeltable owns persistence. Use `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity` only.
-- **No Anthropic SDK in client code** — server functions via `@tanstack/ai` only, or via the `claude -p` subprocess in `pixeltable/service/worker.py`.
+- **No LLM SDK imports in client code** — never `import Anthropic` / `import openai` / similar in `.ts`/`.tsx`/client `.py`. All LLM calls go through `meta/harness/bin/llm` (router) or `@tanstack/ai` adapters. The router decides which backend runs — config, not code.
 - **uv only for Python** — never pip / conda / poetry / pipenv.
 - **No Revit / MicroStation / DGN** at the boundary — IFC4.3 only.
 - **Pixeltable is the only database.** `.bim` files are read-only sources via `@pxt.udf` (sqlite3 implementation detail only).

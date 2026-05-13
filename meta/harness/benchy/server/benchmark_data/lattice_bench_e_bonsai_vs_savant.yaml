@@ -1,0 +1,41 @@
+benchmark_name: "Bench E - Bonsai-4B vs Savant 48B-A4B"
+purpose: "The empirical local winner (Bonsai 4B, 1.1 GB) vs DavidAU Qwen3-48B-A4B Savant-Commander Heretic mega-merge (20 GB, 4B active MoE). Does the 18× size advantage buy anything?"
+base_prompt: |
+  <purpose>
+      Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.
+  </purpose>
+  <instructions>
+      <instruction>Generate only the function requested by the user.</instruction>
+      <instruction>Fill in the function body with the appropriate code.</instruction>
+      <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>
+      <instruction>Write code in python 3.</instruction>
+      <instruction>Generate the function, call the function, and print the result.</instruction>
+      <instruction>Your code must be immediately executable as-is.</instruction>
+  </instructions>
+  <function-request>{{function}}</function-request>
+  <function-arguments>{{arguments}}</function-arguments>
+evaluator: "execute_python_code_with_string_output"
+models:
+  - "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit"
+  - "ollama~savant"
+prompts:
+  - dynamic_variables:
+      function: "def add(a, b): int - add two numbers"
+      arguments: "5, 7"
+    expectation: "12"
+  - dynamic_variables:
+      function: "def reverse_string(s: str) -> str - return the string reversed"
+      arguments: '"hello"'
+    expectation: "olleh"
+  - dynamic_variables:
+      function: "def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces"
+      arguments: '"A man a plan a canal Panama"'
+    expectation: "True"
+  - dynamic_variables:
+      function: "def fizzbuzz(n: int) -> list[str] - i+1 indexed, Fizz/Buzz/FizzBuzz, else str(i+1)"
+      arguments: "5"
+    expectation: "['1', '2', 'Fizz', '4', 'Buzz']"
+  - dynamic_variables:
+      function: "def parse_wkt_point(wkt: str) -> tuple[float, float] - parse 'POINT(lon lat)' and return (lon, lat)"
+      arguments: '"POINT(-122.4 37.8)"'
+    expectation: "(-122.4, 37.8)"

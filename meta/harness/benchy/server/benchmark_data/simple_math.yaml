@@ -1,0 +1,151 @@
+benchmark_name: "Simple Math in Python"
+purpose: "Evaluate the ability of a language model to perform simple mathematical operations in Python."
+base_prompt: |
+  <purpose>
+      Exclusively output python code that performs the requested math operation and then prints the result.
+      Absolutely no additional text or explanation should be output.
+      Simply evaluate {{statement}} in Python and print the resulting value.
+  </purpose>
+
+  <instructions>
+      <instruction>Use Python to compute the result of the mathematical statement.</instruction>
+      <instruction>Print the numeric result only.</instruction>
+      <instruction>Do not output any text besides the final printed value.</instruction>
+      <instruction>Ensure the output can be executed immediately for the final numeric value.</instruction>
+      <instruction>Reduce decimal precision to 2 decimal places when outputting single numbers.</instruction>
+  </instructions>
+
+  <statement>{{statement}}</statement>
+evaluator: "execute_python_code_with_num_output"
+models:
+  # - "llama3.2:1b"
+  # - "llama3.2:latest"
+  - "qwen2.5-coder:14b"
+  - "gemma3:27b"
+  - "gemma3:12b"
+  - "anthropic~claude-3-5-sonnet-latest"
+  - "anthropic~claude-3-5-haiku-latest"
+  - "anthropic~claude-3-7-sonnet-latest"
+  # - "falcon3:10b"
+  # - "vanilj/Phi-4:latest"
+  # - "deepseek~deepseek-chat"
+prompts:
+  - dynamic_variables:
+      statement: "add 5 and 5"
+    expectation: "10.0"
+
+  - dynamic_variables:
+      statement: "add 5 and 5 then split in half then triple"
+    expectation: "15.0"
+
+  - dynamic_variables:
+      statement: "multiply 3 by 4 and add 7"
+    expectation: "19.0"
+
+  - dynamic_variables:
+      statement: "subtract 15 from 20 and multiply by 3"
+    expectation: "15.0"
+
+  - dynamic_variables:
+      statement: "divide 100 by 4 and add 25"
+    expectation: "50.0"
+
+  - dynamic_variables:
+      statement: "calculate 10 squared minus 50"
+    expectation: "50.0"
+
+  - dynamic_variables:
+      statement: "find the average of 10, 20, and 30"
+    expectation: "20.0"
+
+  - dynamic_variables:
+      statement: "calculate 15 percent of 200"
+    expectation: "30.0"
+
+  - dynamic_variables:
+      statement: "add 1/2 and 1/4"
+    expectation: "0.75"
+
+  - dynamic_variables:
+      statement: "multiply 2.5 by 4 and subtract 3"
+    expectation: "7.0"
+
+  - dynamic_variables:
+      statement: "solve the quadratic equation x² + 5x + 6 = 0 and return the largest root"
+    expectation: "-2.0"
+
+  - dynamic_variables:
+      statement: "calculate the compound interest for $1000 at 5% annual rate over 3 years and return the final amount"
+    expectation: "1157.63"
+
+  - dynamic_variables:
+      statement: "calculate the area of a circle with radius 5 using π = 3.14159"
+    expectation: "78.53975"
+
+  - dynamic_variables:
+      statement: "find the greatest common divisor of 48 and 18"
+    expectation: "6.0"
+
+  - dynamic_variables:
+      statement: "calculate the factorial of 5"
+    expectation: "120.0"
+
+  - dynamic_variables:
+      statement: "calculate 6 choose 3"
+    expectation: "20.0"
+
+  - dynamic_variables:
+      statement: "compute the volume of a sphere with radius 5 using π=3.14159"
+    expectation: "523.59875"
+
+  - dynamic_variables:
+      statement: "compute sin(30 degrees) in decimal form"
+    expectation: "0.5"
+
+  - dynamic_variables:
+      statement: "evaluate log base 10 of 1000"
+    expectation: "3.0"
+
+  - dynamic_variables:
+      statement: "compute e^2 with e=2.71828"
+    expectation: "7.38906"
+
+  - dynamic_variables:
+      statement: "convert 100 fahrenheit to celsius using formula C=(F-32)*5/9"
+    expectation: "37.78"
+
+  - dynamic_variables:
+      statement: "calculate the perimeter of a rectangle with length 10.5 and width 4.2"
+    expectation: "29.4"
+
+  - dynamic_variables:
+      statement: "calculate the sum of squares of 1, 2, 3, 4, 5"
+    expectation: "55.0"
+
+  - dynamic_variables:
+      statement: "convert 2 hours 30 minutes to total minutes"
+    expectation: "150.0"
+
+  - dynamic_variables:
+      statement: "what is 7 factorial divided by 3 factorial"
+    expectation: "840.0"
+
+  - dynamic_variables:
+      statement: "evaluate the floor of 3.99"
+    expectation: "3.0"
+
+  - dynamic_variables:
+      statement: "evaluate the ceiling of 3.01"
+    expectation: "4.0"
+
+  - dynamic_variables:
+      statement: "calculate the remainder of 47 divided by 5"
+    expectation: "2.0"
+
+  - dynamic_variables:
+      statement: "add the decimal expansions of 1/3 and 2/3 up to 3 decimal places"
+    expectation: "1.0"
+
+  - dynamic_variables:
+      statement: "convert the fraction 3/8 to decimal form"
+    expectation: "0.375"

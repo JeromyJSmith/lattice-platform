@@ -75,7 +75,10 @@ done
 # ---- 6. No forbidden strings in staged files ----
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
 if [ -n "$STAGED" ]; then
-  ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|\.github/agent-context\.md|\.github/copilot-instructions\.md|\.github/PULL_REQUEST_TEMPLATE\.md|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.cursor/|\.claude/rules/|\.claude/skills/|\.claude/agents/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
+  # Allowlist: files that legitimately reference forbidden patterns as
+  # anti-pattern documentation, agent guardrails, or string-literal enums.
+  # Union of both sides of the merge (kept in sync with docs-sync-check.yml).
+  ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
   while IFS= read -r f; do
     [ -f "$f" ] || continue
     case "$f" in
@@ -85,10 +88,12 @@ if [ -n "$STAGED" ]; then
       continue
     fi
     for needle in '[Rr]evit' '[Mm]icro[Ss]tation' 'dgnconverter' 'rvtconverter' '@itwin/core-backend' 'SnapshotDb' 'pxt\.Geometry' 'pixeltable/service/migrations'; do
-      if grep -nE "$needle" "$f" >/dev/null 2>&1; then
-        MATCH=$(grep -nE "$needle" "$f" | head -2)
+      # Lines tagged `allow-forbidden` are intentional anti-pattern references.
+      MATCH=$(grep -nE "$needle" "$f" 2>/dev/null | grep -v 'allow-forbidden' | head -2 || true)
+      if [ -n "$MATCH" ]; then
         echo "❌ Forbidden string '$needle' in $f:"
         echo "$MATCH"
+        echo "   (Append \`# allow-forbidden\` to the line if this is intentional anti-pattern doc.)"
         fail=1
       fi
     done
@@ -124,6 +129,66 @@ else
   echo "❌ scripts/check-python-docstrings.py is missing"
   fail=1
 fi
+
+# ---- 9. Agent frontmatter (.claude/agents/*.md) ----
+AGENT_DIR="$REPO_ROOT/.claude/agents"
+if [ -d "$AGENT_DIR" ]; then
+  while IFS= read -r -d '' f; do
+    if ! grep -q '^name:' "$f"; then
+      echo "❌ $f: missing 'name:' in YAML frontmatter"
+      fail=1
+    fi
+    if ! grep -q '^description:' "$f"; then
+      echo "❌ $f: missing 'description:' in YAML frontmatter"
+      fail=1
+    fi
+  done < <(find "$AGENT_DIR" -maxdepth 1 -name '*.md' -print0 2>/dev/null)
+fi
+
+# ---- 10. Lattice skill frontmatter (.claude/skills/lattice-*/SKILL.md) ----
+SKILLS_DIR="$REPO_ROOT/.claude/skills"
+if [ -d "$SKILLS_DIR" ]; then
+  while IFS= read -r -d '' f; do
+    if ! grep -q '^description:' "$f"; then
+      echo "❌ $f: missing 'description:' in YAML frontmatter"
+      fail=1
+    fi
+  done < <(find "$SKILLS_DIR" -path '*/lattice-*/SKILL.md' -print0 2>/dev/null)
+fi
+
+# ---- 11. Section GOAL.md structure ----
+SECTION_DIRS="pixeltable pixeltable/service src georef genai vw-plugin ddc meta/harness"
+for dir in $SECTION_DIRS; do
+  goal="$REPO_ROOT/$dir/GOAL.md"
+  if [ ! -f "$goal" ]; then
+    echo "❌ Missing $dir/GOAL.md (required for every section directory)"
+    fail=1
+    continue
+  fi
+  for h2 in "## Fitness Function" "## Improvement Loop" "## Action Catalog" "## Operating Mode"; do
+    if ! grep -qF "$h2" "$goal"; then
+      echo "❌ $dir/GOAL.md: missing required section '$h2'"
+      fail=1
+    fi
+  done
+done
+
+# ---- 12. Section MEMORY.md structure ----
+for dir in $SECTION_DIRS; do
+  mem="$REPO_ROOT/$dir/MEMORY.md"
+  if [ ! -f "$mem" ]; then
+    echo "❌ Missing $dir/MEMORY.md (required for every section directory)"
+    fail=1
+    continue
+  fi
+  for h2 in "## Open Decisions" "## Failed Experiments" "## Session Handoff Notes"; do
+    if ! grep -qF "$h2" "$mem"; then
+      echo "❌ $dir/MEMORY.md: missing required section '$h2'"
+      fail=1
+    fi
+  done
+done
+
 
 if [ "$fail" -eq 1 ]; then
   echo ""

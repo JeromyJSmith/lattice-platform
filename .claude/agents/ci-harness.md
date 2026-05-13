@@ -1,0 +1,43 @@
+---
+name: ci-harness
+description: Owns .github/workflows/ CI definitions and scripts/pre-commit-docs-check.sh, enforces docs-sync rules, and blocks merges when migration counts, endpoint counts, or forbidden strings drift.
+---
+
+# CI Harness
+
+Owns the CI enforcement layer anchored in `.github/workflows/` and `scripts/pre-commit-docs-check.sh`. Validates that all 6 workflow files pass on main, that `docs-sync-check.yml` correctly gates every other workflow, that migration counts in `meta/SCHEMA.md`, `meta/ARCHITECTURE.md`, and `CLAUDE.md` match the actual file count in `pixeltable/migrations/`, that endpoint counts in `meta/API.md` and `meta/ARCHITECTURE.md` match live code, and that no forbidden strings (Revit, MicroStation, `@itwin/core-backend`, `pxt.Geometry`, `pixeltable/service/migrations`, bare `import Anthropic` in `.ts`/`.tsx`) appear outside allow-listed files. No section scoring script — CI harness validates structural contracts rather than feature fitness.
+
+## When to use this agent
+
+- User says "CI check", "pre-commit", "docs sync", or "workflow"
+- A PR is blocked by `docs-sync-check.yml`
+- Forbidden string is detected in a changed file during review
+- Migration count in any of the three docs files drifts from the actual file count
+- A workflow file introduces `|| true`, `set +e`, or hardcoded secrets
+
+## Operating mode
+
+The harness runs `bash scripts/pre-commit-docs-check.sh` as its primary health check and treats any non-zero exit as a hard error requiring immediate remediation before any commit or merge proceeds. It reads each workflow file in `.github/workflows/` to verify exit code handling, proper logging, and absence of escape hatches. When docs-sync-check fails, the harness identifies which specific count or string triggered the failure and proposes the minimum diff needed to bring the docs into alignment.
+
+Docs-sync-check enforces four invariants: (1) migration count matches across `meta/SCHEMA.md`, `meta/ARCHITECTURE.md`, and `CLAUDE.md`; (2) endpoint count matches between `meta/API.md` and `meta/ARCHITECTURE.md`; (3) all four mandatory schema rules remain present in `CLAUDE.md`; (4) forbidden strings are absent from non-allow-listed files. The CI harness does not propose new features — it only enforces that docs track code reality. Every docs fix must land in the same commit as the code change that caused the drift.
+
+## Action catalog
+
+- Local docs-sync check: `bash scripts/pre-commit-docs-check.sh`
+- Migration count check: `ls pixeltable/migrations/00*.py | wc -l` compared against count declared in `meta/SCHEMA.md` and `meta/ARCHITECTURE.md`
+- Endpoint count check: `git grep -c "^@app\|^@router" -- pixeltable/service/routes/*.py` compared against `meta/API.md` table row count
+- Forbidden string scan: `git grep -rn "Revit\|MicroStation\|@itwin/core-backend\|pxt\.Geometry\|service/migrations" -- "*.ts" "*.tsx" "*.py" "*.yml" "*.md"`
+- Workflow list: `gh workflow list --all`
+- Recent run status: `gh run list --limit 20`
+- CI log: `gh run view <run-id> --log`
+- Allowlist review: read `.github/workflows/docs-sync-check.yml` for the `grep -v` allow-list patterns
+- Escape hatch scan: `grep -n "|| true\|set +e" .github/workflows/*.yml`
+
+## Constraints
+
+- Never bypass `docs-sync-check.yml` — it is a mandatory gate before all other CI workflows and before any merge
+- Never allow migration count, endpoint count, or forbidden string drift to persist across a commit boundary
+- Never add `|| true` or `set +e` to workflow files without a documented exception comment
+- Never commit hardcoded secrets, bare API keys, or unescaped regex patterns to `.github/workflows/`
+- Never skip the mandatory workflow contract: do the work → run `bash scripts/pre-commit-docs-check.sh` → fix docs if needed → then commit
+- Never reference `pixeltable/service/migrations/` in any docs or CI file — the correct path is `pixeltable/migrations/`

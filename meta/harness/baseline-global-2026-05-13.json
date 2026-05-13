@@ -1,0 +1,82 @@
+{
+  "aggregate_score": 71,
+  "section_count": 7,
+  "total_points": 497,
+  "sections": {
+    "schema":   46,
+    "api":      97,
+    "frontend": 100,
+    "georef":   54,
+    "genai":    40,
+    "vw-itwin": 79,
+    "ddc":      81
+  },
+  "section_details": {
+    "schema":   {
+  "section": "schema",
+  "score": 46,
+  "breakdown": {
+    "table_count_match": {"points": 0, "max": 50, "declared": 40, "actual": 15},
+    "migration_trail":   {"points": 30, "max": 30, "last_migration": "0014", "trail_ok": 1},
+    "forbidden_strings": {"points": 16, "max": 20, "hits": 1}
+  },
+  "migration_count": 14
+},
+    "api":      {
+  "section": "api",
+  "score": 97,
+  "breakdown": {
+    "endpoint_count_match": {"points": 50, "max": 50, "declared": 33, "actual": 33},
+    "router_health":        {"points": 27, "max": 30, "healthy": 9, "checked": 10},
+    "no_bare_anthropic":    {"points": 20, "max": 20, "hits": 0}
+  }
+},
+    "frontend": {
+  "section": "frontend",
+  "score": 100,
+  "breakdown": {
+    "tanstack_route_convention": {"points": 50, "max": 50, "conforming": 25, "total": 25},
+    "no_bare_anthropic":        {"points": 30, "max": 30, "hits": 0},
+    "no_itwin_core_backend":    {"points": 20, "max": 20, "hits": 0}
+  }
+},
+    "georef":   {
+  "section": "georef",
+  "score": 54,
+  "breakdown": {
+    "converter_implementation": {"points": 0, "max": 40, "implemented": 0, "total": 7},
+    "project_georef_schema":    {"points": 30, "max": 30, "schema_ok": 1},
+    "forbidden_strings":        {"points": 24, "max": 30, "hits": 1}
+  }
+},
+    "genai":    {
+  "section": "genai",
+  "score": 40,
+  "phase": 3,
+  "note": "Phase 3 section — low baseline score is expected",
+  "breakdown": {
+    "lod_assets": {"points": 20, "max": 50, "lod_dirs_exist": 2, "lod_populated": 0, "manifest_count": 0},
+    "comfyui_workflows": {"points": 0, "max": 30, "json_count": 0},
+    "forbidden_strings": {"points": 20, "max": 20, "hits": 0}
+  }
+},
+    "vw-itwin": {
+  "section": "vw-itwin",
+  "score": 79,
+  "breakdown": {
+    "plugin_scaffold": {"points": 40, "max": 40, "cmake_exists": 1, "mcpbridge_exists": 1},
+    "bis_schemas":     {"points": 15, "max": 30, "dir_exists": 1, "schema_count": 0},
+    "forbidden_strings": {"points": 24, "max": 30, "hits": 1}
+  }
+},
+    "ddc":      {
+  "section": "ddc",
+  "score": 81,
+  "breakdown": {
+    "workflow_cleanliness": {"points": 31, "max": 50, "clean": 5, "dirty": 3, "total": 8},
+    "ddc_mapping_doc":      {"points": 30, "max": 30, "exists": 1, "has_cwicr": 1, "has_qdrant": 1},
+    "forbidden_strings":    {"points": 20, "max": 20, "hits": 0}
+  }
+}
+  }
+}

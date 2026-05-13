@@ -37,6 +37,7 @@ from service.routes import (
     evidence as r_evidence,
     georef as r_georef,
     harness as r_harness,
+    harness_health as r_harness_health,
     health as r_health,
     itwin as r_itwin,
     marpa as r_marpa,
@@ -141,6 +142,7 @@ app.include_router(r_marpa.router,    prefix="/v1/marpa",    tags=["marpa"])
 app.include_router(r_semantic.router, prefix="/v1/semantic", tags=["semantic"])
 app.include_router(r_evidence.router, prefix="/v1/evidence", tags=["evidence"])
 app.include_router(r_health.router,   prefix="/v1/health",   tags=["health"])
-app.include_router(r_harness.router,  prefix="/v1/harness",  tags=["harness"])
-app.include_router(r_georef.router,   prefix="/v1/georef",   tags=["georef"])
-app.include_router(r_reality.router,  prefix="/v1/reality",  tags=["reality"])
+app.include_router(r_harness.router,        prefix="/v1/harness",  tags=["harness"])
+app.include_router(r_harness_health.router, prefix="/v1/harness",  tags=["harness"])
+app.include_router(r_georef.router,         prefix="/v1/georef",   tags=["georef"])
+app.include_router(r_reality.router,        prefix="/v1/reality",  tags=["reality"])

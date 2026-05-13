@@ -1,0 +1,36 @@
+benchmark_name: "Bench D - CoT-Friendly All Models"
+purpose: "Same code-gen tasks but the prompt allows the model to think step-by-step before emitting code. Qwen3.6 + Gemma4 should now win on correctness."
+base_prompt: |
+  <purpose>
+      Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.
+  </purpose>
+  <instructions>
+      <instruction>You may think step-by-step before writing the code.</instruction>
+      <instruction>After any reasoning, output the runnable python on the LAST line(s) of your response, inside a single ```python code block.</instruction>
+      <instruction>The code block must contain the function definition, a call to it, and a print statement so the answer appears as stdout.</instruction>
+      <instruction>The code in the block must run as-is with python3.</instruction>
+  </instructions>
+  <function-request>{{function}}</function-request>
+  <function-arguments>{{arguments}}</function-arguments>
+evaluator: "execute_python_code_with_string_output"
+models:
+  - "mlx~prism-ml/Ternary-Bonsai-1.7B-mlx-2bit"
+  - "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit"
+  - "mlx~prism-ml/Ternary-Bonsai-8B-mlx-2bit"
+  - "mlx~mlx-community/Hermes-3-Llama-3.1-8B-4bit"
+  - "mlx~mlx-community/gemma-4-26b-a4b-it-4bit"
+  - "mlx~mlx-community/gemma-4-26b-a4b-nvfp4"
+  - "mlx~unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit"
+prompts:
+  - dynamic_variables:
+      function: "def add(a, b): int - add two numbers"
+      arguments: "5, 7"
+    expectation: "12"
+  - dynamic_variables:
+      function: "def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces"
+      arguments: '"A man a plan a canal Panama"'
+    expectation: "True"
+  - dynamic_variables:
+      function: "def parse_wkt_point(wkt: str) -> tuple[float, float] - parse 'POINT(lon lat)' and return (lon, lat)"
+      arguments: '"POINT(-122.4 37.8)"'
+    expectation: "(-122.4, 37.8)"
