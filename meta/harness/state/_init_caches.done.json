@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T19:35:09+00:00",
+  "duckdb_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/.claude/worktrees/grove-harvest/meta/harness/state/cache/sfa-eval.duckdb",
+  "tables": [
+    "plants",
+    "migrations"
+  ],
+  "row_counts": {
+    "plants": 8,
+    "migrations": 16
+  }
+}
