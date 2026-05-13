@@ -49,6 +49,11 @@ jobs:
 
   pxt-integration:
     name: pxt (ephemeral PXT_HOME)
+    # INERT (2026-05-13): Linux ephemeral PXT_HOME path is deferred until proof
+    # is reattached. We are no longer running Pixeltable integration tests on
+    # GitHub-hosted Linux runners. Local dev still has the make target.
+    # To re-enable: remove `if: false` (no other changes needed).
+    if: false
     runs-on: ubuntu-latest
     needs: no-pxt
     timeout-minutes: 25

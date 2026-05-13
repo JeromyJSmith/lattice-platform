@@ -12,6 +12,12 @@ on:
 jobs:
   pxt:
     name: tests/pxt
+    # INERT (2026-05-13): self-hosted Mac CI path is deferred. No runner is
+    # registered with the `lattice-mac` label; this sat dormant. Marking inert
+    # explicitly so it stops showing up as a blocked path.
+    # To re-enable: register a runner with the `lattice-mac` label, then remove
+    # `if: false`.
+    if: false
     runs-on: [self-hosted, lattice-mac]
     defaults:
       run:
