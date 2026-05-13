@@ -1,0 +1,21 @@
+{
+  "ok": false,
+  "timestamp": "2026-05-13T19:36:40+00:00",
+  "model": "bonsai-4b",
+  "base_url": "http://localhost:9090/v1",
+  "db_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/.claude/worktrees/grove-harvest/meta/harness/state/cache/sfa-eval.duckdb",
+  "prompt": "What is the tallest plant in the cache, and how many feet tall is it?",
+  "compute_iterations": 1,
+  "elapsed_seconds": 1.54,
+  "final_query": null,
+  "final_reasoning": null,
+  "final_result_preview": null,
+  "error": "model did not produce a tool call (function-calling unsupported or refused)",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "{\"name\": \"ListTablesArgs\", \"arguments\": {\"reasoning\": \"I need to identify the table that contains information about plants in the cache to proceed with the query.\"}}\n</tool_call>",
+      "tool_calls": []
+    }
+  ]
+}
