@@ -1074,17 +1074,24 @@ capabilities:
   - id: grove-duckdb-cache-substrate
     surface: pattern
     name: DuckDB Cache Substrate
-    state: DEFERRED
+    state: ACTIVE
     description: 5 DuckDB cache databases under ~/.juniper2026/harness-cache/ as read-only marts for harness tools
     source: "harness/init_caches.py` + `GROVE_ROOT/harness-cache/INDEX.yaml"
     owner_harness: meta-harness
     matrix_decision: candidate
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-grove-duckdb-cache-substrate
-    notes: Core analytical substrate; initialized by H-I init_caches SFA; refreshed by H-D refresh_harness_cache
+    wired_at:
+      - meta/harness/state/cache/sfa-eval.duckdb
+      - meta/harness/tools/sfa-eval/sfa_init_caches.py (creates the cache)
+    invoked_by:
+      - sfa_duckdb_local_v1.py (reads the cache for SQL queries)
+      - sfa_browser_bonsai_v1.py (reads the cache via QueryDuckDBArgs)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_init_caches.py --verify
+      evidence: meta/harness/state/_init_caches.done.json
+      verified_at: 2026-05-13
+    notes: LATTICE port consolidates to a single sfa-eval.duckdb under meta/harness/state/cache/ instead of 5 separate DBs under ~/.juniper2026/harness-cache/. The PATTERN — DuckDB as a read-only mart for SFA consumption — is the same; the physical layout is single-DB for now. Multi-DB partitioning can layer on later if needed.
 
   - id: grove-marimo-cost-engine
     surface: pattern
