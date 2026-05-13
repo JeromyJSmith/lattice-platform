@@ -14,14 +14,15 @@ capability row -> run contract -> browser execution -> sidecar/verifier
 |---:|---|---|
 | 1 | Lock the pre-flight contract in `meta/harness/golden_path.md` and this TODO | A new agent can identify the next path, end state, operator workflow, and not-now boundaries without this chat |
 | 2 | Confirm docs entrypoints point to the contract | `meta/harness/README.md` or `meta/harness/library.yaml` links to `golden_path.md`, `TODO.md`, and `docs/capability-lifecycle.md` |
-| 3 | Reconcile the body-cell harness with the outer wrapper at `/Volumes/PixelTable/VW_iTWIN_Bridge/meta/` | `body-registry.yaml`, `config.yaml`, `metaharness.lock.yaml`, and body-cell docs agree on active path, phase, and evidence boundary |
-| 4 | Define the canonical pre-flight evidence path | The run contract names where filesystem evidence lands now and how wrapper-level `runs/` or `evidence/` receives an artifact or pointer |
-| 5 | Normalize capability row states around proof | Rows with no proof are marked or documented as contract-only; no unproven row is described as trusted |
-| 6 | Define one bounded pre-flight run contract from `domain_spec.md` | Contract includes goal, inputs, allowed paths, denied paths, timeout, verifier, evidence path, expected output, promotion rule, and scalar pass/defer/fail result |
-| 7 | Exercise the operator path through the browser surface | `/harness/capabilities` shows the selected row, proof state, missing wires, run result or pending-browser marker, and troubleshooting guidance |
-| 8 | Exercise the sidecar/verifier path for the same contract | Registered sidecar/verifier execution writes stdout, stderr, exit code, verifier status, artifact path, and failure reason when applicable |
-| 9 | Write the row result from evidence, not assertion | The row cites the proof artifact for `PASS`, cites a blocker for `DEFER`, or cites a failed verifier result for `FAIL` |
-| 10 | Run light verification before handoff, full verification before commit | At minimum, affected docs are reviewed; before commit run `bash scripts/pre-commit-docs-check.sh` and any changed-surface checks required by the actual edits |
+| 3 | Keep capability architecture outside the harness | `meta/capability-research/ARCHITECTURE.md` defines the research source, census, registry, proof-gate, runtime-adoption, future Pixeltable, and documentation boundaries |
+| 4 | Reconcile the body-cell harness with the outer wrapper at `/Volumes/PixelTable/VW_iTWIN_Bridge/meta/` | `body-registry.yaml`, `config.yaml`, `metaharness.lock.yaml`, and body-cell docs agree on active path, phase, and evidence boundary |
+| 5 | Define the canonical pre-flight evidence path | The run contract names where filesystem evidence lands now and how wrapper-level `runs/` or `evidence/` receives an artifact or pointer |
+| 6 | Normalize capability row states around proof | Rows with no proof are marked or documented as contract-only; no unproven row is described as trusted |
+| 7 | Define one bounded pre-flight run contract from `domain_spec.md` | Contract includes goal, inputs, allowed paths, denied paths, timeout, verifier, evidence path, expected output, promotion rule, and scalar pass/defer/fail result |
+| 8 | Exercise the operator path through the browser surface | `/harness/capabilities` shows the selected row, proof state, missing wires, run result or pending-browser marker, and troubleshooting guidance |
+| 9 | Exercise the sidecar/verifier path for the same contract | Registered sidecar/verifier execution writes stdout, stderr, exit code, verifier status, artifact path, and failure reason when applicable |
+| 10 | Write the row result from evidence, not assertion | The row cites the proof artifact for `PASS`, cites a blocker for `DEFER`, or cites a failed verifier result for `FAIL` |
+| 11 | Run light verification before handoff, full verification before commit | At minimum, affected docs are reviewed; before commit run `bash scripts/pre-commit-docs-check.sh` and any changed-surface checks required by the actual edits |
 
 ## P0 — Guardrails Before Promotion
 
@@ -37,12 +38,18 @@ capability row -> run contract -> browser execution -> sidecar/verifier
 
 | Order | Task | Acceptance |
 |---:|---|---|
-| 1 | Validate the docs mirror contract from Amendment 08 | `scripts/doc-mirror-manifest.yaml` has active mirrors, deferred mirrors, local paths, source repos, and categories; stubs clearly point to Issues #23-25 |
-| 2 | Confirm Docs MetaHarness stubs are intentional | `score-docs.sh`, `sync-doc-mirrors.sh`, `ingest-docs.py`, and `detect-doc-gaps.py` exit cleanly and state their tracking issue |
-| 3 | Define the `0017` Pixeltable migration boundary without writing it | Target tables for capabilities, scripts, jobs, verification runs, evidence, model benchmarks, and task state are listed; no migration exists until the pre-flight evidence shape settles |
-| 4 | Populate bootstrap-empty registries | `pixeltable`, `claude-code`, `deck-gl`, and `web-ifc` no longer have `spec-verified: false` with zero useful rows |
-| 5 | Add docs substrate coverage checks for trusted rows | ACTIVE rows have doc coverage or explicit docs-gap rows once ingestion is live |
-| 6 | Connect Graphify, GitNexus, and InfraNodus outputs to harness docs | Each has a documented invocation, output artifact path, and contract-only/proven state |
+| 1 | Run Repo Census 001 for iTwin, BIS, DDC, and construction intelligence sources | `meta/capability-research/census/repo-census-001.md` seed corpus is verified, missing `iTwin/*` and `datadrivenconstruction/*` repos are discovered, and each accepted repo has a contract-only mapping target |
+| 2 | Run Repo Census 002 for UI transfer and parametric edit loop | `meta/capability-research/census/repo-census-002-ui-transfer.md` maps DDC BIM/BOQ/cost/takeoff UI surfaces, iTwin panel/selection surfaces, IFC interaction references, and one parametric quantity fixture |
+| 3 | Run Repo Census 003 for Vectorworks source material | `meta/capability-research/census/repo-census-003-vectorworks.md` maps Python scripts, VectorScript, Marionette, worksheet functions, SDK docs, C++ examples, MCP bridges, ODBC references, and community plugins |
+| 4 | Run Repo Census 004 for ODBC/database-link opportunities | `meta/capability-research/census/repo-census-004-odbc.md` maps Vectorworks-native ODBC docs, Data Manager mapping, driver managers, Python/Arrow/Parquet export bridges, and current vendor drivers without storing credentials |
+| 5 | Maintain the capability research architecture doc | `meta/capability-research/ARCHITECTURE.md` links every new census track, registry, storage boundary, lifecycle state, and future runtime destination |
+| 6 | Extract schema vocabulary before migration design | BIS/ECSchema names, DDC cost/BOQ fields, UI panel contracts, Vectorworks worksheet/object parameter names, Vectorworks record/class/layer/style fields, ODBC sync fields, quantity/cost formula fields, and operator workflow layers are captured as table/column candidates without writing migration `0017` |
+| 7 | Validate the docs mirror contract from Amendment 08 | `scripts/doc-mirror-manifest.yaml` has active mirrors, deferred mirrors, local paths, source repos, and categories; stubs clearly point to Issues #23-25 |
+| 8 | Confirm Docs MetaHarness stubs are intentional | `score-docs.sh`, `sync-doc-mirrors.sh`, `ingest-docs.py`, and `detect-doc-gaps.py` exit cleanly and state their tracking issue |
+| 9 | Define the `0017` Pixeltable migration boundary without writing it | Target tables for capabilities, scripts, jobs, verification runs, evidence, model benchmarks, task state, source repos, schema vocabulary, UI-transfer contracts, Vectorworks extraction contracts, ODBC sync contracts, and harvested capability mappings are listed; no migration exists until the pre-flight evidence shape settles |
+| 10 | Populate bootstrap-empty registries | `pixeltable`, `claude-code`, `deck-gl`, and `web-ifc` no longer have `spec-verified: false` with zero useful rows |
+| 11 | Add docs substrate coverage checks for trusted rows | ACTIVE rows have doc coverage or explicit docs-gap rows once ingestion is live |
+| 12 | Connect Graphify, GitNexus, and InfraNodus outputs to harness docs | Each has a documented invocation, output artifact path, and contract-only/proven state |
 
 ## P1 — Uplift After Pre-Flight Works
 

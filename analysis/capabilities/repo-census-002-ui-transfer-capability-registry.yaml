@@ -1,0 +1,238 @@
+# spec-verified: GitHub API live metadata and tree inspection 2026-05-13
+tool: repo-census-002-ui-transfer
+tool_version: 2026-05-13-live-github-metadata
+canonical_docs: meta/capability-research/census/repo-census-002-ui-transfer.md
+last_harvested: 2026-05-13
+harvested_by: codex
+
+capabilities:
+  - id: opencosterp-bim-linked-boq-panel
+    surface: source_repo
+    name: OpenConstructionERP BIM linked BOQ panel
+    state: ACTIVE
+    description: Harvest DDC's BIM-to-BOQ UI pattern for selecting BIM elements, showing linked BOQ context, and adding selected elements to cost positions.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - frontend/src/features/bim/AddToBOQModal.tsx
+      - frontend/src/features/bim/BIMLinkedBOQPanel.tsx
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future selected-element cost panel proof
+      - future iTwin/TanStack Add to BOQ panel
+    serves:
+      - viewer selection
+      - BOQ
+      - reporting/UI
+      - element identity
+    proof_evidence: []
+
+  - id: opencosterp-bim-quantity-rules
+    surface: source_repo
+    name: OpenConstructionERP BIM quantity rules
+    state: ACTIVE
+    description: Harvest DDC's quantity rule and BIM quantity picker patterns for deriving BOQ quantities from selected or grouped model elements.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - frontend/src/features/bim/BIMQuantityRulesPage.tsx
+      - frontend/src/features/boq/grid/BIMQuantityPicker.tsx
+      - frontend/src/features/boq/suggestQuantityFromBIM.ts
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future quantity-from-element proof
+      - future parametric quantity recalculation proof
+    serves:
+      - geometry/quantity
+      - BOQ
+      - price source
+    proof_evidence: []
+
+  - id: opencosterp-boq-grid-formula-engine
+    surface: source_repo
+    name: OpenConstructionERP BOQ grid formula engine
+    state: ACTIVE
+    description: Harvest DDC's BOQ grid, formula dependency graph, live recalculation, and summary panel patterns for price recalculation after quantity or parameter edits.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - frontend/src/features/boq/BOQGrid.tsx
+      - frontend/src/features/boq/grid/formula/engine.ts
+      - frontend/src/features/boq/grid/formula/live-reeval.ts
+      - frontend/src/features/boq/BOQSummaryPanel.tsx
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future BOQ formula fixture
+      - future selected-element price recalculation proof
+    serves:
+      - BOQ
+      - price source
+      - reporting/UI
+      - evidence
+    proof_evidence: []
+
+  - id: opencosterp-cwicr-match-panel
+    surface: source_repo
+    name: OpenConstructionERP CWICR match panel
+    state: ACTIVE
+    description: Harvest DDC's CWICR match and variant-picker UI patterns for displaying cost item candidates, variants, and source-attributed price choices inside the LATTICE operator panel.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - frontend/src/features/costs/CwicrMatchPanel.tsx
+      - frontend/src/features/costs/MultiVariantPicker.tsx
+      - frontend/src/features/match-elements/MatchDetailPanel.tsx
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future CWICR candidate panel proof
+      - future cost source selection proof
+    serves:
+      - CWICR/cost lookup
+      - price source
+      - material normalization
+      - reporting/UI
+    proof_evidence: []
+
+  - id: opencosterp-takeoff-measurement-ledger
+    surface: source_repo
+    name: OpenConstructionERP takeoff measurement ledger
+    state: ACTIVE
+    description: Harvest DDC's takeoff measurement ledger and undo/grouping patterns as references for evidence-backed quantity edits.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - frontend/src/features/takeoff/components/MeasurementLedger.tsx
+      - frontend/src/features/takeoff/lib/takeoff-ledger.ts
+      - frontend/src/features/takeoff/lib/takeoff-undo.ts
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future quantity edit evidence proof
+      - future measurement ledger panel
+    serves:
+      - geometry/quantity
+      - evidence
+      - reporting/UI
+    proof_evidence: []
+
+  - id: itwin-presentation-selection-panel-model
+    surface: source_repo
+    name: iTwin presentation selected-element panel model
+    state: ACTIVE
+    description: Harvest iTwin presentation/unified-selection patterns for mapping viewer selection into stable selected-element panel state.
+    wired_at:
+      - https://github.com/iTwin/presentation
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future selected-element panel proof
+      - future iTwin selection bridge
+    serves:
+      - viewer selection
+      - element identity
+      - operator panel result
+    proof_evidence: []
+
+  - id: itwin-appui-widget-provider
+    surface: source_repo
+    name: iTwin AppUI widget provider shell
+    state: ACTIVE
+    description: Harvest iTwin AppUI widget/provider/layout patterns for hosting DDC-derived cost, BOQ, and quantity panels in an iTwin-native shell.
+    wired_at:
+      - https://github.com/iTwin/appui
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future operator widget layout proof
+      - future DDC panel host
+    serves:
+      - reporting/UI
+      - operator panel result
+      - viewer-native component conventions
+    proof_evidence: []
+
+  - id: itwin-viewer-property-grid-transfer
+    surface: source_repo
+    name: iTwin viewer property grid transfer
+    state: ACTIVE
+    description: Harvest iTwin property-grid and tree-widget component patterns for rendering selected element identity, properties, and cost/BOQ associations.
+    wired_at:
+      - https://github.com/iTwin/viewer-components-react
+      - apps/learning-snippets/src/test/property-grid
+      - packages/archive/breakdown-trees
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future element property panel proof
+      - future cost association tree
+    serves:
+      - element identity
+      - reporting/UI
+      - evidence display
+    proof_evidence: []
+
+  - id: itwin-viewer-quantity-formatting-transfer
+    surface: source_repo
+    name: iTwin viewer quantity formatting transfer
+    state: ACTIVE
+    description: Harvest iTwin quantity-formatting components and tests for consistent display of lengths, areas, volumes, counts, and cost units.
+    wired_at:
+      - https://github.com/iTwin/viewer-components-react
+      - apps/test-viewer/src/components/quantity-formatting
+      - apps/learning-snippets/src/test/quantity-formatting
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future quantity display fixture
+      - future selected-element cost panel
+    serves:
+      - geometry/quantity
+      - price source
+      - reporting/UI
+    proof_evidence: []
+
+  - id: itwin-ec3-carbon-widget-reference
+    surface: source_repo
+    name: iTwin EC3 carbon widget reference
+    state: ACTIVE
+    description: Harvest iTwin EC3 widget surfaces as the closest iTwin-native precedent for material-impact panels next to cost and BOQ panels.
+    wired_at:
+      - https://github.com/iTwin/viewer-components-react
+      - packages/itwin/ec3-widget
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future LCA/carbon panel proof
+      - future material impact panel
+    serves:
+      - LCA/carbon
+      - material normalization
+      - reporting/UI
+    proof_evidence: []
+
+  - id: thatopen-web-ifc-selection-measurement-reference
+    surface: source_repo
+    name: ThatOpen Web IFC selection and measurement reference
+    state: ACTIVE
+    description: Harvest Web IFC Viewer selection, property, units, dimension, clipping, and import/export patterns as a comparison surface for deterministic IFC interaction fixtures.
+    wired_at:
+      - https://github.com/ThatOpen/web-ifc-viewer
+      - viewer/src/components/ifc/selection
+      - viewer/src/components/ifc/ifc-properties.ts
+      - viewer/src/components/display/dimensions
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future IFC selection/properties fixture
+      - future measurement comparison proof
+    serves:
+      - viewer selection
+      - geometry/quantity
+      - element identity
+    proof_evidence: []
+
+  - id: cadquery-parametric-quantity-fixture
+    surface: source_repo
+    name: CadQuery parametric quantity fixture
+    state: ACTIVE
+    description: Use CadQuery as a candidate local fixture for proving parameter edit -> geometry quantity -> price recalculation before any Vectorworks write-back path exists.
+    wired_at:
+      - https://github.com/CadQuery/cadquery
+      - meta/capability-research/census/repo-census-002-ui-transfer.md
+    invoked_by:
+      - future parametric edit proof
+      - future geometry quantity recalculation fixture
+    serves:
+      - geometry/quantity
+      - price source
+      - actuation/write-back
+      - evidence
+    proof_evidence: []

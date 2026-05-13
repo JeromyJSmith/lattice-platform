@@ -1,0 +1,121 @@
+# Capability research corpus manifest.
+# This controls the first allowed graph/gap-analysis inputs. It is intentionally
+# docs-first; code-wide indexing comes later after a small proof.
+
+version: 1
+status: draft
+last_updated: 2026-05-13
+owner: capability-research
+
+purpose: >
+  Define the curated corpus that InfraNodus, Graphify, or GitNexus may analyze
+  before any repo-wide indexing. This prevents generated files, vendor folders,
+  runtime caches, local assets, and unrelated project history from polluting the
+  first LATTICE capability graph.
+
+curated_docs:
+  - AGENTS.md
+  - meta/ARCHITECTURE.md
+  - meta/SCHEMA.md
+  - meta/API.md
+  - meta/capability-research/README.md
+  - meta/capability-research/ARCHITECTURE.md
+  - meta/capability-research/INVENTORY.md
+  - meta/capability-research/tools/READINESS.md
+  - meta/capability-research/tools/infranodus-skills-master-audit.md
+  - meta/capability-research/inventory/local-graph-tool-audit.md
+  - meta/capability-research/census/repo-census-001.md
+  - meta/capability-research/census/repo-census-002-ui-transfer.md
+  - meta/capability-research/census/repo-census-003-vectorworks.md
+  - meta/capability-research/census/repo-census-004-odbc.md
+  - meta/harness/golden_path.md
+  - meta/harness/TODO.md
+  - meta/harness/docs/capability-lifecycle.md
+  - meta/DDC_MAPPING.md
+  - meta/ITWIN_MAPPING.md
+
+registry_inputs:
+  - analysis/capabilities/repo-census-001-capability-registry.yaml
+  - analysis/capabilities/repo-census-002-ui-transfer-capability-registry.yaml
+  - analysis/capabilities/repo-census-003-vectorworks-capability-registry.yaml
+  - analysis/capabilities/repo-census-004-odbc-capability-registry.yaml
+  - analysis/capabilities/infranodus-capability-registry.yaml
+  - analysis/capabilities/gitnexus-capability-registry.yaml
+  - analysis/capabilities/graphify-parisgroup-capability-registry.yaml
+  - analysis/capabilities/graphify-safishamsi-capability-registry.yaml
+
+source_material:
+  - path: .claude/skills/skills-master/
+    status: vendored_reference
+    first_pass: do_not_bulk_index
+    notes: >
+      Local InfraNodus skills bundle. Use the audit summary first. Do not
+      activate or import all skills wholesale; license and relevance need
+      reconciliation.
+
+first_code_subset:
+  status: planned
+  include:
+    - pixeltable/service/routes/harness.py
+    - pixeltable/service/main.py
+    - scripts/audit-dead-dna.sh
+    - scripts/check-python-docstrings.py
+  reason: >
+    The first code subset should prove the browser -> sidecar -> verifier path
+    and registry audit path before broader code graphing.
+
+global_excludes:
+  - .git/
+  - node_modules/
+  - dist/
+  - .venv/
+  - __pycache__/
+  - .pytest_cache/
+  - .tanstack/tmp/
+  - runtime-runs/
+  - meta/screenshots/
+  - meta/harness/docs/sessions/
+  - meta/harness/references/
+  - 3d_assets/
+  - assets/
+  - public/potree/
+  - "*.env"
+  - ".env*"
+  - "*.las"
+  - "*.laz"
+  - "*.tif"
+  - "*.tiff"
+  - "*.parquet"
+  - "*.db"
+  - "*.sqlite"
+  - "*.glb"
+  - "*.c4d"
+  - "*.png"
+  - "*.jpg"
+  - "*.jpeg"
+  - "*.webp"
+
+tool_policy:
+  infranodus:
+    first_scope: curated_docs
+    allowed_before_graphify: true
+    allowed_before_gitnexus: true
+  graphify:
+    first_scope: curated_docs
+    requires_output_manifest: true
+    repo_wide_allowed: false
+  gitnexus:
+    first_scope: first_code_subset
+    requires_output_manifest: true
+    repo_wide_allowed: false
+
+promotion_policy:
+  evidence_required: true
+  allowed_evidence_roots:
+    - meta/capability-research/inventory/
+    - meta/capability-research/tools/
+    - meta/harness/docs/sessions/
+  notes:
+    - Tool output alone does not promote a capability.
+    - A verifier-backed artifact must exist before any registry row is proven.
+    - Do not store secrets, DSNs with credentials, or API keys.

@@ -1,0 +1,184 @@
+# spec-verified: GitHub API live metadata 2026-05-13
+tool: repo-census-001
+tool_version: 2026-05-13-live-github-metadata
+canonical_docs: meta/capability-research/census/repo-census-001.md
+last_harvested: 2026-05-13
+harvested_by: codex
+
+capabilities:
+  - id: itwinjs-core-platform-substrate
+    surface: source_repo
+    name: iTwin.js core platform substrate
+    state: ACTIVE
+    description: Harvest iTwin.js core package surfaces for geometry, common BIS concepts, presentation, frontend/backend package boundaries, and viewer/runtime naming conventions without adopting Bentley cloud persistence.
+    wired_at:
+      - https://github.com/iTwin/itwinjs-core
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future iTwin platform substrate harvest
+      - future BIS geometry/common naming vocabulary extraction
+    serves:
+      - element identity
+      - BIS/ECSchema vocabulary
+      - geometry/quantity
+      - viewer runtime conventions
+    proof_evidence: []
+
+  - id: bis-schemas-vocabulary-harvest
+    surface: source_repo
+    name: BIS schema vocabulary harvest
+    state: ACTIVE
+    description: Extract BIS schema names, classes, properties, relationships, inventory metadata, and documentation patterns as Pixeltable schema-vocabulary candidates.
+    wired_at:
+      - https://github.com/iTwin/bis-schemas
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future schema vocabulary design note
+      - future Pixeltable vocabulary table design
+    serves:
+      - BIS/ECSchema vocabulary
+      - element identity
+      - material normalization
+      - reporting/UI labels
+    proof_evidence: []
+
+  - id: itwin-viewer-operator-shell
+    surface: source_repo
+    name: iTwin viewer operator shell
+    state: ACTIVE
+    description: Harvest iTwin Viewer packages and app structure for the future operator shell where selected or grouped model elements drive LATTICE panels.
+    wired_at:
+      - https://github.com/iTwin/viewer
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future viewer shell proof fixture
+      - future selected-element operator panel
+    serves:
+      - viewer selection
+      - reporting/UI
+      - operator panel result
+    proof_evidence: []
+
+  - id: itwin-viewer-components-react-panels
+    surface: source_repo
+    name: iTwin viewer React components and panels
+    state: ACTIVE
+    description: Harvest reusable viewer components, property panels, tree/table/reporting widgets, and selection-adjacent UI patterns for LATTICE element inspection surfaces.
+    wired_at:
+      - https://github.com/iTwin/viewer-components-react
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future element inspection panel proof
+      - future cost panel UI mapping
+    serves:
+      - viewer selection
+      - reporting/UI
+      - evidence display
+    proof_evidence: []
+
+  - id: itwinui-design-system
+    surface: source_repo
+    name: iTwinUI design system
+    state: ACTIVE
+    description: Harvest iTwinUI component, token, layout, and naming conventions so LATTICE operator panels can match iTwin-native interaction patterns.
+    wired_at:
+      - https://github.com/iTwin/iTwinUI
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future operator panel design mapping
+      - future iTwin-style TanStack UI proof
+    serves:
+      - reporting/UI
+      - operator panel result
+      - viewer-native component conventions
+    proof_evidence: []
+
+  - id: imodel-transformer-extract-import-adapter
+    surface: source_repo
+    name: iModel transformer extract/import adapter
+    state: ACTIVE
+    description: Harvest iModel export/import and transformation patterns for future controlled synchronization between normalized Pixeltable data and iTwin/iModel-derived element sets.
+    wired_at:
+      - https://github.com/iTwin/imodel-transformer
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future iModel transform proof fixture
+      - future element synchronization design
+    serves:
+      - element identity
+      - actuation/write-back
+      - evidence-backed synchronization
+    proof_evidence: []
+
+  - id: openconstructionerp-boq-runtime-census
+    surface: source_repo
+    name: OpenConstructionERP BOQ runtime census
+    state: ACTIVE
+    description: Harvest OpenConstructionERP modules, APIs, BOQ fields, estimate fields, schedule structures, and package/runtime shape for the future LATTICE cost and 4D/5D adapter.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionERP
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future BOQ adapter proof fixture
+      - future admin cost panel
+    serves:
+      - BOQ
+      - price source
+      - schedule/EVM
+      - reporting/UI
+    proof_evidence: []
+
+  - id: cwicr-cost-corpus-census
+    surface: source_repo
+    name: CWICR cost corpus census
+    state: ACTIVE
+    description: Harvest CWICR cost item, resource, region, unit, data dictionary, and Qdrant semantic-search conventions for source-attributed LATTICE cost lookup.
+    wired_at:
+      - https://github.com/datadrivenconstruction/OpenConstructionEstimate-DDC-CWICR
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future deterministic CWICR fixture
+      - future cost search adapter
+    serves:
+      - CWICR/cost lookup
+      - price source
+      - material normalization
+      - BOQ
+    proof_evidence: []
+
+  - id: ddc-skills-agent-pattern-census
+    surface: source_repo
+    name: DDC skills agent pattern census
+    state: ACTIVE
+    description: Harvest DDC construction-agent skill names, inputs, outputs, examples, and acceptance criteria into LATTICE capability contracts before selecting proof fixtures.
+    wired_at:
+      - https://github.com/datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future DDC skill sync
+      - future skill-to-run-contract mapping
+    serves:
+      - evidence
+      - quantity takeoff
+      - cost estimation
+      - schedule/EVM
+      - reporting/UI
+    proof_evidence: []
+
+  - id: cad2data-fallback-and-workflow-census
+    surface: source_repo
+    name: CAD2Data fallback and workflow census
+    state: ACTIVE
+    description: Harvest CAD2Data converter boundaries, AI agent instructions, sample projects, and n8n workflow patterns as fallback/reference material without admitting Revit or DGN into LATTICE's normal path.
+    wired_at:
+      - https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN
+      - meta/capability-research/census/repo-census-001.md
+    invoked_by:
+      - future converter fallback policy proof
+      - future IFC/DWG edge-case triage
+    serves:
+      - geometry/quantity
+      - fallback parsing
+      - evidence
+      - protected no-Revit/no-DGN boundary
+    proof_evidence: []

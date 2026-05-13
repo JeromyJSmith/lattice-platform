@@ -1,0 +1,221 @@
+# spec-verified: GitHub API live metadata 2026-05-13
+tool: repo-census-003-vectorworks
+tool_version: 2026-05-13-live-github-metadata
+canonical_docs: meta/capability-research/census/repo-census-003-vectorworks.md
+last_harvested: 2026-05-13
+harvested_by: codex
+
+capabilities:
+  - id: vectorworks-developer-scripting-reference
+    surface: source_repo
+    name: Vectorworks developer scripting reference
+    state: ACTIVE
+    description: Harvest official Vectorworks Python, VectorScript, Marionette, common, and function-reference material for script/plugin extraction contracts.
+    wired_at:
+      - https://github.com/Vectorworks/developer-scripting
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future Vectorworks Python script proof
+      - future vs API extraction contract
+    serves:
+      - Vectorworks scripting
+      - object record extraction
+      - class/layer/style extraction
+      - evidence
+    proof_evidence: []
+
+  - id: vectorworks-developer-worksheets-reference
+    surface: source_repo
+    name: Vectorworks worksheet and object parameter reference
+    state: ACTIVE
+    description: Harvest official worksheet functions and object parameters for fast Vectorworks data extraction before deeper C++ plugin work.
+    wired_at:
+      - https://github.com/Vectorworks/developer-worksheets
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future worksheet vocabulary proof
+      - future plant/style/record worksheet extraction design
+    serves:
+      - worksheet extraction
+      - object parameters
+      - plant/style metadata
+      - Pixeltable schema vocabulary
+    proof_evidence: []
+
+  - id: vectorworks-developer-sdk-reference
+    surface: source_repo
+    name: Vectorworks SDK developer reference
+    state: ACTIVE
+    description: Harvest official SDK development information and version references for future C++ plugin planning.
+    wired_at:
+      - https://github.com/Vectorworks/developer-sdk
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future SDK plugin design contract
+      - future Vectorworks version compatibility check
+    serves:
+      - C++ SDK
+      - plugin build planning
+      - version compatibility
+    proof_evidence: []
+
+  - id: vectorworks-sdkexamples-cpp-plugin-reference
+    surface: source_repo
+    name: Vectorworks SDK Examples C++ plugin reference
+    state: ACTIVE
+    description: Harvest Vectorworks SDK distribution and Examples2021-2026 directory shape for menu commands, plugin objects, resources, and C++ SDK patterns.
+    wired_at:
+      - https://github.com/VectorworksDeveloper/SDKExamples
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future SDK examples manifest proof
+      - future C++ placeholder plugin plan
+    serves:
+      - C++ SDK
+      - plugin command shape
+      - geometry/object traversal
+      - resource packaging
+    proof_evidence: []
+
+  - id: mako-vectorworks-mcp-sdk-socket-bridge
+    surface: source_repo
+    name: mako Vectorworks MCP SDK socket bridge
+    state: ACTIVE
+    description: Harvest the SDK plugin plus Unix socket MCP bridge architecture for controlling Vectorworks from Claude while keeping a bounded local bridge.
+    wired_at:
+      - https://github.com/mako-357/vectorworks-mcp
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future Vectorworks MCP bridge proof
+      - future SDK socket bridge design
+    serves:
+      - MCP bridge
+      - C++ SDK
+      - Vectorworks actuation
+      - evidence
+    proof_evidence: []
+
+  - id: togawamanabu-vectorworks-mcp-doc-rag
+    surface: source_repo
+    name: togawamanabu Vectorworks MCP documentation RAG
+    state: ACTIVE
+    description: Harvest Vectorworks MCP documentation/RAG architecture as a reference for querying SDK and scripting docs from agents.
+    wired_at:
+      - https://github.com/togawamanabu/vectorworks-mcp
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future Vectorworks docs RAG proof
+      - future SDK/scripting knowledge search
+    serves:
+      - documentation retrieval
+      - MCP bridge
+      - scripting reference
+    proof_evidence: []
+
+  - id: dlibrary-python-plugin-helper
+    surface: source_repo
+    name: dlibrary Vectorworks Python plugin helper
+    state: ACTIVE
+    description: Harvest a Python helper-library shape for Vectorworks plugin development, with license review before any direct reuse.
+    wired_at:
+      - https://github.com/dietergeerts/dlibrary
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future Python plugin helper assessment
+      - future vs script wrapper design
+    serves:
+      - Vectorworks Python
+      - plugin scaffolding
+      - script ergonomics
+    proof_evidence: []
+
+  - id: vectorworks-python-plugin-basics
+    surface: source_repo
+    name: Vectorworks Python plugin basics
+    state: ACTIVE
+    description: Harvest small MIT Python plugin examples as basic script/plugin shape references.
+    wired_at:
+      - https://github.com/machistore/basics_of_Vectorworks_plugins
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future Python plugin shape proof
+      - future beginner-safe script fixture
+    serves:
+      - Vectorworks Python
+      - plugin command shape
+      - evidence
+    proof_evidence: []
+
+  - id: vectorworks-wall-quantity-cpp-plugin
+    surface: source_repo
+    name: Vectorworks wall quantity C++ plugin
+    state: ACTIVE
+    description: Harvest a small MIT C++ Vectorworks quantity plugin example as a reference for geometry/quantity calculations in plugin context.
+    wired_at:
+      - https://github.com/h-ikeda/vectorworks-plugin-wall-quantity
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future C++ quantity plugin reference proof
+      - future geometry quantity extraction plan
+    serves:
+      - C++ SDK
+      - geometry/quantity
+      - plugin command shape
+    proof_evidence: []
+
+  - id: vectorworks-odbc-postgres-mysql-references
+    surface: source_repo
+    name: Vectorworks ODBC Postgres/MySQL references
+    state: ACTIVE
+    description: Harvest old Vectorworks ODBC database-link references as design substrate for bidirectional record/class/style sync, not as current runtime code.
+    wired_at:
+      - https://github.com/rgm/vectorworks-postgres
+      - https://github.com/rgm/vectorworks-mysql
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future ODBC/data-link design proof
+      - future Pixeltable record sync planning
+    serves:
+      - ODBC/data exchange
+      - object record extraction
+      - Pixeltable write target design
+    proof_evidence: []
+
+  - id: vectorworks-community-python-plugin-watchlist
+    surface: source_repo
+    name: Vectorworks community Python plugin watchlist
+    state: ACTIVE
+    description: Track community Python scripts and plugins as pattern references for class/style import, lighting data export, linter-style checks, and simple document mutation.
+    wired_at:
+      - https://github.com/brageiversen/vectorworksPlugins
+      - https://github.com/vpilone/VectorworksPlugins
+      - https://github.com/robertjaniak/change-lighting-type-class
+      - https://github.com/marissakfarrell/vectorworks-python-tools
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future community script pattern harvest
+      - future class/style/record mutation proof
+    serves:
+      - Vectorworks Python
+      - document mutation patterns
+      - class/layer/style extraction
+    proof_evidence: []
+
+  - id: vectorworks-vectorscript-marionette-watchlist
+    surface: source_repo
+    name: VectorScript and Marionette watchlist
+    state: ACTIVE
+    description: Track VectorScript, Marionette, syntax, and open script-object examples as references for legacy scripting coverage.
+    wired_at:
+      - https://github.com/john-salutz/Salutz-Tools-VW
+      - https://github.com/rgm/marionette
+      - https://github.com/textmate/vectorscript.tmbundle
+      - meta/capability-research/census/repo-census-003-vectorworks.md
+    invoked_by:
+      - future VectorScript vocabulary harvest
+      - future Marionette pattern assessment
+    serves:
+      - VectorScript
+      - Marionette
+      - legacy scripting
+    proof_evidence: []

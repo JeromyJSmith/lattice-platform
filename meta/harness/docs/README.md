@@ -18,6 +18,14 @@ Touching these files updates the docs-harness section's behavior. They follow th
 
 ## Purpose 2: Historical and reference documentation (everything else)
 
+Current repo-census files live outside this folder at
+`meta/capability-research/census/`. They are capability-research artifacts, not
+execution plans. They are referenced by the active architecture note at
+`meta/capability-research/ARCHITECTURE.md` and by matching registries under
+`analysis/capabilities/`. Use them to understand source research and row intent;
+use the architecture note and `meta/harness/golden_path.md` to decide what to
+execute next.
+
 The five subfolders below house the **non-authoritative** documentation tree:
 
 - **`amendments/`** — historical amendment prompts that already shipped. Each carries `status: shipped`, `historical_only: true`, and a `shipped_in_commit` reference. Useful as a paper trail; do not execute their contents.
