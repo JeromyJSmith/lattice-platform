@@ -1,0 +1,112 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T19:38:26+00:00",
+  "model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "db_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/.claude/worktrees/grove-harvest/meta/harness/state/cache/sfa-eval.duckdb",
+  "prompt": "How many Pixeltable migrations are tracked, and what's the largest one by size?",
+  "compute_iterations": 6,
+  "elapsed_seconds": 11.4,
+  "final_query": "SELECT COUNT(*) AS total_migrations, MAX(size_bytes) AS largest_migration_size FROM migrations;",
+  "final_reasoning": "The query has been tested and validated. It returns the total number of migrations and the largest one by size.",
+  "final_result_preview": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 total_migrations \u2502 largest_migration_size \u2502\n\u2502      int64       \u2502        varchar         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               16 \u2502 8631                   \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518",
+  "error": null,
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "ef98fe13-9612-4b12-a896-6cc46cc5efeb",
+          "name": "ListTablesArgs",
+          "arguments": "{\"reasoning\": \"I need to know the names of the tables in the database to identify which one contains migration data.\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "ListTablesArgs",
+      "content": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502    name    \u2502\n\u2502  varchar   \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 migrations \u2502\n\u2502 plants     \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "be5ae6c6-f62d-449b-b7f3-2efe8bd71a03",
+          "name": "DescribeTableArgs",
+          "arguments": "{\"reasoning\": \"I need to understand the schema of the 'migrations' table to determine how many migrations are tracked and what the largest one by size is.\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "DescribeTableArgs",
+      "error": "tool DescribeTableArgs validation/exec failed: 1 validation error for DescribeTableArgs\ntable_name\n  Field required [type=missing, input_value={'reasoning': \"I need to ...argest one by size is.\"}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "02d8825e-53a1-4a56-a45d-16db19d1b1ad",
+          "name": "DescribeTableArgs",
+          "arguments": "{\"reasoning\": \"I need to understand the schema of the 'migrations' table to determine how many migrations are tracked and what the largest one by size is.\", \"table_name\": \"migrations\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "DescribeTableArgs",
+      "content": "\u001b[90m\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502                    \u001b[00m\u001b[1mmigrations\u001b[00m\u001b[90m                    \u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502                                                  \u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502 \u001b[00m\u001b[4mmigration_id\u001b[00m\u001b[90m \u001b[00m\u001b[90mvarchar\u001b[00m\u001b[90m   \u001b[00m\u001b[90mnot null\u001b[00m\u001b[90m                  \u001b[00m\u001b[90m\u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502 \u001b[00mfilename\u001b[90m     \u001b[00m\u001b[90mvarchar\u001b[00m\u001b[90m   \u001b[00m\u001b[90mnot null\u001b[00m\u001b[90m                  \u001b[00m\u001b[90m\u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502 \u001b[00msize_bytes\u001b[90m   \u001b[00m\u001b[90mvarchar\u001b[00m\u001b[90m   \u001b[00m\u001b[90mnot null\u001b[00m\u001b[90m                  \u001b[00m\u001b[90m\u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2502 \u001b[00mindexed_at\u001b[90m   \u001b[00m\u001b[90mtimestamp\u001b[00m\u001b[90m \u001b[00m\u001b[90mdefault CURRENT_TIMESTAMP\u001b[00m\u001b[90m \u001b[00m\u001b[90m\u2502\u001b[00m\u001b[90m\n\u001b[00m\u001b[90m\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001b[00m\u001b[90m\n\u001b[00m"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "250beab8-9863-4d02-8851-3823e2a2c164",
+          "name": "SampleTableArgs",
+          "arguments": "{\"reasoning\": \"I need to see a few rows of the 'migrations' table to understand its structure and identify the largest migration by size.\", \"table_name\": \"migrations\", \"row_sample_size\": 5}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "SampleTableArgs",
+      "content": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 migration_id \u2502                 filename                 \u2502 size_bytes \u2502         indexed_at         \u2502\n\u2502   varchar    \u2502                 varchar                  \u2502  varchar   \u2502         timestamp          \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 0001         \u2502 0001_create_lattice_root.py              \u2502 607        \u2502 2026-05-13 13:35:09.52487  \u2502\n\u2502 0002         \u2502 0002_create_lattice_execution.py         \u2502 4219       \u2502 2026-05-13 13:35:09.525618 \u2502\n\u2502 0003         \u2502 0003_create_lattice_bridge_namespaces.py \u2502 817        \u2502 2026-05-13 13:35:09.526351 \u2502\n\u2502 0004         \u2502 0004_create_vw_tables.py                 \u2502 1745       \u2502 2026-05-13 13:35:09.526879 \u2502\n\u2502 0005         \u2502 0005_create_ifc_tables.py                \u2502 2314       \u2502 2026-05-13 13:35:09.527381 \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "d8eea1d8-dc92-4e48-a22a-42e7557063d9",
+          "name": "RunTestSQLQuery",
+          "arguments": "{\"reasoning\": \"I need to test the SQL query to count the number of migrations and find the largest one by size.\", \"sql_query\": \"SELECT COUNT(*) AS total_migrations, MAX(size_bytes) AS largest_migration_size FROM migrations;\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "RunTestSQLQuery",
+      "content": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 total_migrations \u2502 largest_migration_size \u2502\n\u2502      int64       \u2502        varchar         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               16 \u2502 8631                   \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518"
+    },
+    {
+      "role": "assistant",
+      "content": null,
+      "tool_calls": [
+        {
+          "id": "e5a4c77d-1674-432e-8a78-5be63fa7e70d",
+          "name": "RunFinalSQLQuery",
+          "arguments": "{\"reasoning\": \"The query has been tested and validated. It returns the total number of migrations and the largest one by size.\", \"sql_query\": \"SELECT COUNT(*) AS total_migrations, MAX(size_bytes) AS largest_migration_size FROM migrations;\"}"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "RunFinalSQLQuery",
+      "content": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 total_migrations \u2502 largest_migration_size \u2502\n\u2502      int64       \u2502        varchar         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               16 \u2502 8631                   \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518"
+    }
+  ]
+}

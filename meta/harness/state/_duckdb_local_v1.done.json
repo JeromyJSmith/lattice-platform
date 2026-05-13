@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T19:38:26+00:00",
+  "model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "db_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/.claude/worktrees/grove-harvest/meta/harness/state/cache/sfa-eval.duckdb",
+  "prompt": "How many Pixeltable migrations are tracked, and what's the largest one by size?",
+  "compute_iterations": 6,
+  "elapsed_seconds": 11.4,
+  "final_query": "SELECT COUNT(*) AS total_migrations, MAX(size_bytes) AS largest_migration_size FROM migrations;",
+  "final_reasoning": "The query has been tested and validated. It returns the total number of migrations and the largest one by size.",
+  "final_result_preview": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 total_migrations \u2502 largest_migration_size \u2502\n\u2502      int64       \u2502        varchar         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502               16 \u2502 8631                   \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518",
+  "error": null
+}
