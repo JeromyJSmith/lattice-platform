@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T21:24:02+00:00",
+  "driver_model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "purpose": "Generate Pixeltable migration files for LATTICE",
+  "instructions": "Use pxt.String for geometry columns, ensure_namespace and ensure_table helpers from migrations._helpers, increment migration number from the previous one",
+  "sections": "constraints, examples",
+  "examples": "",
+  "variables": "namespace_path, table_names",
+  "elapsed_seconds": 3.55,
+  "generated_chars": 1036,
+  "error": null,
+  "generated_prompt": "```xml\n<purpose>\n    Generate Pixeltable migration files for LATTICE\n</purpose>\n\n<instructions>\n    Use pxt.String for geometry columns, ensure_namespace and ensure_table helpers from migrations._helpers, increment migration number from the previous one\n</instructions>\n\n<sections>\n    <section name=\"constraints\">\n        <item>Ensure all geometry columns are properly typed using pxt.String</item>\n        <item>Use ensure_namespace and ensure_table helpers from migrations._helpers</item>\n        <item>Maintain a consistent migration numbering system</item>\n    </section>\n    <section name=\"examples\">\n        <item>Example 1: Migration for creating a new geometry column</item>\n        <item>Example 2: Migration for updating an existing geometry column</item>\n        <item>Example 3: Migration for adding a new table with geometry columns</item>\n    </section>\n</sections>\n\n<variables>\n    <variable name=\"namespace_path\">[[namespace_path]]</variable>\n    <variable name=\"table_names\">[[table_names]]</variable>\n</variables>\n```",
+  "user_input": "Purpose: Generate Pixeltable migration files for LATTICE, Instructions: Use pxt.String for geometry columns, ensure_namespace and ensure_table helpers from migrations._helpers, increment migration number from the previous one, Sections: constraints, examples, Variables: namespace_path, table_names"
+}
