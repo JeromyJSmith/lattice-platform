@@ -1,0 +1,170 @@
+benchmark_name: "Simple Function Coder"
+purpose: "Evaluate the ability of a language model to generate and execute a function."
+base_prompt: |
+  <purpose>
+      Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.
+  </purpose>
+  
+  <instructions>
+      <instruction>Generate only the function requested by the user.</instruction>
+      <instruction>Fill in the function body with the appropriate code.</instruction>
+      <instruction>Do not include any other text.</instruction>
+      <instruction>Write code in python 3.</instruction>
+      <instruction>Generate the function, call the function, and print the result.</instruction>
+      <instruction>Code should be clean and readable.</instruction>
+      <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>
+  </instructions>
+  
+  <function-request>
+      {{function}}
+  </function-request>
+
+  <function-arguments>
+      {{arguments}}
+  </function-arguments>
+evaluator: "execute_python_code_with_string_output"
+models: 
+  - "ollama~mistral-small:latest" 
+  - "anthropic~claude-3-5-sonnet-latest"
+  - "openai~gpt-4o-mini"
+  - "qwen2.5-coder:14b"
+  - "gemma3:27b"
+  - "gemma3:12b"
+  - "anthropic~claude-3-5-sonnet-latest"
+  - "anthropic~claude-3-5-haiku-latest"
+  - "anthropic~claude-3-7-sonnet-latest"
+  - "openai~o3-mini"
+prompts:
+  - dynamic_variables:
+      function: "def add(a, b): int - add two numbers"
+      arguments: "1, 2"
+    expectation: "3.0"
+  - dynamic_variables:
+      function: "def multiply_list(numbers: list) -> int - multiply all numbers in a list together"
+      arguments: "[2, 3, 4]"
+    expectation: "24.0"
+  - dynamic_variables:
+      function: "def reverse_string(text: str) -> str - reverse the characters in a string"
+      arguments: "'hello world'"
+    expectation: "dlrow olleh"
+  - dynamic_variables:
+      function: "def count_vowels(text: str) -> int - count the number of vowels in a string"
+      arguments: "'beautiful'"
+    expectation: "5.0"
+  - dynamic_variables:
+      function: "def is_palindrome(text: str) -> bool - check if a string is a palindrome"
+      arguments: "'racecar'"
+    expectation: "True"
+  - dynamic_variables:
+      function: "def fibonacci(n: int) -> list - generate fibonacci sequence up to n numbers"
+      arguments: "5"
+    expectation: "[0, 1, 1, 2, 3]"
+  - dynamic_variables:
+      function: "def filter_even_numbers(numbers: list) -> list - return only even numbers from a list"
+      arguments: "[1, 2, 3, 4, 5, 6]"
+    expectation: "[2, 4, 6]"
+  - dynamic_variables:
+      function: "def merge_dicts(dict1: dict, dict2: dict) -> dict - merge two dictionaries"
+      arguments: "{'a': 1, 'b': 2}, {'c': 3, 'd': 4}"
+    expectation: "{'a': 1, 'b': 2, 'c': 3, 'd': 4}"
+  - dynamic_variables:
+      function: "def calculate_factorial(n: int) -> int - calculate factorial of a number"
+      arguments: "5"
+    expectation: "120.0"
+  - dynamic_variables:
+      function: "def find_longest_word(sentence: str) -> str - find the longest word in a sentence"
+      arguments: "'The quick brown fox jumps over the lazy dog'"
+    expectation: "quick"
+  - dynamic_variables:
+      function: "def sort_by_length(words: list) -> list - sort list of strings by length"
+      arguments: "['python', 'java', 'javascript', 'go']"
+    expectation: "['go', 'java', 'python', 'javascript']"
+  - dynamic_variables:
+      function: "def flatten_list(nested_list: list) -> list - flatten a nested list into a single list"
+      arguments: "[[1, 2], [3, 4], [5]]"
+    expectation: "[1, 2, 3, 4, 5]"
+  - dynamic_variables:
+      function: "def gcd(a: int, b: int) -> int - calculate the greatest common divisor of two numbers"
+      arguments: "54, 24"
+    expectation: "6.0"
+  - dynamic_variables:
+      function: "def remove_duplicates(items: list) -> list - remove all duplicates from a list"
+      arguments: "[1, 2, 2, 3, 3, 3, 4]"
+    expectation: "[1, 2, 3, 4]"
+  - dynamic_variables:
+      function: "def sum_of_squares(numbers: list) -> int - calculate the sum of squares of numbers"
+      arguments: "[1, 2, 3]"
+    expectation: "14.0"
+  - dynamic_variables:
+      function: "def rotate_list(items: list, k: int) -> list - rotate a list to the right by k positions"
+      arguments: "['a', 'b', 'c', 'd', 'e'], 2"
+    expectation: "['d', 'e', 'a', 'b', 'c']"
+  - dynamic_variables:
+      function: "def nth_largest(numbers: list, n: int) -> int - find the nth largest number in a list"
+      arguments: "[10, 5, 7, 20], 2"
+    expectation: "10.0"
+
+  - dynamic_variables:
+      function: "def chunk_list(items: list, size: int) -> list - chunk a list into sublists of given size"
+      arguments: "[1, 2, 3, 4, 5, 6, 7], 3"
+    expectation: "[[1, 2, 3], [4, 5, 6], [7]]"
+
+  - dynamic_variables:
+      function: "def flatten_dict(d: dict, parent_key='', separator='.') -> dict - flatten a nested dictionary by joining keys with a separator"
+      arguments: "{'a': 1, 'b': {'c': 2, 'd': {'e': 3}}}, '', '.'"
+    expectation: "{'a': 1, 'b.c': 2, 'b.d.e': 3}"
+
+  - dynamic_variables:
+      function: "def decode_caesar_cipher(text: str, shift: int) -> str - decode a Caesar cipher shifted text"
+      arguments: "'def', 3"
+    expectation: "abc"
+
+  - dynamic_variables:
+      function: "def find_missing_numbers(nums: list) -> list - find all missing numbers in a range from 1 to max(nums)"
+      arguments: "[1, 2, 4, 6, 7]"
+    expectation: "[3, 5]"
+
+  - dynamic_variables:
+      function: "def sum_digits(n: int) -> int - sum all the digits of a number"
+      arguments: "12345"
+    expectation: "15.0"
+
+  - dynamic_variables:
+      function: "def convert_to_roman(num: int) -> str - convert an integer to a roman numeral"
+      arguments: "9"
+    expectation: "IX"
+
+  - dynamic_variables:
+      function: "def is_perfect_number(n: int) -> bool - check if a number is perfect"
+      arguments: "6"
+    expectation: "True"
+
+  - dynamic_variables:
+      function: "def letter_frequency(text: str) -> dict - return frequency of each letter in the string ignoring case and non-alpha"
+      arguments: "'Hello, World!'"
+    expectation: "{'h': 1, 'e': 1, 'l': 3, 'o': 2, 'w': 1, 'r': 1, 'd': 1}"
+
+  - dynamic_variables:
+      function: "def find_peak_element(nums: list) -> int - return the index of any peak element in the list"
+      arguments: "[1, 2, 3, 1]"
+    expectation: "2.0"
+
+  - dynamic_variables:
+      function: "def compress_string(text: str) -> str - compress a string by counting consecutive repeated characters"
+      arguments: "'aabcccccaaa'"
+    expectation: "a2b1c5a3"
+
+  - dynamic_variables:
+      function: "def decode_string(encoded: str) -> str - decode a string encoded in the format 'charN' repeated N times"
+      arguments: "'a2b1c5a3'"
+    expectation: "aabcccccaaa"
+
+  - dynamic_variables:
+      function: "def transform_keys_to_upper(d: dict) -> dict - transform all dictionary keys to uppercase"
+      arguments: "{'name': 'Alice', 'Age': 30, 'city': 'New York'}"
+    expectation: "{'NAME': 'Alice', 'AGE': 30, 'CITY': 'New York'}"
+
+  - dynamic_variables:
+      function: "def find_substring_indices(haystack: str, needle: str) -> list - find all indices where substring occurs in a string"
+      arguments: "'banana', 'ana'"
+    expectation: "[1, 3]"

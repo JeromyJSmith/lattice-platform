@@ -1,0 +1,47 @@
+# spec-verified: disler/claude-code-hooks-mastery 052ad1c 2026-05-12
+tool: claude-code-hooks-mastery
+tool_version: 052ad1c
+canonical_docs: https://github.com/disler/claude-code-hooks-mastery
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: complete-hook-lifecycle
+    surface: hook
+    name: complete Claude Code hook lifecycle
+    state: ACTIVE
+    description: Demonstrates session, prompt, tool, subagent, compaction, notification, setup, and stop hooks.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE hook doctrine"]
+
+  - id: uv-single-file-hooks
+    surface: pattern
+    name: uv single-file hook scripts
+    state: ACTIVE
+    description: Hook scripts are isolated uv single-file Python programs with embedded dependencies.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE hook doctrine"]
+
+  - id: pre-tool-security
+    surface: hook
+    name: PreToolUse security gate
+    state: ACTIVE
+    description: Blocks dangerous tool calls and sensitive file access before execution.
+    wired_at: ["meta/harness/bash-safety.md", "meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE safety hooks"]
+
+  - id: hook-json-logging
+    surface: observability
+    name: JSON hook logging
+    state: ACTIVE
+    description: Hook events are logged as structured JSON for later inspection and replay.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE evidence model"]
+
+  - id: team-validation-pattern
+    surface: workflow
+    name: builder/validator team validation
+    state: ACTIVE
+    description: Builder implements while validator checks outputs through read-only validation flows.
+    wired_at: ["meta/harness/hooks-observability.md", "meta/verification/VERIFIER.md"]
+    invoked_by: ["LATTICE verification"]

@@ -40,6 +40,24 @@ export interface SidecarResponse<T = unknown> {
   idempotencyKey: string;
 }
 
+export interface SingleFileAgentRunRequest {
+  job_id: string;
+  task: string;
+  repo_root?: string;
+  output?: string;
+  expect_paths?: string[];
+  timeout_seconds?: number;
+}
+
+export interface HarnessCapabilityRunRequest {
+  capability_id: string;
+  task?: string;
+  repo_root?: string;
+  output?: string;
+  expect_paths?: string[];
+  timeout_seconds?: number;
+}
+
 export class SidecarClient {
   readonly mode: "uds" | "tcp";
   readonly socketPath?: string;
@@ -85,6 +103,53 @@ export class SidecarClient {
     idempotencyKey?: string,
   ): Promise<SidecarResponse> {
     return this.post("/v1/evidence/promotions", payload, idempotencyKey);
+  }
+
+  /** Convenience: list registered single-file harness agents. */
+  async listSingleFileAgents(): Promise<SidecarResponse> {
+    return this.get("/v1/harness/single-file-agents/catalog");
+  }
+
+  /** Convenience: run one registered single-file harness agent. */
+  async runSingleFileAgent(
+    payload: SingleFileAgentRunRequest,
+    idempotencyKey?: string,
+  ): Promise<SidecarResponse> {
+    return this.post(
+      "/v1/harness/single-file-agents/runs",
+      payload,
+      idempotencyKey,
+    );
+  }
+
+  /** Convenience: run one allowlisted harness capability. */
+  async runHarnessCapability(
+    payload: HarnessCapabilityRunRequest,
+    idempotencyKey?: string,
+  ): Promise<SidecarResponse> {
+    return this.post("/v1/harness/capabilities/runs", payload, idempotencyKey);
+  }
+
+  /** Convenience: fetch the sample Benchy-compatible benchmark report. */
+  async getHarnessBenchmarkSampleReport(): Promise<SidecarResponse> {
+    return this.get("/v1/harness/benchmarks/sample-report");
+  }
+
+  /** Convenience: read all capability registries as a diagnostic matrix. */
+  async getCapabilityMatrix(): Promise<SidecarResponse> {
+    return this.get("/v1/harness/capabilities/matrix");
+  }
+
+  /** Convenience: validate a Benchy-compatible benchmark report. */
+  async validateHarnessBenchmarkReport(
+    payload: Record<string, unknown>,
+    idempotencyKey?: string,
+  ): Promise<SidecarResponse> {
+    return this.post(
+      "/v1/harness/benchmarks/reports/validate",
+      payload,
+      idempotencyKey,
+    );
   }
 
   /** Convenience: GET /healthz. */

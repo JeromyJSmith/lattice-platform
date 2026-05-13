@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capability_id": "python-docstring-rule",
+  "job_id": "python-docstring-rule",
+  "run_id": "python-docstring-rule-2026-05-12T18-02-26.688Z",
+  "started_at": "2026-05-12T18:02:26Z",
+  "completed_at": "2026-05-12T18:02:26Z",
+  "ok": true,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "scripts/check-python-docstrings.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-12T18-02-26-539Z-python-docstring-rule-browser-run.json",
+  "returncode": 0,
+  "stdout": "check-python-docstrings: OK (5 changed/new files)\n",
+  "stderr": "",
+  "verification": {
+    "status": "passed",
+    "message": "Command returned expected exit code 0.",
+    "returncode": 0,
+    "expected_returncode": 0,
+    "stdout": "check-python-docstrings: OK (5 changed/new files)\n",
+    "stderr": ""
+  },
+  "metrics": {
+    "latency_ms": 146,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}
