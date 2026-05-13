@@ -74,8 +74,9 @@ from rich.panel import Panel
 
 
 # ── LATTICE config ───────────────────────────────────────────────────────────
+# _HERE = meta/harness/tools/sfa-eval — 4 levels deep from repo root.
 _HERE = Path(__file__).resolve().parent
-_REPO = _HERE.parent.parent.parent
+_REPO = _HERE.parent.parent.parent.parent
 _HOST_DIR = _REPO / "meta" / "harness" / "in-tab-llm"
 _SERVE_PY = _HOST_DIR / "serve.py"
 _HOST_HTML = _HOST_DIR / "bonsai-host.html"
