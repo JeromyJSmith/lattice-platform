@@ -78,7 +78,7 @@ if [ -n "$STAGED" ]; then
   # Allowlist: files that legitimately reference forbidden patterns as
   # anti-pattern documentation, agent guardrails, or string-literal enums.
   # Union of both sides of the merge (kept in sync with docs-sync-check.yml).
-  ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
+  ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|\.agents/|\.codex/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
   while IFS= read -r f; do
     [ -f "$f" ] || continue
     case "$f" in

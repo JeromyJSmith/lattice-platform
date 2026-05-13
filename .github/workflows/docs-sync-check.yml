@@ -198,7 +198,7 @@ jobs:
           # are described, never imported/used. Code that actually IMPORTS forbidden
           # packages or uses forbidden types still gets caught (the allowlist only
           # exempts paths, not patterns). Union of both sides of the meta-harness merge.
-          ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
+          ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/audit-dead-dna\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|\.agents/|\.codex/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/|analysis/capabilities/|analysis/infranodus/|analysis/gaps/|analysis/desires/)'
 
           for f in $FILES; do
             [ -f "$f" ] || continue

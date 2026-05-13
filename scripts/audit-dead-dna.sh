@@ -22,6 +22,7 @@ fi
 
 ruby - "${registries[@]}" <<'RUBY'
 require "yaml"
+require "date"
 
 ALLOWED_STATES = %w[ACTIVE DEFERRED BLOCKED].freeze
 ALLOWED_DEFERRED_REASONS = %w[
@@ -60,7 +61,7 @@ summary = Hash.new(0)
 
 ARGV.each do |path|
   begin
-    data = YAML.load_file(path)
+    data = YAML.safe_load(File.read(path), permitted_classes: [Date], aliases: true)
   rescue StandardError => e
     errors << "#{path}: YAML parse failed: #{e.class}: #{e.message}"
     next
