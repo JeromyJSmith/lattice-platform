@@ -12,15 +12,20 @@ capabilities:
   - id: browser-harness-new-tab
     surface: cli_command
     name: new_tab
-    state: DEFERRED
+    state: ACTIVE
     description: Create new Chrome tab via Target.createTarget CDP call; switch to new tab and optionally navigate
     source: src/browser_harness/helpers.py:317-325
     owner_harness: meta-harness
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-browser-harness-new-tab
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py (NavigateArgs tool)
+    invoked_by:
+      - sfa_browser_bonsai_v1.py Test 2 (browser navigation to example.com)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py --test browser-nav
+      evidence: meta/harness/docs/sessions/2026-05-13-200454-browser-bonsai-test2-browser-nav.json
+      verified_at: 2026-05-13
 
   - id: browser-harness-goto-url
     surface: cli_command
@@ -116,15 +121,21 @@ capabilities:
   - id: browser-harness-capture-screenshot
     surface: cli_command
     name: capture_screenshot
-    state: DEFERRED
+    state: ACTIVE
     description: Save PNG screenshot via Page.captureScreenshot CDP; optional downscale via PIL
     source: src/browser_harness/helpers.py:269-281
     owner_harness: meta-harness
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-browser-harness-capture-screenshot
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py (CaptureScreenshotArgs tool)
+      - meta/harness/state/screenshots/garden-bed.png (Test 3 fixture)
+    invoked_by:
+      - sfa_browser_bonsai_v1.py Test 3 (vision-swap pipeline — screenshot then describe via qwen3vl-2b)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py --test vision-swap
+      evidence: meta/harness/state/_browser_bonsai_v1.done.json
+      verified_at: 2026-05-13
 
   - id: browser-harness-list-tabs
     surface: cli_command
@@ -220,16 +231,21 @@ capabilities:
   - id: browser-harness-js
     surface: cli_command
     name: js
-    state: DEFERRED
+    state: ACTIVE
     description: Execute arbitrary JavaScript in attached tab (or iframe via target_id); auto-wraps return statements
     source: src/browser_harness/helpers.py:426-435
     owner_harness: meta-harness
     value: high
     risk: medium
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-browser-harness-js
-    notes: Core dependency for sfa_browser_bonsai_v1.py; enables in-tab transformers.js/WebGPU execution
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py (RunInBrowserArgs tool)
+    invoked_by:
+      - sfa_browser_bonsai_v1.py Test 2 (extracts title + h1 from example.com via document.querySelector)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py --test browser-nav
+      evidence: meta/harness/docs/sessions/2026-05-13-200454-browser-bonsai-test2-browser-nav.json
+      verified_at: 2026-05-13
+    notes: Core dependency for sfa_browser_bonsai_v1.py; future foundation for in-tab transformers.js/WebGPU Bonsai (Move B)
 
   - id: browser-harness-dispatch-key
     surface: cli_command
