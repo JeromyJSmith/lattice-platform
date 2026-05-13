@@ -66,15 +66,19 @@ def is_available(backend_name: str, backend_cfg: dict) -> bool:
     return result.returncode == 0
 
 
-def build_argv(backend_cfg: dict, model: str | None, prompt: str) -> tuple[list[str], bool]:
+def build_argv(backend_cfg: dict, model: str | None, prompt: str, image: str | None = None) -> tuple[list[str], bool]:
     """Return (argv, send_via_stdin)."""
     cmd_template = backend_cfg["cmd"]
+    if backend_cfg.get("image_required") and not image:
+        raise ValueError("backend requires an --image path but none was provided")
     argv: list[str] = []
     for token in cmd_template:
         if token == "{model}":
             if not model:
                 raise ValueError("backend requires a model but none was provided")
             argv.append(model)
+        elif token == "{image}":
+            argv.append(image or "")
         else:
             argv.append(token)
     if backend_cfg.get("prompt_as_arg"):
@@ -83,17 +87,19 @@ def build_argv(backend_cfg: dict, model: str | None, prompt: str) -> tuple[list[
     return argv, bool(backend_cfg.get("stdin_prompt", True))
 
 
-def dispatch(backend_spec: str, backends: dict, prompt: str, timeout: int) -> tuple[int, str]:
+def dispatch(backend_spec: str, backends: dict, prompt: str, timeout: int, image: str | None = None) -> tuple[int, str]:
     name, model = parse_backend_spec(backend_spec)
     if name not in backends:
         return 127, f"llm: unknown backend `{name}`"
     cfg = backends[name]
     if cfg.get("model_required") and not model:
         return 127, f"llm: backend `{name}` requires :model suffix"
+    if cfg.get("image_required") and not image:
+        return 127, f"llm: backend `{name}` requires --image but none provided (skipping in chain)"
     if not is_available(name, cfg):
         return 127, f"llm: backend `{name}` not available ({cfg.get('install', '')})"
     try:
-        argv, send_via_stdin = build_argv(cfg, model, prompt)
+        argv, send_via_stdin = build_argv(cfg, model, prompt, image)
     except ValueError as e:
         return 127, f"llm: {e}"
     if not shutil.which(argv[0]):
@@ -139,8 +145,9 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    parser.add_argument("--task", help="task name from config (propose, triage, review, ...)")
+    parser.add_argument("--task", help="task name from config (propose, triage, review, vision, ...)")
     parser.add_argument("--backend", help="explicit backend (overrides --task)")
+    parser.add_argument("--image", help="image path for vision tasks (required for mlx-vlm + claude vision)")
     parser.add_argument("--timeout", type=int, default=180, help="seconds per attempt (default 180)")
     parser.add_argument("--list", action="store_true", help="show config + backend availability")
     parser.add_argument("--no-fallback", action="store_true", help="primary only, no fallback")
@@ -177,7 +184,7 @@ def main() -> int:
 
     last_err = ""
     for i, backend_spec in enumerate(chain):
-        rc, out = dispatch(backend_spec, config["backends"], prompt, args.timeout)
+        rc, out = dispatch(backend_spec, config["backends"], prompt, args.timeout, image=args.image)
         if rc == 0:
             sys.stdout.write(out)
             sys.stdout.flush()

@@ -10,7 +10,7 @@
     "docs":        { "primary": "claude",                                          "fallback": ["mlx-lm:prism-ml/Ternary-Bonsai-8B-mlx-2bit", "ollama:qwen2.5:14b"] },
     "local":       { "primary": "mlx-lm:prism-ml/Ternary-Bonsai-8B-mlx-2bit",      "fallback": ["mlx-lm:prism-ml/Ternary-Bonsai-4B-mlx-2bit", "mlx-lm:mlx-community/Hermes-3-Llama-3.1-8B-4bit", "ollama:qwen2.5-coder:7b"] },
     "quick":       { "primary": "mlx-lm:prism-ml/Ternary-Bonsai-1.7B-mlx-2bit",    "fallback": ["mlx-lm:prism-ml/Ternary-Bonsai-4B-mlx-2bit", "ollama:llama3.2:3b", "claude"] },
-    "vision":      { "primary": "mlx-vlm:mlx-community/Qwen2-VL-7B-Instruct-4bit", "fallback": ["claude"] }
+    "vision":      { "primary": "mlx-vlm:mlx-community/Qwen3-VL-8B-Instruct-4bit", "fallback": ["mlx-vlm:mlx-community/Qwen3-VL-2B-Instruct-4bit", "mlx-vlm:mlx-community/gemma-4-26b-a4b-it-4bit", "claude"] }
   },
 
   "backends": {
@@ -60,14 +60,15 @@
       "notes": "Apple MLX text LLMs — Apple Silicon native, faster than Ollama on M-series. See `mlx_lm.manage --scan` for cached models. Browse: https://huggingface.co/mlx-community"
     },
     "mlx-vlm": {
-      "cmd": ["mlx_vlm.generate", "--model", "{model}", "--max-tokens", "1024", "--prompt"],
+      "cmd": ["mlx_vlm.generate", "--model", "{model}", "--max-tokens", "1024", "--image", "{image}", "--prompt"],
       "stdin_prompt": false,
       "prompt_as_arg": true,
+      "image_required": true,
       "stream": false,
       "model_required": true,
       "auth_check": "command -v mlx_vlm.generate",
-      "install": "uv tool install mlx-vlm",
-      "notes": "Apple MLX vision-language models. Use --image flag in the cmd for image input (router currently passes text only — extend `cmd` if you need vision-call wiring)."
+      "install": "uv tool install mlx-vlm --with torch --with torchvision  (torch is required by Qwen3-VL's video processor even for image-only input)",
+      "notes": "Apple MLX vision-language models. Pass --image <path> when invoking the router. Tested: Qwen3-VL-2B/8B, Gemma-4-26B (multimodal Gemma)."
     },
     "omlx": {
       "cmd": ["omlx", "launch", "claude", "--model", "{model}"],

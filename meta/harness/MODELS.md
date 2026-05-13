@@ -100,14 +100,82 @@ Browse: https://huggingface.co/mlx-community
 
 ## MLX-VLM: vision-language models
 
-For tasks involving drone frames, IFC screenshots, or plan-sheet OCR:
+The router supports vision via the `vision` task with image input through `--image`:
 
 ```bash
-mlx_vlm.generate --model mlx-community/Qwen2-VL-7B-Instruct-4bit \
+# Through the router (auto-falls-through the chain on failure)
+meta/harness/bin/llm --task=vision --image=/path/to/frame.jpg "Identify the plant species visible."
+
+# Direct mlx_vlm.generate (single model, no fallback)
+mlx_vlm.generate --model mlx-community/Qwen3-VL-8B-Instruct-4bit \
   --image /path/to/frame.jpg --prompt "Identify the plant species visible."
 ```
 
-The router currently passes text-only via the `vision` task. To use images, call `mlx_vlm.generate` directly or extend the `cmd` array in `mlx-vlm` backend config to accept `--image` from the prompt structure.
+### Vision fallback chain (per user spec)
+
+```
+vision: Qwen3-VL-8B → Qwen3-VL-2B → Gemma-4-26B (multimodal) → Claude
+```
+
+Empirical test on a single 1024×1024 image (`example-guitar-flowers.jpg`):
+
+| Model | Disk | Peak mem | Cold start | Warm tok/s | Output quality |
+|---|---|---|---|---|---|
+| Qwen3-VL-2B-Instruct-4bit | 1.5 GB | 3.1 GB | 26 s | 166 | accurate, picks up wooden stand |
+| Qwen3-VL-8B-Instruct-4bit | 5 GB | 7.0 GB | 5.5 s | 70 | accurate, also reads logo text (OCR) |
+| Gemma-4-26B-a4b-it-4bit | 16 GB | 16.6 GB | 8.4 s | 86 | accurate, picks up specific colors (pink/red/green) |
+
+All three correctly identified the subject. Qwen3-VL-8B is the right primary for the harness — it does OCR on the image AND describes the scene in one pass, in ~6 s.
+
+### Important: `mlx-vlm` needs PyTorch installed
+
+Qwen3-VL's video processor imports PyTorch even when only processing images. If you see `ImportError: requires the PyTorch library`, reinstall with:
+
+```bash
+uv tool install mlx-vlm --with torch --with torchvision --reinstall
+```
+
+## Streaming video / per-frame inference
+
+For pipelines that process video frame-by-frame through Pixeltable, **don't invoke the CLI per frame** — each invocation cold-loads the model. Two paths:
+
+1. **`mlx_vlm.server`** — long-running OpenAI-compat HTTP server, model stays resident:
+   ```bash
+   mlx_vlm.server --model mlx-community/Qwen3-VL-8B-Instruct-4bit --port 8081
+   ```
+   Then have your Pixeltable `@pxt.udf` POST each frame to `http://localhost:8081/v1/chat/completions`.
+
+2. **`omlx serve`** — multi-model OpenAI-compat server (recommended for mixed workloads):
+   ```bash
+   omlx serve mlx-community/Qwen3-VL-8B-Instruct-4bit --port 8000
+   ```
+
+Either keeps the model warm — first inference takes ~5-30 s (load), every subsequent inference is the warm-tok/s number above.
+
+## SAM 3 — Segmentation Anything Model 3 (separate integration)
+
+SAM 3 (Meta, Nov 2025) is **not a VLM in the router chain** — it's a segmentation model that takes an image + concept prompt and outputs masks. Different shape:
+
+- **Inputs:** image, plus text concept (`"yellow school bus"`), image exemplar, or bounding box
+- **Outputs:** segmentation masks + tracking IDs (for video)
+- **Use cases in LATTICE:** annotating drone frames for plant detection, isolating individual trees in point cloud orthophotos, video tracking for construction progress
+
+Source: https://github.com/facebookresearch/sam3 · paper: https://arxiv.org/abs/2511.16719
+
+**Integration path** (Phase 2 work, not Wave 1):
+1. `pip install ultralytics` (Ultralytics ships SAM 3 with a stable API and handles checkpoint download).
+2. Write `pixeltable/service/sam3_udf.py` as a `@pxt.udf` over `pxt.Image` columns:
+   ```python
+   @pxt.udf
+   def sam3_segment(image: pxt.Image, concept: str) -> pxt.Json:
+       from ultralytics import SAM
+       model = SAM('sam3.pt')  # cached on first call, not loaded per row
+       result = model(image, text_prompt=concept)
+       return {'masks': result[0].masks.xy, 'boxes': result[0].boxes.xyxy.tolist()}
+   ```
+3. The "model loads every frame" symptom on stock SAM is fixed by holding the `SAM()` instance at module level OR using a long-running server (same shape as `mlx_vlm.server` above).
+
+Not wired up yet. Track in a separate issue.
 
 ## oMLX: multi-model server (advanced)
 
