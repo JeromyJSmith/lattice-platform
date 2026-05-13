@@ -192,3 +192,42 @@ The harness ratchet treats `2` as "no proposal this cycle" — not an error. The
 ## Why this exists
 
 The platform's quality flywheel cannot be tied to a single vendor. If Anthropic has an outage, the harness should keep running. If you want a private-data task to stay local, Ollama handles it. If you have a Copilot subscription paid for already, use it for what it's good at. The router makes those choices configuration, not code.
+
+## Two HF caches on this machine
+
+The router and mlx_lm respect `HF_HUB_CACHE`. There are two caches in play here:
+
+| Path | Default? | Contents |
+|---|---|---|
+| `~/.cache/huggingface/hub/` | yes | Bonsai 1.7B/4B/8B · Hermes-3-8B · Qwen3.6-35B · Gemma-4-26B (4bit) |
+| `/Volumes/PixelTable/models/huggingface-cache/` | no | Gemma-4-26B (NVFP4) · Gemma-2-2B · Gemma-4-E4B (FP16) · BitNet 1.58 2B · whisper-large-v3 · plus Pixeltable-side workloads |
+
+To use the Pixeltable cache instead of the home cache (e.g. to run NVFP4 Gemma):
+
+```bash
+HF_HUB_CACHE=/Volumes/PixelTable/models/huggingface-cache \
+  meta/harness/bin/llm --backend=mlx-lm:mlx-community/gemma-4-26b-a4b-nvfp4 "..."
+```
+
+For Benchy, add to `meta/harness/benchy/server/.env`:
+```
+HF_HUB_CACHE=/Volumes/PixelTable/models/huggingface-cache
+```
+
+There is no native "search both caches" mode in huggingface_hub. The model you want must be in whichever cache `HF_HUB_CACHE` points to.
+
+## Heretic / abliterated models (GGUF — via Ollama, not direct MLX)
+
+PrismML's Ternary Bonsai ships with built-in safety alignment. For uncensored / abliterated work the project has GGUF weights cached at:
+
+| Path | What | Size | Wire-up |
+|---|---|---|---|
+| `/Volumes/PixelTable/gemma4-heretical/` | Script that pulls `trohrbaugh/gemma-4-31b-it-heretic-ara` and registers it in Ollama with the correct Gemma-4 chat template (community GGUFs ship the wrong one). ARA-abliterated, 5/100 refusal rate vs 98/100 stock, KL divergence 0.012. | 17-33 GB | `./get-gemma4-heretical Q4_K_M && ollama run gemma4-heretical` |
+| `/Volumes/PixelTable/models/huggingface-cache/models--DavidAU--Qwen3-48B-A4B-Savant-Commander-Distill-12X-Closed-Open-Heretic-Uncensored-GGUF/` | DavidAU's 48B MoE mega-merge with "Heretic" branding. GGUF Q4_K_M. | 19 GB | Convert to Modelfile + `ollama create` |
+| `/Volumes/Docker/_ai_/z-turbo/qwen3-4b-Z-Image-Engineer/qwen3-4b-heretic-merged-f16.gguf` | Smaller Qwen3-4B heretic merge, FP16. | ~8 GB | Same path |
+
+These are **GGUF format** — they run via Ollama (or llama.cpp), not directly via `mlx_lm.generate`. To use one through the router:
+1. Register it in Ollama: see `/Volumes/PixelTable/gemma4-heretical/get-gemma4-heretical` for the canonical script
+2. Reference it via the Ollama backend: `meta/harness/bin/llm --backend=ollama:gemma4-heretical "..."`
+
+To convert GGUF → MLX (so the model can run via `mlx-lm` directly): `mlx_lm.convert --hf-path <gguf-path> -q --q-bits 4`. Not currently wired in.
