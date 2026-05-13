@@ -46,6 +46,38 @@ The same audit script that enforces Zero Dead DNA (`scripts/audit-dead-dna.sh`, 
 - `git submodule add github.com/mattpocock/skills .claude/skills/...` — banned.
 - Editing the `source:` or `vendored_at:` fields of a vendored skill — banned. To update, re-vendor the whole skill at a new pinned SHA.
 
+## Nested `.git/` directories — strip before commit
+
+When you vendor anything by cloning (vs. copying individual files), the upstream's `.git/` directory comes along for the ride. **It MUST be removed before the content lands in this repo.**
+
+If you forget, `git add` will detect the embedded repo and create a gitlink (an unregistered submodule pointer) instead of adding the files. The directory will appear as a single entry in `git ls-files`, the content won't be in our repo, and a fresh clone on another machine will get a broken pointer.
+
+### The procedure
+
+```bash
+# After git clone <upstream> .claude/skills/<name>/  (or any nested location)
+rm -rf .claude/skills/<name>/.git
+git add .claude/skills/<name>/
+```
+
+`**/.git/` is **not** in `.gitignore` (we want to be told by `git add`'s "embedded git repository" warning that this happened — silent acceptance hides the recursion problem). The specific path `.claude/skills/*/.git/` IS ignored after PR #230 to absorb the common case for skill bundles. Other vendored locations: strip manually.
+
+### Recovery if you already created a gitlink
+
+```bash
+git rm --cached -f .claude/skills/<name>
+rm -rf .claude/skills/<name>/.git
+git add .claude/skills/<name>/
+```
+
+This applies to **every nested git repo** anywhere in the tree — not just `.claude/skills/`. Drop a clone in `tools/`, `meta/harness/`, `analysis/`, `vendored/`, anywhere — strip `.git/` first.
+
+## Disler / IndyDevDan repositories
+
+`github.com/disler/*` (IndyDevDan's repositories) are a recurring source for LATTICE substrate — `single-file-agents`, `benchy`, `agentic-drop-zones`, `claude-code-hooks-mastery`, `the-library`, `pi-vs-claude-code`, `the-verifier-agent`, `agent-sandboxes`, etc. They're listed in `analysis/capabilities/README.md` and most have a capability registry.
+
+**Every Disler vendoring operation gets the strip-`.git/`-before-commit treatment.** This is the most common nested-git-repo case in this codebase, so flag it specifically: if you find yourself cloning `github.com/disler/<anything>`, the inner `.git/` does not belong in the parent repo. Strip it, vendor flat, record the pinned SHA in the `source:` frontmatter of whatever skill/registry references it.
+
 ## Re-vendoring procedure (when upstream evolves)
 
 1. Clone upstream to `/tmp` and pin a new SHA: `git clone https://github.com/<upstream>/<repo> /tmp/<repo> && git -C /tmp/<repo> rev-parse HEAD`.
