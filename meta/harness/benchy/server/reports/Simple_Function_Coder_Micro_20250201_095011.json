@@ -1,0 +1,683 @@
+{
+    "benchmark_name": "Simple Function Coder Micro",
+    "purpose": "Evaluate the ability of a language model to generate and execute a function.",
+    "base_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    {{function}}\n</function-request>\n\n<function-arguments>\n    {{arguments}}\n</function-arguments>\n",
+    "prompt_iterations": [
+        {
+            "dynamic_variables": {
+                "function": "def add(a, b): int - add two numbers",
+                "arguments": "1, 2"
+            },
+            "expectation": "3.0"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def multiply_list(numbers: list) -> int - multiply all numbers in a list together",
+                "arguments": "[2, 3, 4]"
+            },
+            "expectation": "24.0"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def reverse_string(text: str) -> str - reverse the characters in a string",
+                "arguments": "'hello world'"
+            },
+            "expectation": "dlrow olleh"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def count_vowels(text: str) -> int - count the number of vowels in a string",
+                "arguments": "'beautiful'"
+            },
+            "expectation": "5.0"
+        }
+    ],
+    "models": [
+        {
+            "model": "openai~gpt-4o-mini",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 917.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.00076,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~gpt-4o-mini",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef multiply_list(numbers: list) -> int:\n    result = 1\n    for number in numbers:\n        result *= number\n    return result\n\nresult = multiply_list([2, 3, 4])\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1152.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.001012,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~gpt-4o-mini",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 966.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000798,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~gpt-4o-mini",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef count_vowels(text: str) -> int:\n    vowels = 'aeiouAEIOU'\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels('beautiful')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1165.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000993,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~gpt-4o-mini",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 1050.0,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.003563
+        },
+        {
+            "model": "openai~gpt-4o",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 873.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.00076,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~gpt-4o",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef multiply_list(numbers: list) -> int:\n    result = 1\n    for number in numbers:\n        result *= number\n    return result\n\n# Call the function with the provided arguments\nresult = multiply_list([2, 3, 4])\n\n# Print the result\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1865.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.001152,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~gpt-4o",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 920.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000798,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~gpt-4o",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef count_vowels(text: str) -> int:\n    vowels = 'aeiouAEIOU'\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels('beautiful')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1240.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000993,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~gpt-4o",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 1224.5,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.003703
+        },
+        {
+            "model": "openai~o1-mini",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2562.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000246,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o1-mini",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef multiply_list(numbers: list) -> int:\n    result = 1\n    for num in numbers:\n        result *= num\n    return result\n\nprint(multiply_list([2, 3, 4]))\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 4054.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000375,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o1-mini",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2920.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000249,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o1-mini",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef count_vowels(text: str) -> int:\n    vowels = 'aeiouAEIOU'\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels('beautiful')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2411.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000183,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o1-mini",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 2986.75,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.0010530000000000001
+        },
+        {
+            "model": "openai~o3-mini:low",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "def add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1186.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000048,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o3-mini:low",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "def multiply_list(numbers: list) -> int:\n    result = 1\n    for number in numbers:\n        result *= number\n    return result\n\nprint(multiply_list([2, 3, 4]))",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1280.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000062,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o3-mini:low",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "def reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1468.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000089,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:low",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "def count_vowels(text: str) -> int:\n    vowels = set(\"aeiouAEIOU\")\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels('beautiful')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1386.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000101,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:low",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 1330.0,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.00030000000000000003
+        },
+        {
+            "model": "openai~o3-mini:medium",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "def add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 1792.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000125,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o3-mini:medium",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "def multiply_list(numbers: list) -> int:\n    result = 1\n    for num in numbers:\n        result *= num\n    return result\n\nprint(multiply_list([2, 3, 4]))",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 4451.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000139,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o3-mini:medium",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "def reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2342.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000166,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:medium",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "def count_vowels(text: str) -> int:\n    vowels = set(\"aeiouAEIOU\")\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels('beautiful')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2751.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000178,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:medium",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 2834.0,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.000608
+        },
+        {
+            "model": "openai~o3-mini:high",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "def add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 2864.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.00024,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o3-mini:high",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "def multiply_list(numbers: list) -> int:\n    product = 1\n    for number in numbers:\n        product *= number\n    return product\n\nresult = multiply_list([2, 3, 4])\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 3813.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000371,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o3-mini:high",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "def reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 3550.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000281,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:high",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "def count_vowels(text: str) -> int:\n    vowels = \"aeiouAEIOU\"\n    return sum(1 for char in text if char in vowels)\n\nresult = count_vowels(\"beautiful\")\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 4502.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000408,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o3-mini:high",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 3682.25,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.0013
+        },
+        {
+            "model": "openai~o1",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "def add(a, b):\n    return a + b\n\nresult = add(1, 2)\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 3423.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.00024,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o1",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "def multiply_list(numbers: list) -> int:\n    product = 1\n    for num in numbers:\n        product *= num\n    return product\n\nresult = multiply_list([2, 3, 4])\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 3586.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000256,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o1",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "def reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 3578.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000243,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o1",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "def count_vowels(text: str) -> int:\n    count = 0\n    for char in text.lower():\n        if char in 'aeiou':\n            count += 1\n    return count\n\nresult = count_vowels('beautiful')\nprint(result)",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 4455.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000335,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o1",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 3760.5,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.001074
+        },
+        {
+            "model": "openai~o1-preview",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef add(a, b) -> int:\n    \"\"\"Add two numbers\"\"\"\n    return a + b\n\nprint(add(1, 2))\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 7650.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000442,
+                        "errored": null
+                    },
+                    "execution_result": "3.0",
+                    "expected_result": "3.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def add(a, b): int - add two numbers\n</function-request>\n\n<function-arguments>\n    1, 2\n</function-arguments>\n",
+                    "model": "openai~o1-preview",
+                    "correct": true,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef multiply_list(numbers: list) -> int:\n    result = 1\n    for num in numbers:\n        result *= num\n    return result\n\nprint(multiply_list([2, 3, 4]))\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 7094.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000414,
+                        "errored": null
+                    },
+                    "execution_result": "24.0",
+                    "expected_result": "24.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def multiply_list(numbers: list) -> int - multiply all numbers in a list together\n</function-request>\n\n<function-arguments>\n    [2, 3, 4]\n</function-arguments>\n",
+                    "model": "openai~o1-preview",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef reverse_string(text: str) -> str:\n    return text[::-1]\n\nresult = reverse_string('hello world')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 7626.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.000455,
+                        "errored": null
+                    },
+                    "execution_result": "dlrow olleh\n",
+                    "expected_result": "dlrow olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def reverse_string(text: str) -> str - reverse the characters in a string\n</function-request>\n\n<function-arguments>\n    'hello world'\n</function-arguments>\n",
+                    "model": "openai~o1-preview",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "```python\ndef count_vowels(text: str) -> int:\n    count = 0\n    vowels = 'aeiouAEIOU'\n    for char in text:\n        if char in vowels:\n            count += 1\n    return count\n\nresult = count_vowels('beautiful')\nprint(result)\n```",
+                        "tokens_per_second": 0.0,
+                        "provider": "openai",
+                        "total_duration_ms": 8820.0,
+                        "load_duration_ms": 0.0,
+                        "inputAndOutputCost": 0.0005,
+                        "errored": null
+                    },
+                    "execution_result": "5.0",
+                    "expected_result": "5.0",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Code should be clean and readable.</instruction>\n    <instruction>Your code be immediately executed as is. Make sure it's runnable.</instruction>\n</instructions>\n\n<function-request>\n    def count_vowels(text: str) -> int - count the number of vowels in a string\n</function-request>\n\n<function-arguments>\n    'beautiful'\n</function-arguments>\n",
+                    "model": "openai~o1-preview",
+                    "correct": true,
+                    "index": 4
+                }
+            ],
+            "correct_count": 4,
+            "incorrect_count": 0,
+            "accuracy": 1.0,
+            "average_tokens_per_second": 0.0,
+            "average_total_duration_ms": 7797.5,
+            "average_load_duration_ms": 0.0,
+            "total_cost": 0.0018110000000000001
+        }
+    ],
+    "overall_correct_count": 32,
+    "overall_incorrect_count": 0,
+    "overall_accuracy": 1.0,
+    "average_tokens_per_second": 0.0,
+    "average_total_duration_ms": 3083.1875,
+    "average_load_duration_ms": 0.0
+}

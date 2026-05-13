@@ -1,0 +1,10 @@
+# Per-machine artifacts — don't commit
+server/.venv/
+server/__pycache__/
+server/modules/__pycache__/
+server/.env
+client/node_modules/
+client/dist/
+client/.vite/
+.DS_Store
+*.pyc
