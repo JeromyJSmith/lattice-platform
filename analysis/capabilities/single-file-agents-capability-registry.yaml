@@ -101,3 +101,18 @@ capabilities:
       first_proof: meta/harness/docs/sessions/2026-05-13-211909-sqlite-local-tallest-plant.json
       marker: meta/harness/state/_sqlite_local_v1.done.json
     notes: First proven 2026-05-13. Six-iteration loop, 6.81s elapsed, recovered cleanly from a Bonsai-8B validation error on iter 2 (model dropped table_name field). Also a path to query .bim files (SQLite under the hood per CLAUDE.md cardinal rules).
+
+  - id: sfa-polars-local-v1
+    surface: sidecar_job
+    name: Polars CSV single-file agent (local-model variant)
+    state: ACTIVE
+    description: LATTICE port of disler/single-file-agents sfa_polars_csv_agent_openai_v2.py. Preserves the 4-tool Disler surface (ListColumns, SampleCSV, RunTestPolarsCode, RunFinalPolarsCode). The driver writes Polars Python; the SFA evaluates it in an isolated `uv run --with polars` subprocess. Driver model bonsai-8b; Qwen-style fallback parser; auto-seeds an 8-plant CSV fixture mirroring the SQLite/DuckDB plants table.
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_polars_local_v1.py
+      - meta/harness/state/cache/plants.csv
+    invoked_by:
+      - uv run meta/harness/tools/sfa-eval/sfa_polars_local_v1.py
+    proof_evidence:
+      first_proof: meta/harness/docs/sessions/2026-05-13-212215-polars-local-tallest-plant.json
+      marker: meta/harness/state/_polars_local_v1.done.json
+    notes: First proven 2026-05-13. Four-iteration loop, 8.63s elapsed. Code-exec isolation via uv subprocess (no inherited env beyond what uv provides), 60s timeout per snippet, temp files cleaned up. Same plants fixture as sqlite/duckdb SFAs for cross-backend comparison.
