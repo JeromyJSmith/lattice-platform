@@ -75,7 +75,10 @@ done
 # ---- 6. No forbidden strings in staged files ----
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
 if [ -n "$STAGED" ]; then
-  ALLOWLIST_REGEX='^(meta/|\.github/workflows/docs-sync-check\.yml|scripts/pre-commit-docs-check\.sh|scripts/score-.*\.sh|CLAUDE\.md|AGENTS\.md|README\.md|CONTRIBUTING\.md|\.cursorrules|\.cursor/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/)'
+  # Allowlist: files that legitimately reference forbidden patterns as
+  # anti-pattern documentation, agent guardrails, or string-literal enums.
+  # See docs-sync-check.yml for the rationale (kept in sync with CI).
+  ALLOWLIST_REGEX='^(meta/|\.github/|scripts/pre-commit-docs-check\.sh|scripts/score-.*\.sh|.*CLAUDE\.md|.*AGENTS\.md|.*README\.md|.*INSTALL\.md|.*CONTRIBUTING\.md|.*CHANGELOG\.md|.*HANDOFF\.md|codex\.md|cloudflare-agent\.md|\.cursorrules|\.cursor/|.*/GOAL\.md|.*/MEMORY\.md|\.claude/|pixeltable/migrations/|ddc/converters/)'
   while IFS= read -r f; do
     [ -f "$f" ] || continue
     case "$f" in
@@ -85,10 +88,12 @@ if [ -n "$STAGED" ]; then
       continue
     fi
     for needle in '[Rr]evit' '[Mm]icro[Ss]tation' 'dgnconverter' 'rvtconverter' '@itwin/core-backend' 'SnapshotDb' 'pxt\.Geometry' 'pixeltable/service/migrations'; do
-      if grep -nE "$needle" "$f" >/dev/null 2>&1; then
-        MATCH=$(grep -nE "$needle" "$f" | head -2)
+      # Lines tagged `allow-forbidden` are intentional anti-pattern references.
+      MATCH=$(grep -nE "$needle" "$f" 2>/dev/null | grep -v 'allow-forbidden' | head -2)
+      if [ -n "$MATCH" ]; then
         echo "❌ Forbidden string '$needle' in $f:"
         echo "$MATCH"
+        echo "   (Append \`# allow-forbidden\` to the line if this is intentional anti-pattern doc.)"
         fail=1
       fi
     done

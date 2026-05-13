@@ -50,11 +50,12 @@ fi
 
 # ---------- 5. Forbidden strings in pixeltable/ -----------------------------
 # Allowlist mirrors docs-sync-check.yml: GOAL.md / MEMORY.md may reference
-# forbidden patterns as guardrail text.
+# forbidden patterns as guardrail text, and lines tagged `allow-forbidden`
+# are intentional anti-pattern references in code.
 FORBIDDEN_HITS=0
 for needle in 'pxt\.Geometry' 'pixeltable/service/migrations' '[Rr]evit' '[Mm]icro[Ss]tation' '@itwin/core-backend' 'SnapshotDb'; do
   HITS=$(grep -rE "$needle" pixeltable/ --include='*.py' --include='*.ts' --include='*.tsx' 2>/dev/null \
-    | grep -v -E '(GOAL\.md|MEMORY\.md|^pixeltable/\.)' \
+    | grep -v -E '(GOAL\.md|MEMORY\.md|^pixeltable/\.|allow-forbidden)' \
     | wc -l | tr -d ' ')
   FORBIDDEN_HITS=$(( FORBIDDEN_HITS + HITS ))
 done

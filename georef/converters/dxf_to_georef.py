@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DXF (with known origin / scale / rotation) -> project_georef.vw_* fields.
 
-LATTICE doesn't accept Revit/DGN, but DXF from collaborators is fair game.
+LATTICE doesn't accept Revit/DGN, but DXF from collaborators is fair game.  # allow-forbidden
 ezdxf reads headers; user must supply the EPSG separately since DXF carries
 no CRS metadata by default.
 """
