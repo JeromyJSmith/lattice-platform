@@ -191,6 +191,11 @@ if [ "$SCORE_AFTER" -gt "$SCORE_BEFORE" ]; then
   if [ -s "$PROPOSAL_FILE" ]; then
     git apply < "$PROPOSAL_FILE"
     echo "[harness] Proposal applied to working tree"
+    # Auto-promote DEFERRED capability rows wired by this diff
+    if command -v python3 &>/dev/null && [ -f "$REPO_ROOT/scripts/promote-from-diff.py" ]; then
+      echo "[harness] Running registry promotion from accepted diff..."
+      python3 "$REPO_ROOT/scripts/promote-from-diff.py" < "$PROPOSAL_FILE" || true
+    fi
   fi
   # Wave 2: log event_type=accepted to section_events + harness_proposals
 else
