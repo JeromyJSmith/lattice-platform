@@ -1,0 +1,1076 @@
+# spec-verified: GROVE_HARNESS/juniper2026 e282f49 2026-05-13
+tool: grove-harness
+tool_version: e282f49
+canonical_docs: /Volumes/PixelTable/GROVE_HARNESS/juniper2026/SPEC_INDEX.md
+last_harvested: 2026-05-13
+harvested_by: claude-sonnet-4-6
+generated_from:
+  harvest: analysis/capabilities/grove-harness-capability-harvest.md
+  matrix: analysis/capabilities/grove-harness-capability-matrix.md
+  builder: scripts/build-grove-registry.py
+
+capabilities:
+  - id: grove-sfa-extract-plant-positions
+    surface: cli_command
+    name: extract_plant_positions
+    state: DEFERRED
+    description: Extract Plant PIO positions from open VWX with geometry, coordinates, species record fields
+    source: vw_plugins/extract_plant_positions.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-extract-plant-positions
+    notes: "P-R; requires_vw=true; last_verified=2026-05-03; smoke: 4 plants found in 38 objects"
+
+  - id: grove-sfa-extract-landscape-area-composition
+    surface: cli_command
+    name: extract_landscape_area_composition
+    state: DEFERRED
+    description: Read landscape area records from VWX, emit species composition CSV and JSON
+    source: vw_plugins/extract_landscape_area_composition.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-extract-landscape-area-composition
+    notes: "P-R; requires_vw=true; last_verified=2026-05-03; smoke: 8 LAs, 33 rows"
+
+  - id: grove-sfa-diag-pio-inventory
+    surface: cli_command
+    name: diag_pio_inventory
+    state: DEFERRED
+    description: Audit all Plant Instance Objects in document, tabulate by PON/layer
+    source: vw_plugins/diag_pio_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-diag-pio-inventory
+    notes: "P-D; requires_vw=true; last_verified=2026-05-03; smoke: 6563 PIOs"
+
+  - id: grove-sfa-diag-landscape-area-records
+    surface: cli_command
+    name: diag_landscape_area_records
+    state: DEFERRED
+    description: Enumerate all landscape area records and their field contents
+    source: vw_plugins/diag_landscape_area_records.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-diag-landscape-area-records
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-apply-document-georef
+    surface: cli_command
+    name: apply_document_georef
+    state: DEFERRED
+    description: "Apply document-level georeference (EPSG/TM override); gate: backup required"
+    source: vw_plugins/apply_document_georef.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-apply-document-georef
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-bootstrap-plant-3d-pins
+    surface: cli_command
+    name: bootstrap_plant_3d_pins
+    state: DEFERRED
+    description: "Place 3D pin symbols at plant positions in live .vwx; gate: backup required"
+    source: vw_plugins/bootstrap_plant_3d_pins.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-bootstrap-plant-3d-pins
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-place-survey-stakes
+    surface: cli_command
+    name: place_survey_stakes
+    state: DEFERRED
+    description: "Place BOCO survey corners as symbols in live .vwx; gate: backup required"
+    source: vw_plugins/place_survey_stakes.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-place-survey-stakes
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-cleanup-vw-review-layers
+    surface: cli_command
+    name: cleanup_vw_review_layers
+    state: DEFERRED
+    description: Remove configured helper/review layers from live .vwx using template-driven lists
+    source: vw_plugins/cleanup_vw_review_layers.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-cleanup-vw-review-layers
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-normalize-vw-layer-frames
+    surface: cli_command
+    name: normalize_vw_layer_frames
+    state: DEFERRED
+    description: Audit layer frames and translate configured helper layers by negative user origin
+    source: vw_plugins/normalize_vw_layer_frames.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-normalize-vw-layer-frames
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-recover-vw-origin-georef
+    surface: cli_command
+    name: recover_vw_origin_georef
+    state: DEFERRED
+    description: Combined recovery pass for stale survey layers, helper translation, document georef reapply
+    source: vw_plugins/recover_vw_origin_georef.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: high
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-recover-vw-origin-georef
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-probe-file-health-check
+    surface: cli_command
+    name: probe_file_health_check
+    state: DEFERRED
+    description: Probe whether VW File Health Check web palette can be triggered programmatically
+    source: vw_plugins/probe_file_health_check.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: low
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-probe-file-health-check
+    notes: P-W; requires_vw=true; last_verified=null; gated write
+
+  - id: grove-sfa-audit-vw-origin-context
+    surface: cli_command
+    name: audit_vw_origin_context
+    state: DEFERRED
+    description: Read-only audit of model drift against internal and user origin with config-driven targeting
+    source: vw_plugins/audit_vw_origin_context.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-vw-origin-context
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-marpa-programmatic-place-true-plant
+    surface: cli_command
+    name: marpa_programmatic_place_true_plant
+    state: DEFERRED
+    description: Place plant using Plant Style Manager programmatically; wrapper pending
+    source: vw_plugins/marpa_programmatic_place_true_plant.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: high
+    risk: medium-high
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-marpa-programmatic-place-true-plant
+    notes: P-W; requires_vw=true; last_verified=null; unwrapped
+
+  - id: grove-sfa-ingest-landscape-area-composition
+    surface: cli_command
+    name: ingest_landscape_area_composition
+    state: DEFERRED
+    description: Ingest landscape area composition CSV into Pixeltable typed rows
+    source: ingest/ingest_landscape_area_composition.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-ingest-landscape-area-composition
+    notes: H-I; requires_vw=false; last_verified=2026-05-03
+
+  - id: grove-sfa-init-core-pixeltable-schema
+    surface: cli_command
+    name: init_core_pixeltable_schema
+    state: DEFERRED
+    description: Initialize live core schema lanes, skip optional DB schema when absent
+    source: schema/sfa_init_core_pixeltable_schema.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-init-core-pixeltable-schema
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-init-cost-schema
+    surface: cli_command
+    name: init_cost_schema
+    state: DEFERRED
+    description: Initialize typed cost-engine Pixeltable schema for budget/QTO/report workflows
+    source: schema/sfa_init_cost_schema.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-init-cost-schema
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-init-ledger
+    surface: cli_command
+    name: init_ledger
+    state: DEFERRED
+    description: Initialize OpenHarness DuckDB ledger and observability tables
+    source: ingest/sfa_init_ledger.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-init-ledger
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-init-caches
+    surface: cli_command
+    name: init_caches
+    state: DEFERRED
+    description: Bootstrap harness DuckDB cache files before refresh and visual QA rebuilds
+    source: harness/init_caches.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-init-caches
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-setup-grove
+    surface: cli_command
+    name: setup_grove
+    state: DEFERRED
+    description: Bootstrap local MCP files, env exports, and cache setup for fresh GROVE checkout
+    source: harness/setup.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-setup-grove
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-plant-supplier-specs
+    surface: cli_command
+    name: ingest_plant_supplier_specs
+    state: DEFERRED
+    description: Ingest plant supplier specifications into schema from external sources
+    source: ingest/ingest_plant_supplier_specs.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-ingest-plant-supplier-specs
+    notes: H-I; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-budget-ingest
+    surface: cli_command
+    name: budget_ingest
+    state: DEFERRED
+    description: Business-side typed budget ingest for cost engine
+    source: ingest/sfa_budget_ingest.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-budget-ingest
+    notes: H-I; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-build-grove-audit-manifest
+    surface: cli_command
+    name: build_grove_audit_manifest
+    state: DEFERRED
+    description: Host-side deterministic aggregator from audit markers to grove_audit_manifest.json
+    source: ingest/build_grove_audit_manifest.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-grove-audit-manifest
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-ifc
+    surface: cli_command
+    name: ingest_ifc
+    state: DEFERRED
+    description: Ingest IFC4.3 geometry and properties into Pixeltable; skip cleanly when absent
+    source: ingest/ingest_ifc.py
+    owner_harness: georef-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-ingest-ifc
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-dxf
+    surface: cli_command
+    name: ingest_dxf
+    state: DEFERRED
+    description: Ingest DXF or convertible DWG sheets; skip cleanly when inputs absent
+    source: ingest/ingest_dxf.py
+    owner_harness: georef-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-ingest-dxf
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-database
+    surface: cli_command
+    name: ingest_database
+    state: DEFERRED
+    description: Ingest typed VW database exports; skip cleanly when source absent
+    source: ingest/ingest_database.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-ingest-database
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-audit-manifest
+    surface: cli_command
+    name: ingest_audit_manifest
+    state: DEFERRED
+    description: Ingest grove_audit_manifest.json into typed source.audit_object_inventory_objects rows
+    source: ingest/ingest_audit_manifest.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-ingest-audit-manifest
+    notes: H-I; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-ingest-vw-extract
+    surface: cli_command
+    name: ingest_vw_extract
+    state: DEFERRED
+    description: Ingest VW extract data into Pixeltable; wrapper pending
+    source: ingest/ingest_vw_extract.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-ingest-vw-extract
+    notes: H-I; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-ingest-vw-safe-extract
+    surface: cli_command
+    name: ingest_vw_safe_extract
+    state: DEFERRED
+    description: Ingest VW safe extract data into Pixeltable; wrapper pending
+    source: ingest/ingest_vw_safe_extract.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-ingest-vw-safe-extract
+    notes: H-I; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-build-external-tool-indexes
+    surface: cli_command
+    name: build_external_tool_indexes
+    state: DEFERRED
+    description: Refresh external-tool source manifests and catalogs
+    source: harness/openharness/tools/external/build_external_tool_indexes.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-external-tool-indexes
+    notes: H-I; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-build-visual-qa-views
+    surface: cli_command
+    name: build_visual_qa_views
+    state: DEFERRED
+    description: Rebuild read-only visual QA DuckDB mart from audit manifest and ledger
+    source: ingest/build_visual_qa_views.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-visual-qa-views
+    notes: H-D; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-build-geojson-export
+    surface: cli_command
+    name: build_geojson_export
+    state: DEFERRED
+    description: Export manifest feature lane into GeoJSON without fabricated geometry
+    source: ingest/build_geojson_export.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-geojson-export
+    notes: H-D; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-reconcile-la-composition
+    surface: cli_command
+    name: reconcile_la_composition
+    state: DEFERRED
+    description: Compare landscape area composition against recorded state, report drift
+    source: ingest/reconcile_la_composition.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-reconcile-la-composition
+    notes: H-D; requires_vw=false; last_verified=2026-05-03
+
+  - id: grove-sfa-refresh-harness-cache
+    surface: cli_command
+    name: refresh_harness_cache
+    state: DEFERRED
+    description: Refresh harness DuckDB cache tables
+    source: ingest/refresh_harness_cache.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-refresh-harness-cache
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-budget-validate
+    surface: cli_command
+    name: budget_validate
+    state: DEFERRED
+    description: Cost-engine total reconciliation and review-governance validation
+    source: ingest/sfa_budget_validate.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-budget-validate
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-cost-views
+    surface: cli_command
+    name: cost_views
+    state: DEFERRED
+    description: DuckDB cost mart and downstream cost views
+    source: ingest/sfa_cost_views.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-cost-views
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-build-qto-views
+    surface: cli_command
+    name: build_qto_views
+    state: DEFERRED
+    description: Budget-side QTO record build and QTO mart refresh
+    source: ingest/sfa_build_qto_views.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-build-qto-views
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-qto-reconcile
+    surface: cli_command
+    name: qto_reconcile
+    state: DEFERRED
+    description: QTO / BOQ reconciliation artifact refresh
+    source: ingest/sfa_qto_reconcile.py
+    owner_harness: ddc-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-sfa-qto-reconcile
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-index-external-tool-repos
+    surface: cli_command
+    name: index_external_tool_repos
+    state: DEFERRED
+    description: Compact SFA/skill catalog refresh for external-tool lane
+    source: harness/openharness/tools/external/sfa_index_repos.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-index-external-tool-repos
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-promote-external-tool-skills
+    surface: cli_command
+    name: promote_external_tool_skills
+    state: DEFERRED
+    description: Promotion candidate generation for external-tool sources
+    source: harness/openharness/tools/external/sfa_promote_skills.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-promote-external-tool-skills
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-derive-scene-plant-locations
+    surface: cli_command
+    name: derive_scene_plant_locations
+    state: DEFERRED
+    description: Derive scene rows from nested planting DXF inserts; skip cleanly when absent
+    source: ingest/derive_scene_plant_locations.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-derive-scene-plant-locations
+    notes: H-D; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-derive-scene-plant-locations-from-dxf
+    surface: cli_command
+    name: derive_scene_plant_locations_from_dxf
+    state: DEFERRED
+    description: Derive scene rows from typed source.dxf_inserts; skip cleanly when absent
+    source: ingest/derive_scene_plant_locations_from_dxf.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-derive-scene-plant-locations-from-dxf
+    notes: H-D; requires_vw=false; last_verified=2026-05-04
+
+  - id: grove-sfa-derive-plant-tool-exact-payload
+    surface: cli_command
+    name: derive_plant_tool_exact_payload
+    state: DEFERRED
+    description: Build exact plant tool payload from source species; wrapper pending
+    source: ingest/derive_plant_tool_exact_payload.py
+    owner_harness: meta-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-derive-plant-tool-exact-payload
+    notes: H-D; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-qa-plant-exactness
+    surface: cli_command
+    name: qa_plant_exactness
+    state: DEFERRED
+    description: QA pass/fail report for plant exactness criteria; wrapper pending
+    source: ingest/qa_plant_exactness.py
+    owner_harness: meta-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-qa-plant-exactness
+    notes: H-D; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-build-plant-tool-batch-plan
+    surface: cli_command
+    name: build_plant_tool_batch_plan
+    state: DEFERRED
+    description: Build batching plan for plant tool execution; wrapper pending
+    source: ingest/build_plant_tool_batch_plan.py
+    owner_harness: meta-harness
+    matrix_decision: defer
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-build-plant-tool-batch-plan
+    notes: H-D; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-record-plant-sync-tables
+    surface: cli_command
+    name: record_plant_sync_tables
+    state: DEFERRED
+    description: Record plant sync table state snapshots; wrapper pending
+    source: ingest/record_plant_sync_tables.py
+    owner_harness: meta-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-record-plant-sync-tables
+    notes: H-D; requires_vw=false; last_verified=null; unwrapped
+
+  - id: grove-sfa-build-project-report
+    surface: cli_command
+    name: build_project_report
+    state: DEFERRED
+    description: Static HTML project intelligence report bundle
+    source: exports/sfa_build_project_report.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-project-report
+    notes: H-O; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-build-tool-catalog
+    surface: cli_command
+    name: build_tool_catalog
+    state: DEFERRED
+    description: Static HTML harness tool catalog with callable-now and on-deck sections
+    source: harness/sfa_build_tool_catalog.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-tool-catalog
+    notes: H-O; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-drop-zone-daemon
+    surface: cli_command
+    name: drop_zone_daemon
+    state: DEFERRED
+    description: Long-running drop-zone watcher with start/stop/status lifecycle actions
+    source: harness/drop_zone_daemon.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: medium
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-drop-zone-daemon
+    notes: H-O; requires_vw=false; last_verified=null; daemon variant
+
+  - id: grove-sfa-build-meta-harness-views
+    surface: cli_command
+    name: build_meta_harness_views
+    state: DEFERRED
+    description: Refresh read-only meta-harness health, closure, and failure views
+    source: harness/build_meta_harness_views.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-build-meta-harness-views
+    notes: H-D; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-lookup-ifc-class
+    surface: cli_command
+    name: lookup_ifc_class
+    state: DEFERRED
+    description: Scrape buildingsmart.org for IFC class definitions; B-R only, needs Chrome
+    source: harness/openharness/tools/browser/sfa_lookup_ifc_class.py
+    owner_harness: genai-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-lookup-ifc-class
+    notes: B-R; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-scrape-plant-supplier
+    surface: cli_command
+    name: scrape_plant_supplier
+    state: DEFERRED
+    description: Scrape plant supplier websites for species specs + H-I ingest pipeline
+    source: vw_plugins/scrape_plant_supplier.py
+    owner_harness: genai-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-3-3d-assets
+    tracking_issue: TBD-grove-sfa-scrape-plant-supplier
+    notes: B-R; requires_vw=false; last_verified=null
+
+  - id: grove-sfa-audit-georeference
+    surface: cli_command
+    name: audit_georeference
+    state: DEFERRED
+    description: Audit document georeference (EPSG/TM); read-only diagnostic
+    source: vw_plugins/audit_georeference.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-georeference
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-ifc-assignment
+    surface: cli_command
+    name: audit_ifc_assignment
+    state: DEFERRED
+    description: Audit IFC class assignments across all objects in document
+    source: vw_plugins/audit_ifc_assignment.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-ifc-assignment
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-layer-class-inventory
+    surface: cli_command
+    name: audit_layer_class_inventory
+    state: DEFERRED
+    description: Enumerate all layers and class memberships in document
+    source: vw_plugins/audit_layer_class_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-layer-class-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-plant-instance-report
+    surface: cli_command
+    name: audit_plant_instance_report
+    state: DEFERRED
+    description: Tabulate all plant instances by species; read-only report
+    source: vw_plugins/audit_plant_instance_report.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-plant-instance-report
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-plant-style-inventory
+    surface: cli_command
+    name: audit_plant_style_inventory
+    state: DEFERRED
+    description: Enumerate all plant styles and their counts
+    source: vw_plugins/audit_plant_style_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-plant-style-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-symbol-inventory
+    surface: cli_command
+    name: audit_symbol_inventory
+    state: DEFERRED
+    description: Enumerate all symbols by folder and count
+    source: vw_plugins/audit_symbol_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-symbol-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-record-field-inventory
+    surface: cli_command
+    name: audit_record_field_inventory
+    state: DEFERRED
+    description: Enumerate all record types and their field definitions
+    source: vw_plugins/audit_record_field_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-record-field-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-object-inventory
+    surface: cli_command
+    name: audit_object_inventory
+    state: DEFERRED
+    description: Enumerate all objects with type counts
+    source: vw_plugins/audit_object_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-object-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-record-format-inventory
+    surface: cli_command
+    name: audit_record_format_inventory
+    state: DEFERRED
+    description: Enumerate all record formats and field bindings
+    source: vw_plugins/audit_record_format_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-record-format-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-site-model
+    surface: cli_command
+    name: audit_site_model
+    state: DEFERRED
+    description: Enumerate all site model records and their extents
+    source: vw_plugins/audit_site_model.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-site-model
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-audit-worksheet-inventory
+    surface: cli_command
+    name: audit_worksheet_inventory
+    state: DEFERRED
+    description: Enumerate all worksheets and their dimensions
+    source: vw_plugins/audit_worksheet_inventory.py
+    owner_harness: vw-itwin-harness
+    matrix_decision: defer
+    value: medium
+    risk: medium
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-sfa-audit-worksheet-inventory
+    notes: P-D; requires_vw=true; last_verified=null
+
+  - id: grove-sfa-pattern
+    surface: pattern
+    name: SFA Pattern Contract
+    state: DEFERRED
+    description: PEP 723 + dispatch() + marker JSON L1 SFA contract with 10 variant classes
+    source: SPEC_SFA_PATTERN.md
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-sfa-pattern
+    notes: Architecture contract binding all L1 SFAs; defines forbidden top-level imports, modal dialog rule, marker shape
+
+  - id: grove-l2-wrapper-pattern
+    surface: pattern
+    name: L2 Wrapper Pattern Contract
+    state: DEFERRED
+    description: 6-slot Pydantic-typed BaseTool wrapper for SFA→MCP exposure (tool card, input, invoke, output, ledger, retry)
+    source: "SPEC_OPENHARNESS_TOOL_WRAPPER.md` + `harness/openharness/tools/_template.py"
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-l2-wrapper-pattern
+    notes: "Architecture contract; template at _template.py; every concrete wrapper in sfa_*.py subclasses SfaBaseTool"
+
+  - id: grove-variant-taxonomy
+    surface: doctrine
+    name: SFA Variant Taxonomy
+    state: DEFERRED
+    description: P-R / P-D / P-W / H-I / H-D / H-O / B-R / B-I / B-D / B-W classification of environment, mutation, timeout, retry defaults
+    source: "SPEC_SFA_PATTERN.md` + `TOOL_MANIFEST.yaml"
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-variant-taxonomy
+    notes: "10 variants with risk classes: P=Polymorphic (VW), H=Host, B=Browser; D=Diagnostic, R=Read, W=Write, I=Ingest, O=Orchestrator"
+
+  - id: grove-tool-manifest-format
+    surface: pattern
+    name: TOOL_MANIFEST Format
+    state: DEFERRED
+    description: Canonical registry with id / variant / l1_file / l2_wrapper / marker_path / canonical_fields / requires_vw / last_verified per tool
+    source: TOOL_MANIFEST.yaml
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-tool-manifest-format
+    notes: Single source of truth; drives tool_registry.discover(), mcp_server, VW menu, lint baseline
+
+  - id: grove-marker-contract
+    surface: pattern
+    name: Marker JSON Handoff Contract
+    state: DEFERRED
+    description: "data/_<tool>.done.json marker as L1→L2 handoff with required ok+timestamp fields plus domain-specific canonical_fields"
+    source: "SPEC_SFA_PATTERN.md` §3"
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-marker-contract
+    notes: Marker authority governed by DESIGN_STATE_MODEL.md; markers are non-authoritative ephemeral artifacts
+
+  - id: grove-dispatch-helper
+    surface: cli_command
+    name: Dispatch Helper
+    state: DEFERRED
+    description: dispatch(script_path, main_fn, marker_path) helper for dual-path SFA execution (host vs VW)
+    source: vw_plugins/lib/sfa.py
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-dispatch-helper
+    notes: "Canonical for P-* variants; detects environment via is_inside_<env>() guard; enables same SFA file on host or inside bridge"
+
+  - id: grove-marimo-control-plane
+    surface: pattern
+    name: Marimo Reactive Control Plane
+    state: DEFERRED
+    description: Reactive Marimo notebook for orchestrating SFAs + viewing DuckDB cache results + ledger events
+    source: harness/marimo/grove_control.py
+    owner_harness: frontend-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: awaiting-upstream-dep
+    target_phase: phase-2-vw-bridge
+    tracking_issue: TBD-grove-marimo-control-plane
+    notes: Operator surface; reads from harness DuckDB caches and OpenHarness ledger
+
+  - id: grove-duckdb-cache-substrate
+    surface: pattern
+    name: DuckDB Cache Substrate
+    state: DEFERRED
+    description: 5 DuckDB cache databases under ~/.juniper2026/harness-cache/ as read-only marts for harness tools
+    source: "harness/init_caches.py` + `GROVE_ROOT/harness-cache/INDEX.yaml"
+    owner_harness: meta-harness
+    matrix_decision: candidate
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-grove-duckdb-cache-substrate
+    notes: Core analytical substrate; initialized by H-I init_caches SFA; refreshed by H-D refresh_harness_cache
+
+  - id: grove-marimo-cost-engine
+    surface: pattern
+    name: Marimo Cost Engine Notebook
+    state: DEFERRED
+    description: Reactive Marimo notebook for cost calculations, budget validation, QTO reconciliation
+    source: harness/marimo/grove_cost_engine.py
+    owner_harness: frontend-harness
+    matrix_decision: defer
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-4-ddc-integration
+    tracking_issue: TBD-grove-marimo-cost-engine
+    notes: Surfaces cost-engine Pixeltable schema and DuckDB cost mart views
