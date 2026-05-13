@@ -15,91 +15,122 @@ harvested_by: claude-opus-4-7 (LATTICE meta-harness session, Move B)
 # never touches the in-tab model's weights — they live entirely in the
 # browser. See meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py.
 #
-# All rows start DEFERRED with reason=experimental-upstream until the first
-# real proof run lands evidence on disk. Promotion happens in the same
-# commit as the marker JSON + session JSON the SFA emits.
+# First proof run 2026-05-13: 3 iters, 27.3s elapsed, 1 boot + 1 in-tab
+# generation, server-orchestrated end-to-end. Marker at
+# meta/harness/state/_in_tab_bonsai_v1.done.json.
 
 capabilities:
   - id: transformersjs-pipeline-text-generation
     surface: js_api
     name: pipeline("text-generation", model_id, opts)
-    state: DEFERRED
+    state: ACTIVE
     description: Async pipeline factory that downloads ONNX weights and returns a callable generator.
     source: https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestask-model-options
     owner_harness: meta-harness
     value: high
     risk: medium
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-pipeline-text-generation
-    notes: First boot downloads weights (~hundreds of MB); subsequent boots hit browser cache.
+    wired_at:
+      - meta/harness/in-tab-llm/bonsai-host.html
+    invoked_by:
+      - sfa_in_tab_bonsai_v1.py (drives via window.bonsai.generate)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py --prompt "..." --boot-timeout 300
+      evidence: meta/harness/docs/sessions/2026-05-13-211519-in-tab-bonsai-haiku.json
+      verified_at: 2026-05-13
+    notes: First boot downloads weights (~hundreds of MB); subsequent boots hit browser cache. First successful run completed in 27.3s total elapsed.
 
   - id: transformersjs-webgpu-device
     surface: js_api
     name: '{ device: "webgpu" }'
-    state: DEFERRED
+    state: ACTIVE
     description: Pipeline option that selects the WebGPU backend for inference; falls back to WASM if not available.
     source: https://huggingface.co/docs/transformers.js/guides/webgpu
     owner_harness: meta-harness
     value: high
     risk: medium
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-webgpu-device
-    notes: WebGPU requires Chrome 113+ on macOS/Linux/Windows. localhost is a secure context per W3C spec so HTTP works for dev.
+    wired_at:
+      - meta/harness/in-tab-llm/bonsai-host.html (detectWebGPU + pipeline opts)
+    invoked_by:
+      - sfa_in_tab_bonsai_v1.py (BootInTabBonsai reads back window.bonsai.device)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py --prompt "..." --boot-timeout 300
+      evidence: meta/harness/state/_in_tab_bonsai_v1.done.json
+      verified_at: 2026-05-13
+    notes: WebGPU requires Chrome 113+ on macOS/Linux/Windows. localhost is a secure context per W3C spec so HTTP works for dev — no TLS required.
 
   - id: transformersjs-progress-callback
     surface: js_api
     name: 'pipeline(..., { progress_callback })'
-    state: DEFERRED
+    state: ACTIVE
     description: Per-file download progress callback fed into the host UI for visible boot status.
     source: https://huggingface.co/docs/transformers.js/api/utils/hub#progresscallbackdata
     owner_harness: meta-harness
     value: medium
     risk: low
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-progress-callback
+    wired_at:
+      - meta/harness/in-tab-llm/bonsai-host.html (progress_callback drives the bar + log)
+    invoked_by:
+      - bonsai-host.html boot()
+    proof:
+      command: open http://127.0.0.1:8765/bonsai-host.html  # serve.py first
+      evidence: meta/harness/in-tab-llm/bonsai-host.html
+      verified_at: 2026-05-13
     notes: Surfaces per-file ONNX shard download progress so a human watching the page can see what's happening.
 
   - id: transformersjs-cdn-esm-import
     surface: js_api
     name: 'import * from "https://cdn.jsdelivr.net/npm/@huggingface/transformers"'
-    state: DEFERRED
+    state: ACTIVE
     description: ESM module import directly from a CDN; no bundler, no node_modules.
     source: https://huggingface.co/docs/transformers.js/installation
     owner_harness: meta-harness
     value: high
     risk: low
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-cdn-esm-import
+    wired_at:
+      - meta/harness/in-tab-llm/bonsai-host.html (top-level dynamic import)
+    invoked_by:
+      - bonsai-host.html
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py --prompt "..." --boot-timeout 300
+      evidence: meta/harness/docs/sessions/2026-05-13-211519-in-tab-bonsai-haiku.json
+      verified_at: 2026-05-13
     notes: First-load requires network. Subsequent loads served by browser cache. No bundler/build step required.
 
   - id: transformersjs-quantized-onnx-1bit-bonsai
     surface: pattern
     name: onnx-community/Ternary-Bonsai-1.7B-ONNX
-    state: DEFERRED
+    state: ACTIVE
     description: Ternary-quantized 1.7B Bonsai exported to ONNX for transformers.js compatibility.
     source: https://huggingface.co/onnx-community/Ternary-Bonsai-1.7B-ONNX
     owner_harness: meta-harness
     value: high
     risk: low
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-quantized-onnx-1bit-bonsai
+    wired_at:
+      - meta/harness/in-tab-llm/bonsai-host.html (MODEL_ID constant)
+    invoked_by:
+      - sfa_in_tab_bonsai_v1.py (drives this model end-to-end)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py --prompt "..." --boot-timeout 300
+      evidence: meta/harness/docs/sessions/2026-05-13-211519-in-tab-bonsai-haiku.json
+      verified_at: 2026-05-13
     notes: 4B and 8B ONNX exports also exist (onnx-community/Ternary-Bonsai-{4B,8B}-ONNX) — could be swapped via the MODEL_ID constant in bonsai-host.html.
 
   - id: transformersjs-server-orchestrated-pattern
     surface: pattern
     name: Server-orchestrated in-tab inference
-    state: DEFERRED
+    state: ACTIVE
     description: Server-side driver model orchestrates browser-side inference via browser-harness js(); the driver never sees the in-tab model's weights or output tokens directly, just the text result returned by the tool.
     source: meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py
     owner_harness: meta-harness
     value: high
     risk: medium
-    reason: experimental-upstream
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-transformersjs-server-orchestrated-pattern
-    notes: Future foundation for browser-resident agents whose compute lives entirely on the user's device while server keeps the loop coherent.
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py (RunInBrowserLLMArgs tool)
+      - meta/harness/in-tab-llm/bonsai-host.html (window.bonsai.generate)
+    invoked_by:
+      - sfa_in_tab_bonsai_v1.py compute loop
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py --prompt "..." --boot-timeout 300
+      evidence: meta/harness/docs/sessions/2026-05-13-211519-in-tab-bonsai-haiku.json
+      verified_at: 2026-05-13
+    notes: Future foundation for browser-resident agents whose compute lives entirely on the user's device while server keeps the loop coherent. First proof 2026-05-13 — 27.3s end-to-end including model boot.

@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T21:15:19+00:00",
+  "driver_model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "host_url": "http://127.0.0.1:8765/bonsai-host.html",
+  "prompt": "Use the in-tab Bonsai to write a one-line haiku about Pixeltable.",
+  "compute_iterations": 3,
+  "elapsed_seconds": 27.3,
+  "boot_calls": 1,
+  "in_tab_generations": 1,
+  "final_answer": "Pixeltable is a powerful tool for creating and editing pixel art. It's easy to use and has a wide range of features. Pixeltable is a must-have for anyone who loves pixel art.",
+  "error": null
+}
