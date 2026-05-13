@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T21:19:09+00:00",
+  "driver_model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "db_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/state/cache/sfa-eval.sqlite",
+  "db_seeded_this_run": true,
+  "prompt": "What is the tallest plant in the database, and what is its mature height in feet?",
+  "compute_iterations": 6,
+  "elapsed_seconds": 6.81,
+  "final_sql_query": "SELECT common_name, mature_height_ft FROM plants ORDER BY mature_height_ft DESC LIMIT 1;",
+  "final_answer": "('Bald Cypress', 100.0)",
+  "error": null
+}
