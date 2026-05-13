@@ -66,3 +66,6 @@ Thumbs.db
 *.bak
 .cache/
 .gstack/
+
+# ---- active project pointer (machine-local, never committed) ----
+.lattice-active-project

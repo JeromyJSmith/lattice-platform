@@ -1,0 +1,29 @@
+# LATTICE Project Registry
+# -------------------------
+# Managed by: lattice project init | switch | list
+# Do not edit by hand — use the CLI.
+#
+# Protection model
+# ----------------
+#   lattice/projects/{id}/   — Pixeltable namespace owned by this project
+#   lattice/knowledge/       — shared read-only cross-project tables
+#   All API routes require project_id in the path (/v1/projects/{id}/...)
+#   This file is the ONLY place in LATTICE that references external paths.
+
+projects:
+- id: juniper2026
+  name: Grove — Juniper 2026
+  path: /Volumes/PixelTable/GROVE_HARNESS/juniper2026
+  pixeltable_namespace: lattice/projects/juniper2026
+  added: '2026-05-13'
+  vw_files:
+  - "data/grove_extract"
+  - "ingest"
+
+- id: 918-juniper
+  name: MARPA — 918 Juniper Avenue
+  path: /Volumes/PixelTable/MARPA_918_JUNIPER
+  pixeltable_namespace: lattice/projects/918-juniper
+  added: '2026-05-13'
+  vw_files:
+  - "data/Vectorworks Files/_Farber-Haines [2521] (1).ifc"
