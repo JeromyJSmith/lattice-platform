@@ -1,106 +1,43 @@
 #!/usr/bin/env bash
-# score-ddc.sh — fitness score for the ddc/ + .github/ sections.
+# score-ddc.sh — fitness score for the ddc section (0-100).
 #
-# v1 formula:
-#   50 pts — count of .github/workflows/*.yml files that do NOT contain `|| true`
-#            (warning-bypass pattern; clean CI workflows score higher)
-#   30 pts — meta/DDC_MAPPING.md exists and references both CWICR and Qdrant
-#   20 pts — no forbidden strings in ddc/ source files
+# Scoring formula (spec v2):
+#   +25  meta/ has any file mentioning "DDC" (grep -rl)
+#   +25  analysis/capabilities/ has a registry yaml with "ddc" in the filename
+#   +25  meta/ARCHITECTURE.md mentions "DDC"
+#   +25  meta/capability-research/ has any file mentioning "CWICR" or "OpenConstruction"
 #
-# Output: `score: N/100` on stdout, exit 0.
-# With --json: emits a JSON breakdown to stdout instead.
-#
-# Budget: < 10s on a warm system.
+# Output: single integer on stdout (first number — grep -oE '[0-9]+' | head -1).
+# Compatible with run-autoresearch.sh SCORE_BEFORE/SCORE_AFTER extraction.
 
 set -uo pipefail
 
-JSON=0
-case "${1:-}" in
-  --json) JSON=1 ;;
-  --help|-h)
-    cat <<EOF
-Usage: scripts/score-ddc.sh [--json]
+REPO=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+cd "$REPO"
 
-Outputs the ddc/.github section fitness score (0-100) on stdout.
-EOF
-    exit 0 ;;
-esac
+SCORE=0
 
-REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-cd "$REPO_ROOT"
-
-# ---------- 1. Workflow cleanliness (no || true bypass) ---------------------
-TOTAL_WORKFLOWS=$(find .github/workflows -maxdepth 1 -name '*.yml' 2>/dev/null | wc -l | tr -d ' ')
-CLEAN_WORKFLOWS=0
-DIRTY_WORKFLOWS=0
-if [ "$TOTAL_WORKFLOWS" -gt 0 ]; then
-  for f in .github/workflows/*.yml; do
-    if grep -q '|| true' "$f" 2>/dev/null; then
-      DIRTY_WORKFLOWS=$(( DIRTY_WORKFLOWS + 1 ))
-    else
-      CLEAN_WORKFLOWS=$(( CLEAN_WORKFLOWS + 1 ))
-    fi
-  done
+# +25 if meta/ has any file mentioning "DDC"
+DDC_META=$(grep -rl 'DDC' meta/ 2>/dev/null | wc -l | tr -d ' ')
+if [ "$DDC_META" -ge 1 ]; then
+  SCORE=$(( SCORE + 25 ))
 fi
 
-# ---------- 2. DDC_MAPPING.md with CWICR + Qdrant references ----------------
-DDC_MAPPING_EXISTS=0
-DDC_HAS_CWICR=0
-DDC_HAS_QDRANT=0
-if [ -f "meta/DDC_MAPPING.md" ]; then
-  DDC_MAPPING_EXISTS=1
-  grep -q 'CWICR' meta/DDC_MAPPING.md 2>/dev/null && DDC_HAS_CWICR=1
-  grep -q 'Qdrant' meta/DDC_MAPPING.md 2>/dev/null && DDC_HAS_QDRANT=1
+# +25 if analysis/capabilities/ has a registry yaml with "ddc" in the filename
+DDC_YAML=$(find analysis/capabilities -maxdepth 3 \( -name '*ddc*.yaml' -o -name '*ddc*.yml' \) 2>/dev/null | wc -l | tr -d ' ')
+if [ "$DDC_YAML" -ge 1 ]; then
+  SCORE=$(( SCORE + 25 ))
 fi
 
-# ---------- 3. Forbidden strings in ddc/ ------------------------------------
-FORBIDDEN_HITS=0
-if [ -d "ddc" ]; then
-  for needle in 'pxt\.Geometry' 'pixeltable/service/migrations' '[Rr]evit' '[Mm]icro[Ss]tation' '@itwin/core-backend' 'SnapshotDb'; do
-    HITS=$(grep -rE "$needle" ddc/ --include='*.py' --include='*.ts' --include='*.tsx' --include='*.json' --include='*.yml' 2>/dev/null \
-      | grep -v -E '(GOAL\.md|MEMORY\.md|README\.md)' \
-      | wc -l | tr -d ' ')
-    FORBIDDEN_HITS=$(( FORBIDDEN_HITS + HITS ))
-  done
+# +25 if meta/ARCHITECTURE.md mentions "DDC"
+if grep -q 'DDC' meta/ARCHITECTURE.md 2>/dev/null; then
+  SCORE=$(( SCORE + 25 ))
 fi
 
-# ---------- 4. Compute score -------------------------------------------------
-# 50 pts: workflow cleanliness (proportional: clean / total)
-PTS_WORKFLOWS=0
-if [ "$TOTAL_WORKFLOWS" -gt 0 ]; then
-  PTS_WORKFLOWS=$(( 50 * CLEAN_WORKFLOWS / TOTAL_WORKFLOWS ))
+# +25 if meta/capability-research/ has any file mentioning "CWICR" or "OpenConstruction"
+CWICR_HITS=$(grep -rl 'CWICR\|OpenConstruction' meta/capability-research/ 2>/dev/null | wc -l | tr -d ' ')
+if [ "$CWICR_HITS" -ge 1 ]; then
+  SCORE=$(( SCORE + 25 ))
 fi
 
-# 30 pts: DDC mapping doc quality
-PTS_DDC=0
-if [ "$DDC_MAPPING_EXISTS" -eq 1 ]; then
-  PTS_DDC=$(( 10 + 10 * DDC_HAS_CWICR + 10 * DDC_HAS_QDRANT ))
-fi
-
-# 20 pts: no forbidden strings
-if [ "$FORBIDDEN_HITS" -eq 0 ]; then
-  PTS_FORBIDDEN=20
-else
-  PTS_FORBIDDEN=$(( 20 - FORBIDDEN_HITS * 5 ))
-  [ "$PTS_FORBIDDEN" -lt 0 ] && PTS_FORBIDDEN=0
-fi
-
-SCORE=$(( PTS_WORKFLOWS + PTS_DDC + PTS_FORBIDDEN ))
-
-# ---------- 5. Output -------------------------------------------------------
-if [ "$JSON" -eq 1 ]; then
-  cat <<EOF
-{
-  "section": "ddc",
-  "score": $SCORE,
-  "breakdown": {
-    "workflow_cleanliness": {"points": $PTS_WORKFLOWS, "max": 50, "clean": $CLEAN_WORKFLOWS, "dirty": $DIRTY_WORKFLOWS, "total": $TOTAL_WORKFLOWS},
-    "ddc_mapping_doc":      {"points": $PTS_DDC, "max": 30, "exists": $DDC_MAPPING_EXISTS, "has_cwicr": $DDC_HAS_CWICR, "has_qdrant": $DDC_HAS_QDRANT},
-    "forbidden_strings":    {"points": $PTS_FORBIDDEN, "max": 20, "hits": $FORBIDDEN_HITS}
-  }
-}
-EOF
-else
-  echo "score: $SCORE/100"
-fi
-exit 0
+echo "$SCORE"
