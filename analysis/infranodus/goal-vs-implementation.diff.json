@@ -1,9 +1,107 @@
 {
-  "dry_run": true,
-  "corpora": [
-    "goals",
-    "implementation"
-  ],
-  "gaps": [],
-  "note": "Run without --dry and with INFRANODUS_API_KEY set to populate."
+  "generated_at": "2026-05-13T23:12:45.793778Z",
+  "corpus_a": "meta/harness/GOAL.md",
+  "corpus_b": "meta/harness/CURRENT-STATE.md",
+  "api_endpoint": "https://infranodus.com/api/v1/graphAndStatements",
+  "goal_vs_implementation_diff": {
+    "content_gaps": [
+      "Gap 1: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 4. Global Score (score global sh script pt output itwin weight)",
+      "Gap 2: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 5. Cycle Phase (cycle phase invoke add id cron manually exit)",
+      "Gap 3: 1. Section Drift (section scoring land event drift rationale healthy trend) -> 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain)"
+    ],
+    "main_topics": [
+      "1. Section Drift: section scoring land event drift rationale healthy trend (3 | 18% | 23%)",
+      "2. Harness Lattice: harness meta lattice row goal emit json snapshot (1 | 11% | 22%)",
+      "3. Proposal Sandbox: proposal apply ratchet reject error sandbox git plain (4 | 17% | 15%)",
+      "4. Global Score: score global sh script pt output itwin weight (0 | 13% | 15%)",
+      "5. Cycle Phase: cycle phase invoke add id cron manually exit (5 | 15% | 13%)",
+      "6. Autoresearch Run: autoresearch run runner loop flock bootstrap tmp startup (8 | 10% | 6%)",
+      "7. Migration Write: write migration follow average result landed rule (7 | 5% | 3%)",
+      "8. Change File: include file diff change evaluate call unified claude (6 | 6% | 1%)",
+      "9. Fitness Function: fitness function (2 | 1% | 0%)",
+      "10. Action Catalog: action catalog (9 | 1% | 0%)",
+      "11. Production Table: table production (10 | 1% | 0%)"
+    ],
+    "top_influential_nodes": [
+      {
+        "node": "section",
+        "bc": 0.4536806941169357,
+        "degree": 32
+      },
+      {
+        "node": "harness",
+        "bc": 0.4184049821633714,
+        "degree": 14
+      },
+      {
+        "node": "score",
+        "bc": 0.21895217365016026,
+        "degree": 21
+      }
+    ],
+    "modularity": 0.5765749007936507,
+    "diversity_stats": {
+      "diversity_score": "diversified",
+      "modularity_score": "high",
+      "too_focused_on_top_nodes": false,
+      "too_focused_on_top_clusters": false,
+      "ratio_of_top_nodes_influence_by_betweenness": 0.39,
+      "top_nodes_entropy": 1.584962500721156,
+      "ratio_of_top_cluster_influence_by_betweenness": 0.23,
+      "total_clusters": 11,
+      "fair_influence_by_cluster": 0.09
+    },
+    "graph_summary": "<Main Concepts (concept_degree | concept_betweenness_centrality | concept_topic_id)>: \n section (32 | 0.4537 | 3), harness (14 | 0.4184 | 1), score (21 | 0.2190 | ), cycle (20 | 0.1850 | 5), proposal (11 | 0.1771 | 4), meta (6 | 0.0686 | 1), global (10 | 0.0678 | ), phase (4 | 0.0650 | 5), sh (12 | 0.0628 | ), write (6 | 0.0624 | 7), lattice (6 | 0.0610 | 1), autoresearch (6 | 0.0543 | 8), apply (6 | 0.0507 | 4), ratchet (10 | 0.0476 | 4), run (6 | 0.0413 | 8), scoring (4 | 0.0371 | 3) \n </MainConcepts> \n\n <MainTopics (topic_id | cluster_influence_by_degree_ratio | cluster_influence_by_betweenness_ratio)>: \n 1. Section Drift: section scoring land event drift rationale healthy trend (3 | 18% | 23%)\n2. Harness Lattice: harness meta lattice row goal emit json snapshot (1 | 11% | 22%)\n3. Proposal Sandbox: proposal apply ratchet reject error sandbox git plain (4 | 17% | 15%)\n4. Global Score: score global sh script pt output itwin weight (0 | 13% | 15%)\n5. Cycle Phase: cycle phase invoke add id cron manually exit (5 | 15% | 13%)\n6. Autoresearch Run: autoresearch run runner loop flock bootstrap tmp startup (8 | 10% | 6%)\n7. Migration Write: write migration follow average result landed rule (7 | 5% | 3%)\n8. Change File: include file diff change evaluate call unified claude (6 | 6% | 1%)\n9. Fitness Function: fitness function (2 | 1% | 0%)\n10. Action Catalog: action catalog (9 | 1% | 0%)\n11. Production Table: table production (10 | 1% | 0%) \n </MainTopics> \n\n <TopicalGaps>: \n Gap 1: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 4. Global Score (score global sh script pt output itwin weight)\nGap 2: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 5. Cycle Phase (cycle phase invoke add id cron manually exit)\nGap 3: 1. Section Drift (section scoring land event drift rationale healthy trend) -> 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) \n </TopicalGaps> \n\n <ConceptualGateways> \n harness\nphase\nproposal\nsection\nadd\nland\ninvoke\nmeta \n </ConceptualGateways> \n\n <Relations>: \n 1) global <-> score\n2) script <-> score\n3) lattice <-> harness\n4) meta <-> harness\n5) section <-> event\n6) row <-> lattice\n7) ratchet <-> error\n8) harness <-> section\n9) bash <-> meta\n10) harness <-> bootstrap\n11) bootstrap <-> run\n12) run <-> autoresearch \n </Relations> \n <DiversityStatistics>:\n        Modularity: 0.58 \n        Modularity Score: high \n        Top concept nodes diversified\n        Top clusters diversified\n        Ratio of top nodes influence / betweenness: 0.39 \n        Ratio of top topical clusters influence / betweenness: 0.23 \n        Total clusters: 11\n        Fair betweenness / influence ratio per cluster: 0.09 \n        Entropy of top nodes distribution among clusters: 1.584962500721156 \n</DiversityStatistics> \n"
+  },
+  "goal_gaps": {
+    "content_gaps": [
+      "Gap 1: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 4. Global Score (score global sh script pt output itwin weight)",
+      "Gap 2: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 5. Cycle Phase (cycle phase invoke add id cron manually exit)",
+      "Gap 3: 1. Section Drift (section scoring land event drift rationale healthy trend) -> 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain)"
+    ],
+    "main_topics": [
+      "1. Section Drift: section scoring land event drift rationale healthy trend (3 | 18% | 23%)",
+      "2. Harness Lattice: harness meta lattice row goal emit json snapshot (1 | 11% | 22%)",
+      "3. Proposal Sandbox: proposal apply ratchet reject error sandbox git plain (4 | 17% | 15%)",
+      "4. Global Score: score global sh script pt output itwin weight (0 | 13% | 15%)",
+      "5. Cycle Phase: cycle phase invoke add id cron manually exit (5 | 15% | 13%)",
+      "6. Autoresearch Run: autoresearch run runner loop flock bootstrap tmp startup (8 | 10% | 6%)",
+      "7. Migration Write: write migration follow average result landed rule (7 | 5% | 3%)",
+      "8. Unified Change: include file diff change evaluate call unified claude (6 | 6% | 1%)",
+      "9. Fitness Function: fitness function (2 | 1% | 0%)",
+      "10. Action Catalog: action catalog (9 | 1% | 0%)",
+      "11. Production Table: table production (10 | 1% | 0%)"
+    ],
+    "top_influential_nodes": [
+      {
+        "node": "section",
+        "bc": 0.4536806941169357,
+        "degree": 32
+      },
+      {
+        "node": "harness",
+        "bc": 0.4184049821633714,
+        "degree": 14
+      },
+      {
+        "node": "score",
+        "bc": 0.21895217365016026,
+        "degree": 21
+      }
+    ],
+    "modularity": 0.5765749007936507,
+    "diversity_stats": {
+      "diversity_score": "diversified",
+      "modularity_score": "high",
+      "too_focused_on_top_nodes": false,
+      "too_focused_on_top_clusters": false,
+      "ratio_of_top_nodes_influence_by_betweenness": 0.39,
+      "top_nodes_entropy": 1.584962500721156,
+      "ratio_of_top_cluster_influence_by_betweenness": 0.23,
+      "total_clusters": 11,
+      "fair_influence_by_cluster": 0.09
+    },
+    "graph_summary": "<Main Concepts (concept_degree | concept_betweenness_centrality | concept_topic_id)>: \n section (32 | 0.4537 | 3), harness (14 | 0.4184 | 1), score (21 | 0.2190 | ), cycle (20 | 0.1850 | 5), proposal (11 | 0.1771 | 4), meta (6 | 0.0686 | 1), global (10 | 0.0678 | ), phase (4 | 0.0650 | 5), sh (12 | 0.0628 | ), write (6 | 0.0624 | 7), lattice (6 | 0.0610 | 1), autoresearch (6 | 0.0543 | 8), apply (6 | 0.0507 | 4), ratchet (10 | 0.0476 | 4), run (6 | 0.0413 | 8), scoring (4 | 0.0371 | 3) \n </MainConcepts> \n\n <MainTopics (topic_id | cluster_influence_by_degree_ratio | cluster_influence_by_betweenness_ratio)>: \n 1. Section Drift: section scoring land event drift rationale healthy trend (3 | 18% | 23%)\n2. Harness Lattice: harness meta lattice row goal emit json snapshot (1 | 11% | 22%)\n3. Proposal Sandbox: proposal apply ratchet reject error sandbox git plain (4 | 17% | 15%)\n4. Global Score: score global sh script pt output itwin weight (0 | 13% | 15%)\n5. Cycle Phase: cycle phase invoke add id cron manually exit (5 | 15% | 13%)\n6. Autoresearch Run: autoresearch run runner loop flock bootstrap tmp startup (8 | 10% | 6%)\n7. Migration Write: write migration follow average result landed rule (7 | 5% | 3%)\n8. Unified Change: include file diff change evaluate call unified claude (6 | 6% | 1%)\n9. Fitness Function: fitness function (2 | 1% | 0%)\n10. Action Catalog: action catalog (9 | 1% | 0%)\n11. Production Table: table production (10 | 1% | 0%) \n </MainTopics> \n\n <TopicalGaps>: \n Gap 1: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 4. Global Score (score global sh script pt output itwin weight)\nGap 2: 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) -> 5. Cycle Phase (cycle phase invoke add id cron manually exit)\nGap 3: 1. Section Drift (section scoring land event drift rationale healthy trend) -> 3. Proposal Sandbox (proposal apply ratchet reject error sandbox git plain) \n </TopicalGaps> \n\n <ConceptualGateways> \n harness\nphase\nproposal\nsection\nadd\nland\ninvoke\nmeta \n </ConceptualGateways> \n\n <Relations>: \n 1) global <-> score\n2) script <-> score\n3) lattice <-> harness\n4) meta <-> harness\n5) section <-> event\n6) row <-> lattice\n7) ratchet <-> error\n8) harness <-> section\n9) bash <-> meta\n10) harness <-> bootstrap\n11) bootstrap <-> run\n12) run <-> autoresearch \n </Relations> \n <DiversityStatistics>:\n        Modularity: 0.58 \n        Modularity Score: high \n        Top concept nodes diversified\n        Top clusters diversified\n        Ratio of top nodes influence / betweenness: 0.39 \n        Ratio of top topical clusters influence / betweenness: 0.23 \n        Total clusters: 11\n        Fair betweenness / influence ratio per cluster: 0.09 \n        Entropy of top nodes distribution among clusters: 1.584962500721156 \n</DiversityStatistics> \n"
+  },
+  "dry_run": false
 }
