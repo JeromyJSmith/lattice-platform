@@ -226,3 +226,102 @@ jobs:
             exit 1
           fi
           echo "✅ No forbidden strings in changed files"
+
+  harness-file-compliance:
+    name: harness-file-compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate agent frontmatter (name + description)
+        run: |
+          set -euo pipefail
+          fail=0
+          AGENT_DIR=".claude/agents"
+          if [ -d "$AGENT_DIR" ]; then
+            while IFS= read -r -d '' f; do
+              if ! grep -q '^name:' "$f"; then
+                echo "❌ $f: missing 'name:' in YAML frontmatter"
+                fail=1
+              fi
+              if ! grep -q '^description:' "$f"; then
+                echo "❌ $f: missing 'description:' in YAML frontmatter"
+                fail=1
+              fi
+            done < <(find "$AGENT_DIR" -maxdepth 1 -name '*.md' -print0 2>/dev/null)
+          else
+            echo "(skipped — .claude/agents/ not present)"
+          fi
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: add 'name:' and 'description:' YAML frontmatter to every .claude/agents/*.md"
+            exit 1
+          fi
+          echo "✅ Agent frontmatter valid"
+      - name: Validate lattice skill frontmatter (description)
+        run: |
+          set -euo pipefail
+          fail=0
+          SKILLS_DIR=".claude/skills"
+          if [ -d "$SKILLS_DIR" ]; then
+            while IFS= read -r -d '' f; do
+              if ! grep -q '^description:' "$f"; then
+                echo "❌ $f: missing 'description:' in YAML frontmatter"
+                fail=1
+              fi
+            done < <(find "$SKILLS_DIR" -path '*/lattice-*/SKILL.md' -print0 2>/dev/null)
+          else
+            echo "(skipped — .claude/skills/ not present)"
+          fi
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: add 'description:' YAML frontmatter to every .claude/skills/lattice-*/SKILL.md"
+            exit 1
+          fi
+          echo "✅ Lattice skill frontmatter valid"
+      - name: Validate section GOAL.md structure
+        run: |
+          set -euo pipefail
+          fail=0
+          SECTION_DIRS="pixeltable pixeltable/service src georef genai vw-plugin ddc meta/harness"
+          REQUIRED_H2="## Fitness Function ## Improvement Loop ## Action Catalog ## Operating Mode"
+          for dir in $SECTION_DIRS; do
+            goal="$dir/GOAL.md"
+            if [ ! -f "$goal" ]; then
+              echo "❌ Missing $goal (required for every section directory)"
+              fail=1
+              continue
+            fi
+            for h2 in "## Fitness Function" "## Improvement Loop" "## Action Catalog" "## Operating Mode"; do
+              if ! grep -qF "$h2" "$goal"; then
+                echo "❌ $goal: missing required section '$h2'"
+                fail=1
+              fi
+            done
+          done
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: create GOAL.md in each section directory with all 4 required H2 sections"
+            exit 1
+          fi
+          echo "✅ All section GOAL.md files present and structurally valid"
+      - name: Validate section MEMORY.md structure
+        run: |
+          set -euo pipefail
+          fail=0
+          SECTION_DIRS="pixeltable pixeltable/service src georef genai vw-plugin ddc meta/harness"
+          for dir in $SECTION_DIRS; do
+            mem="$dir/MEMORY.md"
+            if [ ! -f "$mem" ]; then
+              echo "❌ Missing $mem (required for every section directory)"
+              fail=1
+              continue
+            fi
+            for h2 in "## Open Decisions" "## Failed Experiments" "## Session Handoff Notes"; do
+              if ! grep -qF "$h2" "$mem"; then
+                echo "❌ $mem: missing required section '$h2'"
+                fail=1
+              fi
+            done
+          done
+          if [ "$fail" -eq 1 ]; then
+            echo "Fix: create MEMORY.md in each section directory with all 3 required H2 sections"
+            exit 1
+          fi
+          echo "✅ All section MEMORY.md files present and structurally valid"

@@ -105,6 +105,65 @@ $STAGED
 EOF
 fi
 
+# ---- 7. Agent frontmatter (.claude/agents/*.md) ----
+AGENT_DIR="$REPO_ROOT/.claude/agents"
+if [ -d "$AGENT_DIR" ]; then
+  while IFS= read -r -d '' f; do
+    if ! grep -q '^name:' "$f"; then
+      echo "❌ $f: missing 'name:' in YAML frontmatter"
+      fail=1
+    fi
+    if ! grep -q '^description:' "$f"; then
+      echo "❌ $f: missing 'description:' in YAML frontmatter"
+      fail=1
+    fi
+  done < <(find "$AGENT_DIR" -maxdepth 1 -name '*.md' -print0 2>/dev/null)
+fi
+
+# ---- 8. Lattice skill frontmatter (.claude/skills/lattice-*/SKILL.md) ----
+SKILLS_DIR="$REPO_ROOT/.claude/skills"
+if [ -d "$SKILLS_DIR" ]; then
+  while IFS= read -r -d '' f; do
+    if ! grep -q '^description:' "$f"; then
+      echo "❌ $f: missing 'description:' in YAML frontmatter"
+      fail=1
+    fi
+  done < <(find "$SKILLS_DIR" -path '*/lattice-*/SKILL.md' -print0 2>/dev/null)
+fi
+
+# ---- 9. Section GOAL.md structure ----
+SECTION_DIRS="pixeltable pixeltable/service src georef genai vw-plugin ddc meta/harness"
+for dir in $SECTION_DIRS; do
+  goal="$REPO_ROOT/$dir/GOAL.md"
+  if [ ! -f "$goal" ]; then
+    echo "❌ Missing $dir/GOAL.md (required for every section directory)"
+    fail=1
+    continue
+  fi
+  for h2 in "## Fitness Function" "## Improvement Loop" "## Action Catalog" "## Operating Mode"; do
+    if ! grep -qF "$h2" "$goal"; then
+      echo "❌ $dir/GOAL.md: missing required section '$h2'"
+      fail=1
+    fi
+  done
+done
+
+# ---- 10. Section MEMORY.md structure ----
+for dir in $SECTION_DIRS; do
+  mem="$REPO_ROOT/$dir/MEMORY.md"
+  if [ ! -f "$mem" ]; then
+    echo "❌ Missing $dir/MEMORY.md (required for every section directory)"
+    fail=1
+    continue
+  fi
+  for h2 in "## Open Decisions" "## Failed Experiments" "## Session Handoff Notes"; do
+    if ! grep -qF "$h2" "$mem"; then
+      echo "❌ $dir/MEMORY.md: missing required section '$h2'"
+      fail=1
+    fi
+  done
+done
+
 if [ "$fail" -eq 1 ]; then
   echo ""
   echo "❌ LATTICE docs-sync check failed — see messages above."

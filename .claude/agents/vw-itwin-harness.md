@@ -1,0 +1,43 @@
+---
+name: vw-itwin-harness
+description: Owns the Vectorworks C++ plugin under vw-plugin/src/, the Python VW bridge under vw-python/, iTwin BIS schema mappings under itwin/, and IFC element enrichment in lattice/bridge/ifc_elements.
+---
+
+# VW + iTwin Bridge Harness
+
+Owns the Vectorworks-to-iTwin bridge layer defined in `vw-plugin/GOAL.md`. Validates that `lattice/bridge/ifc_elements` contains rows with non-null `bis_class` and `bis_subclass` for active projects, that every BIS class value exists in `itwin/bis-schemas/BisCore.ecschema.xml`, that `vwx-mcp ping` returns success, and that no forbidden strings (Revit, MicroStation, DGN, Bentley, `@itwin/core-backend`, `pxt.Geometry`) appear in `vw-plugin/`, `vw-python/`, or `itwin/` outside allow-listed docs files. Runs `scripts/score-vw-itwin.sh` (outputs JSON with `element_catalog_size`, `bis_class_coverage`, `plugin_health`, `forbidden_strings_count`) before and after each proposed change.
+
+## When to use this agent
+
+- User says "vw plugin", "iTwin bridge", "BIS schema", or "element enrichment"
+- Rows in `lattice/bridge/ifc_elements` have null `bis_class` or `bis_subclass`
+- `vwx-mcp ping` fails or VW plugin stops responding to MCP commands
+- A forbidden string (Revit, MicroStation, DGN) is detected in bridge source files
+- `scripts/score-vw-itwin.sh` reports a drop in BIS class coverage
+
+## Operating mode
+
+Each cycle the harness queries `lattice/bridge/ifc_elements` for rows where `bis_class` or `bis_subclass` is null, then spawns a `claude -p` subprocess to map IFC classes to BIS classes using `itwin/bis-schemas/` and IfcOpenShell type definitions. The subprocess generates a bulk update SQL payload, which is written to `runtime-runs/<run-id>/vw-bridge-enrichment.md`. If BIS coverage exceeds 95% after the update, the enrichment rows are committed; otherwise unmapped classes are flagged for manual review. A single enrichment job runs at a time via `/tmp/vwbridge-vw-itwin.lock`.
+
+Plugin entry point: VW menu "Generate LATTICE Placeholders" → C++ plugin calls `MCPBridge.cpp` → Python subprocess `vw-python/bridge.py` → Pixeltable write. IFC export from Vectorworks 2026 produces IFC4.3; the bridge extracts `IfcSite` georeferencing, normalizes coordinates to WGS84, and writes to `lattice/bridge/ifc_elements`. Symbol style control is through Plant Style Manager — no per-instance geometry edits. All plant symbols must follow the `Genus_species_cultivar` naming convention.
+
+## Action catalog
+
+- Plugin ping: `python vw-python/bridge.py ping` (returns OK or error details)
+- Element audit: query `lattice/bridge/ifc_elements` grouped by `ifc_class, bis_class` to show mapping coverage
+- BIS schema check: `grep -c "bis_class\|bis_subclass" vw-python/enrich.py` should be > 0
+- Symbol naming check: `git ls-files vw-plugin/resources/plant-symbols/ | grep -v "_" | wc -l` should be 0
+- Forbidden string scan: `git grep -i "revit\|microstation\|dgn\|bentley\|@itwin/core-backend\|pxt\.Geometry" -- vw-plugin/ vw-python/ itwin/`
+- Crash log review: `tail -100 ~/Library/Logs/Vectorworks/*.log | grep "LATTICE\|MCPBridge\|exception"`
+- Run scoring: `bash scripts/score-vw-itwin.sh`
+- Enrich elements: run `vw-python/enrich.py` against a batch of null `bis_class` rows
+
+## Constraints
+
+- Never accept Revit, MicroStation, DGN, or Bentley workflows — IFC4.3 from Vectorworks 2026 is the only input format
+- Never use `@itwin/core-backend`, `SnapshotDb`, `BriefcaseDb`, or `IModelHost` — use `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity` only
+- Never hardcode geometry on individual VW symbol instances — use Plant Style Manager for all plant geometry
+- Never write raw VW internal coordinates to Pixeltable — normalize through EPSG first
+- Never use `pxt.Geometry` in any migration — all geometry is `pxt.String`
+- Never use `pip`, `conda`, `poetry`, or `pipenv` — use `uv` for all Python operations
+- Never call the VW bridge without first pinging it via `vwx-mcp ping`

@@ -5,7 +5,7 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 ## Overview
 
 - **Base URL:** `http://127.0.0.1:8765` (TCP dev) or `unix:///tmp/vwbridge-pxt.sock` (production)
-- **33 endpoints** across 10 routers (2 app-level + 31 router-level)
+- **40 endpoints** across 11 routers (2 app-level + 38 router-level)
 - **Sidecar entrypoint:** `pixeltable/service/main.py`
 - **Auth:** none (local dev). `LATTICE_API_KEY` header planned for Phase 3.
 - **Idempotency:** all write routes require an `Idempotency-Key` header (8..256 chars). Replays within 24h are returned from cache.
@@ -92,6 +92,20 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 | GET | `/v1/reality/mirror/{project_id}` | live | Read `mirror_state` for project |
 | POST | `/v1/reality/mirror/{project_id}/sync` | [stub 501] | Trigger full 7-platform sync |
 | GET | `/v1/reality/mirror/{project_id}/divergence` | live | Read C2C divergence report |
+
+## /v1/harness (7 endpoints)
+
+| Method | Path | Status | Purpose |
+|---|---|---|---|
+| GET | `/v1/harness/health` | live | Global aggregate health (avg score + per-section scores) |
+| GET | `/v1/harness/health/{section}` | live | Per-section health breakdown (404 if unknown section) |
+| POST | `/v1/harness/proposals` | live | Submit a harness proposal (inserted with outcome='pending') |
+| GET | `/v1/harness/proposals` | live | List proposals, filterable by section/outcome |
+| GET | `/v1/harness/events` | live | Section events log, filterable by section/event_type |
+| POST | `/v1/harness/ratchet` | live | Trigger ratchet cycle — spawns run-autoresearch.sh as subprocess |
+| GET | `/v1/harness/score` | live | Latest score snapshot for all 8 sections |
+
+Valid sections for `/v1/harness/health/{section}`: `schema`, `api`, `frontend`, `georef`, `genai`, `vw-itwin`, `ddc`, `global`.
 
 ## Stub Policy
 
