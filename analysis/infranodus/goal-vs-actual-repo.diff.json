@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-05-13",
+  "corpus_a_intended": "GOAL.md + CURRENT-STATE.md",
+  "corpus_b_actual": "git log -50 + active capabilities + SCHEMA.md + API.md",
+  "content_gaps": [
+    "Gap 1: 4. Proposal Cycle (proposal cycle sandbox apply ratchet working reject error) -> 7. Capability Registry (capability registry claude body library ddc yaml cell)",
+    "Gap 2: 3. Bridge Integration (bridge itwin vw pixeltable sidecar runtime volume src) -> 4. Proposal Cycle (proposal cycle sandbox apply ratchet working reject error)",
+    "Gap 3: 2. Script Audit (script score doc sh global check audit verify) -> 7. Capability Registry (capability registry claude body library ddc yaml cell)"
+  ],
+  "main_topics": [
+    "1. Model Verification: harness meta lattice row benchmark surface model verification (1 | 19% | 40%)",
+    "2. Script Audit: script score doc sh global check audit verify (0 | 17% | 17%)",
+    "3. Bridge Integration: bridge itwin vw pixeltable sidecar runtime volume src (3 | 10% | 15%)",
+    "4. Proposal Cycle: proposal cycle sandbox apply ratchet working reject error (5 | 14% | 7%)",
+    "5. Run Evidence: run bootstrap pre autoresearch commit dry evidence prove (8 | 9% | 7%)",
+    "6. Section Snapshot: section event current task snapshot state cross health (2 | 9% | 6%)",
+    "7. Capability Registry: capability registry claude body library ddc yaml cell (4 | 13% | 5%)",
+    "8. Docstring Change: python file migration docstring rule change propose implement (7 | 8% | 2%)",
+    "9. Drift Detection: drift (6 | 1% | 0%)",
+    "10. WASM Analytics: wasm (9 | 1% | 0%)"
+  ],
+  "top_influential_nodes": [
+    {
+      "node": "harness",
+      "bc": 0.5696535461636133,
+      "degree": 45
+    },
+    {
+      "node": "meta",
+      "bc": 0.26172985065602516,
+      "degree": 27
+    },
+    {
+      "node": "lattice",
+      "bc": 0.20477356551182052,
+      "degree": 14
+    },
+    {
+      "node": "script",
+      "bc": 0.20472821815103692,
+      "degree": 33
+    },
+    {
+      "node": "section",
+      "bc": 0.1258691577483524,
+      "degree": 32
+    }
+  ],
+  "graph_summary": "<Main Concepts (concept_degree | concept_betweenness_centrality | concept_topic_id)>: \n harness (45 | 0.5697 | 1), meta (27 | 0.2617 | 1), lattice (14 | 0.2048 | 1), script (33 | 0.2047 | ), section (32 | 0.1259 | 2), bridge (3 | 0.1106 | 3), itwin (4 | 0.1013 | 3), score (22 | 0.0956 | ), vw (5 | 0.0914 | 3), pixeltable (15 | 0.0907 | 3), proposal (11 | 0.0842 | 5), run (23 | 0.0826 | 8), capability (14 | 0.0795 | 4), doc (21 | 0.0556 | ), cycle (20 | 0.0422 | 5), sh (21 | 0.0386 | ) \n </MainConcepts> \n\n <MainTopics (topic_id | cluster_influence_by_degree_ratio | cluster_influence_by_betweenness_ratio)>: \n 1. Model Verification: harness meta lattice row benchmark surface model verification (1 | 19% | 40%)\n2. Script Audit: script score doc sh global check audit verify (0 | 17% | 17%)\n3. Bridge Integration: bridge itwin vw pixeltable sidecar runtime volume src (3 | 10% | 15%)\n4. Proposal Cycle: proposal cycle sandbox apply ratchet working reject error (5 | 14% | 7%)\n5. Run Evidence: run bootstrap pre autoresearch commit dry evidence prove (8 | 9% | 7%)\n6. Section Snapshot: section event current task snapshot state cross health (2 | 9% | 6%)\n7. Capability Registry: capability registry claude body library ddc yaml cell (4 | 13% | 5%)\n8. Docstring Change: python file migration docstring rule change propose implement (7 | 8% | 2%)\n9. Drift Detection: drift (6 | 1% | 0%)\n10. WASM Analytics: wasm (9 | 1% | 0%) \n </MainTopics> \n\n <TopicalGaps>: \n Gap 1: 4. Proposal Cycle (proposal cycle sandbox apply ratchet working reject error) -> 7. Capability Registry (capability registry claude body library ddc yaml cell)\nGap 2: 3. Bridge Integration (bridge itwin vw pixeltable sidecar runtime volume src) -> 4. Proposal Cycle (proposal cycle sandbox apply ratchet working reject error)\nGap 3: 2. Script Audit (script score doc sh global check audit verify) -> 7. Capability Registry (capability registry claude body library ddc yaml cell) \n </TopicalGaps> \n\n <ConceptualGateways> \n bridge\nitwin\nvw\nlattice\nharness\nbootstrap\nmeta\nproposal \n </ConceptualGateways> \n\n <Relations>: \n 1) meta <-> harness\n2) vw <-> itwin\n3) global <-> score\n4) script <-> score\n5) itwin <-> bridge\n6) lattice <-> harness\n7) volume <-> pixeltable\n8) pixeltable <-> vw\n9) dry <-> run\n10) bridge <-> meta\n11) section <-> event\n12) body <-> cell \n </Relations> \n <DiversityStatistics>:\n        Modularity: 0.51 \n        Modularity Score: high \n        Too focused on top concept nodes \n        Too focused on top topical clusters \n        Ratio of top nodes influence / betweenness: 0.48 \n        Ratio of top topical clusters influence / betweenness: 0.4 \n        Total clusters: 10\n        Fair betweenness / influence ratio per cluster: 0.1 \n        Entropy of top nodes distribution among clusters: 1.3709505944546687 \n</DiversityStatistics> \n",
+  "modularity": 0.5111254930966469,
+  "diversity_stats": {
+    "diversity_score": "biased",
+    "modularity_score": "high",
+    "too_focused_on_top_nodes": true,
+    "too_focused_on_top_clusters": true,
+    "ratio_of_top_nodes_influence_by_betweenness": 0.48,
+    "top_nodes_entropy": 1.3709505944546687,
+    "ratio_of_top_cluster_influence_by_betweenness": 0.4,
+    "total_clusters": 10,
+    "fair_influence_by_cluster": 0.1
+  }
+}
