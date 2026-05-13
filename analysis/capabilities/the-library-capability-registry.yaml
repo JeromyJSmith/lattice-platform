@@ -1,0 +1,87 @@
+# spec-verified: disler/the-library 47f455c 2026-05-12
+tool: the-library
+tool_version: 47f455c
+canonical_docs: https://github.com/disler/the-library
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: private-reference-catalog
+    surface: catalog
+    name: private-first agentics catalog
+    state: ACTIVE
+    description: Catalogs skills, agents, and prompts by reference instead of copying them until requested.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/library.yaml"]
+    invoked_by: ["LATTICE Meta-Harness setup"]
+
+  - id: library-skill-runtime
+    surface: skill
+    name: library meta-skill
+    state: ACTIVE
+    description: Pure-agent SKILL.md runtime that manages add, use, push, remove, list, sync, and search workflows.
+    wired_at: ["meta/harness/agentics-library.md"]
+    invoked_by: ["LATTICE agentics library doctrine"]
+
+  - id: catalog-not-manifest
+    surface: doctrine
+    name: catalog, not manifest
+    state: ACTIVE
+    description: Library entries define available agentics, not what must be installed in every workspace.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/library.yaml"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: typed-dependencies
+    surface: doctrine
+    name: typed skill/agent/prompt dependencies
+    state: ACTIVE
+    description: Dependencies use typed refs such as skill:name, agent:name, and prompt:name to avoid collisions.
+    wired_at: ["meta/harness/agentics-library.md"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: cookbook-command-workflows
+    surface: prompt
+    name: cookbook command workflows
+    state: ACTIVE
+    description: Commands are implemented as concise cookbook instructions read before execution.
+    wired_at: ["meta/harness/agentics-library.md"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: pull-on-demand
+    surface: workflow
+    name: pull on demand
+    state: ACTIVE
+    description: Agentics are pulled into project, global, or harness-specific directories only when needed.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/library.yaml"]
+    invoked_by: ["LATTICE Meta-Harness dry-run setup"]
+
+  - id: source-provenance
+    surface: policy
+    name: source provenance per entry
+    state: ACTIVE
+    description: Every catalog entry points to a local file, GitHub browser URL, or GitHub raw URL with source provenance.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/library.yaml"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: extended-catalog-sections
+    surface: doctrine
+    name: extended catalog sections
+    state: ACTIVE
+    description: LATTICE extends the catalog beyond skills, agents, and prompts to capabilities, references, workflows, docs, repos, gists, scripts, and jobs.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/library.yaml"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: frontmatter-self-description
+    surface: doctrine
+    name: frontmatter self-description
+    state: ACTIVE
+    description: Skills, agents, and prompts should declare capabilities, references, dependencies, and verification in frontmatter.
+    wired_at: ["meta/harness/agentics-library.md"]
+    invoked_by: ["LATTICE Library", "Meta-Harness dry run"]
+
+  - id: ephemeral-sandbox-pull
+    surface: workflow
+    name: ephemeral sandbox pull
+    state: ACTIVE
+    description: Library-backed jobs clone or copy referenced capabilities into temporary sandboxes, execute once, emit evidence, and clean up.
+    wired_at: ["meta/harness/agentics-library.md", "meta/harness/delegation-model.md"]
+    invoked_by: ["LATTICE Library", "Pi harness jobs"]

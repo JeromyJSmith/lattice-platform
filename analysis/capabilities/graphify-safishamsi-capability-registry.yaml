@@ -16,7 +16,7 @@ capabilities:
     name: graphifyy ingest <youtube-url>
     state: ACTIVE
     description: Ingest YouTube video URL → extract transcript → emit graph + structured doc
-    wired_at: [scripts/ingest-tutorials.py (stub now; full impl = Issue #20)]
+    wired_at: ["scripts/ingest-tutorials.py (stub now; full impl = Issue #20)"]
     invoked_by: [Amendment 07 substrate intake]
 
   - id: ingest-pdf

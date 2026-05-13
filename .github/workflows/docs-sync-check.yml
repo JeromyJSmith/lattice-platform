@@ -327,6 +327,33 @@ jobs:
           fi
           echo "✅ All gated research files remain dormant and not_triggered"
 
+  audit-dead-dna-job:
+    name: audit-dead-dna-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run capability registry audit
+        run: |
+          set -euo pipefail
+          bash scripts/audit-dead-dna.sh
+
+  python-docstrings-job:
+    name: python-docstrings-job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+      - name: Verify Python docstrings
+        run: |
+          set -euo pipefail
+          uv run python scripts/check-python-docstrings.py --base "origin/${{ github.base_ref || github.event.repository.default_branch }}"
+
   detect-doc-gaps-job:
     name: detect-doc-gaps-job
     runs-on: ubuntu-latest

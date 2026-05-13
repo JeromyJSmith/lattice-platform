@@ -1,0 +1,47 @@
+# spec-verified: disler/agent-sandboxes 1a72555 2026-05-12
+tool: agent-sandboxes
+tool_version: 1a72555
+canonical_docs: https://github.com/disler/agent-sandboxes
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: sandbox-cli
+    surface: cli_command
+    name: E2B sandbox CLI
+    state: ACTIVE
+    description: CLI manages sandbox init, lifecycle, files, and unified exec operations.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE sandbox jobs"]
+
+  - id: sandbox-mcp
+    surface: mcp_tool
+    name: sandbox MCP server
+    state: ACTIVE
+    description: MCP wraps sandbox CLI operations for agent access.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["future LATTICE sandbox MCP"]
+
+  - id: obox-parallel-forks
+    surface: workflow
+    name: obox parallel forks
+    state: ACTIVE
+    description: Run multiple isolated repository experiments in parallel E2B sandboxes with per-fork logs and model selection.
+    wired_at: ["meta/harness/fork-and-sandbox.md", "meta/harness/model-fit.md"]
+    invoked_by: ["model-fit benchmarks", "sandboxed experiments"]
+
+  - id: sandbox-observability-hooks
+    surface: hook
+    name: sandbox observability hooks
+    state: ACTIVE
+    description: Hooks capture prompts, tool calls, results, errors, compaction, and stop events for sandbox forks.
+    wired_at: ["meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE evidence model"]
+
+  - id: sandbox-path-security
+    surface: policy
+    name: sandbox path security
+    state: ACTIVE
+    description: Local tools are restricted to allowed directories while repo operations happen inside the sandbox.
+    wired_at: ["meta/harness/fork-and-sandbox.md", "meta/harness/bash-safety.md"]
+    invoked_by: ["LATTICE sandbox jobs"]

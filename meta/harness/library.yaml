@@ -1,0 +1,219 @@
+# spec-verified: disler/the-library 47f455c 2026-05-12
+default_dirs:
+  skills:
+    - default: .claude/skills/
+    - global: ~/.claude/skills/
+  agents:
+    - default: .claude/agents/
+    - global: ~/.claude/agents/
+  prompts:
+    - default: .claude/commands/
+    - global: ~/.claude/commands/
+  capabilities:
+    - default: analysis/capabilities/
+    - global: ~/.lattice/capabilities/
+  references:
+    - default: meta/harness/references/
+    - global: ~/.lattice/references/
+  jobs:
+    - default: meta/harness/jobs/
+    - global: ~/.lattice/harness/jobs/
+
+library:
+  skills: []
+  agents: []
+  prompts:
+    - name: meta-harness-entrypoint
+      description: Top-level orientation for current Meta-Harness doctrine, checks, and entrypoints.
+      source: meta/harness/README.md
+    - name: meta-harness-current-state
+      description: Current inventory of harness docs, registries, verification scripts, and open gaps.
+      source: meta/harness/CURRENT-STATE.md
+    - name: meta-harness-todo
+      description: Prioritized work queue for first dry run, Pixeltable substrate, capability coverage, and extraction.
+      source: meta/harness/TODO.md
+    - name: meta-harness-golden-path
+      description: First success-defined path for promoting a uv single-file harness agent into LATTICE.
+      source: meta/harness/golden_path.md
+    - name: meta-harness-source-grounding
+      description: Source lineage and constraints from Meta-Harness, GOAL.md, Superagentic metaharness, and autoresearch.
+      source: meta/harness/source-grounding.md
+    - name: meta-harness-source-adoption-audit
+      description: Read-through audit of Meta-Harness, GOAL, autoresearch, and Disler source repos with adoption decisions.
+      source: meta/harness/source-adoption-audit.md
+    - name: meta-harness-domain-spec
+      description: Required domain onboarding artifact for the first LATTICE Meta-Harness optimization loop.
+      source: meta/harness/domain_spec.md
+    - name: capability-lifecycle
+      description: Capability Harvest to Matrix to Manifest to Registry to Verification workflow.
+      source: meta/harness/docs/capability-lifecycle.md
+    - name: pixeltable-operational-substrate
+      description: Pixeltable as the LATTICE operational substrate with DuckDB WASM analytics over Arrow and Parquet.
+      source: meta/harness/pixeltable-operational-substrate.md
+    - name: indydevdan-incorporation
+      description: Rule for incorporating Disler and IndyDevDan repos as LATTICE doctrine and harness capabilities.
+      source: meta/harness/indydevdan-incorporation.md
+    - name: model-fit
+      description: Meta-Harness loop for benchmarking candidate models against repeatable tasks.
+      source: meta/harness/model-fit.md
+    - name: pi-delegation-surface
+      description: Pi as LATTICE execution, delegation, and verification surface.
+      source: meta/verification/pi-verifier-surface.md
+    - name: install-maintain
+      description: Deterministic setup and maintenance scripts supervised by agentic reports.
+      source: meta/harness/install-maintain.md
+    - name: fork-and-sandbox
+      description: Fork terminal and E2B sandbox doctrine for isolated bounded jobs.
+      source: meta/harness/fork-and-sandbox.md
+    - name: pi-claude-routing
+      description: Routing policy for Pi, Claude CLI, model providers, extensions, and dry-run stacks.
+      source: meta/harness/pi-claude-routing.md
+    - name: hooks-observability
+      description: Hook lifecycle, event evidence, and multi-agent observability doctrine.
+      source: meta/harness/hooks-observability.md
+    - name: programmable-agents
+      description: Programmatic agent calls with bounded tools, outputs, and verification.
+      source: meta/harness/programmable-agents.md
+    - name: single-file-harness-agents
+      description: uv single-file agents for small repeatable harness tasks.
+      source: meta/harness/single-file-harness-agents.md
+    - name: drop-zones
+      description: File-event intake surfaces that trigger configured harness jobs.
+      source: meta/harness/drop-zones.md
+    - name: benchmarking
+      description: Task-specific model benchmarking and report evidence doctrine.
+      source: meta/harness/benchmarking.md
+  capabilities:
+    - name: agent-sandbox-skill
+      description: E2B sandbox skill workflow for isolated plan-build-host-test agent jobs.
+      source: analysis/capabilities/agent-sandbox-skill-capability-registry.yaml
+      references: ["reference:repo-agent-sandbox-skill"]
+    - name: agent-sandboxes
+      description: E2B sandbox CLI, MCP, and obox parallel fork workflows.
+      source: analysis/capabilities/agent-sandboxes-capability-registry.yaml
+      references: ["reference:repo-agent-sandboxes"]
+    - name: bash-damage-from-within
+      description: Bash safety ladder incorporated as LATTICE L4/L5 harness policy.
+      source: analysis/capabilities/bash-damage-from-within-capability-registry.yaml
+      references: ["reference:repo-bash-damage-from-within"]
+    - name: claude-code-hooks-mastery
+      description: Claude Code hook lifecycle and uv single-file hook script patterns.
+      source: analysis/capabilities/claude-code-hooks-mastery-capability-registry.yaml
+      references: ["reference:repo-claude-code-hooks-mastery"]
+    - name: claude-code-hooks-multi-agent-observability
+      description: Multi-agent hook event observability dashboard and event stream pattern.
+      source: analysis/capabilities/claude-code-hooks-multi-agent-observability-capability-registry.yaml
+      references: ["reference:repo-claude-code-hooks-multi-agent-observability"]
+    - name: claude-code-is-programmable
+      description: Programmatic Claude Code as bounded scriptable execution surface.
+      source: analysis/capabilities/claude-code-is-programmable-capability-registry.yaml
+      references: ["reference:repo-claude-code-is-programmable"]
+    - name: fork-repository-skill
+      description: Fork terminal delegation skill for parallel agent/tool execution.
+      source: analysis/capabilities/fork-repository-skill-capability-registry.yaml
+      references: ["reference:repo-fork-repository-skill"]
+    - name: install-and-maintain
+      description: Executable setup and maintenance doctrine for deterministic scripts plus agent reports.
+      source: analysis/capabilities/install-and-maintain-capability-registry.yaml
+      references: ["reference:repo-install-and-maintain"]
+    - name: pi-vs-claude-code
+      description: Pi extension stack and Pi-vs-Claude routing principles.
+      source: analysis/capabilities/pi-vs-claude-code-capability-registry.yaml
+      references: ["reference:repo-pi-vs-claude-code"]
+    - name: single-file-agents
+      description: uv single-file agents for bounded repeatable tasks and provider variants.
+      source: analysis/capabilities/single-file-agents-capability-registry.yaml
+      references: ["reference:repo-single-file-agents"]
+    - name: agentic-drop-zones
+      description: File-triggered agent dispatch workflows driven by YAML config.
+      source: analysis/capabilities/agentic-drop-zones-capability-registry.yaml
+      references: ["reference:repo-agentic-drop-zones"]
+    - name: benchy
+      description: Task-specific model benchmarking and report evidence pattern.
+      source: analysis/capabilities/benchy-capability-registry.yaml
+      references: ["reference:repo-benchy"]
+    - name: the-library
+      description: Private-first agentics catalog incorporated as LATTICE library pattern.
+      source: analysis/capabilities/the-library-capability-registry.yaml
+      references: ["reference:repo-the-library"]
+    - name: the-verifier-agent
+      description: Pi top-down observer verifier pattern incorporated as LATTICE verifier surface.
+      source: analysis/capabilities/the-verifier-agent-capability-registry.yaml
+      references: ["reference:repo-the-verifier-agent"]
+  references:
+    - name: repo-agent-sandbox-skill
+      description: IndyDevDan E2B sandbox skill workflow.
+      kind: repo
+      source: https://github.com/disler/agent-sandbox-skill
+    - name: repo-agent-sandboxes
+      description: IndyDevDan E2B sandbox CLI, MCP, and parallel fork workflows.
+      kind: repo
+      source: https://github.com/disler/agent-sandboxes
+    - name: repo-bash-damage-from-within
+      description: IndyDevDan bash safety ladder for Claude Code and Pi.
+      kind: repo
+      source: https://github.com/disler/bash-damage-from-within
+    - name: repo-claude-code-hooks-mastery
+      description: IndyDevDan Claude Code hook lifecycle mastery repo.
+      kind: repo
+      source: https://github.com/disler/claude-code-hooks-mastery
+    - name: repo-claude-code-hooks-multi-agent-observability
+      description: IndyDevDan multi-agent observability repo for Claude Code hooks.
+      kind: repo
+      source: https://github.com/disler/claude-code-hooks-multi-agent-observability
+    - name: repo-claude-code-is-programmable
+      description: IndyDevDan programmable Claude Code examples.
+      kind: repo
+      source: https://github.com/disler/claude-code-is-programmable
+    - name: repo-fork-repository-skill
+      description: IndyDevDan fork terminal skill for parallel agent delegation.
+      kind: repo
+      source: https://github.com/disler/fork-repository-skill
+    - name: repo-install-and-maintain
+      description: IndyDevDan executable install and maintenance documentation pattern.
+      kind: repo
+      source: https://github.com/disler/install-and-maintain
+    - name: repo-pi-vs-claude-code
+      description: IndyDevDan Pi extension stack and Pi-vs-Claude comparison.
+      kind: repo
+      source: https://github.com/disler/pi-vs-claude-code
+    - name: repo-single-file-agents
+      description: IndyDevDan uv single-file agents collection.
+      kind: repo
+      source: https://github.com/disler/single-file-agents
+    - name: repo-agentic-drop-zones
+      description: IndyDevDan file-triggered agentic drop zones.
+      kind: repo
+      source: https://github.com/disler/agentic-drop-zones
+    - name: repo-benchy
+      description: IndyDevDan live model benchmarking app.
+      kind: repo
+      source: https://github.com/disler/benchy
+      local_mirror: meta/harness/references/benchy/
+      provenance: meta/harness/references/benchy/PROVENANCE.md
+    - name: repo-the-library
+      description: IndyDevDan private-first agentics library catalog.
+      kind: repo
+      source: https://github.com/disler/the-library
+    - name: repo-the-verifier-agent
+      description: IndyDevDan Pi top-down observer verifier pattern.
+      kind: repo
+      source: https://github.com/disler/the-verifier-agent
+  jobs:
+    - name: codebase-context-ripgrep
+      description: Promoted uv single-file harness agent for selecting task-relevant repo files.
+      source: meta/harness/tools/codebase-context-agent.py
+      references: ["reference:repo-single-file-agents"]
+    - name: sync-benchy-reference
+      description: Mirror the Benchy source corpus with LATTICE security exclusions.
+      source: scripts/sync-benchy-reference.sh
+      references: ["reference:repo-benchy"]
+    - name: lattice-verify
+      description: Repo-wide deterministic verification script for LATTICE harness jobs.
+      source: scripts/lattice-verify.sh
+    - name: audit-dead-dna
+      description: Capability registry parser and Zero Dead DNA state-field audit.
+      source: scripts/audit-dead-dna.sh
+    - name: check-python-docstrings
+      description: Changed-file Python docstring ratchet with optional full-repo baseline mode.
+      source: scripts/check-python-docstrings.py

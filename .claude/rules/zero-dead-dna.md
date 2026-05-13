@@ -7,6 +7,8 @@
 
 Every capability listed in any `analysis/capabilities/*-capability-registry.yaml` must, at all times, be in exactly one of three states: `ACTIVE`, `DEFERRED`, `BLOCKED`. No silent rows. No "we'll figure it out later" without a `target_phase` and `tracking_issue`.
 
+The full lifecycle is harvest → matrix → manifest → registry → verification. Zero Dead DNA applies at the registry layer, and each registered row should remain traceable back to the harvest/matrix/manifest trail that justified it.
+
 A capability stuck in `DEFERRED` past its `target_phase` is **dead DNA** and fails CI.
 
 ## Why
@@ -25,7 +27,7 @@ Zero Dead DNA forces you to either USE a capability, EXPLAIN why you're not yet 
 | Mechanism | Where | When |
 |---|---|---|
 | Registry must exist | `analysis/capabilities/<tool>-capability-registry.yaml` | Same commit as tool install |
-| Required-fields check | `scripts/audit-dead-dna.sh` (stub now; full impl = Issue #17) | Local pre-commit + CI Job 12 |
+| Required-fields check | `scripts/audit-dead-dna.sh` | Local pre-commit + CI |
 | Past-target-phase check | same | CI fails if `DEFERRED` row's `target_phase` is in the past relative to current PR head's phase tag |
 | BLOCKED requires resolution path | same | `blocker_resolution_path` must be a non-empty string |
 
@@ -65,4 +67,4 @@ Anything outside this list goes through PR review as a new reason category.
 
 ## Relationship to Capability Harvest Protocol
 
-Capability Harvest Protocol mandates the **registry exists and is complete**. Zero Dead DNA mandates the **registry's contents stay honest over time**. Without the harvest you have no registry to audit; without zero-dead-DNA the registry rots into shelfware.
+Capability Harvest Protocol mandates the **harvest, matrix, manifest, and registry exist for integrated tools**. Zero Dead DNA mandates the **registry's contents stay honest over time**. Without the harvest you have no registry to audit; without zero-dead-DNA the registry rots into shelfware.

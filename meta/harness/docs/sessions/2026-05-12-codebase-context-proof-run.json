@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "tool_id": "codebase-context-ripgrep",
+  "source_provenance": {
+    "source_repo": "https://github.com/disler/single-file-agents",
+    "source_commit": "ae5826a",
+    "source_file": "sfa_codebase_context_agent_w_ripgrep_v3.py",
+    "incorporation_mode": "lattice-owned-adaptation"
+  },
+  "task": "Identify files relevant to adding or changing a FastAPI sidecar route for single-file harness agents and benchmark reports.",
+  "repo_root": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "generated_at": "2026-05-12T10:22:33Z",
+  "expected_paths": [
+    "pixeltable/service/routes/harness.py",
+    "meta/harness/single-file-harness-agents.md"
+  ],
+  "command_evidence": {
+    "list_command": "git ls-files --cached --others --exclude-standard",
+    "candidate_file_count": 591,
+    "max_files": 12
+  },
+  "selected_files": [
+    {
+      "path": "meta/harness/single-file-harness-agents.md",
+      "score": 112,
+      "line_count": 106,
+      "matched_terms": [
+        "harness",
+        "agents",
+        "single",
+        "single-file",
+        "sidecar",
+        "benchmark",
+        "fastapi"
+      ],
+      "rationale": "Matched harness, agents, single, single-file, sidecar, benchmark, fastapi in path/content with score 112."
+    },
+    {
+      "path": "pixeltable/service/routes/harness.py",
+      "score": 102,
+      "line_count": 231,
+      "matched_terms": [
+        "harness",
+        "route",
+        "agents",
+        "benchmark",
+        "single",
+        "single-file",
+        "sidecar",
+        "reports"
+      ],
+      "rationale": "Matched harness, route, agents, benchmark, single, single-file, sidecar, reports in path/content with score 102."
+    },
+    {
+      "path": "analysis/capabilities/single-file-agents-capability-manifest.yaml",
+      "score": 86,
+      "line_count": 25,
+      "matched_terms": [
+        "agents",
+        "harness",
+        "single",
+        "single-file",
+        "benchmark",
+        "relevant",
+        "route",
+        "sidecar"
+      ],
+      "rationale": "Matched agents, harness, single, single-file, benchmark, relevant, route, sidecar in path/content with score 86."
+    },
+    {
+      "path": "meta/harness/docs/specs/meta-harness-specification.md",
+      "score": 86,
+      "line_count": 379,
+      "matched_terms": [
+        "harness",
+        "agents",
+        "fastapi",
+        "benchmark",
+        "relevant",
+        "single",
+        "reports",
+        "route"
+      ],
+      "rationale": "Matched harness, agents, fastapi, benchmark, relevant, single, reports, route in path/content with score 86."
+    },
+    {
+      "path": "meta/harness/golden_path.md",
+      "score": 82,
+      "line_count": 144,
+      "matched_terms": [
+        "harness",
+        "agents",
+        "single",
+        "single-file",
+        "benchmark",
+        "sidecar",
+        "route",
+        "fastapi"
+      ],
+      "rationale": "Matched harness, agents, single, single-file, benchmark, sidecar, route, fastapi in path/content with score 82."
+    },
+    {
+      "path": "meta/harness/docs/research/github-meta-harness.md",
+      "score": 72,
+      "line_count": 1407,
+      "matched_terms": [
+        "harness",
+        "benchmark",
+        "reports",
+        "identify",
+        "agents",
+        "single",
+        "changing",
+        "relevant"
+      ],
+      "rationale": "Matched harness, benchmark, reports, identify, agents, single, changing, relevant in path/content with score 72."
+    },
+    {
+      "path": "analysis/capabilities/single-file-agents-capability-registry.yaml",
+      "score": 69,
+      "line_count": 56,
+      "matched_terms": [
+        "agents",
+        "single",
+        "single-file",
+        "harness",
+        "benchmark"
+      ],
+      "rationale": "Matched agents, single, single-file, harness, benchmark in path/content with score 69."
+    },
+    {
+      "path": "src/routes/harness/benchmarks.tsx",
+      "score": 67,
+      "line_count": 370,
+      "matched_terms": [
+        "benchmark",
+        "harness",
+        "route",
+        "reports"
+      ],
+      "rationale": "Matched benchmark, harness, route, reports in path/content with score 67."
+    },
+    {
+      "path": "analysis/capabilities/single-file-agents-capability-matrix.md",
+      "score": 66,
+      "line_count": 18,
+      "matched_terms": [
+        "harness",
+        "agents",
+        "single",
+        "single-file",
+        "route",
+        "sidecar",
+        "changing",
+        "fastapi"
+      ],
+      "rationale": "Matched harness, agents, single, single-file, route, sidecar, changing, fastapi in path/content with score 66."
+    },
+    {
+      "path": "meta/harness/references/single-file-agents/PROVENANCE.md",
+      "score": 65,
+      "line_count": 19,
+      "matched_terms": [
+        "agents",
+        "single",
+        "single-file",
+        "harness"
+      ],
+      "rationale": "Matched agents, single, single-file, harness in path/content with score 65."
+    },
+    {
+      "path": "meta/harness/library.yaml",
+      "score": 58,
+      "line_count": 210,
+      "matched_terms": [
+        "harness",
+        "agents",
+        "single",
+        "single-file",
+        "benchmark",
+        "reports"
+      ],
+      "rationale": "Matched harness, agents, single, single-file, benchmark, reports in path/content with score 58."
+    },
+    {
+      "path": "meta/harness/source-adoption-audit.md",
+      "score": 56,
+      "line_count": 138,
+      "matched_terms": [
+        "harness",
+        "benchmark",
+        "single",
+        "single-file",
+        "agents",
+        "fastapi"
+      ],
+      "rationale": "Matched harness, benchmark, single, single-file, agents, fastapi in path/content with score 56."
+    }
+  ],
+  "verification": {
+    "command": "uv run /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/tools/codebase-context-agent.py --verify /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json --repo-root /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+    "status": "pending"
+  }
+}

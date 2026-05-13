@@ -1,0 +1,71 @@
+# spec-verified: disler/pi-vs-claude-code 3ce1639 2026-05-12
+tool: pi-vs-claude-code
+tool_version: 3ce1639
+canonical_docs: https://github.com/disler/pi-vs-claude-code
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: pi-extension-stack
+    surface: architecture
+    name: Pi extension stack
+    state: ACTIVE
+    description: Pi capabilities are composable TypeScript extensions loaded per session.
+    wired_at: ["meta/harness/pi-claude-routing.md"]
+    invoked_by: ["LATTICE Pi surface"]
+
+  - id: cross-agent-loading
+    surface: extension
+    name: cross-agent command loading
+    state: ACTIVE
+    description: Pi can scan Claude, Gemini, and Codex directories for commands, skills, and agents.
+    wired_at: ["meta/harness/pi-claude-routing.md", "meta/harness/agentics-library.md"]
+    invoked_by: ["LATTICE Library"]
+
+  - id: purpose-gate
+    surface: extension
+    name: purpose gate
+    state: ACTIVE
+    description: Session intent is declared up front and shown persistently before work starts.
+    wired_at: ["meta/harness/pi-claude-routing.md"]
+    invoked_by: ["Meta-Harness dry run"]
+
+  - id: tilldone
+    surface: extension
+    name: tilldone task discipline
+    state: ACTIVE
+    description: Defines and tracks tasks before work starts, with completion state across steps.
+    wired_at: ["meta/harness/pi-claude-routing.md"]
+    invoked_by: ["Meta-Harness dry run"]
+
+  - id: agent-team-chain
+    surface: extension
+    name: agent team and chain orchestration
+    state: ACTIVE
+    description: Pi can run dispatcher-style teams and sequential agent chains with explicit pipeline definitions.
+    wired_at: ["meta/harness/pi-claude-routing.md"]
+    invoked_by: ["LATTICE delegation model"]
+
+  - id: pi-coms
+    surface: extension
+    name: Pi-to-Pi communication
+    state: ACTIVE
+    description: Peer Pi agents communicate through four tools for list, send, get, and await over local or network transport.
+    wired_at: ["meta/harness/pi-claude-routing.md"]
+    invoked_by: ["future LATTICE peer-agent pool"]
+
+  - id: damage-control-extension
+    surface: extension
+    name: Pi damage-control extension
+    state: ACTIVE
+    description: Pi can intercept dangerous bash patterns and path access through extension rules.
+    wired_at: ["meta/harness/bash-safety.md", "meta/harness/pi-claude-routing.md"]
+    invoked_by: ["LATTICE Pi safety"]
+
+  - id: pi-claude-routing-policy
+    surface: doctrine
+    name: Pi versus Claude routing policy
+    state: ACTIVE
+    description: Use Pi when model/provider flexibility, extensions, observability, or ephemeral execution matters; use Claude CLI for Claude-native repo work.
+    wired_at: ["meta/harness/pi-claude-routing.md", "meta/harness/model-fit.md"]
+    invoked_by: ["LATTICE orchestrator"]

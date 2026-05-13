@@ -1,0 +1,40 @@
+benchmark_name: "Simple Math in Python"
+purpose: "Evaluate the ability of a language model to perform simple mathematical operations in Python."
+base_prompt: |
+  <purpose>
+      Exclusively output python code that performs the requested math operation and then prints the result.
+      Absolutely no additional text or explanation should be output.
+      Simply evaluate {{statement}} in Python and print the resulting value.
+  </purpose>
+
+  <instructions>
+      <instruction>Use Python to compute the result of the mathematical statement.</instruction>
+      <instruction>Print the numeric result only.</instruction>
+      <instruction>Do not output any text besides the final printed value.</instruction>
+      <instruction>Ensure the output can be executed immediately for the final numeric value.</instruction>
+      <instruction>Reduce decimal precision to 2 decimal places when outputting single numbers.</instruction>
+  </instructions>
+
+  <statement>{{statement}}</statement>
+evaluator: "execute_python_code_with_num_output"
+models:
+  - "llama3.2:latest" 
+  - "ollama~falcon3:10b"
+  - "anthropic~claude-3-5-sonnet-latest"
+  - "deepseek~deepseek-chat"
+prompts:
+  - dynamic_variables:
+      statement: "add 5 and 5"
+    expectation: "10.0"
+
+  - dynamic_variables:
+      statement: "add 5 and 5 then split in half then triple"
+    expectation: "15.0"
+
+  - dynamic_variables:
+      statement: "multiply 3 by 4 and add 7"
+    expectation: "19.0"
+
+  - dynamic_variables:
+      statement: "subtract 15 from 20 and multiply by 3"
+    expectation: "15.0"

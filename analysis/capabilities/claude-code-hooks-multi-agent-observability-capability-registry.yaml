@@ -1,0 +1,47 @@
+# spec-verified: disler/claude-code-hooks-multi-agent-observability 8a6e5cf 2026-05-12
+tool: claude-code-hooks-multi-agent-observability
+tool_version: 8a6e5cf
+canonical_docs: https://github.com/disler/claude-code-hooks-multi-agent-observability
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: hook-event-stream
+    surface: observability
+    name: hook event stream
+    state: ACTIVE
+    description: Claude hook events are sent over HTTP and streamed to clients for live observability.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE observability"]
+
+  - id: bun-sqlite-event-store
+    surface: architecture
+    name: Bun plus SQLite event store
+    state: ACTIVE
+    description: Hook event ingestion writes to SQLite and broadcasts through WebSocket.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["future LATTICE event ledger"]
+
+  - id: multi-agent-dashboard
+    surface: ui
+    name: multi-agent observability dashboard
+    state: ACTIVE
+    description: Dashboard filters and visualizes concurrent agent sessions, tool calls, and lifecycle events.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["Meta-Harness dry-run evidence"]
+
+  - id: worktree-observability
+    surface: workflow
+    name: worktree/subagent observability
+    state: ACTIVE
+    description: Worktree creation, subagent lifecycle, and hook events are visible in one event stream.
+    wired_at: ["meta/harness/hooks-observability.md", "meta/harness/fork-and-sandbox.md"]
+    invoked_by: ["LATTICE parallel work"]
+
+  - id: send-event-hook
+    surface: hook
+    name: universal send_event hook
+    state: ACTIVE
+    description: Shared hook forwards normalized event fields to the observability server.
+    wired_at: ["meta/harness/hooks-observability.md"]
+    invoked_by: ["LATTICE hook doctrine"]

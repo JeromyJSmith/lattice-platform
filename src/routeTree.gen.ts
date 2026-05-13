@@ -25,6 +25,8 @@ import { Route as SettingsDbRouteImport } from './routes/settings/db'
 import { Route as SettingsAuthRouteImport } from './routes/settings/auth'
 import { Route as RunsRunIdRouteImport } from './routes/runs/$runId'
 import { Route as ReplayRunIdRouteImport } from './routes/replay/$runId'
+import { Route as HarnessCapabilitiesRouteImport } from './routes/harness/capabilities'
+import { Route as HarnessBenchmarksRouteImport } from './routes/harness/benchmarks'
 import { Route as EvidenceArtifactIdRouteImport } from './routes/evidence/$artifactId'
 import { Route as DemoStoreRouteImport } from './routes/demo/store'
 import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
@@ -124,6 +126,16 @@ const RunsRunIdRoute = RunsRunIdRouteImport.update({
 const ReplayRunIdRoute = ReplayRunIdRouteImport.update({
   id: '/replay/$runId',
   path: '/replay/$runId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HarnessCapabilitiesRoute = HarnessCapabilitiesRouteImport.update({
+  id: '/harness/capabilities',
+  path: '/harness/capabilities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HarnessBenchmarksRoute = HarnessBenchmarksRouteImport.update({
+  id: '/harness/benchmarks',
+  path: '/harness/benchmarks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EvidenceArtifactIdRoute = EvidenceArtifactIdRouteImport.update({
@@ -238,6 +250,8 @@ export interface FileRoutesByFullPath {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/harness/benchmarks': typeof HarnessBenchmarksRoute
+  '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
   '/runs/$runId': typeof RunsRunIdRoute
   '/settings/auth': typeof SettingsAuthRoute
@@ -276,6 +290,8 @@ export interface FileRoutesByTo {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/harness/benchmarks': typeof HarnessBenchmarksRoute
+  '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
   '/runs/$runId': typeof RunsRunIdRoute
   '/settings/auth': typeof SettingsAuthRoute
@@ -315,6 +331,8 @@ export interface FileRoutesById {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/harness/benchmarks': typeof HarnessBenchmarksRoute
+  '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
   '/runs/$runId': typeof RunsRunIdRoute
   '/settings/auth': typeof SettingsAuthRoute
@@ -355,6 +373,8 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/harness/benchmarks'
+    | '/harness/capabilities'
     | '/replay/$runId'
     | '/runs/$runId'
     | '/settings/auth'
@@ -393,6 +413,8 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/harness/benchmarks'
+    | '/harness/capabilities'
     | '/replay/$runId'
     | '/runs/$runId'
     | '/settings/auth'
@@ -431,6 +453,8 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/harness/benchmarks'
+    | '/harness/capabilities'
     | '/replay/$runId'
     | '/runs/$runId'
     | '/settings/auth'
@@ -470,6 +494,8 @@ export interface RootRouteChildren {
   DemoBetterAuthRoute: typeof DemoBetterAuthRoute
   DemoStoreRoute: typeof DemoStoreRoute
   EvidenceArtifactIdRoute: typeof EvidenceArtifactIdRoute
+  HarnessBenchmarksRoute: typeof HarnessBenchmarksRoute
+  HarnessCapabilitiesRoute: typeof HarnessCapabilitiesRoute
   ReplayRunIdRoute: typeof ReplayRunIdRoute
   RunsRunIdRoute: typeof RunsRunIdRoute
   SettingsAuthRoute: typeof SettingsAuthRoute
@@ -610,6 +636,20 @@ declare module '@tanstack/react-router' {
       path: '/replay/$runId'
       fullPath: '/replay/$runId'
       preLoaderRoute: typeof ReplayRunIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/harness/capabilities': {
+      id: '/harness/capabilities'
+      path: '/harness/capabilities'
+      fullPath: '/harness/capabilities'
+      preLoaderRoute: typeof HarnessCapabilitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/harness/benchmarks': {
+      id: '/harness/benchmarks'
+      path: '/harness/benchmarks'
+      fullPath: '/harness/benchmarks'
+      preLoaderRoute: typeof HarnessBenchmarksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/evidence/$artifactId': {
@@ -766,6 +806,8 @@ const rootRouteChildren: RootRouteChildren = {
   DemoBetterAuthRoute: DemoBetterAuthRoute,
   DemoStoreRoute: DemoStoreRoute,
   EvidenceArtifactIdRoute: EvidenceArtifactIdRoute,
+  HarnessBenchmarksRoute: HarnessBenchmarksRoute,
+  HarnessCapabilitiesRoute: HarnessCapabilitiesRoute,
   ReplayRunIdRoute: ReplayRunIdRoute,
   RunsRunIdRoute: RunsRunIdRoute,
   SettingsAuthRoute: SettingsAuthRoute,

@@ -1,0 +1,51 @@
+# spec-verified: disler/benchy 31e8377 2026-05-12
+tool: benchy
+tool_version: 31e8377
+canonical_docs: https://github.com/disler/benchy
+source_mirror: meta/harness/references/benchy/
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: live-model-benchmarks
+    surface: workflow
+    name: live model benchmarks
+    state: ACTIVE
+    description: Compare model quality, latency, price, and speed for specific use cases.
+    wired_at: ["meta/harness/benchmarking.md", "meta/harness/model-fit.md", "meta/harness/references/benchy/"]
+    invoked_by: ["LATTICE model-fit loop"]
+
+  - id: benchmark-yaml-configs
+    surface: data
+    name: benchmark_data YAML configs
+    state: ACTIVE
+    description: Benchmarks are driven by reusable configuration files and saved reports.
+    wired_at: ["meta/harness/benchmarking.md", "meta/harness/references/benchy/server/benchmark_data/"]
+    invoked_by: ["LATTICE benchmarking"]
+
+  - id: provider-modules
+    surface: architecture
+    name: provider module adapters
+    state: ACTIVE
+    description: Benchmark harness includes adapters for OpenAI, Anthropic, Gemini, Ollama, Deepseek, Fireworks, and OpenRouter-style routing.
+    wired_at: ["meta/harness/benchmarking.md", "meta/harness/model-fit.md", "meta/harness/references/benchy/server/modules/"]
+    invoked_by: ["LATTICE model-fit loop"]
+
+  - id: reports-as-evidence
+    surface: evidence
+    name: benchmark reports as evidence
+    state: ACTIVE
+    description: Benchmark results are durable JSON reports used for model selection decisions.
+    wired_at:
+      - meta/harness/benchmarking.md
+      - meta/harness/references/benchy/server/reports/
+      - meta/harness/docs/sessions/2026-05-12-codebase-context-benchmark.json
+    invoked_by: ["Meta-Harness evidence", "/harness/benchmarks"]
+
+  - id: parallel-worktree-variants
+    surface: workflow
+    name: parallel worktree variants
+    state: ACTIVE
+    description: Run multiple model or agent variants on separate worktrees and select the best result.
+    wired_at: ["meta/harness/benchmarking.md", "meta/harness/fork-and-sandbox.md", "meta/harness/references/benchy/start_tree_clients.sh"]
+    invoked_by: ["future LATTICE model experiments"]

@@ -1,0 +1,134 @@
+# spec-verified: meta/DDC_MAPPING.md 2026-05-12
+tool: ddc
+tool_version: mapping-2026-05-12
+canonical_docs: meta/DDC_MAPPING.md
+last_harvested: 2026-05-12
+harvested_by: codex
+
+capabilities:
+  - id: ddc-skills-process-patterns
+    surface: skill_patterns
+    name: DDC skills process patterns
+    state: ACTIVE
+    description: Adapt the DDC construction-agent SKILL.md patterns into LATTICE-native quantity takeoff, cost estimation, scheduling, validation, reporting, specification, and procurement workflows.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/skills/README.md
+      - skills/ddc/README.md
+    invoked_by:
+      - Meta-Harness capability matrix
+      - future DDC skill sync
+      - future DDC quantity-takeoff proof fixture
+    serves:
+      - ddc skills substrate
+      - quantity takeoff
+      - cost estimation
+      - BIM report generation
+    proof_evidence: []
+
+  - id: openconstructionerp-boq-adapter
+    surface: adapter
+    name: OpenConstructionERP BOQ adapter
+    state: ACTIVE
+    description: Bridge LATTICE IFC element rows into OpenConstructionERP BOQ, cost export, and phase adapter calls without vendoring the ERP runtime into this repository.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/erp/README.md
+      - ddc/erp/boq-adapter.py
+      - ddc/erp/cost-export.py
+      - ddc/erp/phase-adapter.py
+    invoked_by:
+      - future pixeltable/service/routes/erp.py
+      - future /admin DDC dashboard
+      - future BOQ proof fixture
+    serves:
+      - OpenConstructionERP integration
+      - BOQ generation
+      - 4D/5D schedule mapping
+      - admin dashboard
+    proof_evidence: []
+
+  - id: cwicr-qdrant-cost-search
+    surface: service_adapter
+    name: CWICR Qdrant cost search
+    state: ACTIVE
+    description: Use the DDC CWICR cost corpus as a local Qdrant-backed semantic lookup service, then write selected unit-cost results back through LATTICE-controlled Pixeltable flows once schema support exists.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/cwicr/README.md
+      - ddc/cwicr/INSTALL.md
+      - ddc/cwicr/seed-qdrant.sh
+      - ddc/cwicr/cost-search.py
+    invoked_by:
+      - future POST /v1/erp/cost-search
+      - future CWICR cost-search proof fixture
+      - future /admin DDC dashboard
+    serves:
+      - CWICR cost lookup
+      - deck.gl cost overlay
+      - BOQ unit cost enrichment
+      - admin dashboard
+    proof_evidence: []
+
+  - id: ddc-n8n-workflow-pattern-extraction
+    surface: workflow_reference
+    name: n8n workflow pattern extraction
+    state: ACTIVE
+    description: Treat DDC n8n workflow JSON as reference process logic and translate useful DAG patterns into LATTICE FastAPI pipelines, not a production n8n runtime.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/n8n/README.md
+      - ddc/n8n/workflows/
+      - ddc/n8n/pipeline-templates/
+    invoked_by:
+      - future DDC workflow sync
+      - future FastAPI pipeline extraction
+      - future evidence/report workflow proof
+    serves:
+      - FastAPI pipeline patterns
+      - evidence artifact workflows
+      - report generation
+      - project task/photo workflow references
+    proof_evidence: []
+
+  - id: ddc-converter-fallback-policy
+    surface: fallback_policy
+    name: DDC IFC/DWG converter fallback policy
+    state: ACTIVE
+    description: Keep DDC Linux converters as explicit fallback tooling for IfcOpenShell or ezdxf failures only; never accept Revit or DGN paths into LATTICE.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/converters/README.md
+      - ddc/converters/INSTALL.md
+    invoked_by:
+      - explicit operator fallback request
+      - future schema_drift_events triage
+      - future OrbStack converter proof
+    serves:
+      - IFC fallback parsing
+      - DWG fallback parsing
+      - protected no-Revit/no-DGN boundary
+      - schema drift triage
+    proof_evidence: []
+
+  - id: ddc-admin-sql-reporting-stubs
+    surface: analytics_sql
+    name: DDC admin SQL/reporting stubs
+    state: ACTIVE
+    description: Seed the admin dashboard query surface for DDC cost summary, element counts, BOQ status, skill execution logs, CWICR search history, and schedule reporting over future Pixeltable exports.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/admin/README.md
+      - ddc/admin/project-summary.sql
+      - ddc/admin/element-counts.sql
+      - ddc/admin/boq-status.sql
+    invoked_by:
+      - future /admin DDC dashboard
+      - future DuckDB WASM Pixeltable export
+      - future DDC reporting proof
+    serves:
+      - admin dashboard
+      - DuckDB WASM analytics
+      - BOQ reporting
+      - DDC execution observability
+    proof_evidence: []

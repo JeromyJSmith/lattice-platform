@@ -1,7 +1,7 @@
-import { Link } from '@tanstack/react-router'
-import TanChatAIAssistant from './demo-AIAssistant.tsx'
-import BetterAuthHeader from '../integrations/better-auth/header-user.tsx'
-import ThemeToggle from './ThemeToggle'
+import { Link } from "@tanstack/react-router";
+import BetterAuthHeader from "../integrations/better-auth/header-user.tsx";
+import TanChatAIAssistant from "./demo-AIAssistant.tsx";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
@@ -21,35 +21,49 @@ export default function Header() {
           <Link
             to="/"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             Home
           </Link>
           <Link
             to="/about"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             About
           </Link>
           <Link
             to="/runtime"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             Runtime
           </Link>
           <Link
             to="/runs"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             Runs
           </Link>
           <Link
+            to="/harness/benchmarks"
+            className="nav-link"
+            activeProps={{ className: "nav-link is-active" }}
+          >
+            Benchmarks
+          </Link>
+          <Link
+            to="/harness/capabilities"
+            className="nav-link"
+            activeProps={{ className: "nav-link is-active" }}
+          >
+            Capabilities
+          </Link>
+          <Link
             to="/settings"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             Settings
           </Link>
@@ -136,5 +150,5 @@ export default function Header() {
         </div>
       </nav>
     </header>
-  )
+  );
 }

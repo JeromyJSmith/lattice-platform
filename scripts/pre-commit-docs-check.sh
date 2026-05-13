@@ -105,6 +105,26 @@ $STAGED
 EOF
 fi
 
+# ---- 7. Capability registry Zero Dead DNA audit ----
+if [ -f scripts/audit-dead-dna.sh ]; then
+  if ! bash scripts/audit-dead-dna.sh; then
+    fail=1
+  fi
+else
+  echo "❌ scripts/audit-dead-dna.sh is missing"
+  fail=1
+fi
+
+# ---- 8. Python docstring audit ----
+if [ -f scripts/check-python-docstrings.py ]; then
+  if ! uv run python scripts/check-python-docstrings.py; then
+    fail=1
+  fi
+else
+  echo "❌ scripts/check-python-docstrings.py is missing"
+  fail=1
+fi
+
 if [ "$fail" -eq 1 ]; then
   echo ""
   echo "❌ LATTICE docs-sync check failed — see messages above."

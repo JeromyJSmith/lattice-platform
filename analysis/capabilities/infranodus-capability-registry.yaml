@@ -202,8 +202,8 @@ capabilities:
     name: ontology-creator
     state: ACTIVE
     description: Builds taxonomies from text; useful for DesireRecord category extraction
-    wired_at: [analysis/infranodus/README.md (referenced for desire intake)]
-    invoked_by: [DesireRecord intake pipeline (Issue #13)]
+    wired_at: ["analysis/infranodus/README.md (referenced for desire intake)"]
+    invoked_by: ["DesireRecord intake pipeline (Issue #13)"]
 
   - id: llm-wiki-skill
     surface: skill

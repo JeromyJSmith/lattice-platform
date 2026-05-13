@@ -1,0 +1,254 @@
+# Meta-Harness Next Session Handoff
+
+Date: 2026-05-12
+Branch: `feature/meta-harness`
+Repo root: `/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge`
+Baseline commit: `c83c8b4 feat(meta-harness): land capability matrix operator surface`
+
+## Start Here
+
+Read these files in order:
+
+1. `AGENTS.md`
+2. `meta/harness/README.md`
+3. `meta/harness/CURRENT-STATE.md`
+4. `meta/harness/golden_path.md`
+5. `meta/harness/TODO.md`
+6. `meta/harness/docs/capability-lifecycle.md`
+7. `meta/DDC_MAPPING.md`
+
+The current goal is still Golden Path 002:
+
+```text
+capability row
+-> run contract
+-> browser Run button
+-> FastAPI sidecar execution
+-> verifier
+-> evidence artifact
+-> row result
+-> promotion/tracking
+```
+
+The important operational change is that the previous dirty tree is now landed.
+Do not rediscover or re-stage that work; start from commit `c83c8b4`.
+
+## Committed Baseline
+
+Commit `c83c8b4` landed the coherent Meta-Harness slice:
+
+- `analysis/capabilities/` now has 23 registries and 200 capability rows.
+- `analysis/capabilities/ddc-capability-registry.yaml` exists with six DDC contract-only rows.
+- `pixeltable/service/routes/harness.py` exposes `/v1/harness/*`.
+- `pixeltable/service/main.py` wires the harness router.
+- `/harness/benchmarks` and `/harness/capabilities` exist in TanStack.
+- `scripts/check-python-docstrings.py`, `scripts/audit-dead-dna.sh`, and `scripts/lattice-verify.sh` are active.
+- Benchy reference material is incorporated under `meta/harness/references/benchy/`.
+- Nested `.vite/`, pycache, `dist/`, env files, and runtime dust are ignored.
+
+The worktree was clean immediately after the commit.
+
+## Current Matrix State
+
+Latest live matrix response observed before this handoff:
+
+| Status | Count |
+|---|---:|
+| Green / proven | 1 |
+| Amber / needs proof or deferred | 151 |
+| Red / failing, blocked, or invalid | 48 |
+| Total | 200 |
+
+Registry audit output from the committed tree:
+
+```text
+registries=23
+active=153
+deferred=44
+blocked=3
+bootstrap_empty=4
+```
+
+Known nuance: the running sidecar process may be stale. Restart it after pulling
+or resuming so it loads the committed `python-docstring-rule` runner in
+`pixeltable/service/routes/harness.py`.
+
+## Servers
+
+If the session starts cold or the sidecar is stale, restart both surfaces.
+
+Sidecar:
+
+```bash
+cd /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/pixeltable
+PIXELTABLE_HOME=/Volumes/PixelTable/.pixeltable uv run uvicorn service.main:app --host 127.0.0.1 --port 7770
+```
+
+Console:
+
+```bash
+cd /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge
+bun run dev --host 127.0.0.1
+```
+
+Open:
+
+```text
+http://127.0.0.1:3000/harness/capabilities
+```
+
+## What Is Runnable Now
+
+Backend allowlist in `pixeltable/service/routes/harness.py` includes:
+
+| Capability | Runner kind | Command / path |
+|---|---|---|
+| `codebase-context-ripgrep` | `single_file_agent` | `uv run meta/harness/tools/codebase-context-agent.py ...` |
+| `python-docstring-rule` | `script_exit_code` | `uv run python scripts/check-python-docstrings.py` |
+
+The sidecar must execute only allowlisted contracts. There is no arbitrary shell
+or arbitrary Python endpoint.
+
+## DDC State
+
+DDC is registered, not proven.
+
+File:
+
+```text
+analysis/capabilities/ddc-capability-registry.yaml
+```
+
+Rows:
+
+- `ddc-skills-process-patterns`
+- `openconstructionerp-boq-adapter`
+- `cwicr-qdrant-cost-search`
+- `ddc-n8n-workflow-pattern-extraction`
+- `ddc-converter-fallback-policy`
+- `ddc-admin-sql-reporting-stubs`
+
+All six are contract-only amber rows because `proof_evidence` is empty. This is
+correct. Do not install DDC services or write migrations just to make them green.
+
+## Proof Artifacts Already Present
+
+Codebase context proof:
+
+```text
+meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json
+meta/harness/docs/sessions/2026-05-12-codebase-context-sidecar-run.json
+meta/harness/docs/sessions/2026-05-12-codebase-context-benchmark.json
+meta/harness/docs/sessions/2026-05-12T13-15-32-115Z-codebase-context-ripgrep-browser-run.json
+```
+
+Python docstring proof:
+
+```text
+meta/harness/docs/sessions/2026-05-12-python-docstring-rule-direct-run.json
+meta/harness/docs/sessions/2026-05-12T18-02-26-539Z-python-docstring-rule-browser-run.json
+```
+
+The `python-docstring-rule` registry row is runnable but still needs an explicit
+registry `proof_evidence` decision before it should be treated as green/proven.
+
+## Verification Passed For `c83c8b4`
+
+These checks passed before the commit:
+
+```bash
+bash scripts/audit-dead-dna.sh
+uv run python scripts/check-python-docstrings.py
+uv run --extra dev pytest tests/no_pxt/test_harness_capability_runs.py
+bun test src/runtime/pixeltable/sidecar-client.test.ts
+bunx biome check src/components/Header.tsx src/runtime/pixeltable/sidecar-client.ts src/runtime/pixeltable/sidecar-client.test.ts src/routes/harness src/server/harness
+bash scripts/pre-commit-docs-check.sh
+bash scripts/lattice-verify.sh HEAD
+bun run build
+git diff --check
+```
+
+Notes:
+
+- `src/routeTree.gen.ts` is generated by TanStack and noisy under Biome.
+- `meta/harness/references/benchy/` is reference material; do not lint it as
+  LATTICE-authored source.
+- `bun run build` emits Vite externalization warnings for Node modules in the
+  server-side sidecar client path, but the build completed.
+
+## Hard Rules
+
+Do not violate these:
+
+- Do not edit landed migrations `0001` through `0016`.
+- Do not touch secrets, `.env*`, OAuth credentials, or provider tokens.
+- Do not change branch protection or merge to `main`.
+- Do not delete migrations, branches, or issues.
+- Do not make incidental doctrine changes.
+- Do not expose arbitrary shell execution from the sidecar.
+- Do not make DuckDB or SQLite durable storage. Pixeltable is the substrate;
+  DuckDB WASM is browser analytics over exported Arrow/Parquet.
+
+## Immediate Next Slice
+
+Do this next:
+
+1. Restart sidecar and console.
+2. Open `/harness/capabilities`.
+3. Confirm both `codebase-context-ripgrep` and `python-docstring-rule` appear
+   under the `Runnable` filter.
+4. Run `python-docstring-rule` from the browser.
+5. Inspect the evidence artifact.
+6. If the artifact is good, update
+   `analysis/capabilities/single-file-agents-capability-registry.yaml` so
+   `python-docstring-rule` cites its proof evidence.
+7. Re-run verification and commit that small promotion.
+
+Acceptance:
+
+- Browser Run button executes through TanStack -> FastAPI sidecar -> allowlisted
+  command.
+- Evidence includes `capability_id`, `run_id`, `ok`, `command`, `artifact`,
+  `verification`, stdout/stderr, return code, and timing.
+- Registry cites proof only after evidence has been inspected.
+- Matrix count remains 200 and green increases only if the row is legitimately
+  proof-backed.
+
+## Next DDC Slice
+
+After `python-docstring-rule` is correctly proof-backed, promote one DDC row from
+contract-only to proof-backed.
+
+Start with:
+
+```text
+ddc-admin-sql-reporting-stubs
+```
+
+Why:
+
+- Local only.
+- No Qdrant.
+- No OpenConstructionERP runtime.
+- No OrbStack.
+- No migration.
+
+Likely task:
+
+- Add `scripts/check-ddc-admin-sql.py`.
+- Validate `ddc/admin/project-summary.sql`, `ddc/admin/element-counts.sql`, and
+  `ddc/admin/boq-status.sql` exist and satisfy the current lightweight contract.
+- Register an allowlisted `script_exit_code` runner.
+- Run it from `/harness/capabilities`.
+- Write proof under `meta/harness/docs/sessions/`.
+- Add proof evidence to `ddc-admin-sql-reporting-stubs`.
+
+## Not Now
+
+- Do not write migration `0017` until the pre-flight evidence shape is stable.
+- Do not install OpenConstructionERP, Qdrant/CWICR, or converters as part of the
+  first DDC proof.
+- Do not promote all DDC rows at once.
+- Do not build webhooks before native Linear/GitHub sync gaps are measured.
+- Do not move the Meta-Harness into its own repository until at least one
+  browser-visible, sidecar-verified, evidence-backed pre-flight path is stable.
