@@ -59,6 +59,7 @@ HARNESS_BACKEND=ollama:qwen2.5-coder:7b bash meta/harness/bootstrap/run-autorese
 - **Pixeltable is the only database.** `.bim` files are read-only sources via `@pxt.udf` (sqlite3 implementation detail only).
 - **Plant Style Manager controls all VW plant instances** — never hardcode geometry per-instance.
 - **All coordinates EPSG-normalized before Pixeltable write** — never raw VW internal coordinates.
+- **Vendored = plain-copy, no nested `.git/`** — any external repo you bring in (especially `github.com/disler/*` / IndyDevDan repos: `single-file-agents`, `benchy`, `agentic-drop-zones`, `claude-code-hooks-mastery`, `the-library`, etc.) gets its `.git/` directory stripped before commit. `git clone` → `rm -rf <path>/.git` → `git add <path>/`. If you forget, `git add` emits an "embedded git repository" warning and creates a broken gitlink instead of vendoring the content. See [`.claude/rules/vendored-skills.md`](.claude/rules/vendored-skills.md) for the full procedure.
 
 ## When you add a migration
 
