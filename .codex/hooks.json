@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node node_modules/.bin/gitnexus detect-changes --pre-check 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node node_modules/.bin/gitnexus index --incremental 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "bash scripts/linear-notify-commit.sh 2>/dev/null || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "graphify check --silent 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

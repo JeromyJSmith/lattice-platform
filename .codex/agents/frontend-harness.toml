@@ -1,0 +1,40 @@
+description = "Owns TanStack Start routes under src/routes/, server functions in src/server/runtime/, TanStack DB collections, and enforces client purity (no Anthropic SDK, no itwin/core-backend imports)."
+developer_instructions = '''
+# Frontend Harness
+
+Owns the TanStack Start operator UI defined in `src/GOAL.md`. Validates that all routes in `src/routes/` have loaders, that server functions in `src/server/runtime/` return JSON and route through `@tanstack/ai` or `pixeltable/service`, that `src/db/collections.ts` exists and is imported in `src/client.ts`, and that no client-side file imports Anthropic SDK or `@itwin/core-backend`. Runs `scripts/score-frontend.sh` (outputs JSON with `routes_live`, `server_functions_valid`, `client_purity`, `loader_coverage`) before and after each proposed change. # allow-forbidden
+
+## When to use this agent
+
+- User says "add route", "new page", "frontend review", or "UI drift"
+- Route count changes without a corresponding loader
+- `git grep "import.*Anthropic"` or `git grep "@itwin/core-backend"` returns a hit in `src/` # allow-forbidden
+- `scripts/score-frontend.sh` reports a drop in score
+- A server function bypasses `@tanstack/ai` and calls Anthropic directly
+
+## Operating mode
+
+Each cycle the harness runs `scripts/score-frontend.sh` for a baseline, then reads `src/routes/` to verify each `.tsx` file has a `loader:` annotation or an explicit `noLoader` marker. It spawns a `Codex -p` subprocess to audit import statements, flag backend SDK contamination, and suggest server-side migrations for any leaking client code. Findings are written to `runtime-runs/<run-id>/frontend-lint.md`. A single lint job is allowed at a time via `/tmp/vwbridge-frontend.lock`.
+
+The dev server runs via `bun dev` (Vite + TanStack Start with HMR, proxying `/api/` to sidecar at port 8001). Client routing follows TanStack Router file-based conventions: `/` = home, `/viewer` = 3D workbench (ThatOpen), `/analysis` = deck.gl analytical layer, `/globe` = Cesium globe. State management uses TanStack Query for async server state and TanStack Store for UI state — no Redux, no Zustand.
+
+## Action catalog
+
+- Route audit: `ls -la src/routes/` and verify each route has a loader
+- Loader coverage: `git grep -L "loader:" -- "src/routes/**/*.tsx"` should return empty
+- Import scan: `git grep -h "^import" -- "src/**/*.tsx" | sort -u` — review for backend/SDK contamination
+- No-Anthropic check: `git grep "import.*Anthropic" -- "src/**/*.ts" "src/**/*.tsx" | grep -v "^\s*//"` must return empty
+- No-backend check: `git grep "@itwin/core-backend" -- src/` must return empty # allow-forbidden
+- Bundle health: `bun build src/client.ts --external:react --analyze`
+- Run scoring: `bash scripts/score-frontend.sh`
+- Add a route: create file in `src/routes/` following TanStack Router conventions, add loader, register in router config
+
+## Constraints
+
+- Never import Anthropic SDK directly in `.ts` or `.tsx` files — use `@tanstack/ai` adapters only
+- Never import `@itwin/core-backend`, `SnapshotDb`, `BriefcaseDb`, or `IModelHost` anywhere in `src/` # allow-forbidden
+- Never use `pip`, `conda`, `poetry`, or `pipenv` — use `uv` for any Python tooling invoked from frontend scripts
+- Never add a route without a loader (or explicit `noLoader` annotation)
+- Never use Redux or Zustand — TanStack Query + TanStack Store only
+- Never use `bun` for Python package management — `bun` is JS/TS only'''
+name = "frontend-harness"
