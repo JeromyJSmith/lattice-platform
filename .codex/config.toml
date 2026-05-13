@@ -1,0 +1,22 @@
+[mcp_servers.3d-asset-gen]
+args = [
+    "run",
+    "--with",
+    "fastmcp",
+    "--with",
+    "httpx",
+    "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/3d_assets/mcp_server.py",
+]
+command = "uv"
+
+[mcp_servers.3d-asset-gen.env]
+PIXELTABLE_HOME = "/Volumes/PixelTable/.pixeltable"
+PYTHONPATH = "/Volumes/PixelTable/schemas"
+
+[mcp_servers.infranodus]
+args = [
+    "-y",
+    "infranodus-mcp-server",
+]
+command = "npx"
+env_vars = ["INFRANODUS_API_KEY"]

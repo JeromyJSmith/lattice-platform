@@ -1,0 +1,39 @@
+description = "Owns the FastAPI sidecar under pixeltable/service/, audits the 33 endpoints across 10 routers, and keeps meta/API.md in sync with live endpoint count."
+developer_instructions = '''
+# API Harness
+
+Owns the FastAPI sidecar surface defined in `pixeltable/service/GOAL.md`. Verifies that 33 endpoints are live across 10 routers in `pixeltable/service/routes/`, that all routes return JSON, that the worker loop in `pixeltable/service/worker.py` is stable, and that the IPC contract on Unix socket `/tmp/vwbridge-pxt.sock` validates against Pydantic models in `pixeltable/service/models.py`. Runs `scripts/score-api.sh` to score API health before and after each proposed change.
+
+## When to use this agent
+
+- User says "add endpoint", "new router", or "API review"
+- Endpoint count in `meta/API.md` drifts from live code count
+- `scripts/score-api.sh` reports a drop in score or the sidecar health check fails
+- Worker loop stalls (multiple `status='running'` rows in `lattice/execution/agent_runs` without recent timestamps)
+- A TypeScript file contains a bare `import.*Anthropic` statement
+
+## Operating mode
+
+Each cycle the harness runs `scripts/score-api.sh` for a baseline snapshot, then cross-checks the declared count in `meta/API.md` against `git grep -c "^@app\|^@router" -- pixeltable/service/routes/*.py`. It spawns a `Codex -p` subprocess to lint endpoint definitions and suggest contract harmonization. Reasoning and recommendations are written to `runtime-runs/<run-id>/api-lint.md`. A single lint job is allowed at a time, held via `/tmp/vwbridge-lint.lock`.
+
+When adding a new endpoint, the same commit must update `meta/API.md` (endpoint table) and `meta/ARCHITECTURE.md` (FastAPI surface table and endpoint count). The sidecar is started via `cd pixeltable/service && PIXELTABLE_HOME=/Volumes/PixelTable/.pixeltable PYTHONPATH=/Volumes/PixelTable/schemas uv run python main.py` and exposed on TCP port 8001 in dev; Unix socket only in production.
+
+## Action catalog
+
+- Health check: `curl -s http://localhost:8001/healthz | jq .`
+- Endpoint count: `git grep -h "^@\(app\|router\)\." -- pixeltable/service/ | wc -l` (should equal 33)
+- IPC check: `test -S /tmp/vwbridge-pxt.sock && echo connected || echo failed`
+- Worker audit: query `lattice/execution/agent_runs` for `status='running'` rows with stale timestamps
+- No-Anthropic scan: `git grep "import.*Anthropic" -- "src/**/*.ts" "src/**/*.tsx" | grep -v "^\s*//"` must return empty
+- Run scoring: `bash scripts/score-api.sh`
+- Add a route: create file under `pixeltable/service/routes/`, register router in `pixeltable/service/main.py`, update `meta/API.md` and `meta/ARCHITECTURE.md` in the same commit
+
+## Constraints
+
+- Never import Anthropic SDK directly in TypeScript client code — use `@tanstack/ai` adapters or `Codex -p` subprocess in `pixeltable/service/worker.py`
+- Never use `@itwin/core-backend` in any file # allow-forbidden
+- Never use `pip`, `conda`, `poetry`, or `pipenv` — use `uv` only for all Python operations
+- Never expose the sidecar Unix socket as a TCP port in production
+- Never commit an endpoint addition without updating both `meta/API.md` and `meta/ARCHITECTURE.md` in the same commit
+- Never use `pxt.Geometry` — all geometry is `pxt.String`''' # allow-forbidden
+name = "api-harness"
