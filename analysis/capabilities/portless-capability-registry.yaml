@@ -129,8 +129,14 @@ capabilities:
     name: Subdomain-to-port routing by HOSTNAME
     state: ACTIVE
     description: Routes by HTTP Host header (subdomain of .localhost or custom TLD) instead of path
+    # NOTE: wired_at lists the canonical per-service config layout. Three of the
+    # five paths (llama-swap, benchy/client, benchy/server) live in directories
+    # that come from Wave 1. scripts/setup-portless.sh is idempotent and writes
+    # each .portless.json only if its parent directory exists. On a branch
+    # without Wave 1 merged, only the root + pixeltable/service entries are
+    # created. After PR #383 lands they all materialize on a re-run. NOT stale.
     wired_at:
-      - .portless.json (root)
+      - .portless.json
       - pixeltable/service/.portless.json
       - meta/harness/bin/llama-swap/.portless.json
       - meta/harness/benchy/client/.portless.json
