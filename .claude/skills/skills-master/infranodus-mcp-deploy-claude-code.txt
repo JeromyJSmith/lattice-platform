@@ -1,0 +1,243 @@
+Title: InfraNodus MCP Server: Claude Code CLI Setup
+
+URL Source: http://infranodus.com/mcp/deploy-claude-code
+
+Markdown Content:
+# InfraNodus MCP Server: Claude Code CLI Setup
+
+[InfraNodus](http://infranodus.com/ "InfraNodus: Generate Insight Using Text Network Analysis")
+
+*   [Features](http://infranodus.com/#features)
+*   [Use Cases](http://infranodus.com/mcp/deploy-claude-code#)
+    *    AI-Assisted Thinking & Insight Generation: 
+    *   [Creative Thinking & Writing](http://infranodus.com/use-case/creative-thinking)
+    *   [Mind Mapping](http://infranodus.com/use-case/text-mindmap)
+    *   [Brainstorming](http://infranodus.com/use-case/brainstorming)
+    *   [Obsidian Knowledge Graphs](http://infranodus.com/use-case/visualize-knowledge-graphs-pkm)
+    *   [Introspection & Self-Reflection](http://infranodus.com/use-case/introspection-self-reflection)
+    *   [Knowledge Graphs for LLM RAG](http://infranodus.com/use-case/ai-knowledge-graphs)
+    *   [Reasoning Ontologies](http://infranodus.com/use-case/reasoning-ontologies)
+    *   [MCP Server](http://infranodus.com/use-case/mcp-server)
+    *   Marketing & Consulting:
+    *   [Market Research](http://infranodus.com/use-case/marketing-research)
+    *   [Sentiment Analysis of Customer Reviews](http://infranodus.com/use-case/customer-reviews-survey-analysis)
+    *   [Search Engine Optimization](http://infranodus.com/use-case/search-engine-optimization)
+    *   [Entity Driven SEO](http://infranodus.com/use-case/entity-driven-seo)
+    *   [Thematic Analysis with AI](http://infranodus.com/use-case/qualitative-research-thematic-analysis)
+    *   [Qualitative Analysis with AI](http://infranodus.com/use-case/ai-qualitative-data-analysis)
+    *   [Innovation & Trend Research](http://infranodus.com/use-case/innovation-consulting-trends)
+    *    Research, Text Visualization & Analysis: 
+    *   [Text Network Analysis](http://infranodus.com/use-case/text-network-analysis)
+    *   [Text Mining & Topic Modeling](http://infranodus.com/use-case/text-mining)
+    *   [Network Analysis & Visualization](http://infranodus.com/use-case/network-analysis-visualization)
+    *   [Overview and Summarization](http://infranodus.com/use-case/discourse-overview-summary)
+
+*   [Graphs](http://infranodus.com/mcp/deploy-claude-code#)
+    *   For Reasoning and GraphRAG
+    *   [Traditional Chinese Medicine](https://infranodus.com/expert/chinese_medicine?background=dark&show_analytics=1&most_influential=bc2&maxnodes=150&labelsize=proportional&edgestype=curve&drawedges=true&drawnodes=true&labelsizeratio=1&dynamic=highlight&cutgraph=1&selected=highlight&demo=1)
+    *   [EightOS Adaptive Resilience](https://infranodus.com/expert/eightos_system?background=dark&show_analytics=1&most_influential=bc2&maxnodes=150&threshold=8&labelsize=proportional&edgestype=curve&drawedges=true&drawnodes=true&labelsizeratio=2&dynamic=highlight&cutgraph=1&selected=highlight&demo=1)
+    *   [Ray Dalio's Principles](https://infranodus.com/expert/ray_dalio_principles?background=default&show_analytics=1&most_influential=bc2&maxnodes=150&threshold=5&labelsize=proportional&edgestype=curve&drawedges=true&drawnodes=true&labelsizeratio=2&dynamic=highlight&cutgraph=1&selected=highlight&demo=1)
+    *    other [Reasoning Ontologies](http://infranodus.com/knowledge-graphs)
+    *   For Text Analysis & RAG
+    *   [News of the Day](https://infranodus.com/live/hourlydailynews?background=default&most_influential=bc&maxnodes=150&demo=1&defaultlabelsize=14&labelsizeratio=2&demo=1)
+    *   [Google Search Results](https://infranodus.com/seo/google?stopwords=data+visualization+tool&demo=1&defaultlabelsize=14&labelsizeratio=2&labelsize=proportional&demo=1)
+    *   [Customer Reviews for LG27UN880B](https://infranodus.com/live/amazon_lg27un880b?background=dark&most_influential=bc2&maxnodes=150&labelsize=proportional&edgestype=line&drawedges=true&drawnodes=true&labelsizeratio=2&dynamic=accumulate&cutgraph=1&selected=highlight&stopwords=monitor+lg+apple&showcategories=1&demo=1)
+    *    other [Graphs & Examples](http://infranodus.com/graphs)
+
+*   [How It Works](http://infranodus.com/#showcase)
+*   [Pricing](http://infranodus.com/#pricing)
+*   [Product](http://infranodus.com/#about)
+    *   Our Approach & Objectives
+    *   [How InfraNodus Works](http://infranodus.com/about/how-it-works)
+    *   [Ecological Thinking](http://infranodus.com/about/ecological-thinking)
+    *   [Cognitive Variability](http://infranodus.com/about/cognitive-variability)
+    *   [InfraNodus Research Framework](http://infranodus.com/about/research-framework)
+    *   About Us
+    *   [Our Story & Philosophy](http://infranodus.com/about/our-story)
+    *   [Our Company](http://infranodus.com/about/our-company)
+    *   [Jobs](http://infranodus.com/jobs)
+    *   [Advisory Board](http://infranodus.com/advisors)
+    *   [Updates & Changelog](http://infranodus.com/updates)
+    *   [Newsletter](http://infranodus.com/newsletter)
+    *   [Affiliate Program](http://infranodus.com/affiliates)
+    *   [Contact Us](http://infranodus.com/about/contact)
+    *   Services & Tools
+    *   [Consulting](http://infranodus.com/consulting)
+    *   [Training & Education](http://infranodus.com/education)
+    *   [InfraNodus Partners](http://infranodus.com/partners)
+    *   [Built with InfraNodus](http://infranodus.com/showcase)
+    *   [AI Browser Extension](http://infranodus.com/extension)
+    *   [Obsidian Graph View Plugin](http://infranodus.com/obsidian-plugin)
+    *   [API & No-Code Integrations](http://infranodus.com/api)
+    *   [MCP Server](http://infranodus.com/mcp)
+    *   [Claude LLM Skills](http://infranodus.com/skills)
+    *   [VSCode / Cursor IDE Extension](http://infranodus.com/vscode-extension)
+    *   Legal
+    *   [Privacy Policy](http://infranodus.com/about/privacy-policy)
+    *   [Terms of Use](http://infranodus.com/about/terms-conditions)
+
+*   [Learn](http://infranodus.com/mcp/deploy-claude-code#)
+    *   Customer Support:
+    *   [User Manual](https://support.noduslabs.com/hc/en-us/categories/360002512819-How-to-Use-InfraNodus)
+    *   [Support Portal](https://support.noduslabs.com/)
+    *   [Tutorials](http://infranodus.com/docs)
+    *   [Latest Updates](http://infranodus.com/updates)
+    *   [Knowledge Graphs for LLMs:](http://infranodus.com/docs/knowledge-graphs-for-llms)
+    *   [GraphRAG: LLM Knowledge Graph](http://infranodus.com/docs/graph-rag-knowledge-graph)
+    *   [Knowledge Graphs for LLM Reasoning](http://infranodus.com/docs/knowledge-graphs-llm-reasoning)
+    *   [MCP vs RAG vs AI Agents](http://infranodus.com/docs/mcp-vs-rag-vs-ai-agents)
+    *   [n8n Workflow Templates](http://infranodus.com/docs/n8n-workflow-templates-automations)
+    *   [AI-Enhanced Ideation Tutorials:](http://infranodus.com/docs/ai-ideation-tutorials)
+    *   [Personal Knowledge Management](http://infranodus.com/docs/personal-knowledge-management)
+    *   [Creative Thinking & Writing](http://infranodus.com/docs/creative-thinking-writers-tool)
+    *   [Overview and AI Article Summary](http://infranodus.com/docs/overview-summarize-books-articles)
+    *   [Generating Insight & Ideas](http://infranodus.com/docs/generate-insight)
+    *   [Dream Analysis & Interpretation](http://infranodus.com/docs/dream-analysis-interpretation)
+    *   [Personal Diary & Journal Analysis](http://infranodus.com/docs/diary-journaling-app)
+    *   [Search Engine / LLM Optimization:](http://infranodus.com/docs/seo-llm-optimization)
+    *   [Keyword Research & Demand Study](http://infranodus.com/docs/keyword-research)
+    *   [SEO Knowledge Graphs](http://infranodus.com/docs/search-engine-optimization)
+    *   [Keyword Clustering for SEO](http://infranodus.com/docs/keyword-clustering-seo)
+    *   [SEO Clusters](http://infranodus.com/docs/seo-clusters)
+    *   [Market Research Tutorials:](http://infranodus.com/docs/market-research-tutorials)
+    *   [Sentiment Analysis](http://infranodus.com/docs/customer-product-reviews-sentiment)
+    *   [Competitive Intelligence](http://infranodus.com/docs/competitive-intelligence)
+    *   [Innovation Strategy & Research](http://infranodus.com/docs/innovation-strategy)
+    *   [Content Gap Analysis](http://infranodus.com/docs/content-gap-analysis)
+    *   [Data Analysis Tutorials:](http://infranodus.com/docs/data-analysis-tutorials)
+    *   [Visual Google Search](http://infranodus.com/docs/visual-search)
+    *   [Text Network Analysis](http://infranodus.com/docs/text-network-analysis)
+    *   [Text Mining & Topic Modeling](http://infranodus.com/docs/network-visualization-text-mining)
+    *   [Qualitative Analysis](http://infranodus.com/docs/qualitative-thematic-analysis)
+    *   [Thematic Analysis with AI](http://infranodus.com/docs/thematic-analysis-steps-framework)
+    *   [AI Text Analysis](http://infranodus.com/docs/ai-text-analysis)
+    *   [Text Visualization Tutorials:](http://infranodus.com/docs/text-visualization-tutorials)
+    *   [Mind Map Generation](http://infranodus.com/docs/mind-map-tool)
+    *   [Word Cloud Generator](http://infranodus.com/docs/word-cloud-generator)
+    *   [Network Analysis & Visualization](http://infranodus.com/docs/network-analysis)
+    *   [Text Art & Music](http://infranodus.com/docs/text-art-sculpting)
+    *   Reviews & Recommendations:
+    *   [Network Visualization Tools](http://infranodus.com/docs/network-visualization-software)
+    *   [Data Visualization Tools](http://infranodus.com/docs/data-visualization-tools)
+    *   [AI Text Analysis Tools](http://infranodus.com/docs/text-analyzer-tools)
+    *   [Text Visualization Tools](http://infranodus.com/docs/tools-text-visualization)
+    *   [Gephi Alternative](http://infranodus.com/docs/gephi-alternative-network-analysis)
+    *   [Voyant Tools Alternative](http://infranodus.com/docs/voyant-alternative-tools)
+    *   [Survey Analysis Tools](http://infranodus.com/docs/survey-analysis-tools)
+
+[](http://infranodus.com/mcp/deploy-claude-code#)[Log In](http://infranodus.com/login)[Sign Up](http://infranodus.com/signup)
+
+###### [MCP Server](http://infranodus.com/mcp)
+
+###### Overview
+
+*   [Setup & Installation](http://infranodus.com/mcp)
+*   [MCP Tools](http://infranodus.com/mcp/tools)
+*   [Example Usage](http://infranodus.com/mcp/examples)
+
+###### Deployment Guides
+
+*   [Claude Web / Desktop](http://infranodus.com/mcp/deploy-claude)
+*   [ChatGPT](http://infranodus.com/mcp/deploy-chatgpt)
+*   [Cursor IDE](http://infranodus.com/mcp/deploy-cursor)
+*   [n8n](http://infranodus.com/mcp/deploy-n8n)
+*   [Make.Com](http://infranodus.com/mcp/deploy-make)
+*   [Claude Code CLI](http://infranodus.com/mcp/deploy-claude-code)
+*   [Terminal / Local CLI](http://infranodus.com/mcp/deploy-terminal)
+*   [MCPorter Reference](http://infranodus.com/mcp/deploy-mcporter)
+*   [OpenClaw AI Agent](http://infranodus.com/mcp/deploy-openclaw)
+*   [Local Installation](http://infranodus.com/mcp/deploy-local)
+
+###### Reference
+
+*   [FAQ](http://infranodus.com/mcp/faq)
+*   [API & Integrations](http://infranodus.com/api)
+*   [API Documentation](http://infranodus.com/api/docs)
+
+# Install MCP Server to Claude Code CLI
+
+You can also configure the InfraNodus MCP server in Claude Code. Note, that if you run Claude Desktop and have the MCP servers set up there, Claude Code has a different setup and will use the MCP servers that you install via its CLI or provide in its `.claude.json` file.The easiest way to install it is to run the following command in your terminal:
+
+```bash
+claude mcp add infranodus -s user \
+-- env INFRANODUS_API_KEY=YOUR_INRANODUS_KEY \
+	npx -y infranodus-mcp-server
+```
+
+Bash
+
+In this case, a configuration will be added to your Claude Code configuration file usually located at `~/Your_User_Name/.claude.json` (your username home directory). You can also add the configuration manually if you open that file, find `mcpServers` section (create it if it doesn't exist) and add the InfraNodus mcp server activation setting:
+
+```json
+{
+	"mcpServers": {
+		"infranodus": {
+			"command": "npx",
+			"args": [
+			  "-y",
+			  "infranodus-mcp-server"
+			],
+			"env": {
+			  "INFRANODUS_API_KEY": "YOUR_INFRANODUS_API_KEY_HERE"
+			}
+	}
+}
+```
+
+JSON
+
+#### What's Next
+
+*   [All Deployment Guides](http://infranodus.com/mcp/deployment)
+*   [MCP Tools & Examples](http://infranodus.com/mcp/tools)
+*   [Example Usage](http://infranodus.com/mcp/examples)
+
+## InfraNodus
+
+InfraNodus is a text network visualization tool that can be used to build graphs and represent any text as a network. It's been developed by Nodus Labs since 2011 and has been used in many research institutions and enterprises worldwide.
+
+ InfraNodus runs on [NestJs](http://www.nestjs.com/) Node.Js framework, [Prisma](http://www.prisma.io/), PostgreSQL, and [Sigma.Js](http://www.sigmajs.org/) graph visualization library, uses [Textexture text network analysis algorithm](https://noduslabs.com/research/visualization-text-polysingularity-network-analysis/) as well as Cytoscape, Graphology and other libraries. Without the open-source community and StackOverflow our product would be impossible. That's why we offer a range of [open source tools](https://github.com/noduslabs/) that underpin InfraNodus for public use under AGPL licenses.
+
+###### Learn More
+
+*   [Support Pages](https://support.noduslabs.com/)
+*   [Case Studies](https://noduslabs.com/tag/infranodus)
+*   [Video Tutorials](https://www.youtube.com/channel/UCK2IvRB36OUwXwMRD1iDmvg)
+*   [Free Online Course](http://noduslabs.com/courses/text-network-analysis-for-cognitive-stimulation/)
+
+*   [GitHub: Workflows, Datasets, Tools](https://github.com/infranodus/)
+*   [API & GraphRAG](http://infranodus.com/api)
+*   [MCP Server](http://infranodus.com/mcp)
+
+###### Our Company
+
+*   [Nodus Labs](https://noduslabs.com/)
+*   [Job Offers](http://infranodus.com/jobs)
+*   [Contact Us](https://noduslabs.com/contact)
+
+*   [Our Research on Google Scholar](https://scholar.google.com/citations?user=7fyleFwAAAAJ)
+
+###### Connect
+
+ Find us on Twitter, YouTube, and Facebook: 
+
+[](https://facebook.com/noduslabs)[](https://twitter.com/noduslabs)[](https://www.youtube.com/channel/UCK2IvRB36OUwXwMRD1iDmvg)[](https://discord.gg/dV5Z2vSbtk)
+
+###### Browser Extension
+
+ Generate new ideas from any web content using AI and knowledge graphs:
+
+[Download InfraNodus AI Extension](http://infranodus.com/extension)
+
+###### Obsidian Graph View Plugin
+
+ Advanced network science insights for your Obsidian vaults:
+
+[Get the InfraNodus Obsidian Graph View Plugin](http://infranodus.com/obsidian-plugin)
+
+© 2011-2025 [Dmitry Paranyushkin / Nodus Labs / InfraNodus SAS](http://noduslabs.com/ "Nodus Labs")
+
+*   [Privacy Policy](https://infranodus.com/about/privacy-policy)
+*   [Terms & Conditions](https://infranodus.com/about/terms-conditions)
+
+![Image 1](https://t.co/i/adsct?bci=3&dv=UTC%26en-US%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%268%2624%26800%26600%260%26na&eci=2&event_id=c376bf3b-a5fd-4570-b4f4-b5c50c41a578&events=%5B%5B%22pageview%22%2C%7B%7D%5D%5D&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=e0330956-7b87-464d-a546-63f7b4e71472&pt=InfraNodus%20MCP%20Server%3A%20Claude%20Code%20CLI%20Setup&tw_document_href=https%3A%2F%2Finfranodus.com%2Fmcp%2Fdeploy-claude-code&tw_iframe_status=0&tw_order_quantity=0&tw_pid_src=1&tw_sale_amount=0&twpid=tw.1778642343923.11864030026819621&txn_id=o4ldc&type=javascript&version=2.3.53)![Image 2](https://analytics.twitter.com/i/adsct?bci=3&dv=UTC%26en-US%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%268%2624%26800%26600%260%26na&eci=2&event_id=c376bf3b-a5fd-4570-b4f4-b5c50c41a578&events=%5B%5B%22pageview%22%2C%7B%7D%5D%5D&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=e0330956-7b87-464d-a546-63f7b4e71472&pt=InfraNodus%20MCP%20Server%3A%20Claude%20Code%20CLI%20Setup&tw_document_href=https%3A%2F%2Finfranodus.com%2Fmcp%2Fdeploy-claude-code&tw_iframe_status=0&tw_order_quantity=0&tw_pid_src=1&tw_sale_amount=0&twpid=tw.1778642343923.11864030026819621&txn_id=o4ldc&type=javascript&version=2.3.53)
