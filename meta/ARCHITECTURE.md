@@ -5,6 +5,7 @@ The one authoritative architecture document. When other docs and this one disagr
 Total **48 tables** planned (currently **36 tables** applied on `main`; migrations **0014** + **0015** + **0016** are planning artifacts on `feature/meta-harness`, adding 12 tables when Phase 2 of the Meta-Harness build applies them). **39 FastAPI endpoints**, 226 issues tracked. Last verified against live state: 2026-05-12 (migration **0013** applied).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
+> See [`meta/capability-research/ARCHITECTURE.md`](capability-research/ARCHITECTURE.md) for the capability research, repo-census, proof-gate, and runtime-adoption architecture.
 
 ---
 
@@ -455,6 +456,7 @@ Every step writes evidence to `lattice/execution/evidence`; the chain is auditab
 | Multi-platform agent handoff | `meta/HANDOFF.md` |
 | Backlog | `meta/FEATURE_BACKLOG.md` |
 | iTwin / Cesium / DDC integration plans | `meta/ITWIN_MAPPING.md`, `meta/CESIUM_SETUP.md`, `meta/DDC_MAPPING.md` |
+| Capability research and proof architecture | `meta/capability-research/ARCHITECTURE.md` |
 | Worktree layout | `meta/WORKTREES.md` |
 | Linear setup steps | `meta/LINEAR_SETUP.md` |
 | UI screenshots | `meta/UI_SCREENSHOTS.md` |

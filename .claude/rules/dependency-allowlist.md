@@ -88,6 +88,17 @@ allowlist:
     capability_registry: null  # vendored skill bundle, not a runtime tool with MCP surface
 ```
 
+  - id: fastmcp
+    name: fastmcp
+    upstream: github.com/jlowin/fastmcp
+    language: python
+    install_method: uv_run_with
+    install_target: "uv run --with fastmcp (ad-hoc, not in pyproject.toml)"
+    scope: ad-hoc runtime via uv --with flag
+    justification: MCP server framework for 3d-asset-gen pipeline server (3d_assets/mcp_server.py)
+    phase_added: 2
+    capability_registry: analysis/capabilities/fastmcp-capability-registry.yaml
+
 ## Adding a new dependency
 
 1. Open a PR that appends a row to the YAML above

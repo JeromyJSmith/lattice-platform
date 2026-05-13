@@ -1,0 +1,83 @@
+# spec-verified: github.com/jlowin/fastmcp 2026-05-12
+tool: fastmcp
+tool_version: "2.x"
+canonical_docs: https://github.com/jlowin/fastmcp
+last_harvested: "2026-05-12"
+harvested_by: claude-code
+
+# fastmcp is used exclusively as the framework for 3d_assets/mcp_server.py
+# It is NOT installed globally — invoked via `uv run --with fastmcp`.
+# Capability surface exposed by 3d-asset-gen is in this registry.
+
+capabilities:
+  - id: generate_plant_prompt
+    surface: mcp_tool
+    name: generate_plant_prompt
+    state: ACTIVE
+    description: Build SD image generation prompt for a plant species using botanical trait library
+    wired_at: "3d_assets/mcp_server.py:generate_plant_prompt"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: list_known_species
+    surface: mcp_tool
+    name: list_known_species
+    state: ACTIVE
+    description: Return all species with pre-built trait profiles (10 MARPA Live palette species)
+    wired_at: "3d_assets/mcp_server.py:list_known_species"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: render_plant_image
+    surface: mcp_tool
+    name: render_plant_image
+    state: ACTIVE
+    description: Submit SD prompt to ComfyUI for photorealistic plant image generation
+    wired_at: "3d_assets/mcp_server.py:render_plant_image"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: generate_3d_from_image
+    surface: mcp_tool
+    name: generate_3d_from_image
+    state: ACTIVE
+    description: Submit image to TRELLIS server (port 8766) for 3D GLB generation
+    wired_at: "3d_assets/mcp_server.py:generate_3d_from_image"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: run_full_pipeline
+    surface: mcp_tool
+    name: run_full_pipeline
+    state: ACTIVE
+    description: Orchestrate full pipeline — prompt → ComfyUI render → TRELLIS 3D — for a species
+    wired_at: "3d_assets/mcp_server.py:run_full_pipeline"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: get_job_status
+    surface: mcp_tool
+    name: get_job_status
+    state: ACTIVE
+    description: Poll status of any pipeline job (ComfyUI render or TRELLIS 3D)
+    wired_at: "3d_assets/mcp_server.py:get_job_status"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: list_completed_assets
+    surface: mcp_tool
+    name: list_completed_assets
+    state: ACTIVE
+    description: List all completed TRELLIS GLBs on disk via gallery API or direct scan
+    wired_at: "3d_assets/mcp_server.py:list_completed_assets"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: copy_asset_to_downloads
+    surface: mcp_tool
+    name: copy_asset_to_downloads
+    state: ACTIVE
+    description: Copy a completed GLB to ~/Downloads
+    wired_at: "3d_assets/mcp_server.py:copy_asset_to_downloads"
+    invoked_by: claude-code via 3d-asset-gen MCP
+
+  - id: ingest_asset
+    surface: mcp_tool
+    name: ingest_asset
+    state: ACTIVE
+    description: Copy GLB to lod-300 and upsert row into lattice/bridge/plant_assets Pixeltable
+    wired_at: "3d_assets/mcp_server.py:ingest_asset"
+    invoked_by: claude-code via 3d-asset-gen MCP

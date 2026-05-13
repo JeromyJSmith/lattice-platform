@@ -6,6 +6,19 @@
       "env": {
         "INFRANODUS_API_KEY": "${INFRANODUS_API_KEY}"
       }
+    },
+    "3d-asset-gen": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "--with", "httpx",
+        "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/3d_assets/mcp_server.py"
+      ],
+      "env": {
+        "PIXELTABLE_HOME": "/Volumes/PixelTable/.pixeltable",
+        "PYTHONPATH": "/Volumes/PixelTable/schemas"
+      }
     }
   }
 }

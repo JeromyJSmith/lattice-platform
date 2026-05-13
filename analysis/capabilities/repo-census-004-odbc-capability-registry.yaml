@@ -1,0 +1,192 @@
+# spec-verified: web and GitHub live metadata 2026-05-13
+tool: repo-census-004-odbc
+tool_version: 2026-05-13-live-web-github-metadata
+canonical_docs: meta/capability-research/census/repo-census-004-odbc.md
+last_harvested: 2026-05-13
+harvested_by: codex
+
+capabilities:
+  - id: vectorworks-native-odbc-database-workflow
+    surface: documentation
+    name: Vectorworks native ODBC database workflow
+    state: ACTIVE
+    description: Harvest Vectorworks native database setup, record-format connection, object connection, and update-direction workflows as the design basis for fixture-backed record sync.
+    wired_at:
+      - https://app-help.vectorworks.net/2023/eng/VW2023_Guide/Database/Database_setup.htm
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future Vectorworks ODBC field mapping proof
+      - future record sync design
+    serves:
+      - ODBC/data exchange
+      - object record extraction
+      - class/layer/style sync
+      - price source ingest
+    proof_evidence: []
+
+  - id: vectorworks-odbc-driver-support-matrix
+    surface: documentation
+    name: Vectorworks ODBC driver support matrix
+    state: ACTIVE
+    description: Harvest Vectorworks ODBC driver support, platform, read/write, and add-row constraints before selecting any live driver.
+    wired_at:
+      - https://product-help.vectorworks.net/2025/jpn/VW2025_Guide/Database/ODBC_driver_information.htm
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future ODBC driver selection design
+      - future Mac ODBC setup proof
+    serves:
+      - ODBC/data exchange
+      - driver compatibility
+      - evidence
+    proof_evidence: []
+
+  - id: vectorworks-worksheet-database-semantics
+    surface: documentation
+    name: Vectorworks worksheet database semantics
+    state: ACTIVE
+    description: Harvest worksheet/database-row behavior and worksheet function semantics for fixture-backed extraction of object-derived values.
+    wired_at:
+      - https://www.vectorworks.co.jp/vwfeatures/worksheet.html
+      - https://www.vectorworks.co.jp/develop/ScriptReference/Pages/Worksheets.html
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future worksheet extraction proof
+      - future class/style/record schedule fixture
+    serves:
+      - worksheet extraction
+      - object parameters
+      - quantity calculation
+      - price source ingest
+    proof_evidence: []
+
+  - id: vectorworks-data-manager-mapping
+    surface: documentation
+    name: Vectorworks Data Manager mapping
+    state: ACTIVE
+    description: Harvest Vectorworks Data Manager concepts for mapping object data, records, and external data fields into a controlled Pixeltable sync contract.
+    wired_at:
+      - https://download2.vectorworks.net/ebooks/us/guides/data-manager.pdf
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future Data Manager to Pixeltable mapping design
+      - future record field normalization proof
+    serves:
+      - object record extraction
+      - field mapping
+      - Pixeltable schema vocabulary
+    proof_evidence: []
+
+  - id: vectorworks-postgres-mysql-odbc-community-refs
+    surface: source_repo
+    name: Vectorworks Postgres/MySQL ODBC community references
+    state: ACTIVE
+    description: Harvest old community Vectorworks-to-Postgres/MySQL ODBC examples as historical design references, not current runtime code.
+    wired_at:
+      - https://github.com/rgm/vectorworks-postgres
+      - https://github.com/rgm/vectorworks-mysql
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future ODBC community reference assessment
+      - future record sync fixture design
+    serves:
+      - ODBC/data exchange
+      - record sync
+      - database-link design
+    proof_evidence: []
+
+  - id: unixodbc-iodbc-manager-setup
+    surface: source_repo
+    name: unixODBC and iODBC manager setup
+    state: ACTIVE
+    description: Harvest cross-platform ODBC manager setup, DSN config, diagnostic, and macOS/Linux support patterns for any future ODBC bridge.
+    wired_at:
+      - https://github.com/lurcher/unixODBC
+      - https://github.com/openlink/iODBC
+      - https://www.iodbc.org/
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future Mac ODBC setup design
+      - future DSN manifest verifier
+    serves:
+      - ODBC/data exchange
+      - driver compatibility
+      - setup diagnostics
+    proof_evidence: []
+
+  - id: pyodbc-turbodbc-python-adapters
+    surface: source_repo
+    name: pyodbc and turbodbc Python adapters
+    state: ACTIVE
+    description: Harvest Python ODBC adapter APIs and constraints for future local fixture reads from ODBC-compatible sources.
+    wired_at:
+      - https://github.com/mkleehammer/pyodbc
+      - https://github.com/blue-yonder/turbodbc
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future Python ODBC fixture proof
+      - future price-sheet database ingest adapter
+    serves:
+      - ODBC/data exchange
+      - Python ingest
+      - price source ingest
+    proof_evidence: []
+
+  - id: arrow-parquet-odbc-export-bridges
+    surface: source_repo
+    name: Arrow and Parquet ODBC export bridges
+    state: ACTIVE
+    description: Harvest ODBC-to-Arrow, ODBC-to-Parquet, and ODBC-to-CSV bridge tools as possible deterministic fixture/export shapes for Pixeltable ingestion.
+    wired_at:
+      - https://github.com/pacman82/arrow-odbc-py
+      - https://github.com/pacman82/odbc2parquet
+      - https://github.com/pacman82/odbcsv
+      - https://github.com/pacman82/odbc-api
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future ODBC export fixture
+      - future Parquet handoff proof
+    serves:
+      - ODBC/data exchange
+      - Arrow/Parquet export
+      - Pixeltable ingest fixture
+    proof_evidence: []
+
+  - id: sqlserver-psql-mysql-odbc-driver-candidates
+    surface: documentation
+    name: SQL Server PostgreSQL MySQL ODBC driver candidates
+    state: ACTIVE
+    description: Track current official SQL Server, PostgreSQL, and MySQL ODBC driver surfaces as possible sources for firm database connections.
+    wired_at:
+      - https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server
+      - https://odbc.postgresql.org/
+      - https://dev.mysql.com/doc/relnotes/connector-odbc/en/index.html
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future driver compatibility review
+      - future ODBC connection-string redaction proof
+    serves:
+      - ODBC/data exchange
+      - driver compatibility
+      - price source ingest
+    proof_evidence: []
+
+  - id: cloud-warehouse-odbc-driver-watchlist
+    surface: documentation
+    name: Cloud warehouse ODBC driver watchlist
+    state: ACTIVE
+    description: Track Snowflake, Redshift, AWS wrapper, and MariaDB ODBC surfaces as later options for firm or supplier data sources.
+    wired_at:
+      - https://www.snowflake.com/en/developers/downloads/odbc/
+      - https://github.com/aws/amazon-redshift-odbc-driver
+      - https://github.com/aws/aws-advanced-odbc-wrapper
+      - https://github.com/mariadb-corporation/mariadb-connector-odbc
+      - meta/capability-research/census/repo-census-004-odbc.md
+    invoked_by:
+      - future supplier/firm database driver review
+      - future cloud warehouse ingest design
+    serves:
+      - ODBC/data exchange
+      - supplier data ingest
+      - price source ingest
+    proof_evidence: []

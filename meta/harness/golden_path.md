@@ -211,6 +211,50 @@ Golden Path 001 proved that one promoted script can run and leave evidence. The
 next path locks the pre-flight loop that decides whether a capability is ready
 to be trusted by an operator.
 
+### Research-Aligned North Star
+
+The capability matrix is not the product. It is the proof gate for a broader
+LATTICE workflow: harvest external repository capabilities, reduce each one to a
+bounded contract, run it through the browser/sidecar/verifier path, and only
+then let it participate in the Vectorworks -> Pixeltable -> iTwin/DDC operator
+loop.
+
+The research packet under
+`/Volumes/PixelTable/VW_iTWIN_Bridge/Vectorworks_Bentley_iTwin_MARPA_Research_20260508/`
+frames the target use case:
+
+```text
+Vectorworks authored project data
+  -> Pixeltable aggregation and compute substrate
+  -> BIS/IFC/iTwin semantic-spatial normalization
+  -> element selection or grouped query
+  -> DDC/CWICR/OpenConstructionERP cost, BOQ, schedule, LCA, and reporting
+  -> iTwin/TanStack operator panels and evidence-backed agent actions
+```
+
+That means Golden Path 002 should stay small, but it should select proof slices
+that move toward this stack. The next proofs should prefer deterministic,
+local-first contracts that validate pieces of the future element workflow:
+geometry/quantity checks, material or BIS normalization checks, DDC admin/report
+queries, cost-search fixtures, grouping/reporting adapters, and evidence
+promotion rules. Do not skip the proof gate because a repository appears useful;
+the purpose of the harness is to prevent unverified harvested capabilities from
+entering the operator path.
+
+Capability rows should be mapped against the future element workflow while they
+are harvested. Use current registry fields for that mapping: `invoked_by`
+describes the future operator/run surface, `serves` names the workflow layer
+supported by the capability, and `proof_evidence` stays empty until a verifier
+artifact exists. The prototype shape to keep in mind is:
+
+```text
+BIM/iTwin element selection
+  -> element identity + geometry + material + quantity
+  -> proven DDC/cost/schedule/LCA/reporting capability
+  -> operator panel result
+  -> evidence-backed promotion/tracking
+```
+
 The path is:
 
 ```text
