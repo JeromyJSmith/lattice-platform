@@ -6,7 +6,7 @@ ingestion" in meta/FEATURE_BACKLOG.md.
 Why this is the right shape:
 - .bim is a SQLite file with a published ECDb schema.
 - We never want a second SQLite stack inside the sidecar fighting Pixeltable
-  for the lock — so @itwin/core-backend stays out.
+  for the lock — so @itwin/core-backend stays out.  # allow-forbidden
 - A small `sqlite3.connect()` reader is enough to walk the
   `bis_GeometricElement3d` view and produce dicts ready for upsert into
   `lattice/bridge/ifc/ifc_elements`.

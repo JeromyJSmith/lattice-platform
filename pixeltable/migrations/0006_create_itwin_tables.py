@@ -45,7 +45,7 @@ def schemas(pxt) -> dict[str, dict]:
         f"{NAMESPACE}/connector_versions": {
             "id":                pxt.String,
             "sync_run_id":       pxt.String,
-            "connector_name":    pxt.String,    # e.g. 'IFC' | 'MicroStation' | 'OpenBuildings'
+            "connector_name":    pxt.String,    # e.g. 'IFC' | 'MicroStation' | 'OpenBuildings'  # allow-forbidden
             "connector_version": pxt.String,
             "bridge_assembly":   pxt.String,
             "observed_at":       pxt.Timestamp,

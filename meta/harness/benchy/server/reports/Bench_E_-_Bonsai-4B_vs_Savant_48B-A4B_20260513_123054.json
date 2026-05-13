@@ -1,0 +1,244 @@
+{
+    "benchmark_name": "Bench E - Bonsai-4B vs Savant 48B-A4B",
+    "purpose": "The empirical local winner (Bonsai 4B, 1.1 GB) vs DavidAU Qwen3-48B-A4B Savant-Commander Heretic mega-merge (20 GB, 4B active MoE). Does the 18× size advantage buy anything?",
+    "base_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>{{function}}</function-request>\n<function-arguments>{{arguments}}</function-arguments>\n",
+    "prompt_iterations": [
+        {
+            "dynamic_variables": {
+                "function": "def add(a, b): int - add two numbers",
+                "arguments": "5, 7"
+            },
+            "expectation": "12"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def reverse_string(s: str) -> str - return the string reversed",
+                "arguments": "\"hello\""
+            },
+            "expectation": "olleh"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces",
+                "arguments": "\"A man a plan a canal Panama\""
+            },
+            "expectation": "True"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def fizzbuzz(n: int) -> list[str] - i+1 indexed, Fizz/Buzz/FizzBuzz, else str(i+1)",
+                "arguments": "5"
+            },
+            "expectation": "['1', '2', 'Fizz', '4', 'Buzz']"
+        },
+        {
+            "dynamic_variables": {
+                "function": "def parse_wkt_point(wkt: str) -> tuple[float, float] - parse 'POINT(lon lat)' and return (lon, lat)",
+                "arguments": "\"POINT(-122.4 37.8)\""
+            },
+            "expectation": "(-122.4, 37.8)"
+        }
+    ],
+    "models": [
+        {
+            "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "def add(a, b):\n    return a + b\n\nresult = add(5, 7)\nprint(result)",
+                        "tokens_per_second": 51.967,
+                        "provider": "mlx",
+                        "total_duration_ms": 2923.0,
+                        "load_duration_ms": 1827.4543313652084,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "12.0",
+                    "expected_result": "12",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def add(a, b): int - add two numbers</function-request>\n<function-arguments>5, 7</function-arguments>\n",
+                    "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+                    "correct": false,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "def reverse_string(s: str) -> str:\n    return s[::-1]\n\nresult = reverse_string(\"hello\")\nprint(result)",
+                        "tokens_per_second": 52.259,
+                        "provider": "mlx",
+                        "total_duration_ms": 2938.0,
+                        "load_duration_ms": 1821.7575758062665,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "olleh\n",
+                    "expected_result": "olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def reverse_string(s: str) -> str - return the string reversed</function-request>\n<function-arguments>\"hello\"</function-arguments>\n",
+                    "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+                    "correct": true,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "def is_palindrome(s: str) -> bool:\n    cleaned = s.lower().replace(\" \", \"\")\n    return cleaned == cleaned[::-1]\n\nresult = is_palindrome(\"A man a plan a canal Panama\")\nprint(result)",
+                        "tokens_per_second": 78.719,
+                        "provider": "mlx",
+                        "total_duration_ms": 3416.0,
+                        "load_duration_ms": 1822.4724985697326,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "True\n",
+                    "expected_result": "True",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces</function-request>\n<function-arguments>\"A man a plan a canal Panama\"</function-arguments>\n",
+                    "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "def fizzbuzz(n: int) -> list[str]:\n    result = []\n    for i in range(1, n + 1):\n        if i % 3 == 0 and i % 5 == 0:\n            result.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            result.append(\"Fizz\")\n        elif i % 5 == 0:\n            result.append(\"Buzz\")\n        else:\n            result.append(str(i + 1))\n    return result\n\nfizzbuzz(5)",
+                        "tokens_per_second": 83.131,
+                        "provider": "mlx",
+                        "total_duration_ms": 3720.0,
+                        "load_duration_ms": 1785.2218900912906,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "",
+                    "expected_result": "['1', '2', 'Fizz', '4', 'Buzz']",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def fizzbuzz(n: int) -> list[str] - i+1 indexed, Fizz/Buzz/FizzBuzz, else str(i+1)</function-request>\n<function-arguments>5</function-arguments>\n",
+                    "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+                    "correct": false,
+                    "index": 4
+                },
+                {
+                    "prompt_response": {
+                        "response": "def parse_wkt_point(wkt: str) -> tuple[float, float]:\n    wkt = wkt.strip()\n    if wkt.startswith(\"POINT(\"):\n        wkt = wkt[6:-1]\n        parts = wkt.split(\" \")\n        if len(parts) == 2:\n            lon, lat = float(parts[0]), float(parts[1])\n            return (lon, lat)\n    return (0.0, 0.0)\n\nresult = parse_wkt_point(\"POINT(-122.4 37.8)\")\nprint(result)",
+                        "tokens_per_second": 85.844,
+                        "provider": "mlx",
+                        "total_duration_ms": 3758.0,
+                        "load_duration_ms": 1763.1506878153266,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "(-122.4, 37.8)\n",
+                    "expected_result": "(-122.4, 37.8)",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def parse_wkt_point(wkt: str) -> tuple[float, float] - parse 'POINT(lon lat)' and return (lon, lat)</function-request>\n<function-arguments>\"POINT(-122.4 37.8)\"</function-arguments>\n",
+                    "model": "mlx~prism-ml/Ternary-Bonsai-4B-mlx-2bit",
+                    "correct": true,
+                    "index": 5
+                }
+            ],
+            "correct_count": 3,
+            "incorrect_count": 2,
+            "accuracy": 0.6,
+            "average_tokens_per_second": 70.38399999999999,
+            "average_total_duration_ms": 3351.0,
+            "average_load_duration_ms": 1804.011396729565,
+            "total_cost": 0.0
+        },
+        {
+            "model": "ollama~savant",
+            "results": [
+                {
+                    "prompt_response": {
+                        "response": "<think>\n**Goal**: I need to generate a Python function, call it with given arguments, and print the result. Let me break this down.\n\n1. **Function Request**: `def add(a, b): int - add two numbers` - This is a function called `add` that takes two parameters, `a` and `b`, and returns their sum as an integer.\n\n2. **Function Arguments**: `5, 7` - I'll need to call the `add` function with these values.\n\n3. **Output**: The result of `add(5, 7)` is 12, which is what I should print.\n\nI'll follow the instructions to create a function, call it, and print the result. The code must be immediately executable.\n\nLet me write the Python code:\n\n```python\ndef add(a, b):\n    return a + b\n\nresult = add(5, 7)\nprint(result)\n```\n\nThis code:\n1. Defines the `add` function\n2. Calls the function with 5 and 7\n3. Prints the result (12)\n\nIt's simple, clean, and meets all the requirements: no extra text, valid Python 3, immediately executable. This is exactly what I need to output.\n\nWait, should the function return an int explicitly? The request says `def add(a, b): int`, but in Python, you don't specify the return type in the function definition. The function is just `def add(a, b):` which returns the sum, and the caller handles type conversion. If I want to be explicit, I could do `def add(a, b) -> int:` which specifies the type hint, but the request didn't ask for type hints. The simplest approach is to just write `return a + b`.\n\nI think the instructions just mean it's a function that returns an integer. So the code I wrote is fine.\n\nMy instructions: \"Do not include any other text. No commentary, no markdown fences.\" So I will output just the code.\n\nI'm ready to output.\n</think>\n\ndef add(a, b):\n    return a + b\n\nresult = add(5, 7)\nprint(result)",
+                        "tokens_per_second": 63.27252557804801,
+                        "provider": "ollama",
+                        "total_duration_ms": 7804.66825,
+                        "load_duration_ms": 85.037041,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "12.0",
+                    "expected_result": "12",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def add(a, b): int - add two numbers</function-request>\n<function-arguments>5, 7</function-arguments>\n",
+                    "model": "ollama~savant",
+                    "correct": false,
+                    "index": 1
+                },
+                {
+                    "prompt_response": {
+                        "response": "<think>\n **Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.**\n\n **Instructions:**\n- Generate only the function requested by the user.\n- Fill in the function body with the appropriate code.\n- Do not include any other text.\n- Write code in python 3.\n- Generate the function, call the function, and print the result.\n- Your code must be immediately executable as-is.\n\n **Function-request:**\n```python\ndef reverse_string(s: str) -> str - return the string reversed\n```\n\n **Function-arguments:**\n```python\n\"hello\"\n```\n\nI need to create a Python function `reverse_string` that takes a string and returns it reversed. Then I'll call this function with the argument \"hello\" and print the result.\n\nHere's what I'll do:\n1. Create a function `reverse_string` that accepts a string parameter `s`\n2. Implement a way to reverse the string (using slicing would be simplest: `s[::-1]`)\n3. Call the function with the argument \"hello\"\n4. Print the result\n\nThe complete code should be:\n```python\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n\nresult = reverse_string(\"hello\")\nprint(result)\n```\n\nThis code:\n- Defines the required function with the correct type hints\n- Uses the most Pythonic way to reverse a string\n- Calls the function with \"hello\" as the argument\n- Prints the result\n\nLet me double-check the requirements:\n- No extra text or commentary: check\n- Only Python 3 code: check\n- Immediately executable: check\n- Follows the function request precisely: check\n\nEverything looks good. This is the final code I'll output.\n</think>\n\ndef reverse_string(s: str) -> str:\n    return s[::-1]\n\nresult = reverse_string(\"hello\")\nprint(result)",
+                        "tokens_per_second": 64.24368638054743,
+                        "provider": "ollama",
+                        "total_duration_ms": 6440.383625,
+                        "load_duration_ms": 59.401666,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "Error:   File \"/Users/ojeromyo/.tmp/tmpp99zzl3_.py\", line 9\n    I need to create a Python function `reverse_string` that takes a string and returns it reversed. Then I'll call this function with the argument \"hello\" and print the result.\n                                                                                                           ^\nSyntaxError: unterminated string literal (detected at line 9)\n",
+                    "expected_result": "olleh",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def reverse_string(s: str) -> str - return the string reversed</function-request>\n<function-arguments>\"hello\"</function-arguments>\n",
+                    "model": "ollama~savant",
+                    "correct": false,
+                    "index": 2
+                },
+                {
+                    "prompt_response": {
+                        "response": "<think>\n**Purpose**: Generate a function, call it, and print the result. The function is `is_palindrome` that checks if a string is a palindrome (case-insensitive, ignores spaces).\n\n**Function Request**: `def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces`\n\n**Arguments**: `\"A man a plan a canal Panama\"`\n\nI need to create a Python function, then call it with the given argument and print the result.\n\n1. **Generate the function**:\n   - The function should take a string `s`\n   - It should be case-insensitive: convert the string to lower or upper\n   - It should ignore spaces: remove spaces or filter them out\n   - Then check if the processed string equals its reverse\n\n2. **Call the function**:\n   - Use the provided argument `\"A man a plan a canal Panama\"`\n\n3. **Print the result**:\n   - Print the boolean value (True or False)\n\nLet me write the code:\n\n```python\ndef is_palindrome(s: str) -> bool:\n    # Process the string: lowercase and remove spaces\n    processed = s.lower().replace(\" \", \"\")\n    # Check if it reads the same forwards and backwards\n    return processed == processed[::-1]\n\nresult = is_palindrome(\"A man a plan a canal Panama\")\nprint(result)\n```\n\nBut wait, I should make sure it's *only* the function and the call/print. I'm not adding any explanations.\n\nSo the final output should be the code, and since this code is already executable as-is, I'll just provide it.\n</think>\n\ndef is_palindrome(s: str) -> bool:\n    processed = s.lower().replace(\" \", \"\")\n    return processed == processed[::-1]\n\nresult = is_palindrome(\"A man a plan a canal Panama\")\nprint(result)",
+                        "tokens_per_second": 64.41548932299983,
+                        "provider": "ollama",
+                        "total_duration_ms": 6211.0695,
+                        "load_duration_ms": 50.287833,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "True\n",
+                    "expected_result": "True",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def is_palindrome(s: str) -> bool - case-insensitive, ignore spaces</function-request>\n<function-arguments>\"A man a plan a canal Panama\"</function-arguments>\n",
+                    "model": "ollama~savant",
+                    "correct": true,
+                    "index": 3
+                },
+                {
+                    "prompt_response": {
+                        "response": "<think>\n**Understanding the Task:**\nI'm being asked to generate and execute a Python function for the \"fizzbuzz\" problem. The requirements are very specific.\n\n**Analyzing the Request:**\n- **Function Signature:** `def fizzbuzz(n: int) -> list[str]`\n- **Behavior:** Generate a list of strings from 1 to n (i+1 indexed).\n  - If the number is divisible by 3, replace with \"Fizz\".\n  - If divisible by 5, replace with \"Buzz\".\n  - If divisible by both 3 and 5 (i.e., 15), replace with \"FizzBuzz\".\n  - Otherwise, keep the number as a string.\n- **Argument:** `n = 5`\n\n**Designing the Function:**\nI'll create a loop from 1 to n (inclusive). For each number:\n1. Check divisibility by 15 (for FizzBuzz).\n2. If not, check divisibility by 5 (for Buzz).\n3. If not, check divisibility by 3 (for Fizz).\n4. If none, use the number as a string.\n\n**Execution Plan:**\n1. Create the function.\n2. Call the function with n=5.\n3. Print the result.\n\n**Writing the Code:**\nI need to write a clean, direct Python function. Since the user specified it must be immediately executable, I'll include the function definition, the call, and the print statement.\n\n**Potential Pitfalls to Avoid:**\n- Forgetting the loop range (should be `range(1, n+1)`).\n- Incorrect logic for FizzBuzz (checking 15 first).\n- Not handling the string conversion properly.\n\nI'll follow these steps to write the code. The goal is to produce exactly what the user asked for, with no additional text or commentary.\n\n**Executing the Solution:**\nWhen the code runs with n=5, it should output:\n```python\n['1', '2', 'Fizz', '4', 'Buzz']\n```\n\nAlright, I'm confident in my approach. Let me write the code.\n</think>\n\ndef fizzbuzz(n: int) -> list[str]:\n    return [\n        \"FizzBuzz\" if i % 15 == 0 else\n        \"Buzz\" if i % 5 == 0 else\n        \"Fizz\" if i % 3 == 0 else\n        str(i)\n        for i in range(1, n+1)\n    ]\n\nprint(fizzbuzz(5))",
+                        "tokens_per_second": 63.30951334924795,
+                        "provider": "ollama",
+                        "total_duration_ms": 8598.58525,
+                        "load_duration_ms": 51.224333,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "",
+                    "expected_result": "['1', '2', 'Fizz', '4', 'Buzz']",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def fizzbuzz(n: int) -> list[str] - i+1 indexed, Fizz/Buzz/FizzBuzz, else str(i+1)</function-request>\n<function-arguments>5</function-arguments>\n",
+                    "model": "ollama~savant",
+                    "correct": false,
+                    "index": 4
+                },
+                {
+                    "prompt_response": {
+                        "response": "<think>\n**Understanding the Problem**\n\nI need to create a Python function that parses a Well-Known Text (WKT) representation of a point, specifically 'POINT(lon lat)', and returns a tuple of the longitude and latitude as floats.\n\nThe function should be named `parse_wkt_point`, it should accept a `wkt: str` parameter, and return a `tuple[float, float]`. I'll also need to call this function with the argument 'POINT(-122.4 37.8)' and print the result.\n\n**Designing the Solution**\n\nLet's use a regular expression to extract the coordinates from the WKT string.\n\nFor a WKT point, the format is 'POINT(lon lat)'. I can create a regex pattern to match this:\n```regex\nr'POINT\\(([^ ]+) ([^ ]+)\\)'\n```\n\nThis pattern will:\n1. Match the 'POINT(' prefix\n2. Capture the first coordinate (longitude) which is any number of characters not including a space\n3. Match a space\n4. Capture the second coordinate (latitude) in the same way\n5. Match the ')' suffix\n\nI'll use `re.search` to find the match in the input string. If there's a match, I'll extract the two coordinates, convert them to floats, and return them as a tuple.\n\nI'll write this as a Python function, then call it with the provided argument and print the result.\n\n**Code Implementation**\n\nHere's the complete Python code that satisfies the requirements:\n\n```python\nimport re\n\ndef parse_wkt_point(wkt: str) -> tuple[float, float]:\n    match = re.search(r'POINT\\(([^ ]+) ([^ ]+)\\)', wkt)\n    if match:\n        lon = float(match.group(1))\n        lat = float(match.group(2))\n        return (lon, lat)\n    else:\n        raise ValueError(\"Invalid WKT point format\")\n\nparse_wkt_point(\"POINT(-122.4 37.8)\")\n```\n\nWait, the problem says to print the result, so I need to modify the code:\n\n```python\nimport re\n\ndef parse_wkt_point(wkt: str) -> tuple[float, float]:\n    match = re.search(r'POINT\\(([^ ]+) ([^ ]+)\\)', wkt)\n    if match:\n        lon = float(match.group(1))\n        lat = float(match.group(2))\n        return (lon, lat)\n    else:\n        raise ValueError(\"Invalid WKT point format\")\n\nprint(parse_wkt_point(\"POINT(-122.4 37.8)\"))\n```\n\n**Testing the Code**\n\nLet me test the code with the given input:\n\n```python\nprint(parse_wkt_point(\"POINT(-122.4 37.8)\"))\n```\n\nThis should output: `(-122.4, 37.8)`\n\nThis is exactly what I need to output.\n\n**Final Code**\n\nAlright, the code is ready:\n\n```python\nimport re\n\ndef parse_wkt_point(wkt: str) -> tuple[float, float]:\n    match = re.search(r'POINT\\(([^ ]+) ([^ ]+)\\)', wkt)\n    if match:\n        lon = float(match.group(1))\n        lat = float(match.group(2))\n        return (lon, lat)\n    else:\n        raise ValueError(\"Invalid WKT point format\")\n\nprint(parse_wkt_point(\"POINT(-122.4 37.8)\"))\n```\n\nThis code does everything the problem requires: defines the function, uses regex to parse the WKT, and prints the result.\n\nLet me double-check the instructions:\n- Generate only the function requested: Yes, the function is defined.\n- Fill in the function body with the appropriate code: The regex-based parsing is there.\n- No other text: The code is self-contained.\n- Python 3: The code uses Python syntax.\n- Generate the function, call it, and print the result: The code does all three.\n- Immediately executable: The code is ready to run.\n\nEverything is perfect. I'll output the final code.\n</think>\n\nimport re\n\ndef parse_wkt_point(wkt: str) -> tuple[float, float]:\n    match = re.search(r'POINT\\(([^ ]+) ([^ ]+)\\)', wkt)\n    if match:\n        lon = float(match.group(1))\n        lat = float(match.group(2))\n        return (lon, lat)\n    else:\n        raise ValueError(\"Invalid WKT point format\")\n\nprint(parse_wkt_point(\"POINT(-122.4 37.8)\"))",
+                        "tokens_per_second": 61.73971259326158,
+                        "provider": "ollama",
+                        "total_duration_ms": 16019.378583,
+                        "load_duration_ms": 60.822666,
+                        "inputAndOutputCost": 0.0,
+                        "errored": null
+                    },
+                    "execution_result": "Error:   File \"/Users/ojeromyo/.tmp/tmp2d6vjk5p.py\", line 11\n    I'll use `re.search` to find the match in the input string. If there's a match, I'll extract the two coordinates, convert them to floats, and return them as a tuple.\n                                                                                     ^\nSyntaxError: unterminated string literal (detected at line 11)\n",
+                    "expected_result": "(-122.4, 37.8)",
+                    "input_prompt": "<purpose>\n    Generate a function for a given function-request. Then call the function with the provided arguments. Then print the result.\n</purpose>\n<instructions>\n    <instruction>Generate only the function requested by the user.</instruction>\n    <instruction>Fill in the function body with the appropriate code.</instruction>\n    <instruction>Do not include any other text. No commentary, no markdown fences.</instruction>\n    <instruction>Write code in python 3.</instruction>\n    <instruction>Generate the function, call the function, and print the result.</instruction>\n    <instruction>Your code must be immediately executable as-is.</instruction>\n</instructions>\n<function-request>def parse_wkt_point(wkt: str) -> tuple[float, float] - parse 'POINT(lon lat)' and return (lon, lat)</function-request>\n<function-arguments>\"POINT(-122.4 37.8)\"</function-arguments>\n",
+                    "model": "ollama~savant",
+                    "correct": false,
+                    "index": 5
+                }
+            ],
+            "correct_count": 1,
+            "incorrect_count": 4,
+            "accuracy": 0.2,
+            "average_tokens_per_second": 63.39618544482096,
+            "average_total_duration_ms": 9014.8170416,
+            "average_load_duration_ms": 61.35470780000001,
+            "total_cost": 0.0
+        }
+    ],
+    "overall_correct_count": 4,
+    "overall_incorrect_count": 6,
+    "overall_accuracy": 0.4,
+    "average_tokens_per_second": 66.89009272241047,
+    "average_total_duration_ms": 6182.9085208,
+    "average_load_duration_ms": 932.6830522647824
+}

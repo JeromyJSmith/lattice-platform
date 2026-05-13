@@ -1,0 +1,10 @@
+{
+  "section": "schema",
+  "score": 46,
+  "breakdown": {
+    "table_count_match": {"points": 0, "max": 50, "declared": 40, "actual": 15},
+    "migration_trail":   {"points": 30, "max": 30, "last_migration": "0014", "trail_ok": 1},
+    "forbidden_strings": {"points": 16, "max": 20, "hits": 1}
+  },
+  "migration_count": 14
+}

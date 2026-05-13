@@ -1,4 +1,25 @@
-"""0014 — Meta-Harness schema (Phase 2 of the harness build).
+"""PARKED — Alternate 0014 schema (analytics-flavor).
+
+This file is preserved as a reference for a richer `lattice/harness/*`
+schema that captures the 7 health signals as individual `pxt.Float`
+columns plus a `composite_score`. The leading underscore prefix
+deliberately breaks the migration runner's discovery regex
+(`^(\\d{4})_[a-z0-9_]+\\.py$`), so this file does NOT execute.
+
+The canonical 0014 migration is `0014_harness.py` — the version
+wired into `pixeltable/service/routes/harness_health.py` and the
+ratchet/agents. If/when the analytics columns are needed, layer
+them as a forward migration (e.g. 0017_harness_analytics_schema.py)
+that uses `add_column` operations against the existing tables — do
+NOT re-run this file as-is, as it would attempt `create_table` on
+tables that already exist.
+
+Kept in tree per user direction (2026-05-13) to preserve the design
+work without losing it.
+
+Original docstring follows:
+
+0014 — Meta-Harness schema (Phase 2 of the harness build).
 
 Creates `lattice/harness/*` — the four tables that back the Global
 Meta-Harness's seven health signals and the section-event reporting
@@ -105,6 +126,12 @@ def _global_decisions_schema(pxt) -> dict[str, object]:
 # ---------- entry point ---------------------------------------------------
 
 def apply(pxt, dry_run: bool) -> dict:
+    """Parked apply() — NOT executed by the migration runner.
+
+    This file's leading underscore excludes it from the migration discovery
+    regex (`^(\\d{4})_[a-z0-9_]+\\.py$`). The function is retained so the
+    analytics-flavor schema design stays auditable in tree.
+    """
     assert_ownership(pxt, OWNED_PARENTS)
     banner("0014 meta-harness schema", dry_run=dry_run)
     out: dict = {}
