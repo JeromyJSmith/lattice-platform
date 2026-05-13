@@ -268,17 +268,25 @@ capabilities:
   - id: grove-sfa-init-caches
     surface: cli_command
     name: init_caches
-    state: DEFERRED
+    state: ACTIVE
     description: Bootstrap harness DuckDB cache files before refresh and visual QA rebuilds
     source: harness/init_caches.py
     owner_harness: meta-harness
     matrix_decision: candidate
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-grove-sfa-init-caches
-    notes: H-I; requires_vw=false; last_verified=2026-05-04
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_init_caches.py
+      - meta/harness/state/cache/sfa-eval.duckdb
+    invoked_by:
+      - sfa_init_caches.py --verify (substrate check 4)
+      - sfa_duckdb_local_v1.py (consumes the seeded DuckDB)
+      - sfa_browser_bonsai_v1.py (consumes the seeded DuckDB via QueryDuckDBArgs)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_init_caches.py --verify
+      evidence: meta/harness/state/_init_caches.done.json
+      verified_at: 2026-05-13
+    notes: H-I; requires_vw=false; LATTICE port of juniper2026/harness/init_caches.py
 
   - id: grove-sfa-setup-grove
     surface: cli_command
@@ -943,16 +951,25 @@ capabilities:
   - id: grove-sfa-pattern
     surface: pattern
     name: SFA Pattern Contract
-    state: DEFERRED
+    state: ACTIVE
     description: PEP 723 + dispatch() + marker JSON L1 SFA contract with 10 variant classes
     source: SPEC_SFA_PATTERN.md
     owner_harness: meta-harness
     matrix_decision: candidate
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-grove-sfa-pattern
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_init_caches.py
+      - meta/harness/tools/sfa-eval/sfa_duckdb_local_v1.py
+      - meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py
+    invoked_by:
+      - sfa_init_caches.py (PEP 723 header + dispatch + marker)
+      - sfa_duckdb_local_v1.py (same shape, llama-swap variant)
+      - sfa_browser_bonsai_v1.py (same shape, multi-model variant)
+    proof:
+      command: uv run meta/harness/tools/sfa-eval/sfa_browser_bonsai_v1.py --prompt "Count the rows in the plants table." --compute 6
+      evidence: meta/harness/docs/sessions/2026-05-13-205800-browser-bonsai-adhoc.json
+      verified_at: 2026-05-13
     notes: Architecture contract binding all L1 SFAs; defines forbidden top-level imports, modal dialog rule, marker shape
 
   - id: grove-l2-wrapper-pattern
@@ -1003,16 +1020,25 @@ capabilities:
   - id: grove-marker-contract
     surface: pattern
     name: Marker JSON Handoff Contract
-    state: DEFERRED
+    state: ACTIVE
     description: "data/_<tool>.done.json marker as L1→L2 handoff with required ok+timestamp fields plus domain-specific canonical_fields"
     source: "SPEC_SFA_PATTERN.md` §3"
     owner_harness: meta-harness
     matrix_decision: candidate
     value: high
     risk: low
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-grove-marker-contract
+    wired_at:
+      - meta/harness/state/_init_caches.done.json
+      - meta/harness/state/_duckdb_local_v1.done.json
+      - meta/harness/state/_browser_bonsai_v1.done.json
+    invoked_by:
+      - sfa_init_caches.py (emits _init_caches.done.json)
+      - sfa_duckdb_local_v1.py (emits _duckdb_local_v1.done.json)
+      - sfa_browser_bonsai_v1.py (emits _browser_bonsai_v1.done.json)
+    proof:
+      command: cat meta/harness/state/_browser_bonsai_v1.done.json
+      evidence: meta/harness/state/_browser_bonsai_v1.done.json
+      verified_at: 2026-05-13
     notes: Marker authority governed by DESIGN_STATE_MODEL.md; markers are non-authoritative ephemeral artifacts
 
   - id: grove-dispatch-helper

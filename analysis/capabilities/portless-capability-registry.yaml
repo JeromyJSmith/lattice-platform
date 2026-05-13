@@ -12,11 +12,18 @@ capabilities:
   - id: portless-cli-run
     surface: cli_command
     name: portless <name> <cmd>
-    state: DEFERRED
+    state: ACTIVE
     description: Run dev command with auto-assigned ephemeral PORT and HTTPS subdomain routing
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-portless-cli-run
+    wired_at:
+      - scripts/portless/llm.sh
+      - scripts/portless/benchy.sh
+    invoked_by:
+      - scripts/portless/llm.sh (llama-swap behind https://llm.localhost)
+      - scripts/portless/benchy.sh (benchy client + server behind https://benchy{,-api}.localhost)
+    proof:
+      command: bash scripts/setup-portless.sh && bash scripts/portless/llm.sh
+      evidence: scripts/setup-portless.sh
+      verified_at: 2026-05-13
     owner_harness: meta-harness
     value: high
     risk: low
@@ -120,11 +127,23 @@ capabilities:
   - id: portless-hostname-routing
     surface: pattern
     name: Subdomain-to-port routing by HOSTNAME
-    state: DEFERRED
+    state: ACTIVE
     description: Routes by HTTP Host header (subdomain of .localhost or custom TLD) instead of path
-    reason: out-of-scope-for-current-phase
-    target_phase: next-meta-harness-proof-cycle
-    tracking_issue: TBD-portless-hostname-routing
+    wired_at:
+      - .portless.json (root)
+      - pixeltable/service/.portless.json
+      - meta/harness/bin/llama-swap/.portless.json
+      - meta/harness/benchy/client/.portless.json
+      - meta/harness/benchy/server/.portless.json
+    invoked_by:
+      - https://llm.localhost (llama-swap auto-load endpoint)
+      - https://sidecar.localhost (FastAPI sidecar)
+      - https://benchy.localhost + https://benchy-api.localhost (benchy UI + API)
+      - https://app.localhost (TanStack Start app)
+    proof:
+      command: cat .portless.json
+      evidence: .portless.json
+      verified_at: 2026-05-13
     owner_harness: meta-harness
     value: high
     risk: low
