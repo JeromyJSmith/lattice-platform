@@ -4,8 +4,8 @@ Canonical human-readable reference for the LATTICE Pixeltable schema.
 
 ## Overview
 
-- **36 tables** across 5 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, plus indices)
-- **Migration trail: 0001-0013** (write-once; never edit a landed migration)
+- **40 tables** across 5 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`, plus indices)
+- **Migration trail: 0001-0014** (write-once; never edit a landed migration)
 - **Pixeltable version: 0.6.0** (pinned via `pixeltable/pyproject.toml`)
 - **Geometry type: `pxt.String`** storing WKT or GeoJSON. Pixeltable 0.6.x has no native Geometry type. PostGIS spatial queries layer on at the DuckDB WASM query layer downstream.
 - **Migration path: `pixeltable/migrations/`** (NOT `pixeltable/service/migrations/`)
@@ -52,12 +52,17 @@ lattice/
 │   ├── comfyui_jobs
 │   ├── model_registry
 │   └── training_runs
-└── reality/             # Reality capture (0013)
-    ├── drone_flights
-    ├── drone_frames               # pxt.Image column
-    ├── gaussian_splats
-    ├── point_cloud_sessions
-    └── mirror_state               # 7 sync flags + divergence score
+├── reality/             # Reality capture (0013)
+│   ├── drone_flights
+│   ├── drone_frames               # pxt.Image column
+│   ├── gaussian_splats
+│   ├── point_cloud_sessions
+│   └── mirror_state               # 7 sync flags + divergence score
+└── harness/             # Meta-Harness self-improvement (0014)
+    ├── health_snapshots           # per-section fitness score history
+    ├── harness_proposals          # proposed changes + ratchet outcomes
+    ├── section_events             # log of every harness action
+    └── global_decisions           # cross-section policy decisions
 ```
 
 ## Migration Trail
@@ -77,6 +82,7 @@ lattice/
 | 0011 | Add embedding indices to `landscape_entities` |
 | 0012 | Extended schema: 26 cols on `ifc_elements`, `plant_assets`, `marpa_projects`, `site_zones`, `reference_images`, full `lattice/genai/*` namespace |
 | 0013 | Georef + reality + mirror: `project_georef` (67 cols), `lattice/reality/*` namespace (5 tables) |
+| 0014 | Meta-Harness: `lattice/harness/*` namespace (4 tables: health_snapshots, harness_proposals, section_events, global_decisions) |
 
 ## Table Reference
 

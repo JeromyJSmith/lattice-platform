@@ -6,10 +6,10 @@ This file is the primary instruction surface for any AI agent opening this repos
 
 ---
 
-## LIVE STATE (2026-05-11)
+## LIVE STATE (2026-05-13)
 
-- **Migrations applied: 0001–0013** (13 total, write-once)
-- **Pixeltable tables: 36** across 4 owned namespaces (`lattice/{execution,bridge,genai,reality}`)
+- **Migrations applied: 0001–0014** (14 total, write-once)
+- **Pixeltable tables: 40** across 5 owned namespaces (`lattice/{execution,bridge,genai,reality,harness}`)
 - **FastAPI endpoints: 33** across 10 routers
 - **Migration path:** `pixeltable/migrations/` (NOT `pixeltable/service/migrations/`)
 - **Canonical schema reference:** [`meta/SCHEMA.md`](meta/SCHEMA.md)
@@ -19,7 +19,7 @@ This file is the primary instruction surface for any AI agent opening this repos
 ## MANDATORY SCHEMA + MIGRATION RULES
 
 1. **`pxt.String` for geometry.** Pixeltable 0.6.x has NO `pxt.Geometry` type. All geometry columns are `pxt.String` storing WKT (`POINT(lon lat)`) or GeoJSON. PostGIS spatial queries layer on at the DuckDB WASM query layer downstream. **Never write `pxt.Geometry` in a migration — it will fail.**
-2. **Write-once migrations.** Never edit a landed migration in `pixeltable/migrations/`. Always increment the number. Migrations 0001–0013 are immutable; the next one is `0014`.
+2. **Write-once migrations.** Never edit a landed migration in `pixeltable/migrations/`. Always increment the number. Migrations 0001–0014 are immutable; the next one is `0015`.
 3. **Migration path is `pixeltable/migrations/`.** Not `pixeltable/service/migrations/` — that path does not exist. The `docs-sync-check` CI workflow will block any PR that references the wrong path.
 4. **Owned-parents rule.** Before creating tables in a new namespace (e.g. `lattice/reality`), `pxt.create_dir()` every ancestor first AND add the new top-level namespace to `OWNED_PARENTS` in `pixeltable/migrations/_helpers.py`. Always use the `ensure_namespace()` / `ensure_table()` / `ensure_column()` helpers — never raw `create_*` calls.
 

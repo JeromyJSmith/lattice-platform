@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Last verified against live state: 2026-05-11 (migration **0013** applied, runtime console green, **36 tables**, **33 FastAPI endpoints**, 226 issues tracked).
+Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, **40 tables**, **33 FastAPI endpoints**, Meta-Harness foundation landed).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 
@@ -227,7 +227,7 @@ The active runtime today is the worker in `pixeltable/service/worker.py` — it 
 
 ## 6. Pixeltable schema overview
 
-**36 tables** across **4 owned namespaces** (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`), post migration **0013**.
+**40 tables** across **5 owned namespaces** (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`), post migration **0014**.
 
 See [`meta/SCHEMA.md`](SCHEMA.md) for the full canonical schema table reference.
 
