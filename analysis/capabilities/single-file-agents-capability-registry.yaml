@@ -116,3 +116,17 @@ capabilities:
       first_proof: meta/harness/docs/sessions/2026-05-13-212215-polars-local-tallest-plant.json
       marker: meta/harness/state/_polars_local_v1.done.json
     notes: First proven 2026-05-13. Four-iteration loop, 8.63s elapsed. Code-exec isolation via uv subprocess (no inherited env beyond what uv provides), 60s timeout per snippet, temp files cleaned up. Same plants fixture as sqlite/duckdb SFAs for cross-backend comparison.
+
+  - id: sfa-meta-prompt-local-v1
+    surface: sidecar_job
+    name: Meta-prompt generator (local-model variant)
+    state: ACTIVE
+    description: LATTICE port of disler/single-file-agents sfa_meta_prompt_openai_v1.py. Single-shot prompt engineering — takes a purpose + instructions + optional sections/examples/variables and emits a structured XML prompt template. No tool loop, so no Qwen fallback parser required. Default driver bonsai-8b; override with --driver-model qwen3.6-35b or hermes-3-8b for sharper output.
+    wired_at:
+      - meta/harness/tools/sfa-eval/sfa_meta_prompt_local_v1.py
+    invoked_by:
+      - uv run meta/harness/tools/sfa-eval/sfa_meta_prompt_local_v1.py
+    proof_evidence:
+      first_proof: meta/harness/docs/sessions/2026-05-13-212402-meta-prompt-local-pixeltable-migration.json
+      marker: meta/harness/state/_meta_prompt_local_v1.done.json
+    notes: First proven 2026-05-13. Single-shot 3.55s, 1036-char XML output. Generated a prompt template for "Pixeltable migration files for LATTICE" with purpose/instructions/sections/variables blocks. Output wrapped in ```xml fences (minor model quirk) but content is structurally correct.

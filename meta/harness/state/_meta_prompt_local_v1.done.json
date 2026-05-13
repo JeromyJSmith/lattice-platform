@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T21:24:02+00:00",
+  "driver_model": "bonsai-8b",
+  "base_url": "http://localhost:9090/v1",
+  "purpose": "Generate Pixeltable migration files for LATTICE",
+  "instructions": "Use pxt.String for geometry columns, ensure_namespace and ensure_table helpers from migrations._helpers, increment migration number from the previous one",
+  "sections": "constraints, examples",
+  "examples": "",
+  "variables": "namespace_path, table_names",
+  "elapsed_seconds": 3.55,
+  "generated_chars": 1036,
+  "error": null
+}
