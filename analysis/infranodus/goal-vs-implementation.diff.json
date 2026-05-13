@@ -1,0 +1,9 @@
+{
+  "dry_run": true,
+  "corpora": [
+    "goals",
+    "implementation"
+  ],
+  "gaps": [],
+  "note": "Run without --dry and with INFRANODUS_API_KEY set to populate."
+}

@@ -133,6 +133,9 @@ def classify_claim(s: str) -> tuple[str, str | None]:
     # Whitespace-bearing strings are prose, not paths.
     if any(ch.isspace() for ch in raw):
         return ("non_path", None)
+    # Glob patterns describe a set of paths, not a single checkable path.
+    if "*" in raw or "?" in raw:
+        return ("non_path", None)
 
     # Strip annotations + colon suffixes (line numbers, function names, etc.)
     s = _PAREN_ANNOTATION_RE.sub("", raw).strip()
