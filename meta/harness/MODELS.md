@@ -137,7 +137,7 @@ uv tool install mlx-vlm --with torch --with torchvision --reinstall
 
 ## Streaming video / per-frame inference
 
-For pipelines that process video frame-by-frame through Pixeltable, **don't invoke the CLI per frame** — each invocation cold-loads the model. Two paths:
+For pipelines that process video frame-by-frame through Pixeltable, **don't invoke the CLI per frame** — each invocation cold-loads the model. Three paths in increasing power:
 
 1. **`mlx_vlm.server`** — long-running OpenAI-compat HTTP server, model stays resident:
    ```bash
@@ -145,12 +145,54 @@ For pipelines that process video frame-by-frame through Pixeltable, **don't invo
    ```
    Then have your Pixeltable `@pxt.udf` POST each frame to `http://localhost:8081/v1/chat/completions`.
 
-2. **`omlx serve`** — multi-model OpenAI-compat server (recommended for mixed workloads):
+2. **`omlx serve`** — multi-model OpenAI-compat server for Apple Silicon:
    ```bash
    omlx serve mlx-community/Qwen3-VL-8B-Instruct-4bit --port 8000
    ```
 
-Either keeps the model warm — first inference takes ~5-30 s (load), every subsequent inference is the warm-tok/s number above.
+3. **`llama-swap`** (RECOMMENDED) — one OpenAI-compat endpoint, all our models, auto-load on demand, TTL-based auto-unload, friendly names with `useModelName` rewrite. See § llama-swap below.
+
+## llama-swap — one endpoint for every local model
+
+`meta/harness/bin/llama-swap/` ships a vendored llama-swap binary (Go, no deps) plus the LATTICE-wired config. It exposes a single OpenAI-compatible endpoint at `http://localhost:9090` that auto-starts the right `mlx_lm.server` or `mlx_vlm.server` for the requested model, keeps it warm for `ttl` seconds, then unloads to free memory. Group `swap: true` means only one big model is in RAM at a time.
+
+Start it:
+
+```bash
+meta/harness/bin/llama-swap/llama-swap \
+  -config meta/harness/bin/llama-swap/config.yaml \
+  -listen :9090 -watch-config
+```
+
+Friendly model names available at the endpoint (`/v1/models` lists all):
+
+| Friendly | Real HF model | TTL |
+|---|---|---|
+| `bonsai-4b` / `bonsai` / `local` | `prism-ml/Ternary-Bonsai-4B-mlx-2bit` | 600s |
+| `bonsai-1.7b` / `quick` | `prism-ml/Ternary-Bonsai-1.7B-mlx-2bit` | 600s |
+| `bonsai-8b` | `prism-ml/Ternary-Bonsai-8B-mlx-2bit` | 600s |
+| `hermes-3-8b` / `hermes` | `mlx-community/Hermes-3-Llama-3.1-8B-4bit` | 600s |
+| `qwen3.6-35b` / `qwen` | `unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit` | 300s |
+| `qwen3vl-2b` / `vision:fast` | `mlx-community/Qwen3-VL-2B-Instruct-4bit` | 600s |
+| `qwen3vl-8b` / `qwen3vl` / `vision` | `mlx-community/Qwen3-VL-8B-Instruct-4bit` | 600s |
+| `gemma-4-26b` / `gemma4` | `mlx-community/gemma-4-26b-a4b-it-4bit` | 300s |
+
+Call it like the OpenAI API:
+
+```bash
+curl http://localhost:9090/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model": "bonsai", "messages": [{"role": "user", "content": "..."}]}'
+```
+
+Observed timings on the test image (geometry/dimensions):
+- First call to `bonsai-4b` (cold load): 5.6 s
+- Second call to `bonsai-4b` (warm): **0.27 s**
+- Hot-swap from `bonsai-4b` → `qwen3vl-2b` + vision inference: 6.9 s
+
+This is the right backend for the streaming/per-frame video pipeline: the Pixeltable `@pxt.udf` just POSTs to `localhost:9090` with whatever model the task needs and llama-swap handles loading.
+
+Source: [mostlygeek/llama-swap](https://github.com/mostlygeek/llama-swap) (v211, vendored binary).
 
 ## SAM 3 — Segmentation Anything Model 3 (separate integration)
 

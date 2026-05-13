@@ -1,0 +1,81 @@
+# llama-swap config for LATTICE Meta-Harness
+#
+# One OpenAI-compatible endpoint at http://localhost:9090 routes to whichever
+# local model is requested. llama-swap auto-starts the right MLX server,
+# keeps it warm for `ttl` seconds, then unloads on idle to free memory.
+#
+# Clients use friendly names (`bonsai-4b`, `qwen3vl-2b`, etc.) and
+# `useModelName` rewrites the model field for the upstream MLX server
+# which expects the canonical HF repo ID.
+#
+# Run:
+#   meta/harness/bin/llama-swap/llama-swap \
+#     -config meta/harness/bin/llama-swap/config.yaml -listen :9090 -watch-config
+
+healthCheckTimeout: 240
+
+models:
+
+  # ── PrismML Ternary Bonsai (text, LATTICE local primary) ──────────────────
+  "bonsai-4b":
+    cmd: mlx_lm.server --model prism-ml/Ternary-Bonsai-4B-mlx-2bit --port ${PORT}
+    useModelName: "prism-ml/Ternary-Bonsai-4B-mlx-2bit"
+    aliases: ["bonsai", "local"]
+    ttl: 600
+
+  "bonsai-1.7b":
+    cmd: mlx_lm.server --model prism-ml/Ternary-Bonsai-1.7B-mlx-2bit --port ${PORT}
+    useModelName: "prism-ml/Ternary-Bonsai-1.7B-mlx-2bit"
+    aliases: ["quick"]
+    ttl: 600
+
+  "bonsai-8b":
+    cmd: mlx_lm.server --model prism-ml/Ternary-Bonsai-8B-mlx-2bit --port ${PORT}
+    useModelName: "prism-ml/Ternary-Bonsai-8B-mlx-2bit"
+    ttl: 600
+
+  # ── MLX text LLMs ─────────────────────────────────────────────────────────
+  "hermes-3-8b":
+    cmd: mlx_lm.server --model mlx-community/Hermes-3-Llama-3.1-8B-4bit --port ${PORT}
+    useModelName: "mlx-community/Hermes-3-Llama-3.1-8B-4bit"
+    aliases: ["hermes"]
+    ttl: 600
+
+  "qwen3.6-35b":
+    cmd: mlx_lm.server --model unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit --port ${PORT}
+    useModelName: "unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit"
+    aliases: ["qwen"]
+    ttl: 300   # big model — unload sooner
+
+  # ── MLX vision-language ───────────────────────────────────────────────────
+  "qwen3vl-2b":
+    cmd: mlx_vlm.server --model mlx-community/Qwen3-VL-2B-Instruct-4bit --port ${PORT}
+    useModelName: "mlx-community/Qwen3-VL-2B-Instruct-4bit"
+    aliases: ["vision:fast"]
+    ttl: 600
+
+  "qwen3vl-8b":
+    cmd: mlx_vlm.server --model mlx-community/Qwen3-VL-8B-Instruct-4bit --port ${PORT}
+    useModelName: "mlx-community/Qwen3-VL-8B-Instruct-4bit"
+    aliases: ["qwen3vl", "vision"]
+    ttl: 600
+
+  "gemma-4-26b":
+    cmd: mlx_vlm.server --model mlx-community/gemma-4-26b-a4b-it-4bit --port ${PORT}
+    useModelName: "mlx-community/gemma-4-26b-a4b-it-4bit"
+    aliases: ["gemma4", "vision:multimodal"]
+    ttl: 300
+
+# Exclusive group — only one MLX model loaded at a time across the whole config.
+groups:
+  default:
+    swap: true
+    members:
+      - bonsai-4b
+      - bonsai-1.7b
+      - bonsai-8b
+      - hermes-3-8b
+      - qwen3.6-35b
+      - qwen3vl-2b
+      - qwen3vl-8b
+      - gemma-4-26b
