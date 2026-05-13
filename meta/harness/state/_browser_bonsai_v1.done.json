@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "timestamp": "2026-05-13T20:05:22+00:00",
+  "driver_model": "bonsai-8b",
+  "vision_model": "qwen3vl-2b",
+  "base_url": "http://localhost:9090/v1",
+  "prompt": "There's an image saved at meta/harness/state/screenshots/garden-bed.png. Use DescribeScreenshot to ask the vision model what dimensions (length, width, height) are shown in the drawing, then report them in your final answer.",
+  "compute_iterations": 2,
+  "elapsed_seconds": 17.17,
+  "model_swaps": 1,
+  "final_answer": "The dimensions of the drawing are: Length: 12 ft, Width: 6 ft, Height: 2.5 ft.",
+  "error": null
+}
