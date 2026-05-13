@@ -36,14 +36,92 @@ HARNESS_BACKEND=ollama:qwen2.5-coder:7b bash meta/harness/bootstrap/run-autorese
 
 ## Supported backends
 
-| Backend | Install | Authentication |
-|---|---|---|
-| `claude` | [Claude Code](https://docs.anthropic.com/claude-code) | `claude login` (Anthropic account) |
-| `codex` | `brew install codex` or `npm install -g @openai/codex` | `OPENAI_API_KEY` or `codex login` |
-| `copilot` | `gh extension install github/gh-copilot` | GitHub Copilot subscription via `gh auth login` |
-| `ollama` | `brew install ollama` | None — runs locally |
+| Backend | Install | Authentication | Notes |
+|---|---|---|---|
+| `claude` | [Claude Code](https://docs.anthropic.com/claude-code) | `claude login` | Anthropic Claude Code CLI |
+| `codex` | `brew install codex` | `codex login` or `OPENAI_API_KEY` | OpenAI Codex CLI |
+| `copilot` | `gh extension install github/gh-copilot` | GitHub Copilot subscription | Uses your paid Copilot |
+| `ollama` | `brew install ollama` | None — local | GGUF models, broadest model zoo |
+| `mlx-lm` | `uv tool install mlx-lm` | None — local | Apple Silicon native, ~2-4× faster than Ollama on M-series |
+| `mlx-vlm` | `uv tool install mlx-vlm` | None — local | Vision-language (Qwen2-VL, LLaVA, etc.) |
+| `omlx` | [oMLX.app](https://github.com/oMLX/oMLX) | None — local | Multi-model OpenAI-compatible server for Apple Silicon |
 
 Run `meta/harness/bin/llm --list` to see what's actually present on this machine.
+
+## PrismML Ternary Bonsai (recommended local primary)
+
+PrismML released the Ternary Bonsai model family in April 2026 — Apache 2.0, native MLX support, weights constrained to `{-1, 0, +1}` with group-wise FP16 scaling. Approximately **9× smaller memory footprint** than equivalent FP16 models while maintaining benchmark parity. Three sizes:
+
+| Model | Disk | Peak mem | Speed (M3 Max) | Use case |
+|---|---|---|---|---|
+| `prism-ml/Ternary-Bonsai-1.7B-mlx-2bit` | 495 MB | 0.54 GB | **418 tok/s** | Triage, classification, quick suggestions |
+| `prism-ml/Ternary-Bonsai-4B-mlx-2bit` | 1.1 GB | 1.22 GB | **216 tok/s** | General reasoning, fallback for proposals |
+| `prism-ml/Ternary-Bonsai-8B-mlx-2bit` | 2.3 GB | 2.41 GB | **136 tok/s** | Primary local — 75.5 avg benchmark score |
+
+All three are already cached on this machine. The router uses them automatically:
+- `quick` task → 1.7B primary
+- `local` task → 8B primary
+- `agent-loop`, `propose`, `docs`, `triage` → all have a Bonsai fallback in their chain
+
+```bash
+# Direct one-shot via router
+meta/harness/bin/llm --backend=mlx-lm:prism-ml/Ternary-Bonsai-8B-mlx-2bit "..."
+
+# Or pin Bonsai for an entire ratchet cycle
+HARNESS_BACKEND=mlx-lm:prism-ml/Ternary-Bonsai-8B-mlx-2bit \
+  bash meta/harness/bootstrap/run-autoresearch.sh schema
+```
+
+To pull additional sizes or a fresh copy:
+```bash
+hf download prism-ml/Ternary-Bonsai-1.7B-mlx-2bit
+hf download prism-ml/Ternary-Bonsai-4B-mlx-2bit
+hf download prism-ml/Ternary-Bonsai-8B-mlx-2bit
+```
+
+Refs: [PrismML announcement](https://prismml.com/news/ternary-bonsai) · [HF collection](https://huggingface.co/collections/prism-ml/bonsai) · [Bonsai-demo repo](https://github.com/PrismML-Eng/Bonsai-demo/)
+
+## MLX-LM: other recommended models
+
+Apple Silicon native — same `mlx_lm.generate` CLI, auto-downloads from HF on first call:
+
+```bash
+# Code reasoning
+mlx_lm.generate --model mlx-community/Qwen2.5-Coder-7B-Instruct-4bit --prompt "..."
+
+# General reasoning, 14B
+mlx_lm.generate --model mlx-community/Qwen2.5-14B-Instruct-4bit --prompt "..."
+
+# Reasoning chains (for plan-review)
+mlx_lm.generate --model mlx-community/DeepSeek-R1-Distill-Qwen-14B-4bit --prompt "..."
+```
+
+Browse: https://huggingface.co/mlx-community
+
+## MLX-VLM: vision-language models
+
+For tasks involving drone frames, IFC screenshots, or plan-sheet OCR:
+
+```bash
+mlx_vlm.generate --model mlx-community/Qwen2-VL-7B-Instruct-4bit \
+  --image /path/to/frame.jpg --prompt "Identify the plant species visible."
+```
+
+The router currently passes text-only via the `vision` task. To use images, call `mlx_vlm.generate` directly or extend the `cmd` array in `mlx-vlm` backend config to accept `--image` from the prompt structure.
+
+## oMLX: multi-model server (advanced)
+
+oMLX is a production-ready OpenAI-compatible server for Apple Silicon — useful when you want a single long-running process serving multiple models with hot-swap:
+
+```bash
+# Start a server bound to one model
+omlx serve mlx-community/Llama-3.2-3B-Instruct-4bit --port 8000
+
+# Or launch another CLI tool (Codex, etc.) against a local model
+omlx launch codex --model prism-ml/Ternary-Bonsai-8B-mlx-2bit
+```
+
+The router calls oMLX in `launch` mode by default. For server-mode integration, point an OpenAI-SDK client at `http://localhost:8000/v1`.
 
 ## Ollama: recommended models for the harness
 
