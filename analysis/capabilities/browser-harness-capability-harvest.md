@@ -1,0 +1,86 @@
+<!-- spec-verified: browser-use/browser-harness 2026-05-13 -->
+# Capability Harvest — browser-harness
+
+| Field | Value |
+|---|---|
+| Source repo | `https://github.com/browser-use/browser-harness` |
+| Reviewed commit | `e93b8dd` (current HEAD at harvest) |
+| Canonical docs | `~/browser-harness/SKILL.md` |
+| Harvest date | `2026-05-13` |
+| LATTICE owner | Meta-Harness (cross-section dev tool) |
+| Harvested by | claude-haiku-4-5 |
+
+## Capability Surfaces
+
+| Capability ID | Surface | Name | Source command/doc | Raw capability | Notes |
+|---|---|---|---|---|---|
+| `browser-harness-new-tab` | `cli_command` | `new_tab(url="about:blank")` | `src/browser_harness/helpers.py:317-325` | Create new Chrome tab via Target.createTarget CDP call and switch to it | Opens blank tab, then navigates if url supplied; always switch_tab on creation |
+| `browser-harness-goto-url` | `cli_command` | `goto_url(url)` | `src/browser_harness/helpers.py:159-164` | Navigate active tab to URL via Page.navigate CDP; returns domain skills manifest if BH_DOMAIN_SKILLS=1 | Optionally surfaces up to 10 site-specific skill filenames from agent-workspace/domain-skills/<site>/ |
+| `browser-harness-page-info` | `cli_command` | `page_info()` | `src/browser_harness/helpers.py:166-176` | Snapshot of current page state: URL, title, viewport (w/h), scroll position (sx/sy), document size (pw/ph) | Returns dialog dict if native alert/confirm/prompt/beforeunload is open; frozen page until dialog handled |
+| `browser-harness-click-at-xy` | `cli_command` | `click_at_xy(x, y, button="left", clicks=1)` | `src/browser_harness/helpers.py:181-201` | Pixel-coordinate mouse click via Input.dispatchMouseEvent CDP at (x, y); supports button (left/right/middle), click count, DPR scaling | Hit-testing happens in Chrome's compositor; clicks pass through iframes, shadow DOM, cross-origin; optional debug overlay |
+| `browser-harness-type-text` | `cli_command` | `type_text(text)` | `src/browser_harness/helpers.py:203-204` | Insert text into focused element via Input.insertText CDP | Bypasses framework event listeners; may leave submit buttons disabled (use fill_input for framework-managed inputs) |
+| `browser-harness-fill-input` | `cli_command` | `fill_input(selector, text, clear_first=True, timeout=0.0)` | `src/browser_harness/helpers.py:206-243` | Fill framework-managed input (React controlled, Vue v-model, Ember tracked) via selector; focus, clear (Cmd+A on macOS), type real key events, fire synthetic input+change events | Respects framework event listeners; raises RuntimeError if selector not found or element not focusable; supports timeout for late-rendered SPA elements |
+| `browser-harness-press-key` | `cli_command` | `press_key(key, modifiers=0)` | `src/browser_harness/helpers.py:253-262` | Dispatch keyboard event via Input.dispatchKeyEvent CDP | Supports special keys (Enter, Tab, Escape, Arrow*, Backspace, Delete, PageUp/PageDown, Home, End); modifiers bitfield: 1=Alt, 2=Ctrl, 4=Meta/Cmd, 8=Shift |
+| `browser-harness-scroll` | `cli_command` | `scroll(x, y, dy=-300, dx=0)` | `src/browser_harness/helpers.py:264-265` | Dispatch mouse wheel scroll at (x, y) with deltaX/deltaY via Input.dispatchMouseEvent | Negative dy scrolls down (default -300px), positive scrolls up; dx scrolls horizontally |
+| `browser-harness-capture-screenshot` | `cli_command` | `capture_screenshot(path=None, full=False, max_dim=None)` | `src/browser_harness/helpers.py:269-281` | Save PNG screenshot via Page.captureScreenshot CDP; optional downscale to max_dim (for image-aware LLMs with pixel limits) | Defaults to /tmp/shot.png; full=True captures entire page beyond viewport; optional PIL downscale for large displays |
+| `browser-harness-list-tabs` | `cli_command` | `list_tabs(include_chrome=True)` | `src/browser_harness/helpers.py:285-292` | List all open tabs as [{"targetId", "title", "url"}]; filter out chrome:// / internal URLs unless include_chrome=True | Uses Target.getTargets CDP; filters to page type only (excludes service workers, etc.) |
+| `browser-harness-current-tab` | `cli_command` | `current_tab()` | `src/browser_harness/helpers.py:294-296` | Return metadata dict of currently-attached tab: {"targetId", "url", "title"} | Queries daemon state for active session; used as dict arg to switch_tab() |
+| `browser-harness-switch-tab` | `cli_command` | `switch_tab(target)` | `src/browser_harness/helpers.py:303-315` | Switch daemon to a different tab; accepts targetId string or dict from current_tab()/list_tabs() | Unmarks old tab (removes 🐴 emoji prefix), activates new tab, attaches session, marks new tab, returns sessionId |
+| `browser-harness-wait` | `cli_command` | `wait(seconds=1.0)` | `src/browser_harness/helpers.py:350-351` | Sleep for N seconds | Simple time.sleep wrapper |
+| `browser-harness-wait-for-load` | `cli_command` | `wait_for_load(timeout=15.0)` | `src/browser_harness/helpers.py:353-359` | Poll document.readyState == 'complete' or timeout; returns True if complete, False on timeout | Misses SPA routes (document is complete before framework renders); use wait_for_element after SPA navigation |
+| `browser-harness-wait-for-element` | `cli_command` | `wait_for_element(selector, timeout=10.0, visible=False)` | `src/browser_harness/helpers.py:361-389` | Poll until querySelector(selector) exists in DOM (or visible if visible=True) or timeout; returns True/False | For SPA route waits; visible=True respects display:none, visibility:hidden, opacity:0 on ancestors via checkVisibility or CSS fallback |
+| `browser-harness-wait-for-network-idle` | `cli_command` | `wait_for_network_idle(timeout=10.0, idle_ms=500)` | `src/browser_harness/helpers.py:391-424` | Wait until all in-flight XHR/fetch finish and no Network.* CDP events for idle_ms ms; returns True/False | Filters events to active session only (background tabs don't poison idle check); useful after form submits, SPA transitions, XHR without visible DOM change |
+| `browser-harness-js` | `cli_command` | `js(expression, target_id=None)` | `src/browser_harness/helpers.py:426-435` | **HEADLINE: Execute arbitrary JavaScript inside the attached tab (or iframe via target_id).** Expressions with top-level `return` auto-wrapped in IIFE via Runtime.evaluate CDP. Returns JSON-serializable value or raises RuntimeError on JS exception. | Core substrate for in-tab transformers.js / WebGPU / DOM introspection work. Handles NaN/Infinity/-0/BigInt unserializable values. Can attach to iframe targets for cross-origin JS execution. |
+| `browser-harness-dispatch-key` | `cli_command` | `dispatch_key(selector, key="Enter", event="keypress")` | `src/browser_harness/helpers.py:441-450` | Dispatch a DOM KeyboardEvent on matched element instead of raw CDP input; useful for sites that react to synthetic DOM key events more reliably | Focus element first, then dispatch with key, code, keyCode, which, bubbles=true |
+| `browser-harness-upload-file` | `cli_command` | `upload_file(selector, path)` | `src/browser_harness/helpers.py:452-457` | Set files on a file input via CDP DOM.setFileInputFiles; path is absolute filepath (or list of paths) | Uses DOM node lookup; raises RuntimeError if selector not found |
+| `browser-harness-http-get` | `cli_command` | `http_get(url, headers=None, timeout=20.0)` | `src/browser_harness/helpers.py:459-476` | Pure HTTP request without browser; routes through Browser Use fetch-use proxy if BROWSER_USE_API_KEY set (handles bot detection, residential proxies, retries), else local urllib | Gzip-aware; default User-Agent; wrap in ThreadPoolExecutor for bulk static-page fetches |
+| `browser-harness-cdp` | `cli_command` | `cdp(method, session_id=None, **params)` | `src/browser_harness/helpers.py:52-54` | **FALLBACK: Raw Chrome DevTools Protocol call.** Send any CDP method/params; returns result dict or raises RuntimeError on CDP error. Substrate for custom helper additions. | Anything helpers don't cover goes here; method is string like "Page.navigate", "DOM.getDocument", "Input.dispatchMouseEvent" |
+| `browser-harness-drain-events` | `cli_command` | `drain_events()` | `src/browser_harness/helpers.py:57` | Pull buffered CDP events (Network.*, DOM.*, Debugger.*, etc.) from daemon; used by wait_for_network_idle and custom event handlers | Returns list of event dicts; session_id field lets you filter to active session |
+| `browser-harness-iframe-target` | `cli_command` | `iframe_target(url_substr)` | `src/browser_harness/helpers.py:341-346` | Locate first iframe target whose URL contains url_substr; use as target_id arg to js(..., target_id=...) for in-iframe JS execution | Returns targetId or None; needed for cross-origin iframe work |
+| `browser-harness-ensure-real-tab` | `cli_command` | `ensure_real_tab()` | `src/browser_harness/helpers.py:327-339` | Recover from stale/internal tab by switching to first real user tab; handles chrome://, devtools://, about:, etc. | Returns tab dict or None if no real tabs exist; daemon auto-recovers on next call if session goes stale |
+| `browser-harness-agent-helpers-canvas` | `pattern` | Agent-editable helpers self-modifying canvas | `agent-workspace/agent_helpers.py` | **HEADLINE ARCHITECTURAL FEATURE:** When the agent discovers a missing helper during execution, it writes one into agent_helpers.py and invokes it immediately via dynamic import. The harness improves itself every run. | Reusable helpers live here; next `browser-harness` run imports them automatically without restart. Keeps core helpers.py minimal and task-agnostic. |
+| `browser-harness-interaction-skills` | `pattern` | Per-mechanic interaction playbooks (17 skills) | `interaction-skills/*.md` | Documented playbooks for tricky UI primitives: connection (remote debugging setup), cookies (reading/clearing), cross-origin-iframes, dialogs (alert/confirm/prompt), downloads, drag-and-drop, dropdowns, iframes, network-requests (monitoring traffic), print-as-pdf, profile-sync (cookies-only cloud profiles), screenshots, scrolling, shadow-dom, tabs, uploads, viewport | Read before inventing approach to a specific mechanic; agent-authored, not hand-written |
+| `browser-harness-domain-skills` | `pattern` | Per-site domain-specific playbooks (opt-in) | `agent-workspace/domain-skills/<site>/*.md` | Community-contributed site-specific skills (selectors, flows, edge cases) for sites like github, linkedin, amazon, etc. Opt-in via BH_DOMAIN_SKILLS=1 env var. goto_url surfaces up to 10 skills for navigated domain. | Agent-authored when it learns something non-obvious; captures durable site shape, not pixel coordinates or task narration |
+| `browser-harness-cdp-attach-to-running-chrome` | `doctrine` | Connect to user's already-running Chrome | `SKILL.md §Design constraints`, `install.md §Way 1` | Design constraint: harness connects to the user's real running Chrome via CDP remote debugging, does NOT launch its own browser. Two setup methods: Way 1 (chrome://inspect checkbox + Allow popup, uses real profile), Way 2 (--remote-debugging-port flag, isolated profile, no popups). | Tier-1 design; enables browser work without browser management overhead |
+| `browser-harness-coordinate-first-clicks` | `doctrine` | Pixel-coordinate clicks by default; selectors fallback | `SKILL.md §What actually works`, `helpers.py:181-201` | Design doctrine: coordinate-based clicks (click_at_xy) are the primary interaction mode. Hit-testing happens in Chrome's browser process, so clicks pass through iframes, shadow DOM, cross-origin WITHOUT extra work. Drop to DOM selectors only when target has no visible geometry (hidden input, 0×0 node). | Eliminates frame/shadow/cross-origin selector complexity; screenshot → click_at_xy flow is faster than DOM queries |
+| `browser-harness-start-remote-daemon` | `cli_command` | `start_remote_daemon(name, profileName=None, profileId=None, proxyCountryCode=None, timeout=7200)` | `src/browser_harness/helpers.py` imported from remote module | Spawn Browser Use Cloud browser via API; name is daemon BU_NAME identifier; profileName/profileId reuse cookie-state cloud profile; proxyCountryCode enables country-specific IP (None disables proxy). Spawned daemon prints liveUrl, auto-opens in local browser if GUI detected. Returns when daemon is ready. | Requires BROWSER_USE_API_KEY env var set. Cloud browser bills until timeout (default 2h). PATCH /browsers/{id} {"action":"stop"} to stop early. |
+| `browser-harness-list-cloud-profiles` | `cli_command` | `list_cloud_profiles()` | `src/browser_harness/helpers.py` imported from remote module | List cookie-state profiles saved in Browser Use Cloud account | Useful for deciding which profile to pass to start_remote_daemon(profileId=uuid) |
+| `browser-harness-list-local-profiles` | `cli_command` | `list_local_profiles()` | `src/browser_harness/helpers.py` imported from remote module | List local Chrome profiles on the current machine | Candidate profiles for sync_local_profile() to upload to cloud |
+| `browser-harness-sync-local-profile` | `cli_command` | `sync_local_profile(profile_name)` | `src/browser_harness/helpers.py` imported from remote module | Upload a local Chrome profile (cookies only) to Browser Use Cloud account; returns UUID for use in start_remote_daemon(profileId=uuid) | Requires `profile-use` tool installed once: `curl -fsSL https://browser-use.com/profile.sh | sh`. Only cookies sync — not localStorage, extensions, history. |
+| `browser-harness-multi-named-sessions` | `pattern` | Parallel isolated browsers via BU_NAME env var | `install.md §Remote browsers`, `helpers.py:37-38` | Each sub-agent gets distinct BU_NAME (e.g. BU_NAME=work, BU_NAME=research) which namespaces daemon IPC socket, pid file, log file. Enables parallel browser instances without collision. | Invoke as: `BU_NAME=work browser-harness -c '...'` for isolated daemon named "work" |
+
+## Evidence
+
+### Help command
+
+- `browser-harness --help` displays usage and daemon lifecycle commands
+- `browser-harness --doctor` shows version, install mode, daemon state, Chrome running status, pending updates
+- `uv tool install -e .` installs as global command from repo checkout (editable mode)
+
+### Canonical docs
+
+- **SKILL.md** (`~/browser-harness/SKILL.md`): primary day-to-day reference; covers usage, remote browsers, interaction skills, design constraints, gotchas, domain skills opt-in
+- **install.md** (`~/browser-harness/install.md`): browser connection setup (Way 1 remote debugging checkbox, Way 2 --remote-debugging-port flag), first-time troubleshooting, architecture diagram
+- **README.md** (`~/browser-harness/README.md`): overview, setup prompt, free Browser Use Cloud tier info, architecture layers, domain skills contribution guide
+- **helpers.py** (`src/browser_harness/helpers.py`): 494 lines, 30+ core functions with type hints and docstrings; source of truth for all CLI commands
+- **interaction-skills/ directory** (`interaction-skills/*.md`): 17 playbooks for specific UI mechanics
+- **agent-workspace/agent_helpers.py** (`agent-workspace/agent_helpers.py`): template for agent-authored helpers
+- **agent-workspace/domain-skills/** (`agent-workspace/domain-skills/`): contributed site-specific playbooks (github, linkedin, amazon, etc.)
+
+### Local config and environment
+
+- Installation: `git clone https://github.com/browser-use/browser-harness && cd browser-harness && uv tool install -e .`
+- IPC socket: `/tmp/bu-<BU_NAME>.sock` (POSIX) or TCP loopback + port file (Windows)
+- Chrome remote debugging: `chrome://inspect/#remote-debugging` (Way 1), `--remote-debugging-port=9222 --user-data-dir=<path>` (Way 2)
+- Environment variables: `BU_NAME` (daemon identifier), `BU_CDP_WS` (override local Chrome CDP WS URL), `BU_CDP_URL` (DevTools HTTP endpoint), `BROWSER_USE_API_KEY` (Cloud auth), `BH_DOMAIN_SKILLS` (opt-in skills), `BH_AGENT_WORKSPACE` (custom helpers path), `BH_DEBUG_CLICKS` (click overlay debug)
+- Python version: Python 3.8+
+- Package manager: `uv` (installed as global command via `uv tool install -e .`)
+
+### Gaps or unknowns
+
+1. **Chrome 144+ "Allow remote debugging?" popup** — The popup appears inconsistently on subsequent attaches (conditions not fully characterized in official Chrome docs). Way 1 setup requires user click; Way 2 and Cloud sidestep this entirely. Worth documenting the frequency/conditions for future troubleshooting.
+2. **Domain skills directory**: currently opt-in via BH_DOMAIN_SKILLS=1; no in-band discovery or registry. Future enhancement: publish a curated list of community skills with versioning.
+3. **agent_helpers.py dynamic import** — Currently file-based (importlib.util); no hot-reload (agent must be invoked again). Future: watch file and reload on write.
+4. **Event filtering in wait_for_network_idle**: filters by session_id to avoid background-tab pollution, but session_id field is populated by daemon; if daemon session tracking drifts, false idle declarations possible. Mitigated by re-screenshot after waits.
+5. **Profile-use tool** for cloud profile sync requires one-time install: `curl -fsSL https://browser-use.com/profile.sh | sh`. Could be baked into setup automation.
+6. **JS unserializable values** (NaN, Infinity, BigInt) are decoded on return from Runtime.evaluate; BigInt loses precision if >2^53. Documented but worth noting for large integer work.

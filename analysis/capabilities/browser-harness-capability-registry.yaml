@@ -1,0 +1,454 @@
+# spec-verified: browser-use/browser-harness 2026-05-13
+tool: browser-harness
+tool_version: e93b8dd
+canonical_docs: https://github.com/browser-use/browser-harness
+last_harvested: 2026-05-13
+harvested_by: claude-haiku-4-5
+generated_from:
+  harvest: analysis/capabilities/browser-harness-capability-harvest.md
+  matrix: analysis/capabilities/browser-harness-capability-matrix.md
+
+capabilities:
+  - id: browser-harness-new-tab
+    surface: cli_command
+    name: new_tab
+    state: DEFERRED
+    description: Create new Chrome tab via Target.createTarget CDP call; switch to new tab and optionally navigate
+    source: src/browser_harness/helpers.py:317-325
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-new-tab
+
+  - id: browser-harness-goto-url
+    surface: cli_command
+    name: goto_url
+    state: DEFERRED
+    description: Navigate active tab to URL via Page.navigate CDP; optionally surface domain skills
+    source: src/browser_harness/helpers.py:159-164
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-goto-url
+
+  - id: browser-harness-page-info
+    surface: cli_command
+    name: page_info
+    state: DEFERRED
+    description: Snapshot of current page (URL, title, viewport, scroll, document size); detects native dialogs
+    source: src/browser_harness/helpers.py:166-176
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-page-info
+
+  - id: browser-harness-click-at-xy
+    surface: cli_command
+    name: click_at_xy
+    state: DEFERRED
+    description: Pixel-coordinate mouse click via Input.dispatchMouseEvent; hits through iframes/shadow/cross-origin
+    source: src/browser_harness/helpers.py:181-201
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-click-at-xy
+
+  - id: browser-harness-type-text
+    surface: cli_command
+    name: type_text
+    state: DEFERRED
+    description: Insert text into focused element via Input.insertText CDP
+    source: src/browser_harness/helpers.py:203-204
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-type-text
+
+  - id: browser-harness-fill-input
+    surface: cli_command
+    name: fill_input
+    state: DEFERRED
+    description: Fill framework-managed input (React, Vue, Ember); focus, clear, type, fire synthetic events
+    source: src/browser_harness/helpers.py:206-243
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-fill-input
+
+  - id: browser-harness-press-key
+    surface: cli_command
+    name: press_key
+    state: DEFERRED
+    description: Dispatch keyboard event via Input.dispatchKeyEvent CDP; supports special keys and modifiers
+    source: src/browser_harness/helpers.py:253-262
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-press-key
+
+  - id: browser-harness-scroll
+    surface: cli_command
+    name: scroll
+    state: DEFERRED
+    description: Dispatch mouse wheel scroll at (x, y) with deltaX/deltaY via Input.dispatchMouseEvent
+    source: src/browser_harness/helpers.py:264-265
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-scroll
+
+  - id: browser-harness-capture-screenshot
+    surface: cli_command
+    name: capture_screenshot
+    state: DEFERRED
+    description: Save PNG screenshot via Page.captureScreenshot CDP; optional downscale via PIL
+    source: src/browser_harness/helpers.py:269-281
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-capture-screenshot
+
+  - id: browser-harness-list-tabs
+    surface: cli_command
+    name: list_tabs
+    state: DEFERRED
+    description: List all open tabs as dicts with targetId, title, URL; optionally filter chrome:// URLs
+    source: src/browser_harness/helpers.py:285-292
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-list-tabs
+
+  - id: browser-harness-current-tab
+    surface: cli_command
+    name: current_tab
+    state: DEFERRED
+    description: Return metadata dict of currently-attached tab (targetId, url, title)
+    source: src/browser_harness/helpers.py:294-296
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-current-tab
+
+  - id: browser-harness-switch-tab
+    surface: cli_command
+    name: switch_tab
+    state: DEFERRED
+    description: Switch daemon to different tab; accepts targetId or tab dict; unmarks old tab, marks new
+    source: src/browser_harness/helpers.py:303-315
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-switch-tab
+
+  - id: browser-harness-wait
+    surface: cli_command
+    name: wait
+    state: DEFERRED
+    description: Sleep for N seconds; simple time.sleep wrapper
+    source: src/browser_harness/helpers.py:350-351
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-wait
+
+  - id: browser-harness-wait-for-load
+    surface: cli_command
+    name: wait_for_load
+    state: DEFERRED
+    description: Poll document.readyState == complete or timeout; returns True/False
+    source: src/browser_harness/helpers.py:353-359
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-wait-for-load
+
+  - id: browser-harness-wait-for-element
+    surface: cli_command
+    name: wait_for_element
+    state: DEFERRED
+    description: Poll until querySelector(selector) exists and optionally visible; returns True/False
+    source: src/browser_harness/helpers.py:361-389
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-wait-for-element
+
+  - id: browser-harness-wait-for-network-idle
+    surface: cli_command
+    name: wait_for_network_idle
+    state: DEFERRED
+    description: Wait until all in-flight requests finish and no Network events for idle_ms ms
+    source: src/browser_harness/helpers.py:391-424
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-wait-for-network-idle
+
+  - id: browser-harness-js
+    surface: cli_command
+    name: js
+    state: DEFERRED
+    description: Execute arbitrary JavaScript in attached tab (or iframe via target_id); auto-wraps return statements
+    source: src/browser_harness/helpers.py:426-435
+    owner_harness: meta-harness
+    value: high
+    risk: medium
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-js
+    notes: Core dependency for sfa_browser_bonsai_v1.py; enables in-tab transformers.js/WebGPU execution
+
+  - id: browser-harness-dispatch-key
+    surface: cli_command
+    name: dispatch_key
+    state: DEFERRED
+    description: Dispatch DOM KeyboardEvent on matched element instead of raw CDP input
+    source: src/browser_harness/helpers.py:441-450
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-dispatch-key
+
+  - id: browser-harness-upload-file
+    surface: cli_command
+    name: upload_file
+    state: DEFERRED
+    description: Set files on file input via CDP DOM.setFileInputFiles
+    source: src/browser_harness/helpers.py:452-457
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-upload-file
+
+  - id: browser-harness-http-get
+    surface: cli_command
+    name: http_get
+    state: DEFERRED
+    description: Pure HTTP request without browser; routes through Browser Use proxy if BROWSER_USE_API_KEY set
+    source: src/browser_harness/helpers.py:459-476
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-http-get
+
+  - id: browser-harness-cdp
+    surface: cli_command
+    name: cdp
+    state: DEFERRED
+    description: Raw Chrome DevTools Protocol call; fallback for anything helpers don't cover
+    source: src/browser_harness/helpers.py:52-54
+    owner_harness: meta-harness
+    value: high
+    risk: medium
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-cdp
+
+  - id: browser-harness-drain-events
+    surface: cli_command
+    name: drain_events
+    state: DEFERRED
+    description: Pull buffered CDP events from daemon; used by wait_for_network_idle
+    source: src/browser_harness/helpers.py:57
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-drain-events
+
+  - id: browser-harness-iframe-target
+    surface: cli_command
+    name: iframe_target
+    state: DEFERRED
+    description: Locate iframe target by URL substring; use with js(..., target_id=...) for in-iframe execution
+    source: src/browser_harness/helpers.py:341-346
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-iframe-target
+
+  - id: browser-harness-ensure-real-tab
+    surface: cli_command
+    name: ensure_real_tab
+    state: DEFERRED
+    description: Recover from stale/internal tab by switching to first real user tab
+    source: src/browser_harness/helpers.py:327-339
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-ensure-real-tab
+
+  - id: browser-harness-agent-helpers-canvas
+    surface: pattern
+    name: agent-editable helpers self-modifying canvas
+    state: DEFERRED
+    description: agent-workspace/agent_helpers.py imported dynamically; agent writes helpers during execution
+    source: agent-workspace/agent_helpers.py
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-agent-helpers-canvas
+    notes: Harness improves itself every run; reusable helpers written by agent without core changes
+
+  - id: browser-harness-interaction-skills
+    surface: pattern
+    name: per-mechanic interaction playbooks
+    state: DEFERRED
+    description: 17 documented playbooks for UI mechanics (connection, cookies, dialogs, dropdowns, iframes, etc.)
+    source: interaction-skills/*.md
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-interaction-skills
+
+  - id: browser-harness-domain-skills
+    surface: pattern
+    name: per-site domain-specific playbooks
+    state: DEFERRED
+    description: Community-contributed site skills (github, linkedin, amazon); opt-in via BH_DOMAIN_SKILLS=1
+    source: agent-workspace/domain-skills/
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-domain-skills
+
+  - id: browser-harness-cdp-attach-to-running-chrome
+    surface: doctrine
+    name: attach to user's running Chrome without launching browser
+    state: DEFERRED
+    description: Connect to existing Chrome via CDP remote debugging; two setup paths (Way 1 checkbox, Way 2 flag)
+    source: install.md
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-cdp-attach-to-running-chrome
+
+  - id: browser-harness-coordinate-first-clicks
+    surface: doctrine
+    name: pixel-coordinate clicks by default; selectors fallback
+    state: DEFERRED
+    description: Use click_at_xy for most interactions; drop to DOM selectors only when target lacks visible geometry
+    source: SKILL.md
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-coordinate-first-clicks
+
+  - id: browser-harness-start-remote-daemon
+    surface: cli_command
+    name: start_remote_daemon
+    state: DEFERRED
+    description: Spawn Browser Use Cloud browser via API; supports profile reuse and proxy country selection
+    source: src/browser_harness/helpers.py
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-headless-pipelines
+    tracking_issue: TBD-browser-harness-start-remote-daemon
+
+  - id: browser-harness-list-cloud-profiles
+    surface: cli_command
+    name: list_cloud_profiles
+    state: DEFERRED
+    description: List cookie-state profiles saved in Browser Use Cloud account
+    source: src/browser_harness/helpers.py
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-headless-pipelines
+    tracking_issue: TBD-browser-harness-list-cloud-profiles
+
+  - id: browser-harness-list-local-profiles
+    surface: cli_command
+    name: list_local_profiles
+    state: DEFERRED
+    description: List local Chrome profiles on current machine
+    source: src/browser_harness/helpers.py
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-headless-pipelines
+    tracking_issue: TBD-browser-harness-list-local-profiles
+
+  - id: browser-harness-sync-local-profile
+    surface: cli_command
+    name: sync_local_profile
+    state: DEFERRED
+    description: Upload local Chrome profile (cookies only) to Browser Use Cloud
+    source: src/browser_harness/helpers.py
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-2-headless-pipelines
+    tracking_issue: TBD-browser-harness-sync-local-profile
+
+  - id: browser-harness-multi-named-sessions
+    surface: pattern
+    name: parallel isolated browsers via BU_NAME env var
+    state: DEFERRED
+    description: Each BU_NAME value (e.g. work, research) gets distinct daemon socket/pid/log; enables parallel sub-agents
+    source: install.md, helpers.py:37-38
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: out-of-scope-for-current-phase
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-browser-harness-multi-named-sessions
