@@ -1,0 +1,61 @@
+{
+  "_doc": "LATTICE Meta-Harness model router config. Edit this file to swap which model handles which task. See meta/harness/MODELS.md for full docs.",
+  "default": "claude",
+
+  "tasks": {
+    "propose":     { "primary": "claude",                    "fallback": ["ollama:qwen2.5-coder:7b", "codex", "copilot"] },
+    "agent-loop":  { "primary": "claude",                    "fallback": ["ollama:qwen2.5-coder:7b"] },
+    "triage":      { "primary": "copilot",                   "fallback": ["claude", "ollama:llama3.2:3b"] },
+    "review":      { "primary": "codex",                     "fallback": ["claude", "ollama:qwen2.5-coder:7b"] },
+    "docs":        { "primary": "claude",                    "fallback": ["ollama:qwen2.5:14b"] },
+    "local":       { "primary": "ollama:qwen2.5-coder:7b",   "fallback": ["ollama:llama3.2:3b"] },
+    "quick":       { "primary": "ollama:llama3.2:3b",        "fallback": ["claude"] }
+  },
+
+  "backends": {
+    "claude": {
+      "cmd": ["claude", "-p"],
+      "stdin_prompt": true,
+      "stream": true,
+      "auth_check": "claude --version",
+      "install": "see https://docs.anthropic.com/claude-code",
+      "notes": "Anthropic Claude Code CLI. Used by pixeltable/service/worker.py."
+    },
+    "codex": {
+      "cmd": ["codex", "exec", "--"],
+      "stdin_prompt": false,
+      "prompt_as_arg": true,
+      "stream": false,
+      "auth_check": "codex --version",
+      "install": "brew install codex (or: npm install -g @openai/codex)",
+      "notes": "OpenAI Codex CLI. Requires OPENAI_API_KEY or codex login."
+    },
+    "copilot": {
+      "cmd": ["gh", "copilot", "suggest", "-t", "shell", "--"],
+      "stdin_prompt": false,
+      "prompt_as_arg": true,
+      "stream": false,
+      "auth_check": "gh extension list | grep -q gh-copilot",
+      "install": "gh extension install github/gh-copilot",
+      "notes": "GitHub Copilot via gh extension. Uses your Copilot subscription."
+    },
+    "ollama": {
+      "cmd": ["ollama", "run", "{model}"],
+      "stdin_prompt": true,
+      "stream": true,
+      "model_required": true,
+      "auth_check": "ollama list",
+      "install": "brew install ollama (then: ollama pull qwen2.5-coder:7b)",
+      "notes": "Local models, no network, no API cost. Pull models with `ollama pull <name>`."
+    }
+  },
+
+  "recommended_ollama_models": {
+    "qwen2.5-coder:7b":  { "size_gb": 4.7,  "use": "fast code reasoning, propose/agent-loop fallback" },
+    "qwen2.5-coder:14b": { "size_gb": 9.0,  "use": "stronger code reasoning" },
+    "qwen2.5:14b":       { "size_gb": 8.7,  "use": "general reasoning, docs/research" },
+    "llama3.2:3b":       { "size_gb": 2.0,  "use": "quick triage, classification" },
+    "codestral:22b":     { "size_gb": 13.0, "use": "long-context code analysis" },
+    "deepseek-r1:14b":   { "size_gb": 9.0,  "use": "reasoning chains, plan-review" }
+  }
+}

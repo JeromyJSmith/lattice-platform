@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+"""LATTICE Meta-Harness model router.
+
+Reads meta/harness/config/models.json and dispatches a prompt to the
+configured backend for the given task, falling back through the chain
+if a backend is unavailable or its invocation fails.
+
+Usage:
+  llm --task=propose "prompt here"
+  llm --task=propose < prompt.txt           # read prompt from stdin
+  llm --backend=ollama:qwen2.5-coder:7b "prompt"
+  llm --backend=claude "prompt"
+  llm --list                                 # show config + which backends are available
+  llm --help
+
+Exit codes:
+  0  — backend ran and produced output (forwarded to stdout)
+  1  — config error
+  2  — no usable backend in the chain (all unavailable or all failed)
+  3  — usage error
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shlex
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(
+    subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True, text=True, check=False,
+    ).stdout.strip()
+    or Path(__file__).resolve().parents[3]
+)
+CONFIG_PATH = REPO_ROOT / "meta" / "harness" / "config" / "models.json"
+
+
+def load_config() -> dict:
+    if not CONFIG_PATH.is_file():
+        print(f"llm: config not found at {CONFIG_PATH}", file=sys.stderr)
+        sys.exit(1)
+    with CONFIG_PATH.open() as f:
+        return json.load(f)
+
+
+def parse_backend_spec(spec: str) -> tuple[str, str | None]:
+    """`claude` -> (claude, None); `ollama:qwen2.5-coder:7b` -> (ollama, qwen2.5-coder:7b)."""
+    if ":" not in spec:
+        return spec, None
+    name, _, model = spec.partition(":")
+    return name, model
+
+
+def is_available(backend_name: str, backend_cfg: dict) -> bool:
+    check = backend_cfg.get("auth_check")
+    if not check:
+        return True
+    result = subprocess.run(
+        check, shell=True, capture_output=True, text=True, check=False
+    )
+    return result.returncode == 0
+
+
+def build_argv(backend_cfg: dict, model: str | None, prompt: str) -> tuple[list[str], bool]:
+    """Return (argv, send_via_stdin)."""
+    cmd_template = backend_cfg["cmd"]
+    argv: list[str] = []
+    for token in cmd_template:
+        if token == "{model}":
+            if not model:
+                raise ValueError("backend requires a model but none was provided")
+            argv.append(model)
+        else:
+            argv.append(token)
+    if backend_cfg.get("prompt_as_arg"):
+        argv.append(prompt)
+        return argv, False
+    return argv, bool(backend_cfg.get("stdin_prompt", True))
+
+
+def dispatch(backend_spec: str, backends: dict, prompt: str, timeout: int) -> tuple[int, str]:
+    name, model = parse_backend_spec(backend_spec)
+    if name not in backends:
+        return 127, f"llm: unknown backend `{name}`"
+    cfg = backends[name]
+    if cfg.get("model_required") and not model:
+        return 127, f"llm: backend `{name}` requires :model suffix"
+    if not is_available(name, cfg):
+        return 127, f"llm: backend `{name}` not available ({cfg.get('install', '')})"
+    try:
+        argv, send_via_stdin = build_argv(cfg, model, prompt)
+    except ValueError as e:
+        return 127, f"llm: {e}"
+    if not shutil.which(argv[0]):
+        return 127, f"llm: command `{argv[0]}` not on PATH"
+    try:
+        result = subprocess.run(
+            argv,
+            input=prompt if send_via_stdin else None,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return 124, f"llm: backend `{backend_spec}` timed out after {timeout}s"
+    if result.returncode != 0:
+        return result.returncode, result.stdout + result.stderr
+    return 0, result.stdout
+
+
+def list_state(config: dict) -> None:
+    print("Backends:")
+    for name, cfg in config["backends"].items():
+        avail = "✓" if is_available(name, cfg) else "✗"
+        on_path = "✓" if shutil.which(cfg["cmd"][0]) else "✗"
+        notes = cfg.get("notes", "")
+        print(f"  {avail} {name:10s}  on-path={on_path}  {notes}")
+        if avail != "✓":
+            print(f"      install: {cfg.get('install', '?')}")
+    print()
+    print("Tasks (primary → fallback chain):")
+    for task, route in config["tasks"].items():
+        chain = " → ".join([route["primary"]] + route.get("fallback", []))
+        print(f"  {task:12s}  {chain}")
+    print()
+    print(f"Default backend (when --task is unrecognized): {config['default']}")
+    print(f"Config path: {CONFIG_PATH}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="LATTICE meta-harness model router",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
+    parser.add_argument("--task", help="task name from config (propose, triage, review, ...)")
+    parser.add_argument("--backend", help="explicit backend (overrides --task)")
+    parser.add_argument("--timeout", type=int, default=180, help="seconds per attempt (default 180)")
+    parser.add_argument("--list", action="store_true", help="show config + backend availability")
+    parser.add_argument("--no-fallback", action="store_true", help="primary only, no fallback")
+    parser.add_argument("prompt", nargs="?", default=None, help="prompt text (or read from stdin)")
+    args = parser.parse_args()
+
+    config = load_config()
+
+    if args.list:
+        list_state(config)
+        return 0
+
+    # Resolve prompt
+    if args.prompt is not None:
+        prompt = args.prompt
+    elif not sys.stdin.isatty():
+        prompt = sys.stdin.read()
+    else:
+        print("llm: no prompt provided (pass as arg or via stdin)", file=sys.stderr)
+        return 3
+
+    # Build chain
+    if args.backend:
+        chain = [args.backend]
+    elif args.task:
+        if args.task not in config["tasks"]:
+            print(f"llm: unknown task `{args.task}` — using default `{config['default']}`", file=sys.stderr)
+            chain = [config["default"]]
+        else:
+            route = config["tasks"][args.task]
+            chain = [route["primary"]] + ([] if args.no_fallback else route.get("fallback", []))
+    else:
+        chain = [config["default"]]
+
+    last_err = ""
+    for i, backend_spec in enumerate(chain):
+        rc, out = dispatch(backend_spec, config["backends"], prompt, args.timeout)
+        if rc == 0:
+            sys.stdout.write(out)
+            sys.stdout.flush()
+            if i > 0:
+                print(f"\n[llm: succeeded on fallback `{backend_spec}` (#{i + 1} of {len(chain)})]", file=sys.stderr)
+            return 0
+        last_err = out
+        if rc == 127:
+            # Not available — try next without printing the prompt body
+            print(f"[llm: skipping `{backend_spec}` — {out.strip().splitlines()[0] if out.strip() else 'unavailable'}]", file=sys.stderr)
+        else:
+            print(f"[llm: backend `{backend_spec}` failed (rc={rc}) — trying next]", file=sys.stderr)
+
+    print(f"llm: no backend in chain succeeded. Last error:\n{last_err}", file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

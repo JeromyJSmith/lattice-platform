@@ -13,12 +13,12 @@
 | 3D engine | `@thatopen/components` 3.4.6 + Three.js 0.184 |
 | Analytics | deck.gl 9.3.2 + DuckDB WASM + MapLibre |
 | iTwin | `core-geometry` + `core-common` only (never `core-backend`) |
-| Agent runtime | `claude -p --output-format stream-json` subprocess |
+| Agent runtime | model-routed via `meta/harness/bin/llm` (see [`meta/harness/MODELS.md`](meta/harness/MODELS.md)) |
 
 ## Cardinal rules (zero-tolerance)
 
 1. No `@itwin/core-backend`. Pixeltable owns persistence.
-2. No Anthropic Python SDK. The CLI subprocess is the live path.
+2. No LLM SDK imports in client code (Anthropic, OpenAI, etc.). All LLM calls go through `meta/harness/bin/llm` — backend is config-driven.
 3. No pip / conda / poetry. uv only.
 4. No writes to `marpa/*` or `lattice/source` / `lattice/qa` / `lattice/budget` / `lattice/worksheet` Pixeltable trees — those belong to other bodies.
 5. No Revit, DGN, MicroStation. IFC4.3 at the authoring boundary.

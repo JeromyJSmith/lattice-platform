@@ -18,12 +18,12 @@ If you're picking up an issue, also read [`meta/AGENT_ONBOARDING.md`](../meta/AG
 | 3D engine   | `@thatopen/components` 3.4.6 + Three.js 0.184     |
 | Analytics   | deck.gl 9.3.2 + DuckDB WASM 1.33.1 + MapLibre 5  |
 | iTwin       | `@itwin/core-geometry` 5.9.2 + `@itwin/core-common` — **never** `@itwin/core-backend** |
-| Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
+| Real agent  | model-routed via `meta/harness/bin/llm` (see [`meta/harness/MODELS.md`](../meta/harness/MODELS.md)) |
 
 ## Cardinal rules
 
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
-2. **Never import the Anthropic SDK in client code.** It's removed from `pixeltable/pyproject.toml` for this reason; the CLI subprocess is the live path.
+2. **Never import any LLM SDK directly in client code** (Anthropic, OpenAI, etc.). All LLM calls go through `meta/harness/bin/llm` — the router decides which backend (Claude / Codex / Ollama / Copilot) handles which task.
 3. **Never use pip, conda, poetry.** All Python ops go through `uv`.
 4. **Never write to `marpa/*` or other foreign Pixeltable namespaces.** Ownership is enforced in `pixeltable/migrations/_helpers.py::assert_ownership`.
 5. **No Revit, no DGN, no MicroStation.** IFC4.3 is the only authoring boundary.

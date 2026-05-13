@@ -41,10 +41,19 @@ The `docs-sync-check.yml` CI workflow enforces the same checks. It will block me
 
 See [`meta/AGENT_ONBOARDING.md` § 9 Mandatory workflow contract](meta/AGENT_ONBOARDING.md) for the contract.
 
+## MODEL ROUTING
+
+LLM calls go through the model router at [`meta/harness/bin/llm`](meta/harness/bin/llm). The router reads [`meta/harness/config/models.json`](meta/harness/config/models.json) to decide which backend (Claude / Codex / Copilot / Ollama) handles each task, with automatic fallback. No backend is privileged — swap any for any by editing the JSON. Full docs: [`meta/harness/MODELS.md`](meta/harness/MODELS.md).
+
+Pin a single model for one harness run:
+```bash
+HARNESS_BACKEND=ollama:qwen2.5-coder:7b bash meta/harness/bootstrap/run-autoresearch.sh schema
+```
+
 ## CARDINAL CODE RULES
 
 - **No `@itwin/core-backend`** — Pixeltable owns persistence. Use `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity` only.
-- **No Anthropic SDK in client code** — server functions via `@tanstack/ai` only, or via the `claude -p` subprocess in `pixeltable/service/worker.py`.
+- **No LLM SDK imports in client code** — never `import Anthropic` / `import openai` / similar in `.ts`/`.tsx`/client `.py`. All LLM calls go through `meta/harness/bin/llm` (router) or `@tanstack/ai` adapters. The router decides which backend runs — config, not code.
 - **uv only for Python** — never pip / conda / poetry / pipenv.
 - **No Revit / MicroStation / DGN** at the boundary — IFC4.3 only.
 - **Pixeltable is the only database.** `.bim` files are read-only sources via `@pxt.udf` (sqlite3 implementation detail only).

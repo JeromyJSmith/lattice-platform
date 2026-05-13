@@ -8,7 +8,7 @@
 #
 # Sections: schema | api | frontend | georef | genai | vw-itwin | ddc
 #
-# --dry  skips the claude -p proposal call and emits a no-op diff so all
+# --dry  skips the llm router proposal call and emits a no-op diff so all
 #        wiring (sandbox, scoring, ratchet gate) can be verified without
 #        requiring claude availability.
 #
@@ -28,7 +28,7 @@ Run one autoresearch cycle for a section of the LATTICE platform.
 Sections: schema | api | frontend | georef | genai | vw-itwin | ddc
 
 Options:
-  --dry    Skip the claude -p proposal call. Emit a no-op diff that scores
+  --dry    Skip the llm router proposal call. Emit a no-op diff that scores
            identically, verifying all harness wiring without AI involvement.
   --help   Show this message and exit.
 
@@ -134,10 +134,19 @@ if [ "$DRY" -eq 1 ]; then
 else
   PROPOSAL_PROMPT="Read ${SECTION}/GOAL.md if it exists, else read pixeltable/GOAL.md. Read scripts/score-${SECTION}.sh. Propose ONE concrete change to the ${SECTION} section that would increase the fitness score. Output ONLY a unified diff applicable from the repo root. No explanation, no markdown fences, just the diff."
 
-  echo "[harness] Calling claude -p (timeout 120s)..."
-  if ! timeout 120 claude -p "$PROPOSAL_PROMPT" > "$PROPOSAL_FILE" 2>&1; then
-    echo "[harness] claude -p failed or timed out — no proposal this cycle"
-    # Wave 2: log event_type=rejected with error_log='timeout' to section_events
+  # Route through the model router. Backend is decided by config:
+  #   meta/harness/config/models.json — task `propose`
+  # Override with HARNESS_BACKEND env var if you want to pin one explicitly.
+  LLM=meta/harness/bin/llm
+  echo "[harness] Calling model router (task=propose, timeout=120s)..."
+  if [ -n "${HARNESS_BACKEND:-}" ]; then
+    LLM_ARGS=(--backend="$HARNESS_BACKEND" --timeout=120)
+  else
+    LLM_ARGS=(--task=propose --timeout=120)
+  fi
+  if ! "$LLM" "${LLM_ARGS[@]}" "$PROPOSAL_PROMPT" > "$PROPOSAL_FILE" 2>&1; then
+    echo "[harness] llm router failed across all fallbacks — no proposal this cycle"
+    # Wave 2: log event_type=rejected with error_log='all-backends-failed' to section_events
     rm -f "$PROPOSAL_FILE"
     git worktree remove --force "$SANDBOX" 2>/dev/null || true
     exit 0  # Harness stays healthy — just no progress this cycle
