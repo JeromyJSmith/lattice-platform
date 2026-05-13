@@ -26,7 +26,9 @@ require "yaml"
 ALLOWED_STATES = %w[ACTIVE DEFERRED BLOCKED].freeze
 ALLOWED_DEFERRED_REASONS = %w[
   awaiting-upstream-dep
+  awaiting-api-key
   cost-prohibitive
+  experimental-upstream
   out-of-scope-for-current-phase
   redundant-with-other-tool
 ].freeze

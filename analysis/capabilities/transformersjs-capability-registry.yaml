@@ -1,0 +1,105 @@
+# spec-verified: github.com/huggingface/transformers.js 2026-05-13
+tool: transformers.js
+tool_version: v3.x  # via cdn.jsdelivr.net/npm/@huggingface/transformers
+canonical_docs: https://huggingface.co/docs/transformers.js
+last_harvested: 2026-05-13
+harvested_by: claude-opus-4-7 (LATTICE meta-harness session, Move B)
+
+# Why this registry exists
+# ------------------------
+# transformers.js v3+ runs ONNX-exported HF models in the browser with WebGPU
+# acceleration. LATTICE uses it to run onnx-community/Ternary-Bonsai-1.7B-ONNX
+# inside a Chrome tab driven by browser-harness js(), with the server-side
+# SFA orchestrating which prompts to fire. Server-side driver model is
+# bonsai-8b on llama-swap; in-tab model is the 1.7B ONNX Bonsai. The driver
+# never touches the in-tab model's weights — they live entirely in the
+# browser. See meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py.
+#
+# All rows start DEFERRED with reason=experimental-upstream until the first
+# real proof run lands evidence on disk. Promotion happens in the same
+# commit as the marker JSON + session JSON the SFA emits.
+
+capabilities:
+  - id: transformersjs-pipeline-text-generation
+    surface: js_api
+    name: pipeline("text-generation", model_id, opts)
+    state: DEFERRED
+    description: Async pipeline factory that downloads ONNX weights and returns a callable generator.
+    source: https://huggingface.co/docs/transformers.js/api/pipelines#pipelinestask-model-options
+    owner_harness: meta-harness
+    value: high
+    risk: medium
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-pipeline-text-generation
+    notes: First boot downloads weights (~hundreds of MB); subsequent boots hit browser cache.
+
+  - id: transformersjs-webgpu-device
+    surface: js_api
+    name: '{ device: "webgpu" }'
+    state: DEFERRED
+    description: Pipeline option that selects the WebGPU backend for inference; falls back to WASM if not available.
+    source: https://huggingface.co/docs/transformers.js/guides/webgpu
+    owner_harness: meta-harness
+    value: high
+    risk: medium
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-webgpu-device
+    notes: WebGPU requires Chrome 113+ on macOS/Linux/Windows. localhost is a secure context per W3C spec so HTTP works for dev.
+
+  - id: transformersjs-progress-callback
+    surface: js_api
+    name: 'pipeline(..., { progress_callback })'
+    state: DEFERRED
+    description: Per-file download progress callback fed into the host UI for visible boot status.
+    source: https://huggingface.co/docs/transformers.js/api/utils/hub#progresscallbackdata
+    owner_harness: meta-harness
+    value: medium
+    risk: low
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-progress-callback
+    notes: Surfaces per-file ONNX shard download progress so a human watching the page can see what's happening.
+
+  - id: transformersjs-cdn-esm-import
+    surface: js_api
+    name: 'import * from "https://cdn.jsdelivr.net/npm/@huggingface/transformers"'
+    state: DEFERRED
+    description: ESM module import directly from a CDN; no bundler, no node_modules.
+    source: https://huggingface.co/docs/transformers.js/installation
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-cdn-esm-import
+    notes: First-load requires network. Subsequent loads served by browser cache. No bundler/build step required.
+
+  - id: transformersjs-quantized-onnx-1bit-bonsai
+    surface: pattern
+    name: onnx-community/Ternary-Bonsai-1.7B-ONNX
+    state: DEFERRED
+    description: Ternary-quantized 1.7B Bonsai exported to ONNX for transformers.js compatibility.
+    source: https://huggingface.co/onnx-community/Ternary-Bonsai-1.7B-ONNX
+    owner_harness: meta-harness
+    value: high
+    risk: low
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-quantized-onnx-1bit-bonsai
+    notes: 4B and 8B ONNX exports also exist (onnx-community/Ternary-Bonsai-{4B,8B}-ONNX) — could be swapped via the MODEL_ID constant in bonsai-host.html.
+
+  - id: transformersjs-server-orchestrated-pattern
+    surface: pattern
+    name: Server-orchestrated in-tab inference
+    state: DEFERRED
+    description: Server-side driver model orchestrates browser-side inference via browser-harness js(); the driver never sees the in-tab model's weights or output tokens directly, just the text result returned by the tool.
+    source: meta/harness/tools/sfa-eval/sfa_in_tab_bonsai_v1.py
+    owner_harness: meta-harness
+    value: high
+    risk: medium
+    reason: experimental-upstream
+    target_phase: next-meta-harness-proof-cycle
+    tracking_issue: TBD-transformersjs-server-orchestrated-pattern
+    notes: Future foundation for browser-resident agents whose compute lives entirely on the user's device while server keeps the loop coherent.
