@@ -32,23 +32,36 @@ mcp = FastMCP(
 
 
 def _run_in_vw(body: str, timeout: int = _TIMEOUT) -> object:
-    """Run a one-shot Python script inside VW; return the value of `_result`."""
+    """Run a one-shot Python script inside VW; return the value of `_result`.
+
+    Writes the script to a temp file so AppleScript reads it with real newlines
+    intact — json.dumps() would escape \\n to literal backslash-n which breaks
+    Python's multi-statement parser inside VW.
+    """
     result_path = tempfile.mktemp(suffix=".json", prefix="vwmcp_")
+    script_path = tempfile.mktemp(suffix=".py",   prefix="vwscript_")
     script = (
         "import json as _json, vs\n"
         + body
         + f"\nwith open({json.dumps(result_path)}, 'w') as _f: _json.dump(_result, _f)\n"
     )
-    apple = f"tell application {json.dumps(_VW_APP)} to run Python script {json.dumps(script)}"
+    with open(script_path, "w") as f:
+        f.write(script)
+    # AppleScript reads the file → real newlines → VW gets valid Python source
+    apple = (
+        f"set _s to read POSIX file {json.dumps(script_path)}\n"
+        f"tell application {json.dumps(_VW_APP)} to run Python script _s"
+    )
     try:
         subprocess.run(["osascript", "-e", apple], timeout=timeout, capture_output=True)
         with open(result_path) as f:
             return json.load(f)
     finally:
-        try:
-            os.unlink(result_path)
-        except FileNotFoundError:
-            pass
+        for p in (script_path, result_path):
+            try:
+                os.unlink(p)
+            except FileNotFoundError:
+                pass
 
 
 def _ensure_document():
@@ -104,15 +117,18 @@ def vw_get_drawing_info() -> dict:
 
 @mcp.tool()
 def vw_list_layers() -> list:
-    """List all design layers with name and visibility."""
+    """List all layers with name and visibility."""
     _ensure_document()
     return _run_in_vw("""
-layers = []
-layer = vs.FActLayer()
-while layer:
-    layers.append({'name': vs.GetLName(layer), 'visible': vs.GetLVisibility(layer) == 0})
-    layer = vs.NextLayer(layer)
-_result = layers
+try:
+    layers = []
+    layer = vs.FLayer()
+    while layer:
+        layers.append({'name': vs.GetLName(layer), 'visible': vs.GetLVis(layer) == 0})
+        layer = vs.NextLayer(layer)
+    _result = layers
+except Exception as e:
+    _result = [{'fatal': str(e)}]
 """)
 
 
@@ -125,21 +141,30 @@ def vw_list_objects_on_layer(layer: str) -> list:
     """
     _ensure_document()
     return _run_in_vw(f"""
-layer_name = {json.dumps(layer)}
-target = None
-lyr = vs.FActLayer()
-while lyr:
-    if vs.GetLName(lyr) == layer_name:
-        target = lyr
-        break
-    lyr = vs.NextLayer(lyr)
-objects = []
-if target:
-    h = vs.FSObject(target)
-    while h:
-        objects.append({{'entity_type': vs.GetEntityType(h), 'name': vs.GetName(h), 'num_records': vs.NumRecords(h)}})
-        h = vs.NextSObj(h)
-_result = objects
+try:
+    layer_name = {json.dumps(layer)}
+    target = None
+    lyr = vs.FLayer()
+    while lyr:
+        if vs.GetLName(lyr) == layer_name:
+            target = lyr
+            break
+        lyr = vs.NextLayer(lyr)
+    objects = []
+    if target:
+        h = vs.FInLayer(target)
+        i = 0
+        while h and i < 500:
+            try:
+                obj = {{'type': vs.GetTypeN(h), 'name': vs.GetName(h), 'num_records': vs.NumRecords(h)}}
+            except Exception as oe:
+                obj = {{'error': str(oe)}}
+            objects.append(obj)
+            h = vs.NextObj(h)
+            i += 1
+    _result = objects
+except Exception as e:
+    _result = [{{'fatal': str(e)}}]
 """)
 
 
@@ -153,24 +178,29 @@ def vw_get_object_bounds(layer: str, name: str) -> dict:
     """
     _ensure_document()
     return _run_in_vw(f"""
-layer_name = {json.dumps(layer)}
-obj_name = {json.dumps(name)}
-found = None
-lyr = vs.FActLayer()
-while lyr:
-    if vs.GetLName(lyr) == layer_name:
-        h = vs.FSObject(lyr)
-        while h:
-            if vs.GetName(h) == obj_name:
-                found = h
+try:
+    layer_name = {json.dumps(layer)}
+    obj_name = {json.dumps(name)}
+    found = None
+    lyr = vs.FLayer()
+    while lyr:
+        if vs.GetLName(lyr) == layer_name:
+            h = vs.FInLayer(lyr)
+            while h:
+                if vs.GetName(h) == obj_name:
+                    found = h
+                    break
+                h = vs.NextObj(h)
+            if found:
                 break
-            h = vs.NextSObj(h)
-    lyr = vs.NextLayer(lyr)
-if found:
-    p1, p2 = vs.GetBBox(found)
-    _result = {{'min_x': p1[0], 'min_y': p1[1], 'max_x': p2[0], 'max_y': p2[1]}}
-else:
-    _result = {{'error': 'object not found'}}
+        lyr = vs.NextLayer(lyr)
+    if found:
+        p1, p2 = vs.GetBBox(found)
+        _result = {{'min_x': p1[0], 'min_y': p1[1], 'max_x': p2[0], 'max_y': p2[1]}}
+    else:
+        _result = {{'error': 'object not found'}}
+except Exception as e:
+    _result = {{'fatal': str(e)}}
 """)
 
 
@@ -185,28 +215,35 @@ def vw_get_record_data(layer: str, name: str, record: str) -> dict:
     """
     _ensure_document()
     return _run_in_vw(f"""
-layer_name = {json.dumps(layer)}
-obj_name = {json.dumps(name)}
-record_name = {json.dumps(record)}
-found = None
-lyr = vs.FActLayer()
-while lyr:
-    if vs.GetLName(lyr) == layer_name:
-        h = vs.FSObject(lyr)
-        while h:
-            if vs.GetName(h) == obj_name:
-                found = h
+try:
+    layer_name = {json.dumps(layer)}
+    obj_name = {json.dumps(name)}
+    record_name = {json.dumps(record)}
+    found = None
+    lyr = vs.FLayer()
+    while lyr:
+        if vs.GetLName(lyr) == layer_name:
+            h = vs.FInLayer(lyr)
+            while h:
+                if vs.GetName(h) == obj_name:
+                    found = h
+                    break
+                h = vs.NextObj(h)
+            if found:
                 break
-            h = vs.NextSObj(h)
-    lyr = vs.NextLayer(lyr)
-fields = {{}}
-if found:
-    rec = vs.GetRecord(found, vs.NumRecords(found))
-    if rec and vs.GetName(rec) == record_name:
-        for i in range(1, vs.NumFields(rec) + 1):
-            fname = vs.GetFldName(rec, i)
-            fields[fname] = vs.GetRField(found, record_name, fname)
-_result = fields
+        lyr = vs.NextLayer(lyr)
+    fields = {{}}
+    if found:
+        for ri in range(1, vs.NumRecords(found) + 1):
+            rec = vs.GetRecord(found, ri)
+            if rec and vs.GetName(rec) == record_name:
+                for fi in range(1, vs.NumFields(rec) + 1):
+                    fname = vs.GetFldName(rec, fi)
+                    fields[fname] = vs.GetRField(found, record_name, fname)
+                break
+    _result = fields
+except Exception as e:
+    _result = {{'fatal': str(e)}}
 """)
 
 
@@ -215,14 +252,17 @@ def vw_export_ifc() -> dict:
     """Trigger an IFC 4.3 export. Returns path of the exported file under ~/.lattice/vw-exports/."""
     _ensure_document()
     return _run_in_vw("""
-import os, time
-target_dir = os.path.expanduser('~/.lattice/vw-exports')
-os.makedirs(target_dir, exist_ok=True)
-out_path = os.path.join(target_dir, f'{int(time.time())}.ifc')
-vs.SetPref(8908, True)
-vs.SetSavePref(8909, out_path)
-vs.DoMenuTextByName('Export IFC...', 0)
-_result = {'path': out_path}
+try:
+    import os, time
+    target_dir = os.path.expanduser('~/.lattice/vw-exports')
+    os.makedirs(target_dir, exist_ok=True)
+    out_path = os.path.join(target_dir, f'{int(time.time())}.ifc')
+    vs.SetPref(8908, True)
+    vs.SetSavePref(8909, out_path)
+    vs.DoMenuTextByName('Export IFC...', 0)
+    _result = {'path': out_path}
+except Exception as e:
+    _result = {'fatal': str(e)}
 """)
 
 
