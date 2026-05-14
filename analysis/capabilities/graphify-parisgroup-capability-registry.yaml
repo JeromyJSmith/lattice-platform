@@ -20,10 +20,10 @@ capabilities:
   - id: cli-run
     surface: cli_command
     name: graphify run
-    state: ACTIVE
+    state: BLOCKED
     description: Execute full analysis pass; writes meta/harness/graph-reports/
-    wired_at: [meta/harness/bootstrap/graph-snapshot.sh]
-    invoked_by: [pre-session bootstrap]
+    blocker: Installed CLI on 2026-05-13 does not expose `graphify run`; bounded proof used `graphify update .`
+    blocker_resolution_path: Replace this harvested row with a real `graphify update` row during the next Graphify re-harvest
 
   - id: cli-check
     surface: cli_command
@@ -36,10 +36,10 @@ capabilities:
   - id: cli-install-integrations
     surface: cli_command
     name: graphify install-integrations
-    state: ACTIVE
+    state: BLOCKED
     description: Writes .claude/ skills + MCP config (--project-local mode)
-    wired_at: [Phase 1 install step]
-    invoked_by: [Phase 1 install]
+    blocker: Installed CLI on 2026-05-13 uses platform-specific install commands such as `graphify codex install`
+    blocker_resolution_path: Replace this harvested row with platform-specific install rows during the next Graphify re-harvest
 
   - id: cli-stats
     surface: cli_command
@@ -160,66 +160,66 @@ capabilities:
   - id: mcp-graphify_stats
     surface: mcp_tool
     name: graphify_stats
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI stats but callable from Claude conversation
-    wired_at: [".mcp.json (graphify entry — Phase 1)"]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_search
     surface: mcp_tool
     name: graphify_search
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI search
-    wired_at: [.mcp.json]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_explain
     surface: mcp_tool
     name: graphify_explain
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI explain
-    wired_at: [.mcp.json]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_hotspots
     surface: mcp_tool
     name: graphify_hotspots
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI hotspots
-    wired_at: [.mcp.json]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_cycles
     surface: mcp_tool
     name: graphify_cycles
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI cycles
-    wired_at: [.mcp.json]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_diff
     surface: mcp_tool
     name: graphify_diff
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI diff
-    wired_at: [.mcp.json]
-    invoked_by: [Claude inline queries]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_run_analysis
     surface: mcp_tool
     name: graphify_run_analysis
-    state: ACTIVE
+    state: BLOCKED
     description: Trigger graphify run from MCP
-    wired_at: [.mcp.json]
-    invoked_by: [autoresearch pre-propose]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server and no `graphify run` command
+    blocker_resolution_path: Re-harvest the current Graphify release and replace this row with a real surface if one exists
 
   - id: mcp-graphify_policy_check
     surface: mcp_tool
     name: graphify_policy_check
-    state: ACTIVE
+    state: BLOCKED
     description: Same as CLI policy-check
-    wired_at: [.mcp.json]
-    invoked_by: [autoresearch ratchet step]
+    blocker: Installed CLI on 2026-05-13 exposes no Graphify MCP server or MCP tool surface
+    blocker_resolution_path: Re-harvest the current Graphify release and only promote MCP rows if a real `.mcp.json` entry exists
 
   - id: mcp-graphify_export
     surface: mcp_tool
@@ -234,34 +234,38 @@ capabilities:
   - id: slash-graphify-status
     surface: slash_command
     name: /graphify-status
-    state: ACTIVE
+    state: DEFERRED
     description: Quick status check from Claude Code chat
-    wired_at: [".claude/skills/generated/graphify-status/SKILL.md (auto-generated by install-integrations)"]
-    invoked_by: [user interactive]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: slash-graphify-explain
     surface: slash_command
     name: /graphify-explain <symbol>
-    state: ACTIVE
+    state: DEFERRED
     description: Interactive explain from chat
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [user interactive]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: slash-graphify-hotspots
     surface: slash_command
     name: /graphify-hotspots
-    state: ACTIVE
+    state: DEFERRED
     description: List top hotspots from chat
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [user interactive]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: slash-graphify-check
     surface: slash_command
     name: /graphify-check
-    state: ACTIVE
+    state: DEFERRED
     description: Run policy + cycle check from chat
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [user interactive]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: slash-graphify-diff
     surface: slash_command
@@ -276,26 +280,29 @@ capabilities:
   - id: skill-graphify-introduction
     surface: skill
     name: graphify-introduction
-    state: ACTIVE
+    state: DEFERRED
     description: Onboarding skill for new agents (what graphify is, when to query)
-    wired_at: [.claude/skills/generated/graphify-introduction/SKILL.md]
-    invoked_by: [auto-load via install-integrations]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: skill-graphify-architecture-report
     surface: skill
     name: graphify-architecture-report
-    state: ACTIVE
+    state: DEFERRED
     description: Read & interpret graphify-out/*/architecture-report.md
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [section harness agents]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   - id: skill-graphify-hotspot-triage
     surface: skill
     name: graphify-hotspot-triage
-    state: ACTIVE
+    state: DEFERRED
     description: Decide if a hotspot needs refactor vs. lives-with annotation
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [section harness pre-propose]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-graphify-reharvest
+    tracking_issue: 19
 
   # ─── SUBAGENTS (2) ───
   - id: agent-graphify-investigator

@@ -1,10 +1,10 @@
 # graphify.toml — LATTICE repository graph configuration
-# Used by graphify CLI (parisgroup/graphify) for code graph analysis.
+# Used by the graphifyy package, which installs the `graphify` CLI.
 #
-# graphify update src/ — rebuild graph from source
-# graphify watch src/  — watch mode during development
-# graphify query "..."  — BFS traversal
-# graphify cluster-only graphify-out/ — re-run clustering
+# graphify update .       — AST refresh for changed code
+# graphify extract .      — full semantic extraction when API keys are available
+# graphify query "..."    — graph traversal against graphify-out/graph.json
+# bash scripts/run-graphify-mcp.sh  — stdio MCP server over graphify-out/graph.json
 
 [graph]
 # Output directory for graph.json + cluster reports
@@ -15,11 +15,9 @@ format = "json"
 [source]
 # Directories to include in the code graph
 include = [
-  "src",
+  "src/server/runtime",
   "pixeltable/service",
-  "pixeltable/migrations",
   "scripts",
-  "meta/harness/tools",
 ]
 # Glob patterns to exclude
 exclude = [
@@ -44,6 +42,6 @@ max_depth = 8
 
 [skill]
 # Platform where graphify skills are installed (claude | codex | cursor | etc.)
-platform = "claude"
+platform = "codex"
 # Output dir for generated skills (relative to repo root)
 generated_skills_dir = ".claude/skills/generated"
