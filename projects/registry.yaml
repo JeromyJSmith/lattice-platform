@@ -19,3 +19,28 @@ projects:
   path: /Volumes/PixelTable/vw-universe
   pixeltable_namespace: lattice/projects/vw-universe
   added: '2026-05-14'
+- id: lakehouse
+  name: Lakehouse
+  path: /Volumes/PixelTable/vw-samples/lakehouse
+  pixeltable_namespace: lattice/projects/lakehouse
+  added: '2026-05-14'
+- id: urban-park
+  name: Urban Park
+  path: /Volumes/PixelTable/vw-samples/urban-park
+  pixeltable_namespace: lattice/projects/urban-park
+  added: '2026-05-14'
+- id: cube-landscape
+  name: Cube Landscape
+  path: /Volumes/PixelTable/vw-samples/cube-landscape
+  pixeltable_namespace: lattice/projects/cube-landscape
+  added: '2026-05-14'
+- id: riverwood
+  name: Riverwood
+  path: /Volumes/PixelTable/vw-samples/riverwood
+  pixeltable_namespace: lattice/projects/riverwood
+  added: '2026-05-14'
+- id: institutional
+  name: Institutional
+  path: /Volumes/PixelTable/vw-samples/institutional
+  pixeltable_namespace: lattice/projects/institutional
+  added: '2026-05-14'

@@ -271,6 +271,25 @@ def project_init(name: str, path: str, force: bool) -> None:
             )
             console.print(f"[green]✓[/green] Wrote {lib_path}")
 
+    # Copy VW export reference doc into project docs/
+    docs_dir = proj_path / "docs"
+    docs_dir.mkdir(exist_ok=True)
+    ref_src = LATTICE_ROOT / "meta" / "capability-research" / "reference" / "VW_EXPORT_COMMANDS.md"
+    ref_dst = docs_dir / "VW_EXPORT_COMMANDS.md"
+    if ref_src.exists() and not ref_dst.exists():
+        ref_dst.write_text(ref_src.read_text())
+        console.print(f"[green]✓[/green] Wrote {ref_dst.relative_to(proj_path)} (VW export reference)")
+
+    # Copy extract_all.py template into project vw_plugins/ if missing
+    vw_plugins_dir = proj_path / "vw_plugins"
+    vw_plugins_dir.mkdir(exist_ok=True)
+    extract_src = LATTICE_ROOT / "meta" / "capability-research" / "reference" / "extract_all_template.py"
+    extract_dst = vw_plugins_dir / "extract_all.py"
+    if extract_src.exists() and not extract_dst.exists():
+        content = extract_src.read_text().replace("PROJECT_ID_PLACEHOLDER", name)
+        extract_dst.write_text(content)
+        console.print(f"[green]✓[/green] Wrote vw_plugins/extract_all.py (extraction script)")
+
     # Register in registry
     projects = registry.get("projects", [])
     if existing and force:
