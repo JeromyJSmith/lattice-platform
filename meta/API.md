@@ -5,7 +5,7 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 ## Overview
 
 - **Base URL:** `http://127.0.0.1:8765` (TCP dev) or `unix:///tmp/vwbridge-pxt.sock` (production)
-- **46 endpoints** across 12 routers (2 app-level + 44 router-level — includes 6 capability/benchmark + 7 harness health/ratchet)
+- **49 endpoints** across 13 routers (2 app-level + 47 router-level — includes 6 capability/benchmark + 7 harness health/ratchet + 3 project-scoped ingest)
 - **Sidecar entrypoint:** `pixeltable/service/main.py`
 - **Auth:** none (local dev). `LATTICE_API_KEY` header planned for Phase 3.
 - **Idempotency:** all write routes require an `Idempotency-Key` header (8..256 chars). Replays within 24h are returned from cache.
@@ -125,6 +125,14 @@ Endpoints marked `[stub 501]` return HTTP 501 Not Implemented until the underlyi
 Tracking issues:
 - Georef converters → [GH #224](https://github.com/) labeled `georef`, `agent-ready`
 - Reality ingest pipelines → [GH #225](https://github.com/) labeled `reality-capture`, `agent-ready`
+
+## /v1/projects (3 endpoints)
+
+| Method | Path | Status | Purpose |
+|---|---|---|---|
+| POST | `/v1/projects/{project_id}/ingest/ifc` | live | Ingest IFC file into project-scoped Pixeltable namespace |
+| GET | `/v1/projects/{project_id}/elements` | live | List IFC elements for a project (lightweight, no geometry blobs) |
+| GET | `/v1/projects/{project_id}/status` | live | Registry check + element count for a project |
 
 ## Adding endpoints
 

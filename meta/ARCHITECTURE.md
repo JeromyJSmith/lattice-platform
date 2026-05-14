@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0014** landed on `feature/meta-harness`. Post-Phase-2 total: 48 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **46 FastAPI endpoints** across 12 routers (Wave 1 harness foundation + capability/benchmark surface both wired). Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, Meta-Harness foundation landed + harness router wired).
+Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0014** landed on `feature/meta-harness`. Post-Phase-2 total: 48 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **49 FastAPI endpoints** across 13 routers (Wave 1 harness foundation + capability/benchmark surface + project-scoped ingest router wired). Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, Meta-Harness foundation landed + harness router wired + /v1/projects router added).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 > See [`meta/capability-research/ARCHITECTURE.md`](capability-research/ARCHITECTURE.md) for the capability research, repo-census, proof-gate, and runtime-adoption architecture.
@@ -170,7 +170,7 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
 
 ---
 
-## 3a. FastAPI surface (46 endpoints)
+## 3a. FastAPI surface (49 endpoints)
 
 The full live endpoint reference is in [`meta/API.md`](API.md). Summary by router:
 
@@ -188,7 +188,8 @@ The full live endpoint reference is in [`meta/API.md`](API.md). Summary by route
 | `/v1/harness` (health/ratchet) | 7 | live (health, proposals, events, ratchet, score) |
 | `/v1/georef` | 11 | 8 stub-501 + 3 live (read endpoints) |
 | `/v1/reality` | 7 | 5 stub-501 + 2 live (mirror reads) |
-| **Total** | **46** | |
+| `/v1/projects` | 3 | live (project-scoped IFC ingest, element listing, status) |
+| **Total** | **49** | |
 
 Stub-501 endpoints are intentional placeholders that define the contract for converters/pipelines that haven't landed yet. They are NOT removed when implementation lands — the route stays, the 501 turns into 200.
 
