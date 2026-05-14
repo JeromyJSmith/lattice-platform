@@ -20,27 +20,37 @@ projects:
   pixeltable_namespace: lattice/projects/vw-universe
   added: '2026-05-14'
 - id: lakehouse
-  name: Lakehouse
+  name: Lakehouse Landscape 2026 (ISO19650 BIM)
   path: /Volumes/PixelTable/vw-samples/lakehouse
   pixeltable_namespace: lattice/projects/lakehouse
   added: '2026-05-14'
+  vw_files:
+  - lakehouse-landscape-project-2026.vwx
 - id: urban-park
-  name: Urban Park
+  name: Urban Park 2025
   path: /Volumes/PixelTable/vw-samples/urban-park
   pixeltable_namespace: lattice/projects/urban-park
   added: '2026-05-14'
+  vw_files:
+  - urban-park-2025.vwx
 - id: cube-landscape
-  name: Cube Landscape
+  name: The Cube Landscape 2025
   path: /Volumes/PixelTable/vw-samples/cube-landscape
   pixeltable_namespace: lattice/projects/cube-landscape
   added: '2026-05-14'
+  vw_files:
+  - 2025-the-cube-landscape.vwx
 - id: riverwood
-  name: Riverwood
+  name: Riverwood Townhomes 2025
   path: /Volumes/PixelTable/vw-samples/riverwood
   pixeltable_namespace: lattice/projects/riverwood
   added: '2026-05-14'
+  vw_files:
+  - 2025-riverwood-townhomes.vwx
 - id: institutional
-  name: Institutional
+  name: Gallery 196 Institutional
   path: /Volumes/PixelTable/vw-samples/institutional
   pixeltable_namespace: lattice/projects/institutional
   added: '2026-05-14'
+  vw_files:
+  - institutional-project-gallery-196.vwx
