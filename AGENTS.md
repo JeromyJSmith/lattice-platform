@@ -23,18 +23,9 @@ comment and PR author, not by file-path jurisdiction.
 
 ## Hard prohibitions (apply to every agent, no exceptions)
 
-Lane labels dispatch work to the best-fit agent and identify stewardship. They
-do not create exclusive file-path jurisdiction, except for the hard prohibitions
-listed below.
-
-| Agent | Branch prefix | What it stewards |
-|---|---|---|
-| **Codex CLI** | `codex/` | `pixeltable/migrations/` (new only), `pixeltable/service/`, `src/server/runtime/`, `src/routes/`, `scripts/*.py` |
-| **Claude Code** | `claude/` | Multi-file refactors ≥3 dirs, `.claude/rules/`, `.claude/skills/`, `analysis/capabilities/`, `CLAUDE.md`, `AGENTS.md` |
-| **GitHub Copilot** | `copilot/` | `.github/`, `scripts/*.sh`, `meta/*.md` (single-file) |
-| **Warp PI** | `warp-pi/` | Shell scripts, `uv` ops, Phase B M3 Max bootstrap |
-| **Hermes** | `hermes/` | `meta/harness/docs/`, `analysis/`, research/synthesis |
-| **Human only** | `human/` | Secrets, OAuth, merges to main, deletions, Linear milestone changes |
+Any capable coding agent can pick up any open issue in any part of the codebase.
+No model has exclusive ownership of any file or directory — every agent is
+responsible for everything. Attribution is by Linear comment and PR author.
 
 The only things no agent — human or AI — may do without an explicit, separate
 human decision:
@@ -49,36 +40,9 @@ human decision:
    are the explicit point of a PR or they don't happen.
 
 Everything else — any file, any directory — is in scope for any agent that
-picks up the issue. Hard prohibitions survive the stewardship model: migrations
-are write-once, secrets and `.env*` are human-only, branch protection and merges
-to `main` are human-only, deletions are human-only. Changes under `.claude/rules/`
-must be the explicit purpose of the PR, not incidental drift.
-
----
-
-## If you are Codex — read this section carefully
-
-### Your stewardship
-
-**Stewarded paths:**
-- `pixeltable/migrations/*.py` — **new files only** (write-once rule — see below)
-- `pixeltable/service/**` — FastAPI sidecar services, workers, ingest
-- `src/server/runtime/**` — TanStack server functions
-- `src/routes/**` — new route files only
-- `scripts/*.py` — Python utility scripts
-
-**Prohibited (stop immediately if the task requires these):**
-- Editing any file in `pixeltable/migrations/` that already exists
-- Touching `.claude/rules/`, `.claude/skills/` unless the PR is explicitly a doctrine/skill change
-- Touching `.github/workflows/` (Copilot lane)
-- Architectural decisions not already in `meta/ARCHITECTURE.md`
-
-### Label guard — run this check first
-
-Check your Linear issue's labels. If `codex` is not present:
-1. Post a workpad comment: "Skipping — not labeled `codex`. Returning to Todo."
-2. Move issue back to **Todo** via `linear_graphql`.
-3. Stop. Make no file changes.
+picks up the issue. Migrations are write-once, secrets and `.env*` are human-only,
+branch protection and merges to `main` are human-only, deletions are human-only.
+Changes under `.claude/rules/` must be the explicit purpose of the PR.
 
 ---
 

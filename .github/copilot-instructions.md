@@ -120,17 +120,8 @@ Branches use a `<type>/marpa-<NNN>-<slug>` pattern where `<type>` is `feat`,
 Agent name does not appear in the branch — attribution is by Linear comment
 and PR author.
 
-Lane labels dispatch work and identify stewardship. They do not create exclusive
-file-path jurisdiction for ordinary implementation artifacts.
-
-| Agent | Branch prefix | Linear label | Stewardship |
-|---|---|---|---|
-| Codex CLI | `codex/` | `codex` | migrations (new), service, server routes, scripts |
-| Claude Code | `claude/` | `claude-code` | multi-file refactors, .claude/, analysis/ |
-| GitHub Copilot | `copilot/` | `copilot` | .github/, scripts (single-file), meta (single-file) |
-| Warp PI | `warp-pi/` | `warp-pi` | scripts/, shell ops, Phase B bootstrap |
-| Hermes | `hermes/` | `hermes` | meta/harness/docs/, analysis/, research |
-| Human only | `human/` | `human-only` | secrets, OAuth, branch protection, merges, protected deletions |
+Any agent can pick up any issue. No model has exclusive ownership of any path.
+Every agent is responsible for everything.
 
 ## Hard prohibitions (apply to every agent — no exceptions)
 
