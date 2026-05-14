@@ -1,0 +1,15 @@
+#----------------------------------------------------------------------------------------
+#
+#     $Source: tools/utils/utils.mke $
+#
+#  $Copyright: (c) 2019 Bentley Systems, Incorporated. All rights reserved. $
+#
+#----------------------------------------------------------------------------------------
+
+%include mdl.mki
+
+baseDir = $(_MakeFilePath)
+
+always:
+    ~linkfile "$(BuildContext)Delivery/BisConstants.py=$(baseDir)BisConstants.py"
+    ~linkfile "$(BuildContext)Delivery/FindSchemas.py=$(baseDir)FindSchemas.py"

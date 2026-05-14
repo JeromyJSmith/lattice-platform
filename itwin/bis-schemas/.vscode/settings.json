@@ -1,0 +1,33 @@
+{
+  "[xml]": { 
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true, 
+    "editor.detectIndentation": false
+  },
+  "cSpell.words": [
+    "ASHRAE",
+    "CMAP",
+    "Callout",
+    "Coord",
+    "Omni",
+    "Subclassable",
+    "callouts",
+    "cmaps",
+    "ecschema",
+    "functionalbreakdownelement",
+    "functionalcomponentelement",
+    "functionalelement",
+    "functionalmodel",
+    "functionalpartition",
+    "lifecycle",
+    "spcomp",
+    "subclassing",
+    "xmlns"
+  ],
+  "cSpell.enabledLanguageIds": [
+    "html",
+    "markdown",
+    "text",
+    "xml"
+  ],
+}

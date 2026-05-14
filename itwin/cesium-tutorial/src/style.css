@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+}
+
+#cesiumContainer {
+  height: 100vh;
+  width: 100%;
+}
+
+#tutorialInterface {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 25%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+#tutorialInterface h3 {
+  margin-top: 0px;
+}

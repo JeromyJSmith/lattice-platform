@@ -1,0 +1,14 @@
+.vscode/*
+!.vscode/settings.json
+.cmapthumbs/
+node_modules/*
+packageOut/*
+testOut/*
+lib/*
+
+.vs
+*.vcxproj.user
+*.pyc
+project.idx
+
+.DS_Store

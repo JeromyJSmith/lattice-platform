@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<ECSchema schemaName="BuildingSpatial" alias="spatial" version="01.00.02" xmlns="http://www.bentley.com/schemas/Bentley.ECXML.3.2" description="The Spatial representation of building composition elements">
+    <ECSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <ECSchemaReference name="BisCustomAttributes" version="01.00.00" alias="bisCA"/>
+    <ECSchemaReference name="SpatialComposition" version="01.00.01" alias="spcomp"/>
+
+    <ECCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>NotForProduction</SupportedUse>
+        </ProductionStatus>
+        <SchemaLayerInfo xmlns="BisCustomAttributes.01.00.00">
+            <Value>DisciplinePhysical</Value>
+        </SchemaLayerInfo>
+    </ECCustomAttributes>
+
+    <ECEntityClass typeName="Building" modifier="None" description="An element modeling the spatial perspective of a building">
+        <BaseClass>spcomp:Facility</BaseClass>
+        <BaseClass>spcomp:ICompositeVolume</BaseClass>
+    </ECEntityClass>
+
+    <ECEntityClass typeName="BuildingType" modifier="None" displayLabel="Building Type" description="Further specializes a particular subclass of a Building by associating a custom Type that can be defined by users.">
+        <BaseClass>spcomp:FacilityType</BaseClass>
+    </ECEntityClass>
+
+    <ECRelationshipClass typeName="BuildingIsOfType" modifier="None" strength="referencing" displayLabel="Building Is Of Building Type" description="Relates a Building to its Type definition">
+        <BaseClass>spcomp:FacilityIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Building"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="BuildingType"/>
+        </Target>
+    </ECRelationshipClass>
+
+    <ECEntityClass typeName="Space" modifier="None" description="An element modeling a building space">
+        <BaseClass>spcomp:Space</BaseClass>
+        <BaseClass>spcomp:ICompositeVolume</BaseClass>
+    </ECEntityClass>
+
+    <ECEntityClass typeName="SpaceType" modifier="None" displayLabel="Space Type" description="Further specializes a particular subclass of a Space by associating a custom Type that can be defined by users.">
+        <BaseClass>spcomp:SpaceType</BaseClass>
+    </ECEntityClass>
+
+    <ECRelationshipClass typeName="SpaceIsOfType" modifier="None" strength="referencing" displayLabel="Space Is Of Space Type" description="Relates a Space to its Type definition">
+        <BaseClass>spcomp:SpaceIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Space"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="SpaceType"/>
+        </Target>
+    </ECRelationshipClass>
+
+    <ECEntityClass typeName="Story" modifier="Abstract" description="A building Story that is an aggregation of spaces that are vertically bound">
+        <BaseClass>spcomp:FacilityPart</BaseClass>
+        <BaseClass>spcomp:ICompositeVolume</BaseClass>
+    </ECEntityClass>
+
+    <ECEntityClass typeName="ElevationStory" modifier="Abstract" description="A building story that is a (nearly) horizontal aggregation of spaces that are vertically bound">
+        <BaseClass>Story</BaseClass>
+    </ECEntityClass>
+
+    <ECEntityClass typeName="RegularStory" modifier="None" displayLabel="Regular Story" description="A building story that is delimited by 2 elevations from top and bottom and represents a horizontal aggregation of spaces that are vertically bound">
+        <BaseClass>ElevationStory</BaseClass>
+    </ECEntityClass>
+  
+    <ECEntityClass typeName="RegularStoryType" modifier="None" displayLabel="Regular Story Type" description="Further specializes a particular subclass of a RegularStory by associating a custom Type that can be defined by users.">
+        <BaseClass>spcomp:FacilityPartType</BaseClass>
+    </ECEntityClass>
+
+    <ECRelationshipClass typeName="RegularStoryIsOfType" modifier="None" strength="referencing" displayLabel="Regular Story Is Of Regular Story Type" description="Relates a RegularStory to its Type definition">
+        <BaseClass>spcomp:FacilityPartIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="RegularStory"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="RegularStoryType"/>
+        </Target>
+    </ECRelationshipClass>
+
+    <ECEntityClass typeName="Zone" modifier="None">
+        <BaseClass>spcomp:Zone</BaseClass>
+    </ECEntityClass>
+
+    <ECEntityClass typeName="ZoneType" modifier="None" displayLabel="Zone Type" description="Further specializes a particular subclass of a Zone by associating a custom Type that can be defined by users.">
+        <BaseClass>spcomp:ZoneType</BaseClass>
+    </ECEntityClass>
+
+    <ECRelationshipClass typeName="ZoneIsOfType" modifier="None" strength="referencing" displayLabel="Zone Is Of Zone Type" description="Relates a Zone to its Type definition">
+        <BaseClass>spcomp:ZoneIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Zone"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="ZoneType"/>
+        </Target>
+    </ECRelationshipClass>
+
+</ECSchema>

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<ECSchema schemaName="Egress" alias="egr" version="01.00.00" xmlns="http://www.bentley.com/schemas/Bentley.ECXML.3.1">
+  <ECSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+  <ECSchemaReference name="BisCustomAttributes" version="01.00.00" alias="bisCA"/>
+  <ECSchemaReference name="BisCore" version="01.00.01" alias="bis" />
+  <ECSchemaReference name="BuildingSpacePlanning" version="01.00.00" alias="bsp" />
+
+  <ECCustomAttributes>
+    <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+      <SupportedUse>NotForProduction</SupportedUse>
+    </ProductionStatus>
+    <SchemaLayerInfo xmlns="BisCustomAttributes.01.00.00">
+      <Value>Application</Value>
+    </SchemaLayerInfo>
+  </ECCustomAttributes>
+
+  <KindOfQuantity typeName="Length" description="Length" persistenceUnit="M" relativeError="1e-6" presentationUnits="FT(fi8)"/>
+  <KindOfQuantity typeName="Area" description="Area" persistenceUnit="SQ.M" relativeError="1e-6" presentationUnits="SQ.FT(fi8)"/>
+  
+  <ECEntityClass typeName="EgressPath" displayLabel="Egress Path">
+    <BaseClass>bis:SpatialLocationElement</BaseClass>
+    <ECCustomAttributes>
+      <ClassHasHandler xmlns="BisCore.01.00.00" />
+    </ECCustomAttributes>
+    <ECProperty propertyName="Length" displayLabel="Length" typeName="double" readOnly="true" kindOfQuantity="Length"/>
+    <ECProperty propertyName="IsPrimary" displayLabel="isPrimary" typeName="boolean" readOnly="true"/>
+    <ECNavigationProperty propertyName="Source" relationshipName="EgressPathHasSourceElement" direction="Forward" description="Element that path goes from" />
+    <ECNavigationProperty propertyName="Target" relationshipName="EgressPathHasTargetElement" direction="Forward" description="Element that path goes to" />
+  </ECEntityClass>
+
+  <ECRelationshipClass typeName="EgressPathHasSourceElement" strength="referencing" strengthDirection="backward" modifier="None">
+    <Source multiplicity="(0..1)" roleLabel="starts from" polymorphic ="false">
+      <Class class="EgressPath"/>
+    </Source>
+    <Target multiplicity="(0..1)" roleLabel="has" polymorphic="true">
+      <Class class ="bis:SpatialLocationElement"/>
+    </Target>
+  </ECRelationshipClass>
+
+  <ECRelationshipClass typeName="EgressPathHasTargetElement" strength="referencing" strengthDirection="backward" modifier="None">
+    <Source multiplicity="(0..1)" roleLabel="goes to" polymorphic ="false">
+      <Class class="EgressPath"/>
+    </Source>
+    <Target multiplicity="(0..1)" roleLabel="has" polymorphic="true">
+      <Class class ="bis:SpatialLocationElement"/>
+    </Target>
+  </ECRelationshipClass>
+
+  <ECEntityClass typeName="EgressPathSection" displayLabel="Egress Path Section">
+    <BaseClass>bis:SpatialLocationElement</BaseClass>
+    <ECCustomAttributes>
+      <ClassHasHandler xmlns="BisCore.01.00"/>
+    </ECCustomAttributes>
+    <ECProperty propertyName="Length" displayLabel="Length" typeName="double" readOnly="true" kindOfQuantity="Length"/>
+    <ECProperty propertyName="PassingPeople" displayLabel="PassingPeople" typeName="int" readOnly="true"/>
+    <ECNavigationProperty propertyName="PassedSpace" relationshipName="EgressPathSectionGoesThroughSpace" direction="Forward" description="Space that section goes through" />
+  </ECEntityClass>
+
+  <ECRelationshipClass typeName="EgressPathSectionGoesThroughSpace" strength="referencing" strengthDirection="backward" modifier="None">
+    <Source multiplicity="(0..1)" roleLabel="goes through" polymorphic="false">
+      <Class class="EgressPathSection"/>
+    </Source>
+    <Target multiplicity="(0..1)" roleLabel="has" polymorphic="false">
+      <Class class="bsp:Space"/>
+    </Target>
+  </ECRelationshipClass>
+
+  <ECRelationshipClass typeName="EgressPathHasSections" strength="referencing" strengthDirection="forward" modifier="None">
+    <BaseClass>bis:ElementRefersToElements</BaseClass>
+    <Source multiplicity="(0..*)" roleLabel="owns sections" polymorphic="true">
+      <Class class="EgressPath"/>
+    </Source>
+    <Target multiplicity="(0..*)" roleLabel="composes" polymorphic="true">
+      <Class class="EgressPathSection"/>
+    </Target>
+    <ECProperty propertyName="Index" displayLabel="Index" typeName="int"/>
+  </ECRelationshipClass>
+
+  <ECRelationshipClass typeName="EgressSectionConnectsElements" strength="referencing" strengthDirection="forward" modifier="None">
+    <BaseClass>bis:ElementRefersToElements</BaseClass>
+    <ECProperty propertyName="IsSource" displayLabel="IsSource" typeName="boolean"/>
+    <Source multiplicity="(0..*)" roleLabel="connects" polymorphic="false">
+      <Class class="EgressPathSection"/>
+    </Source>
+    <Target multiplicity="(0..*)" roleLabel="is connected" polymorphic="true">
+      <Class class="bis:SpatialLocationElement"/>
+      <!--Should be able to hold both spaces and openings-->
+    </Target>
+  </ECRelationshipClass>
+
+</ECSchema>

@@ -24,6 +24,8 @@ EXCLUDED_PARTS = {
     "references",
     "benchy",
     "examples",
+    "bis-schemas",
+    "cesium-tutorial",
 }
 
 PROTECTED_MIGRATION_PATTERN = "pixeltable/migrations/00"

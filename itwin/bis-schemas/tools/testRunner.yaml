@@ -1,0 +1,66 @@
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - tools/
+
+pr:
+  drafts: false
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - tools/
+      - package.json
+      - package-lock.json
+
+workspace:
+  clean: all
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- task: NodeTool@0
+  displayName: 'Install Node 22.x'
+  inputs:
+    versionSpec: 22.x
+    checkLatest: true
+
+- checkout: self
+  clean: true
+
+- task: CmdLine@2
+  displayName: 'NPM CONFIGURATION'
+  inputs:
+    script: 'npm config list' 
+
+- script: npm install
+  displayName: 'npm install'
+
+- task: Npm@1
+  displayName: 'Schema Package Generation Tests'
+  inputs:
+    command: custom
+    customCommand: run testPkgGen
+
+- task: Npm@1
+  displayName: 'Schema Inventory Generation Tests'
+  inputs:
+    command: custom
+    customCommand: run testInvGen
+
+- task: Npm@1
+  displayName: 'Schema Comparison Tests'
+  inputs:
+    command: custom
+    customCommand: run testSchemaDifference
+
+- task: Npm@1
+  displayName: 'Schema Upgrade Tests'
+  inputs:
+    command: custom
+    customCommand: run testSchemaUpgrade

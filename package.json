@@ -20,14 +20,21 @@
     "@itwin/appui-abstract": "5.9.2",
     "@itwin/appui-react": "5.29.0",
     "@itwin/components-react": "5.29.0",
+    "@itwin/core-backend": "5.9.2",
     "@itwin/core-bentley": "5.9.2",
     "@itwin/core-common": "5.9.2",
     "@itwin/core-frontend": "5.9.2",
     "@itwin/core-geometry": "5.9.2",
     "@itwin/core-quantity": "5.9.2",
     "@itwin/core-react": "5.29.0",
+    "@itwin/create-imodel-react": "2.2.1",
+    "@itwin/delete-imodel-react": "2.1.0",
+    "@itwin/delete-itwin-react": "2.0.0",
+    "@itwin/imodel-browser-react": "4.2.0",
     "@itwin/imodel-components-react": "5.29.0",
+    "@itwin/imodel-transformer": "1.2.0",
     "@itwin/itwinui-react": "3.20.2",
+    "@itwin/manage-versions-react": "2.2.4",
     "@itwin/scenes-client": "0.12.0",
     "@openrouter/sdk": "^0.12.35",
     "@stratakit/mui": "0.4.2",
@@ -98,5 +105,8 @@
   },
   "overrides": {
     "mermaid": "11.15.0"
-  }
+  },
+  "trustedDependencies": [
+    "@bentley/imodeljs-native"
+  ]
 }

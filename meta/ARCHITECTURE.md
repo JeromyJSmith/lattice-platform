@@ -40,6 +40,10 @@ Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,
 | **iTwin (Tier 1)** | `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity`, `@itwin/core-frontend`, `@itwin/core-bentley` | 5.9.2 | ✅ |
 | **iTwin UI** | `@itwin/itwinui-react`, `@itwin/appui-react`, `@itwin/appui-abstract`, `@itwin/components-react`, `@itwin/core-react`, `@itwin/imodel-components-react` | 3.20.2 / 5.29.0 / 5.9.2 | ✅ |
 | **iTwin Scenes** | `@itwin/scenes-client` | 0.12.0 | ✅ |
+| **iTwin Admin** | `@itwin/create-imodel-react`, `delete-imodel-react`, `delete-itwin-react`, `imodel-browser-react`, `manage-versions-react` | 2.x–4.x | ✅ |
+| **iTwin ETL** | `@itwin/imodel-transformer`, `@itwin/core-backend`, `@bentley/imodeljs-native` | 1.2.0 / 5.9.2 / 5.9.17 | ✅ |
+| **BIS Schemas** | `itwin/bis-schemas/` (vendored from github.com/iTwin/bis-schemas) | HEAD 2026-05-14 | ✅ |
+| **Cesium patterns** | `itwin/cesium-tutorial/` (Tier 3 reference for /globe, github.com/iTwin/itwin-cesium-tutorial-app) | HEAD 2026-05-14 | ✅ |
 | **IFC parse** | ifcopenshell | ≥0.8.5 | ✅ |
 | **DXF parse** | ezdxf | ≥1.4.3 | ⏳ |
 | **Real agent** | `claude -p --output-format stream-json --include-partial-messages` | CLI 2.1.138 | ✅ |
