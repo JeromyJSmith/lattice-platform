@@ -1,22 +1,22 @@
-import { useRef } from 'react'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRef } from "react";
 
 export function EventTimeline(props: { items: string[] }) {
-  const parentRef = useRef<HTMLDivElement>(null)
+  const parentRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({
     count: props.items.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 28,
-  })
+  });
 
   return (
     <div ref={parentRef} className="h-64 overflow-auto border rounded">
       <div
         style={{
           height: `${rowVirtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
+          width: "100%",
+          position: "relative",
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualItem) => (
@@ -32,5 +32,5 @@ export function EventTimeline(props: { items: string[] }) {
         ))}
       </div>
     </div>
-  )
+  );
 }

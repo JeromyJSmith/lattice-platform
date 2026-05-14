@@ -1,76 +1,76 @@
-import { useState, useEffect } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { ImageIcon, Loader2, Download } from 'lucide-react'
+import { createFileRoute } from "@tanstack/react-router";
+import { Download, ImageIcon, Loader2 } from "lucide-react";
+import { useState } from "react";
 
-const SIZES = ['1024x1024', '1536x1024', '1024x1536', 'auto']
+const SIZES = ["1024x1024", "1536x1024", "1024x1536", "auto"];
 
 interface GeneratedImage {
-  url?: string
-  b64Json?: string
-  revisedPrompt?: string
+  url?: string;
+  b64Json?: string;
+  revisedPrompt?: string;
 }
 
 function ImagePage() {
   const [prompt, setPrompt] = useState(
-    'A cute baby sea otter wearing a beret and glasses, sitting at a small cafe table, sipping a cappuccino',
-  )
-  const [size, setSize] = useState('1024x1024')
-  const [numberOfImages, setNumberOfImages] = useState(1)
-  const [images, setImages] = useState<Array<GeneratedImage>>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    "A cute baby sea otter wearing a beret and glasses, sitting at a small cafe table, sipping a cappuccino",
+  );
+  const [size, setSize] = useState("1024x1024");
+  const [numberOfImages, setNumberOfImages] = useState(1);
+  const [images, setImages] = useState<Array<GeneratedImage>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    setIsLoading(true)
-    setError(null)
-    setImages([])
+    setIsLoading(true);
+    setError(null);
+    setImages([]);
 
     try {
-      const response = await fetch('/demo/api/ai/image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/demo/api/ai/image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, size, numberOfImages }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate image')
+        throw new Error(data.error || "Failed to generate image");
       }
 
-      setImages(data.images)
+      setImages(data.images);
     } catch (err: any) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const getImageSrc = (image: GeneratedImage) => {
-    if (image.url) return image.url
-    if (image.b64Json) return `data:image/png;base64,${image.b64Json}`
-    return ''
-  }
+    if (image.url) return image.url;
+    if (image.b64Json) return `data:image/png;base64,${image.b64Json}`;
+    return "";
+  };
 
   const handleDownload = async (image: GeneratedImage, index: number) => {
-    const src = getImageSrc(image)
-    if (!src) return
+    const src = getImageSrc(image);
+    if (!src) return;
 
     try {
-      const response = await fetch(src)
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `generated-image-${index + 1}.png`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (err) {
+      const response = await fetch(src);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `generated-image-${index + 1}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
       // Failed to download image
     }
-  }
+  };
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gray-900 p-6">
@@ -85,10 +85,14 @@ function ImagePage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label
+                  htmlFor="img-size"
+                  className="block text-sm font-medium text-gray-300 mb-2"
+                >
                   Size
                 </label>
                 <select
+                  id="img-size"
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
                   disabled={isLoading}
@@ -102,15 +106,22 @@ function ImagePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label
+                  htmlFor="img-count"
+                  className="block text-sm font-medium text-gray-300 mb-2"
+                >
                   Count
                 </label>
                 <input
+                  id="img-count"
                   type="number"
                   value={numberOfImages}
                   onChange={(e) =>
                     setNumberOfImages(
-                      Math.max(1, Math.min(4, parseInt(e.target.value) || 1)),
+                      Math.max(
+                        1,
+                        Math.min(4, parseInt(e.target.value, 10) || 1),
+                      ),
                     )
                   }
                   min={1}
@@ -122,10 +133,14 @@ function ImagePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="img-prompt"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Prompt
               </label>
               <textarea
+                id="img-prompt"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 disabled={isLoading}
@@ -136,6 +151,7 @@ function ImagePage() {
             </div>
 
             <button
+              type="button"
               onClick={handleGenerate}
               disabled={isLoading || !prompt.trim()}
               className="w-full px-4 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
@@ -146,7 +162,7 @@ function ImagePage() {
                   Generating...
                 </>
               ) : (
-                'Generate Image'
+                "Generate Image"
               )}
             </button>
           </div>
@@ -170,10 +186,11 @@ function ImagePage() {
                     <div key={index} className="relative group">
                       <img
                         src={getImageSrc(image)}
-                        alt={`Generated image ${index + 1}`}
+                        alt={`AI-generated result ${index + 1}`}
                         className="w-full rounded-lg border border-gray-700"
                       />
                       <button
+                        type="button"
                         onClick={() => handleDownload(image, index)}
                         className="absolute top-2 right-2 p-2 bg-gray-900/80 hover:bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                         title="Download image"
@@ -201,9 +218,9 @@ function ImagePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export const Route = createFileRoute('/demo/ai-image')({
+export const Route = createFileRoute("/demo/ai-image")({
   component: ImagePage,
-})
+});

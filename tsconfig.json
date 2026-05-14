@@ -1,5 +1,12 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".claude/worktrees/**",
+    "meta/harness/benchy/client/**",
+    "itwin/**"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

@@ -1,20 +1,20 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-import guitars from '#/data/demo-guitars'
+import guitars from "#/data/demo-guitars";
 
-export const Route = createFileRoute('/demo/guitars/$guitarId')({
+export const Route = createFileRoute("/demo/guitars/$guitarId")({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const guitar = guitars.find((guitar) => guitar.id === +params.guitarId)
+    const guitar = guitars.find((guitar) => guitar.id === +params.guitarId);
     if (!guitar) {
-      throw new Error('Guitar not found')
+      throw new Error("Guitar not found");
     }
-    return guitar
+    return guitar;
   },
-})
+});
 
 function RouteComponent() {
-  const guitar = Route.useLoaderData()
+  const guitar = Route.useLoaderData();
 
   return (
     <div className="relative min-h-[100vh] flex items-center bg-black text-white p-5">
@@ -31,7 +31,10 @@ function RouteComponent() {
           <div className="text-2xl font-bold text-emerald-400">
             ${guitar.price}
           </div>
-          <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg transition-colors">
+          <button
+            type="button"
+            className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg transition-colors"
+          >
             Add to Cart
           </button>
         </div>
@@ -47,5 +50,5 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,22 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 import {
-  ddcCapabilityArtifactPath,
   ddcCapabilities,
+  ddcCapabilityArtifactPath,
   ddcExclusions,
   ddcPipelineStages,
   ddcSummary,
   ddcSurfaces,
-} from '#/data/ddc-capability-matrix'
+} from "#/data/ddc-capability-matrix";
 
-export const Route = createFileRoute('/admin/')({
+export const Route = createFileRoute("/admin/")({
   component: AdminPage,
-})
+});
 
 const priorityClassName: Record<string, string> = {
-  high: 'border-rose-300/60 bg-rose-500/10 text-rose-700 dark:text-rose-200',
-  medium: 'border-amber-300/60 bg-amber-500/10 text-amber-700 dark:text-amber-200',
-  low: 'border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200',
-}
+  high: "border-rose-300/60 bg-rose-500/10 text-rose-700 dark:text-rose-200",
+  medium:
+    "border-amber-300/60 bg-amber-500/10 text-amber-700 dark:text-amber-200",
+  low: "border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
+};
 
 function AdminPage() {
   return (
@@ -29,16 +30,28 @@ function AdminPage() {
               Full DDC capability matrix
             </h1>
             <p className="text-sm leading-7 text-[var(--sea-ink-soft)] sm:text-base">
-              This page maps every planned DataDrivenConstruction capability to its local LATTICE
-              home, runtime target, current implementation state, delivery wave, and validation
-              signal.
+              This page maps every planned DataDrivenConstruction capability to
+              its local LATTICE home, runtime target, current implementation
+              state, delivery wave, and validation signal.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <SummaryCard label="Capabilities" value={String(ddcSummary.capabilityCount)} />
-            <SummaryCard label="Integration surfaces" value={String(ddcSummary.surfaceCount)} />
-            <SummaryCard label="High priority" value={String(ddcSummary.highPriorityCount)} />
-            <SummaryCard label="Waves mapped" value={String(ddcPipelineStages.length)} />
+            <SummaryCard
+              label="Capabilities"
+              value={String(ddcSummary.capabilityCount)}
+            />
+            <SummaryCard
+              label="Integration surfaces"
+              value={String(ddcSummary.surfaceCount)}
+            />
+            <SummaryCard
+              label="High priority"
+              value={String(ddcSummary.highPriorityCount)}
+            />
+            <SummaryCard
+              label="Waves mapped"
+              value={String(ddcPipelineStages.length)}
+            />
           </div>
         </div>
       </section>
@@ -47,11 +60,18 @@ function AdminPage() {
         {ddcSurfaces.map((surface) => (
           <article key={surface.id} className="island-shell rounded-2xl p-5">
             <p className="island-kicker mb-2">{surface.classification}</p>
-            <h2 className="text-lg font-semibold text-[var(--sea-ink)]">{surface.name}</h2>
+            <h2 className="text-lg font-semibold text-[var(--sea-ink)]">
+              {surface.name}
+            </h2>
             <p className="mt-3 text-sm text-[var(--sea-ink-soft)]">
-              Adoption mode: <span className="font-semibold text-[var(--sea-ink)]">{surface.adoptionMode}</span>
+              Adoption mode:{" "}
+              <span className="font-semibold text-[var(--sea-ink)]">
+                {surface.adoptionMode}
+              </span>
             </p>
-            <code className="mt-4 block whitespace-normal break-all text-xs">{surface.localHome}</code>
+            <code className="mt-4 block whitespace-normal break-all text-xs">
+              {surface.localHome}
+            </code>
           </article>
         ))}
       </section>
@@ -59,27 +79,45 @@ function AdminPage() {
       <section className="island-shell overflow-hidden rounded-[2rem]">
         <div className="border-b border-[var(--line)] px-6 py-4">
           <p className="island-kicker mb-1">Capability matrix</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">Mapped scope and delivery order</h2>
+          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
+            Mapped scope and delivery order
+          </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse text-left text-sm">
             <thead className="bg-white/40">
               <tr>
-                {['Capability', 'Priority', 'Wave', 'Current state', 'Gap', 'Validation', 'Local home'].map(
-                  (heading) => (
-                    <th key={heading} className="px-4 py-3 font-semibold text-[var(--sea-ink)]">
-                      {heading}
-                    </th>
-                  ),
-                )}
+                {[
+                  "Capability",
+                  "Priority",
+                  "Wave",
+                  "Current state",
+                  "Gap",
+                  "Validation",
+                  "Local home",
+                ].map((heading) => (
+                  <th
+                    key={heading}
+                    className="px-4 py-3 font-semibold text-[var(--sea-ink)]"
+                  >
+                    {heading}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {ddcCapabilities.map((capability) => (
-                <tr key={capability.id} className="border-t border-[var(--line)] align-top">
+                <tr
+                  key={capability.id}
+                  className="border-t border-[var(--line)] align-top"
+                >
                   <td className="px-4 py-3">
-                    <div className="font-semibold text-[var(--sea-ink)]">{capability.capability}</div>
-                    <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">{capability.targetSurface}</div>
+                    <div className="font-semibold text-[var(--sea-ink)]">
+                      {capability.capability}
+                    </div>
+                    <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                      {capability.targetSurface}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -88,12 +126,22 @@ function AdminPage() {
                       {capability.priority}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-medium text-[var(--sea-ink)]">{capability.wave}</td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">{capability.currentState}</td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">{capability.gap}</td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">{capability.validation}</td>
+                  <td className="px-4 py-3 font-medium text-[var(--sea-ink)]">
+                    {capability.wave}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                    {capability.currentState}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                    {capability.gap}
+                  </td>
+                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                    {capability.validation}
+                  </td>
                   <td className="px-4 py-3">
-                    <code className="whitespace-normal break-all text-xs">{capability.localHome}</code>
+                    <code className="whitespace-normal break-all text-xs">
+                      {capability.localHome}
+                    </code>
                   </td>
                 </tr>
               ))}
@@ -105,18 +153,25 @@ function AdminPage() {
       <section className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
         <article className="island-shell rounded-[2rem] p-6">
           <p className="island-kicker mb-2">Execution pipeline</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">Wave-by-wave integration path</h2>
+          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
+            Wave-by-wave integration path
+          </h2>
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {ddcPipelineStages.map((stage) => (
-              <div key={stage.id} className="rounded-2xl border border-[var(--line)] bg-white/30 p-4">
+              <div
+                key={stage.id}
+                className="rounded-2xl border border-[var(--line)] bg-white/30 p-4"
+              >
                 <h3 className="text-lg font-semibold text-[var(--sea-ink)]">
                   {stage.id}: {stage.name}
                 </h3>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--sea-ink-soft)]">
                   {stage.capabilityIds.map((capabilityId) => {
-                    const capability = ddcCapabilities.find((entry) => entry.id === capabilityId)
-                    if (!capability) return null
-                    return <li key={capability.id}>{capability.capability}</li>
+                    const capability = ddcCapabilities.find(
+                      (entry) => entry.id === capabilityId,
+                    );
+                    if (!capability) return null;
+                    return <li key={capability.id}>{capability.capability}</li>;
                   })}
                 </ul>
               </div>
@@ -126,20 +181,22 @@ function AdminPage() {
 
         <article className="island-shell rounded-[2rem] p-6">
           <p className="island-kicker mb-2">Guardrails</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">Explicit exclusions</h2>
+          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
+            Explicit exclusions
+          </h2>
           <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-7 text-[var(--sea-ink-soft)]">
             {ddcExclusions.map((exclusion) => (
               <li key={exclusion}>{exclusion}</li>
             ))}
           </ul>
           <p className="mt-5 text-xs text-[var(--sea-ink-soft)]">
-            Canonical structured artifact:{' '}
+            Canonical structured artifact:{" "}
             <code>{ddcCapabilityArtifactPath}</code>
           </p>
         </article>
       </section>
     </main>
-  )
+  );
 }
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
@@ -148,7 +205,9 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--sea-ink-soft)]">
         {label}
       </div>
-      <div className="mt-2 text-2xl font-bold text-[var(--sea-ink)]">{value}</div>
+      <div className="mt-2 text-2xl font-bold text-[var(--sea-ink)]">
+        {value}
+      </div>
     </div>
-  )
+  );
 }

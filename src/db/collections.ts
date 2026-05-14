@@ -1,8 +1,11 @@
-import { createCollection, localOnlyCollectionOptions } from '@tanstack/react-db'
+import {
+  createCollection,
+  localOnlyCollectionOptions,
+} from "@tanstack/react-db";
 
 export interface RunRow {
-  id: string
-  status: 'pending' | 'running' | 'completed' | 'failed'
+  id: string;
+  status: "pending" | "running" | "completed" | "failed";
 }
 
 export const runCollection = createCollection(
@@ -10,4 +13,4 @@ export const runCollection = createCollection(
     getKey: (item) => item.id,
     initialData: [],
   }),
-)
+);

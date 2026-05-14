@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-const agents = ['claude-code', 'pi', 'hermes', 'openrouter'] as const
+const agents = ["claude-code", "pi", "hermes", "openrouter"] as const;
 
-export const Route = createFileRoute('/agents/')({
+export const Route = createFileRoute("/agents/")({
   component: AgentsPage,
-})
+});
 
 function AgentsPage() {
   return (
@@ -20,5 +20,5 @@ function AgentsPage() {
         ))}
       </ul>
     </main>
-  )
+  );
 }

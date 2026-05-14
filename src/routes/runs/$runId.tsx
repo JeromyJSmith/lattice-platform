@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/runs/$runId')({
+export const Route = createFileRoute("/runs/$runId")({
   component: RunDetailPage,
-})
+});
 
 function RunDetailPage() {
-  const { runId } = Route.useParams()
+  const { runId } = Route.useParams();
   return (
     <main className="page-wrap px-4 pb-8 pt-14 space-y-2">
       <h1 className="text-2xl font-bold">Run: {runId}</h1>
@@ -14,5 +14,5 @@ function RunDetailPage() {
         Open replay timeline
       </Link>
     </main>
-  )
+  );
 }

@@ -1,12 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { getRuntimeCollections } from '#/db/runtime-collections'
+import { createFileRoute } from "@tanstack/react-router";
+import { getRuntimeCollections } from "#/db/runtime-collections";
 
-export const Route = createFileRoute('/settings/db')({
+export const Route = createFileRoute("/settings/db")({
   component: DbSettingsPage,
-})
+});
 
 function DbSettingsPage() {
-  const collections = getRuntimeCollections()
+  const collections = getRuntimeCollections();
   return (
     <main className="page-wrap px-4 pb-8 pt-14">
       <h1 className="text-2xl font-bold">TanStack DB Status</h1>
@@ -14,5 +14,5 @@ function DbSettingsPage() {
         Local collection size: {collections.runCollection.state.length}
       </p>
     </main>
-  )
+  );
 }

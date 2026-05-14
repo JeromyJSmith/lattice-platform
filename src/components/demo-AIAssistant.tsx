@@ -1,33 +1,32 @@
-import { useEffect, useRef, useState } from 'react'
-import { useStore } from '@tanstack/react-store'
-import { Store } from '@tanstack/store'
+import { useStore } from "@tanstack/react-store";
+import { Store } from "@tanstack/store";
+import { BotIcon, ChevronRight, Send, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Streamdown } from "streamdown";
+import type { ChatMessages } from "#/lib/demo-ai-hook";
+import { useGuitarRecommendationChat } from "#/lib/demo-ai-hook";
 
-import { Send, X, ChevronRight, BotIcon } from 'lucide-react'
-import { Streamdown } from 'streamdown'
+import GuitarRecommendation from "./demo-GuitarRecommendation";
 
-import { useGuitarRecommendationChat } from '#/lib/demo-ai-hook'
-import type { ChatMessages } from '#/lib/demo-ai-hook'
-
-import GuitarRecommendation from './demo-GuitarRecommendation'
-
-export const showAIAssistant = new Store(false)
+export const showAIAssistant = new Store(false);
 
 function Messages({ messages }: { messages: ChatMessages }) {
-  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: messages is the scroll trigger, not a callback dep
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight
+        messagesContainerRef.current.scrollHeight;
     }
-  }, [messages])
+  }, [messages]);
 
   if (!messages.length) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">
         Ask me anything! I'm here to help.
       </div>
-    )
+    );
   }
 
   return (
@@ -36,16 +35,19 @@ function Messages({ messages }: { messages: ChatMessages }) {
         <div
           key={id}
           className={`py-3 ${
-            role === 'assistant'
-              ? 'bg-linear-to-r from-orange-500/5 to-red-600/5'
-              : 'bg-transparent'
+            role === "assistant"
+              ? "bg-linear-to-r from-orange-500/5 to-red-600/5"
+              : "bg-transparent"
           }`}
         >
           {parts.map((part, index) => {
-            if (part.type === 'text' && part.content) {
+            if (part.type === "text" && part.content) {
               return (
-                <div key={index} className="flex items-start gap-2 px-4">
-                  {role === 'assistant' ? (
+                <div
+                  key={`text-${index}`}
+                  className="flex items-start gap-2 px-4"
+                >
+                  {role === "assistant" ? (
                     <div className="w-6 h-6 rounded-lg bg-linear-to-r from-orange-500 to-red-600 flex items-center justify-center text-xs font-medium text-white flex-shrink-0">
                       AI
                     </div>
@@ -58,34 +60,36 @@ function Messages({ messages }: { messages: ChatMessages }) {
                     <Streamdown>{part.content}</Streamdown>
                   </div>
                 </div>
-              )
+              );
             }
             if (
-              part.type === 'tool-call' &&
-              part.name === 'recommendGuitar' &&
+              part.type === "tool-call" &&
+              part.name === "recommendGuitar" &&
               part.output
             ) {
               return (
                 <div key={part.id} className="max-w-[80%] mx-auto">
                   <GuitarRecommendation id={String(part.output?.id)} />
                 </div>
-              )
+              );
             }
+            return null;
           })}
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export default function AIAssistant() {
-  const isOpen = useStore(showAIAssistant, (state) => state)
-  const { messages, sendMessage } = useGuitarRecommendationChat()
-  const [input, setInput] = useState('')
+  const isOpen = useStore(showAIAssistant, (state) => state);
+  const { messages, sendMessage } = useGuitarRecommendationChat();
+  const [input, setInput] = useState("");
 
   return (
     <div className="relative z-50">
       <button
+        type="button"
         onClick={() => showAIAssistant.setState((state) => !state)}
         className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-linear-to-r from-green-700 to-green-900 text-white hover:opacity-90 transition-opacity"
       >
@@ -101,6 +105,7 @@ export default function AIAssistant() {
           <div className="flex items-center justify-between p-3 border-b border-orange-500/20">
             <h3 className="font-semibold text-white">AI Assistant</h3>
             <button
+              type="button"
               onClick={() => showAIAssistant.setState((state) => !state)}
               className="text-gray-400 hover:text-white transition-colors"
             >
@@ -113,10 +118,10 @@ export default function AIAssistant() {
           <div className="p-3 border-t border-orange-500/20">
             <form
               onSubmit={(e) => {
-                e.preventDefault()
+                e.preventDefault();
                 if (input.trim()) {
-                  sendMessage(input)
-                  setInput('')
+                  sendMessage(input);
+                  setInput("");
                 }
               }}
             >
@@ -127,18 +132,17 @@ export default function AIAssistant() {
                   placeholder="Type your message..."
                   className="w-full rounded-lg border border-orange-500/20 bg-gray-800/50 pl-3 pr-10 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-transparent resize-none overflow-hidden"
                   rows={1}
-                  style={{ minHeight: '36px', maxHeight: '120px' }}
+                  style={{ minHeight: "36px", maxHeight: "120px" }}
                   onInput={(e) => {
-                    const target = e.target as HTMLTextAreaElement
-                    target.style.height = 'auto'
-                    target.style.height =
-                      Math.min(target.scrollHeight, 120) + 'px'
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = "auto";
+                    target.style.height = `${Math.min(target.scrollHeight, 120)}px`;
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey && input.trim()) {
-                      e.preventDefault()
-                      sendMessage(input)
-                      setInput('')
+                    if (e.key === "Enter" && !e.shiftKey && input.trim()) {
+                      e.preventDefault();
+                      sendMessage(input);
+                      setInput("");
                     }
                   }}
                 />
@@ -155,5 +159,5 @@ export default function AIAssistant() {
         </div>
       )}
     </div>
-  )
+  );
 }

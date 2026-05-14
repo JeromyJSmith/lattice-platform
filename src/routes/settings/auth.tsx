@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/settings/auth')({
+export const Route = createFileRoute("/settings/auth")({
   component: AuthSettingsPage,
-})
+});
 
 function AuthSettingsPage() {
   return (
@@ -12,5 +12,5 @@ function AuthSettingsPage() {
         Better Auth is installed and reserved as operator-mode boundary.
       </p>
     </main>
-  )
+  );
 }
