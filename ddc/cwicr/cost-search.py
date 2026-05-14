@@ -19,43 +19,57 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 
+QDRANT_URL = os.environ.get("QDRANT_URL", "http://localhost:6333")
+COLLECTION = os.environ.get("CWICR_COLLECTION", "cwicr")
+EMBED_MODEL = os.environ.get("CWICR_EMBED_MODEL", "sentence-transformers/all-mpnet-base-v2")
 
-QDRANT_URL = "http://localhost:6333"
-COLLECTION = "cwicr"
-EMBED_MODEL = "sentence-transformers/all-mpnet-base-v2"
+_MODEL = None
+
+
+def _get_model():
+    global _MODEL
+    if _MODEL is None:
+        from sentence_transformers import SentenceTransformer
+
+        _MODEL = SentenceTransformer(EMBED_MODEL)
+    return _MODEL
 
 
 def search(description: str, region: str, top: int) -> list[dict]:
-    """Embed description and query Qdrant for top-k matches.
+    if not description.strip():
+        raise ValueError("description is required")
+    if top < 1:
+        raise ValueError("top must be >= 1")
 
-    NOT YET IMPLEMENTED. Sketch (uncomment when seed-qdrant.sh has run):
-
-    from sentence_transformers import SentenceTransformer
     from qdrant_client import QdrantClient
-    from qdrant_client.http.models import Filter, FieldCondition, MatchValue
+    from qdrant_client.http.models import FieldCondition, Filter, MatchValue
 
-    model = SentenceTransformer(EMBED_MODEL)
+    model = _get_model()
     client = QdrantClient(url=QDRANT_URL)
-    vec = model.encode(description).tolist()
-    flt = Filter(must=[FieldCondition(key="region", match=MatchValue(value=region))])
+    vector = model.encode(description, normalize_embeddings=True).tolist()
     hits = client.search(
-        collection_name=COLLECTION, query_vector=vec,
-        limit=top, query_filter=flt,
+        collection_name=COLLECTION,
+        query_vector=vector,
+        limit=top,
+        query_filter=Filter(
+            must=[FieldCondition(key="region", match=MatchValue(value=region))]
+        ),
     )
     return [
-        {"item_id": h.payload["item_id"], "name": h.payload["name"],
-         "unit": h.payload["unit"], "unit_cost": h.payload["unit_cost"],
-         "unit_currency": h.payload["unit_currency"],
-         "unit_cost_region": h.payload["region"], "score": h.score}
-        for h in hits
+        {
+            "item_id": hit.payload.get("item_id"),
+            "name": hit.payload.get("name"),
+            "unit": hit.payload.get("unit"),
+            "unit_cost": hit.payload.get("unit_cost"),
+            "unit_currency": hit.payload.get("unit_currency", "USD"),
+            "unit_cost_region": hit.payload.get("region", region),
+            "score": hit.score,
+        }
+        for hit in hits
     ]
-    """
-    raise NotImplementedError(
-        "cost-search stub. Run ddc/cwicr/INSTALL.md steps first, then "
-        "implement search() per the docstring sketch."
-    )
 
 
 def main() -> int:

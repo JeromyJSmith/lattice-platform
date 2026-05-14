@@ -13,4 +13,6 @@ Plus an admin dashboard data layer ([`admin/`](admin/)) and Linux fallback conve
 
 **The DDC philosophy for LATTICE:** the value is the *patterns and cost data*, not the file converters. LATTICE handles IFC/DXF natively on Mac via IfcOpenShell + ezdxf. DDC's Linux converters are fallbacks only, and we never touch `ddc-rvtconverter` or `ddc-dgnconverter` (no Revit, no DGN in LATTICE).
 
+The canonical machine-readable DDC harvest now lives at [`capability-matrix.yaml`](capability-matrix.yaml), and the operator-facing map is rendered at `/admin`.
+
 For the full repo-by-repo map see [`../meta/DDC_MAPPING.md`](../meta/DDC_MAPPING.md).
