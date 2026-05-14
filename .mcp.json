@@ -1,5 +1,16 @@
 {
   "mcpServers": {
+    "graphify": {
+      "command": "bash",
+      "args": [
+        "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/scripts/run-graphify-mcp.sh",
+        "graphify-out/graph.json"
+      ]
+    },
+    "gitnexus": {
+      "command": "node",
+      "args": ["node_modules/.bin/gitnexus", "mcp"]
+    },
     "infranodus": {
       "command": "npx",
       "args": ["-y", "infranodus-mcp-server"],

@@ -271,3 +271,14 @@ uv run python main.py &
 | Agent runtime | claude -p CLI subprocess (Claude Max) | — |
 | Orchestration | Symphony + Codex CLI (codex app-server) | 0.130.0 |
 | Issue tracker | Linear / MARPA team | MARPA-XX prefix |
+
+---
+
+## graphify
+
+This repo uses the `graphifyy` package, which installs the `graphify` CLI.
+
+- `graphify update .` refreshes the local AST graph in `graphify-out/`
+- `graphify extract .` runs the full semantic pass when the required API key is present
+- `.mcp.json` launches the stdio MCP server through `scripts/run-graphify-mcp.sh`
+- After code changes in this session, refresh `graphify-out/` before relying on graph answers

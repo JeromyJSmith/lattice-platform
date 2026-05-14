@@ -21,18 +21,20 @@ capabilities:
   - id: mcp-search
     surface: mcp_tool
     name: search
-    state: ACTIVE
+    state: DEFERRED
     description: Hybrid BM25 + semantic search across indexed repo
-    wired_at: [".mcp.json (gitnexus entry — Phase 1)"]
-    invoked_by: [pre-edit context retrieval, section harnesses]
+    reason: awaiting-upstream-dep
+    target_phase: phase-1-followup-search-health
+    tracking_issue: 19
 
   - id: mcp-impact
     surface: mcp_tool
     name: impact
-    state: ACTIVE
+    state: DEFERRED
     description: Blast-radius analysis for a file/symbol change
-    wired_at: [.mcp.json]
-    invoked_by: [PreToolUse Write hook + manual queries]
+    reason: awaiting-upstream-dep
+    target_phase: phase-1-followup-search-health
+    tracking_issue: 19
 
   - id: mcp-detect_changes
     surface: mcp_tool
@@ -208,18 +210,20 @@ capabilities:
   - id: skill-gitnexus-introduction
     surface: skill
     name: gitnexus-introduction
-    state: ACTIVE
+    state: DEFERRED
     description: Onboarding skill — when to query gitnexus vs grep
-    wired_at: [".claude/skills/generated/gitnexus-introduction/SKILL.md (auto)"]
-    invoked_by: [auto-load post-analyze]
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
 
   - id: skill-gitnexus-blast-radius
     surface: skill
     name: gitnexus-blast-radius
-    state: ACTIVE
+    state: DEFERRED
     description: How to read impact() output and act on it
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [section harnesses pre-edit]
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
 
   - id: skill-gitnexus-cypher
     surface: skill
@@ -233,40 +237,45 @@ capabilities:
   - id: skill-gitnexus-architecture
     surface: skill
     name: gitnexus-architecture
-    state: ACTIVE
+    state: DEFERRED
     description: Understand GitNexus's own graph schema
-    wired_at: [.claude/skills/generated/]
-    invoked_by: [autoresearch loop initial training]
+    reason: out-of-scope-for-current-phase
+    target_phase: post-Phase-8
+    tracking_issue: 19
 
   # ─── HOOKS (PreToolUse + PostToolUse) ───
   - id: hook-pretooluse-file-read
     surface: hook
     name: PreToolUse on Read
-    state: ACTIVE
+    state: DEFERRED
     description: Auto-enrich every Read with graph context (callers, callees, centrality)
-    wired_at: [".claude/settings.json (Phase 6)"]
-    invoked_by: [Claude Code on Read tool]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-hook-expansion
+    tracking_issue: 19
 
   - id: hook-pretooluse-grep
     surface: hook
     name: PreToolUse on Grep
-    state: ACTIVE
+    state: DEFERRED
     description: Auto-enrich every Grep with graph context
-    wired_at: [".claude/settings.json (Phase 6)"]
-    invoked_by: [Claude Code on Grep tool]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-hook-expansion
+    tracking_issue: 19
 
   - id: hook-pretooluse-write
     surface: hook
     name: PreToolUse on Write
-    state: ACTIVE
+    state: DEFERRED
     description: Compute blast radius before Write; warn if touches central node
-    wired_at: [".claude/settings.json (Phase 6)"]
-    invoked_by: [Claude Code on Write tool]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-hook-expansion
+    tracking_issue: 19
 
   - id: hook-posttooluse-write
     surface: hook
     name: PostToolUse on Write
-    state: ACTIVE
+    state: DEFERRED
     description: Re-index changed file post-Write so subsequent queries reflect change
-    wired_at: [".claude/settings.json (Phase 6)"]
-    invoked_by: [Claude Code on Write tool]
+    reason: out-of-scope-for-current-phase
+    target_phase: phase-1-followup-hook-expansion
+    tracking_issue: 19
