@@ -23,6 +23,7 @@ EXCLUDED_PARTS = {
     "build",
     "references",
     "benchy",
+    "examples",
 }
 
 PROTECTED_MIGRATION_PATTERN = "pixeltable/migrations/00"

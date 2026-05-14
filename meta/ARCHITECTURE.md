@@ -37,7 +37,9 @@ Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,
 | **Basemap** | MapLibre GL + react-map-gl/maplibre | 5.24.0 / 8.1.1 | ⏳ |
 | **Globe** | Cesium + resium + `@deck.gl/cesium` | ^1.125 / ^1.19 / 9.3.2 | ⏳ |
 | **Point cloud** | potree-core | 2.0.15 | ⏳ |
-| **iTwin (Tier 1)** | `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity` | 5.9.2 | ⏳ install pending issue #167 |
+| **iTwin (Tier 1)** | `@itwin/core-geometry`, `@itwin/core-common`, `@itwin/core-quantity`, `@itwin/core-frontend`, `@itwin/core-bentley` | 5.9.2 | ✅ |
+| **iTwin UI** | `@itwin/itwinui-react`, `@itwin/appui-react`, `@itwin/appui-abstract`, `@itwin/components-react`, `@itwin/core-react`, `@itwin/imodel-components-react` | 3.20.2 / 5.29.0 / 5.9.2 | ✅ |
+| **iTwin Scenes** | `@itwin/scenes-client` | 0.12.0 | ✅ |
 | **IFC parse** | ifcopenshell | ≥0.8.5 | ✅ |
 | **DXF parse** | ezdxf | ≥1.4.3 | ⏳ |
 | **Real agent** | `claude -p --output-format stream-json --include-partial-messages` | CLI 2.1.138 | ✅ |
