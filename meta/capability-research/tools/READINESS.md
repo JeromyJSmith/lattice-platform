@@ -1,7 +1,7 @@
 # Graph Tool Readiness
 
 Date: 2026-05-13
-Status: InfraNodus first pass complete, Graphify and GitNexus still gated
+Status: InfraNodus first pass complete, Graphify and GitNexus bounded proofs complete, repo-wide runs still gated
 
 This document defines the order and prerequisites for using InfraNodus,
 Graphify, and GitNexus on the LATTICE capability research corpus.
@@ -11,8 +11,8 @@ Graphify, and GitNexus on the LATTICE capability research corpus.
 | Tool | Current stance | Why |
 |---|---|---|
 | InfraNodus | First curated-doc gap analysis complete | Output exists at `meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md` |
-| Graphify | Installed, not ready for repo-wide run | Local `graphify` exists, but LATTICE needs its own corpus boundaries, ignore rules, and output paths |
-| GitNexus | Installed, not ready for LATTICE repo-wide run | Local `gitnexus` 1.6.3 exists, but this repo is not indexed and should get its own scoped setup |
+| Graphify | Bounded proof complete, not ready for repo-wide run | Output exists at `meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md`; root `graphify-out/` is live, but broader promotion and output relocation are still unsettled |
+| GitNexus | Bounded proof complete, not ready for repo-wide run | Output exists at `meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md`; scoped index is real, but query/FTS health still needs follow-up |
 
 See `../inventory/local-graph-tool-audit.md` for the PixelTable-volume audit,
 `../inventory/corpus-manifest.yaml` for the first allowed input corpus, and
@@ -88,7 +88,7 @@ Graphify should wait until these exist:
 | First run scope | Docs-only subset under `meta/capability-research/`, `meta/ARCHITECTURE.md`, `meta/SCHEMA.md`, `meta/API.md` |
 | Evidence rule | Output path must be cited by a harness proof artifact before any capability promotion |
 
-Proposed output locations:
+Proof and output locations:
 
 ```text
 meta/capability-research/inventory/graphify/
@@ -114,7 +114,7 @@ GitNexus should wait until:
 | Existing registry reconciliation | `gitnexus-capability-registry.yaml` no longer claims missing generated paths as active proof |
 | First run scope | Small code subset, ideally harness route + UI client + one verifier script |
 
-Proposed output locations:
+Proof and output locations:
 
 ```text
 meta/capability-research/inventory/gitnexus/
@@ -137,8 +137,8 @@ intent, but not all rows are proven-ready in the current repo state.
 | Registry | Readiness gap |
 |---|---|
 | `analysis/capabilities/infranodus-capability-registry.yaml` | Several `wired_at` entries reference `analysis/infranodus/*`, which does not exist yet |
-| `analysis/capabilities/gitnexus-capability-registry.yaml` | Mentions `.mcp.json`, generated skills, hooks, and graph outputs that need current-state verification |
-| `analysis/capabilities/graphify-parisgroup-capability-registry.yaml` | Mentions `graphify.toml` and graph report paths that need current-state verification |
+| `analysis/capabilities/gitnexus-capability-registry.yaml` | Repo-local MCP and scoped index are real, but some ACTIVE rows still overclaim search/impact health and older hook shapes |
+| `analysis/capabilities/graphify-parisgroup-capability-registry.yaml` | Current installed CLI does not match several harvested rows (`graphify run`, MCP surfaces, generated slash-command paths) |
 | `analysis/capabilities/graphify-safishamsi-capability-registry.yaml` | Mentions tutorial ingestion paths that need a deterministic proof fixture |
 
 Do not change these rows to proven until each has a verifier-backed artifact.
