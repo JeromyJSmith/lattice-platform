@@ -1,12 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { getPixeltableIngestionStatus } from '#/runtime/pixeltable/pixeltable-client'
+import { createFileRoute } from "@tanstack/react-router";
+import { getPixeltableIngestionStatus } from "#/runtime/pixeltable/pixeltable-client";
 
-export const Route = createFileRoute('/settings/pixeltable')({
+export const Route = createFileRoute("/settings/pixeltable")({
   component: PixeltableSettingsPage,
-})
+});
 
 function PixeltableSettingsPage() {
-  const status = getPixeltableIngestionStatus()
+  const status = getPixeltableIngestionStatus();
   return (
     <main className="page-wrap px-4 pb-8 pt-14">
       <h1 className="text-2xl font-bold">Pixeltable Ingestion Boundary</h1>
@@ -14,5 +14,5 @@ function PixeltableSettingsPage() {
         {JSON.stringify(status, null, 2)}
       </pre>
     </main>
-  )
+  );
 }

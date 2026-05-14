@@ -1,11 +1,11 @@
-import { useHotkeys } from '@tanstack/react-hotkeys'
+import { useHotkeys } from "@tanstack/react-hotkeys";
 
 export function useOperatorHotkeys(options: {
-  onToggleSidebar: () => void
-  onFocusRuntime: () => void
+  onToggleSidebar: () => void;
+  onFocusRuntime: () => void;
 }) {
   useHotkeys([
-    { hotkey: 'Mod+b', callback: options.onToggleSidebar },
-    { hotkey: 'Mod+k', callback: options.onFocusRuntime },
-  ])
+    { hotkey: "Mod+b", callback: options.onToggleSidebar },
+    { hotkey: "Mod+k", callback: options.onFocusRuntime },
+  ]);
 }

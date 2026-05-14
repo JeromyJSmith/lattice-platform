@@ -1,29 +1,29 @@
-import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { ChefHat, Clock, Users, Gauge } from 'lucide-react'
-import { Streamdown } from 'streamdown'
+import { createFileRoute } from "@tanstack/react-router";
+import { ChefHat, Clock, Gauge, Users } from "lucide-react";
+import { useState } from "react";
+import { Streamdown } from "streamdown";
 
-import type { Recipe } from './api.ai.structured'
+import type { Recipe } from "./api.ai.structured";
 
-type Mode = 'structured' | 'oneshot'
+type Mode = "structured" | "oneshot";
 
 const SAMPLE_RECIPES = [
-  'Homemade Margherita Pizza',
-  'Thai Green Curry',
-  'Classic Beef Bourguignon',
-  'Chocolate Lava Cake',
-  'Crispy Korean Fried Chicken',
-  'Fresh Spring Rolls with Peanut Sauce',
-  'Creamy Mushroom Risotto',
-  'Authentic Pad Thai',
-]
+  "Homemade Margherita Pizza",
+  "Thai Green Curry",
+  "Classic Beef Bourguignon",
+  "Chocolate Lava Cake",
+  "Crispy Korean Fried Chicken",
+  "Fresh Spring Rolls with Peanut Sauce",
+  "Creamy Mushroom Risotto",
+  "Authentic Pad Thai",
+];
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   const difficultyColors = {
-    easy: 'bg-green-500/20 text-green-400',
-    medium: 'bg-yellow-500/20 text-yellow-400',
-    hard: 'bg-red-500/20 text-red-400',
-  }
+    easy: "bg-green-500/20 text-green-400",
+    medium: "bg-yellow-500/20 text-yellow-400",
+    hard: "bg-red-500/20 text-red-400",
+  };
 
   return (
     <div className="space-y-6">
@@ -136,50 +136,50 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function StructuredPage() {
-  const [recipeName, setRecipeName] = useState('')
+  const [recipeName, setRecipeName] = useState("");
   const [result, setResult] = useState<{
-    mode: Mode
-    recipe?: Recipe
-    markdown?: string
-    provider: string
-    model: string
-  } | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    mode: Mode;
+    recipe?: Recipe;
+    markdown?: string;
+    provider: string;
+    model: string;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async (mode: Mode) => {
-    if (!recipeName.trim()) return
+    if (!recipeName.trim()) return;
 
-    setIsLoading(true)
-    setError(null)
-    setResult(null)
+    setIsLoading(true);
+    setError(null);
+    setResult(null);
 
     try {
-      const response = await fetch('/demo/api/ai/structured', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/demo/api/ai/structured", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ recipeName, mode }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate recipe')
+        throw new Error(data.error || "Failed to generate recipe");
       }
 
-      setResult(data)
+      setResult(data);
     } catch (err: any) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const canExecute = !!(!isLoading && recipeName.trim() && !error)
+  const canExecute = !!(!isLoading && recipeName.trim() && !error);
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gray-900 p-6">
@@ -192,19 +192,23 @@ function StructuredPage() {
         </div>
 
         <p className="text-gray-400 mb-6">
-          Compare two output modes:{' '}
+          Compare two output modes:{" "}
           <strong className="text-orange-400">One-Shot</strong> returns freeform
-          markdown, while{' '}
+          markdown, while{" "}
           <strong className="text-orange-400">Structured</strong> returns
           validated JSON conforming to a Zod schema.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label
+              htmlFor="recipe-name"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
               Recipe Name
             </label>
             <input
+              id="recipe-name"
               type="text"
               value={recipeName}
               onChange={(e) => setRecipeName(e.target.value)}
@@ -214,12 +218,13 @@ function StructuredPage() {
             />
 
             <div className="mt-2">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <span className="block text-sm font-medium text-gray-300 mb-2">
                 Quick Picks
-              </label>
+              </span>
               <div className="flex flex-wrap gap-2">
                 {SAMPLE_RECIPES.map((name) => (
                   <button
+                    type="button"
                     key={name}
                     onClick={() => setRecipeName(name)}
                     disabled={isLoading}
@@ -235,19 +240,21 @@ function StructuredPage() {
           <div>
             <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => handleGenerate('oneshot')}
+                type="button"
+                onClick={() => handleGenerate("oneshot")}
                 disabled={!canExecute}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors text-white ${
-                  !canExecute ? 'bg-gray-600' : 'bg-orange-500'
+                  !canExecute ? "bg-gray-600" : "bg-orange-500"
                 }`}
               >
                 One-Shot (Markdown)
               </button>
               <button
-                onClick={() => handleGenerate('structured')}
+                type="button"
+                onClick={() => handleGenerate("structured")}
                 disabled={!canExecute}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors  text-white ${
-                  !canExecute ? 'bg-gray-600' : 'bg-blue-500'
+                  !canExecute ? "bg-gray-600" : "bg-blue-500"
                 }`}
               >
                 Structured (JSON)
@@ -265,12 +272,12 @@ function StructuredPage() {
             {result && (
               <span
                 className={`px-2 py-1 rounded text-xs font-medium ${
-                  result.mode === 'structured'
-                    ? 'bg-purple-500/20 text-purple-400'
-                    : 'bg-blue-500/20 text-blue-400'
+                  result.mode === "structured"
+                    ? "bg-purple-500/20 text-purple-400"
+                    : "bg-blue-500/20 text-blue-400"
                 }`}
               >
-                {result.mode === 'structured' ? 'Structured JSON' : 'Markdown'}
+                {result.mode === "structured" ? "Structured JSON" : "Markdown"}
               </span>
             )}
           </div>
@@ -283,7 +290,7 @@ function StructuredPage() {
 
           {result ? (
             <div className="space-y-4">
-              {result.mode === 'structured' && result.recipe ? (
+              {result.mode === "structured" && result.recipe ? (
                 <RecipeCard recipe={result.recipe} />
               ) : result.markdown ? (
                 <div className="prose prose-invert max-w-none">
@@ -302,9 +309,9 @@ function StructuredPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export const Route = createFileRoute('/demo/ai-structured')({
+export const Route = createFileRoute("/demo/ai-structured")({
   component: StructuredPage,
-})
+});

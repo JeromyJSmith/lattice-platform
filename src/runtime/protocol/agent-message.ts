@@ -1,10 +1,10 @@
-import type { AgentId } from './agent-event'
+import type { AgentId } from "./agent-event";
 
 export interface AgentMessage {
-  id: string
-  threadId: string
-  sourceAgent: AgentId
-  targetAgent: AgentId
-  content: string
-  createdAt: string
+  id: string;
+  threadId: string;
+  sourceAgent: AgentId;
+  targetAgent: AgentId;
+  content: string;
+  createdAt: string;
 }

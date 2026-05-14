@@ -1,7 +1,7 @@
-import { runCollection } from './collections'
+import { runCollection } from "./collections";
 
 export function getRuntimeCollections() {
   return {
     runCollection,
-  }
+  };
 }

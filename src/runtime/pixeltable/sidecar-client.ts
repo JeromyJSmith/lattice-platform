@@ -68,7 +68,10 @@ export class SidecarClient {
   constructor(opts: SidecarClientOptions = {}) {
     const env =
       typeof process !== "undefined" ? process.env : ({} as NodeJS.ProcessEnv);
-    const explicitTcp = opts.baseUrl ?? env.PIXELTABLE_SERVICE_URL;
+    // Explicit socketPath always wins — don't let PIXELTABLE_SERVICE_URL override a direct UDS request.
+    const explicitTcp = opts.socketPath
+      ? null
+      : (opts.baseUrl ?? env.PIXELTABLE_SERVICE_URL);
     if (explicitTcp && /^https?:\/\//i.test(explicitTcp)) {
       this.mode = "tcp";
       this.baseUrl = explicitTcp.replace(/\/+$/, "");

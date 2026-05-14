@@ -42,7 +42,7 @@ export default function Header() {
           <Link
             to="/admin"
             className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            activeProps={{ className: "nav-link is-active" }}
           >
             Admin
           </Link>

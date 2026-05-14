@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { StreamEventRow } from '#/server/runtime/list-stream-events'
+import { useEffect, useState } from "react";
+import type { StreamEventRow } from "#/server/runtime/list-stream-events";
 
 /**
  * Subscribe to the sidecar's SSE stream for `runId`. Returns the accumulated
@@ -11,45 +11,49 @@ import type { StreamEventRow } from '#/server/runtime/list-stream-events'
  * full history, then live deltas follow.
  */
 export function useStreamEvents(runId: string | null): StreamEventRow[] {
-  const [events, setEvents] = useState<StreamEventRow[]>([])
+  const [events, setEvents] = useState<StreamEventRow[]>([]);
 
   useEffect(() => {
-    setEvents([])
-    if (!runId) return
+    setEvents([]);
+    if (!runId) return;
 
-    const base = (import.meta as ImportMeta & { env: { VITE_PIXELTABLE_SERVICE_URL?: string } })
-      .env?.VITE_PIXELTABLE_SERVICE_URL ?? 'http://127.0.0.1:7770'
-    const url = `${base}/v1/runtime/stream-events/sse?run_id=${encodeURIComponent(runId)}`
-    const es = new EventSource(url)
-    const seen = new Set<string>()
+    const base =
+      (
+        import.meta as ImportMeta & {
+          env: { VITE_PIXELTABLE_SERVICE_URL?: string };
+        }
+      ).env?.VITE_PIXELTABLE_SERVICE_URL ?? "http://127.0.0.1:7770";
+    const url = `${base}/v1/runtime/stream-events/sse?run_id=${encodeURIComponent(runId)}`;
+    const es = new EventSource(url);
+    const seen = new Set<string>();
 
-    es.addEventListener('delta', (e) => {
+    es.addEventListener("delta", (e) => {
       try {
-        const row = JSON.parse((e as MessageEvent).data) as StreamEventRow
-        if (row.event_id && seen.has(row.event_id)) return
-        if (row.event_id) seen.add(row.event_id)
+        const row = JSON.parse((e as MessageEvent).data) as StreamEventRow;
+        if (row.event_id && seen.has(row.event_id)) return;
+        if (row.event_id) seen.add(row.event_id);
         setEvents((prev) => {
-          const next = [...prev, row]
-          next.sort((a, b) => a.seq - b.seq)
-          return next
-        })
+          const next = [...prev, row];
+          next.sort((a, b) => a.seq - b.seq);
+          return next;
+        });
       } catch {
         // malformed event — drop
       }
-    })
+    });
 
-    es.addEventListener('end', () => {
-      es.close()
-    })
+    es.addEventListener("end", () => {
+      es.close();
+    });
 
     es.onerror = () => {
       // EventSource auto-reconnects with exponential backoff; let it.
-    }
+    };
 
     return () => {
-      es.close()
-    }
-  }, [runId])
+      es.close();
+    };
+  }, [runId]);
 
-  return events
+  return events;
 }

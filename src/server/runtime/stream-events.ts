@@ -1,10 +1,10 @@
-import { createServerFn } from '@tanstack/react-start'
+import { createServerFn } from "@tanstack/react-start";
 
-export const streamEvents = createServerFn({ method: 'GET' })
+export const streamEvents = createServerFn({ method: "GET" })
   .inputValidator((data: { runId: string }) => data)
   .handler(async ({ data }) => {
     return {
       runId: data.runId,
-      stream: 'TODO: attach live SSE stream for RuntimeEvent records',
-    }
-  })
+      stream: "TODO: attach live SSE stream for RuntimeEvent records",
+    };
+  });

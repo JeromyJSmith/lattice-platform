@@ -1,17 +1,17 @@
-import { useForm } from '@tanstack/react-form'
+import { useForm } from "@tanstack/react-form";
 
 export function TaskSubmitForm(props: { onSubmit: (value: string) => void }) {
   const form = useForm({
-    defaultValues: { prompt: '' },
+    defaultValues: { prompt: "" },
     onSubmit: ({ value }) => props.onSubmit(value.prompt),
-  })
+  });
 
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        void form.handleSubmit()
+        e.preventDefault();
+        e.stopPropagation();
+        void form.handleSubmit();
       }}
       className="flex gap-2"
     >
@@ -29,5 +29,5 @@ export function TaskSubmitForm(props: { onSubmit: (value: string) => void }) {
         Submit
       </button>
     </form>
-  )
+  );
 }

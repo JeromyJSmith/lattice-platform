@@ -1,4 +1,4 @@
-import { runtimeTools } from './runtime-tools'
+import { runtimeTools } from "./runtime-tools";
 
 export function AgentUI() {
   return (
@@ -12,5 +12,5 @@ export function AgentUI() {
         ))}
       </ul>
     </section>
-  )
+  );
 }

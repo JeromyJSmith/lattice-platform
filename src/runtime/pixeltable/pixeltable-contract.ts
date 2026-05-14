@@ -1,1 +1,1 @@
-export const pixeltableContractId = 'pixeltable.runtime_ledger.v1'
+export const pixeltableContractId = "pixeltable.runtime_ledger.v1";

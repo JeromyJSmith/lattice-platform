@@ -12,12 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RuntimeRouteImport } from './routes/runtime'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ThreadsIndexRouteImport } from './routes/threads/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as RunsIndexRouteImport } from './routes/runs/index'
 import { Route as EvidenceIndexRouteImport } from './routes/evidence/index'
 import { Route as AgentsIndexRouteImport } from './routes/agents/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ThreadsThreadIdRouteImport } from './routes/threads/$threadId'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as SettingsPixeltableRouteImport } from './routes/settings/pixeltable'
@@ -64,11 +64,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ThreadsIndexRoute = ThreadsIndexRouteImport.update({
   id: '/threads/',
   path: '/threads/',
@@ -92,6 +87,11 @@ const EvidenceIndexRoute = EvidenceIndexRouteImport.update({
 const AgentsIndexRoute = AgentsIndexRouteImport.update({
   id: '/agents/',
   path: '/agents/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThreadsThreadIdRoute = ThreadsThreadIdRouteImport.update({
@@ -248,7 +248,6 @@ const DemoApiAiChatRoute = DemoApiAiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin/': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -267,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/settings/pixeltable': typeof SettingsPixeltableRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/threads/$threadId': typeof ThreadsThreadIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/agents/': typeof AgentsIndexRoute
   '/evidence/': typeof EvidenceIndexRoute
   '/runs/': typeof RunsIndexRoute
@@ -289,7 +289,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -308,6 +307,7 @@ export interface FileRoutesByTo {
   '/settings/pixeltable': typeof SettingsPixeltableRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/threads/$threadId': typeof ThreadsThreadIdRoute
+  '/admin': typeof AdminIndexRoute
   '/agents': typeof AgentsIndexRoute
   '/evidence': typeof EvidenceIndexRoute
   '/runs': typeof RunsIndexRoute
@@ -331,7 +331,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin/': typeof AdminIndexRoute
   '/runtime': typeof RuntimeRoute
   '/agents/$agentId': typeof AgentsAgentIdRoute
   '/demo/ai-chat': typeof DemoAiChatRoute
@@ -350,6 +349,7 @@ export interface FileRoutesById {
   '/settings/pixeltable': typeof SettingsPixeltableRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/threads/$threadId': typeof ThreadsThreadIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/agents/': typeof AgentsIndexRoute
   '/evidence/': typeof EvidenceIndexRoute
   '/runs/': typeof RunsIndexRoute
@@ -374,7 +374,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/admin/'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -393,6 +392,7 @@ export interface FileRouteTypes {
     | '/settings/pixeltable'
     | '/settings/providers'
     | '/threads/$threadId'
+    | '/admin/'
     | '/agents/'
     | '/evidence/'
     | '/runs/'
@@ -415,7 +415,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/admin'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -434,6 +433,7 @@ export interface FileRouteTypes {
     | '/settings/pixeltable'
     | '/settings/providers'
     | '/threads/$threadId'
+    | '/admin'
     | '/agents'
     | '/evidence'
     | '/runs'
@@ -456,7 +456,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
-    | '/admin/'
     | '/runtime'
     | '/agents/$agentId'
     | '/demo/ai-chat'
@@ -475,6 +474,7 @@ export interface FileRouteTypes {
     | '/settings/pixeltable'
     | '/settings/providers'
     | '/threads/$threadId'
+    | '/admin/'
     | '/agents/'
     | '/evidence/'
     | '/runs/'
@@ -498,7 +498,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   RuntimeRoute: typeof RuntimeRoute
   AgentsAgentIdRoute: typeof AgentsAgentIdRoute
   DemoAiChatRoute: typeof DemoAiChatRoute
@@ -517,6 +516,7 @@ export interface RootRouteChildren {
   SettingsPixeltableRoute: typeof SettingsPixeltableRoute
   SettingsProvidersRoute: typeof SettingsProvidersRoute
   ThreadsThreadIdRoute: typeof ThreadsThreadIdRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   AgentsIndexRoute: typeof AgentsIndexRoute
   EvidenceIndexRoute: typeof EvidenceIndexRoute
   RunsIndexRoute: typeof RunsIndexRoute
@@ -551,13 +551,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -600,6 +593,13 @@ declare module '@tanstack/react-router' {
       path: '/agents'
       fullPath: '/agents/'
       preLoaderRoute: typeof AgentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/threads/$threadId': {
@@ -818,7 +818,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminIndexRoute: AdminIndexRoute,
   RuntimeRoute: RuntimeRoute,
   AgentsAgentIdRoute: AgentsAgentIdRoute,
   DemoAiChatRoute: DemoAiChatRoute,
@@ -837,6 +836,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsPixeltableRoute: SettingsPixeltableRoute,
   SettingsProvidersRoute: SettingsProvidersRoute,
   ThreadsThreadIdRoute: ThreadsThreadIdRoute,
+  AdminIndexRoute: AdminIndexRoute,
   AgentsIndexRoute: AgentsIndexRoute,
   EvidenceIndexRoute: EvidenceIndexRoute,
   RunsIndexRoute: RunsIndexRoute,
