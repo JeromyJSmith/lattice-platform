@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0014** landed on `feature/meta-harness`. Post-Phase-2 total: 48 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **49 FastAPI endpoints** across 13 routers (Wave 1 harness foundation + capability/benchmark surface + project-scoped ingest router wired). Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, Meta-Harness foundation landed + harness router wired + /v1/projects router added).
+Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0014** landed on `feature/meta-harness`. Post-Phase-2 total: 48 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **54 FastAPI endpoints** across 14 routers (Wave 1 harness foundation + capability/benchmark surface + project-scoped ingest router + ERP/DDC router wired). Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, Meta-Harness foundation landed + harness router wired + /v1/projects router added + /v1/erp router added).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 > See [`meta/capability-research/ARCHITECTURE.md`](capability-research/ARCHITECTURE.md) for the capability research, repo-census, proof-gate, and runtime-adoption architecture.
@@ -138,7 +138,11 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
    │    GET  /v1/reality/mirror/{id}/*         2 mirror read endpoints    │
    │    GET  /v1/harness/*                      benchmark/catalog reads   │
    │    POST /v1/harness/*                      registered harness jobs   │
-   │    POST /v1/erp/boq           (future)    OpenConstructionERP BOQ    │
+   │    POST /v1/erp/boq                        OpenConstructionERP BOQ   │
+   │    POST /v1/erp/cost-search                CWICR semantic cost       │
+   │    GET  /v1/erp/boq/{project_id}           BOQ read                  │
+   │    GET  /v1/erp/export/{project_id}        BOQ export download       │
+   │    POST /v1/erp/phases                     4D/5D phase assignments   │
    │    POST /v1/genai/infer       (future)    Local model dispatch       │
    │                                                                       │
    │  Worker loop:  poll agent_runs WHERE status='pending'                │
@@ -170,7 +174,7 @@ See [`meta/CESIUM_SETUP.md`](CESIUM_SETUP.md) for the coordinate bridge.
 
 ---
 
-## 3a. FastAPI surface (49 endpoints)
+## 3a. FastAPI surface (54 endpoints)
 
 The full live endpoint reference is in [`meta/API.md`](API.md). Summary by router:
 
@@ -186,10 +190,11 @@ The full live endpoint reference is in [`meta/API.md`](API.md). Summary by route
 | `/v1/health` | 2 | live |
 | `/v1/harness` (capability/benchmark) | 6 | live benchmark/catalog/job/diagnostic/run-contract surface |
 | `/v1/harness` (health/ratchet) | 7 | live (health, proposals, events, ratchet, score) |
+| `/v1/erp` | 5 | 3 live + 2 stub-501 (DDC/OpenConstructionERP) |
 | `/v1/georef` | 11 | 8 stub-501 + 3 live (read endpoints) |
 | `/v1/reality` | 7 | 5 stub-501 + 2 live (mirror reads) |
 | `/v1/projects` | 3 | live (project-scoped IFC ingest, element listing, status) |
-| **Total** | **49** | |
+| **Total** | **54** | |
 
 Stub-501 endpoints are intentional placeholders that define the contract for converters/pipelines that haven't landed yet. They are NOT removed when implementation lands — the route stays, the 501 turns into 200.
 
@@ -397,7 +402,7 @@ The one-line insight: LATTICE takes the **schema language** (`bis-schemas`) + th
 
 ## 9. DDC integration map
 
-LATTICE wraps four pieces of the DataDrivenConstruction ecosystem (full detail in [`meta/DDC_MAPPING.md`](DDC_MAPPING.md)):
+LATTICE wraps four pieces of the DataDrivenConstruction ecosystem (full detail in [`meta/DDC_MAPPING.md`](DDC_MAPPING.md) and the structured harvest at [`ddc/capability-matrix.yaml`](../ddc/capability-matrix.yaml)):
 
 | Piece | LATTICE home | Status |
 |---|---|---|

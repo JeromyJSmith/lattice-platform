@@ -4,6 +4,10 @@
 
 ---
 
+Structured harvest output for this map lives at `/home/runner/work/lattice-platform/lattice-platform/ddc/capability-matrix.yaml`.
+
+---
+
 ## THE DDC PHILOSOPHY FOR LATTICE
 
 DDC's value to LATTICE is NOT the file converters.

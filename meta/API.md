@@ -5,7 +5,7 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 ## Overview
 
 - **Base URL:** `http://127.0.0.1:8765` (TCP dev) or `unix:///tmp/vwbridge-pxt.sock` (production)
-- **49 endpoints** across 13 routers (2 app-level + 47 router-level — includes 6 capability/benchmark + 7 harness health/ratchet + 3 project-scoped ingest)
+- **54 endpoints** across 14 routers (2 app-level + 52 router-level — includes 6 capability/benchmark + 7 harness health/ratchet + 3 project-scoped ingest + 5 ERP/DDC)
 - **Sidecar entrypoint:** `pixeltable/service/main.py`
 - **Auth:** none (local dev). `LATTICE_API_KEY` header planned for Phase 3.
 - **Idempotency:** all write routes require an `Idempotency-Key` header (8..256 chars). Replays within 24h are returned from cache.
@@ -75,6 +75,16 @@ Canonical reference for the LATTICE sidecar FastAPI surface.
 | POST | `/v1/harness/single-file-agents/runs` | live | Run one registered single-file harness agent as a bounded sidecar job |
 | GET | `/v1/harness/benchmarks/sample-report` | live | Return a Benchy-compatible sample report |
 | POST | `/v1/harness/benchmarks/reports/validate` | live | Validate a Benchy-compatible benchmark report shape |
+
+## /v1/erp (5 endpoints)
+
+| Method | Path | Status | Purpose |
+|---|---|---|---|
+| POST | `/v1/erp/boq` | [stub 501] | Create or refresh a project BOQ from local IFC rows |
+| GET | `/v1/erp/boq/{project_id}` | live | Fetch the current project BOQ from OpenConstructionERP |
+| GET | `/v1/erp/export/{project_id}` | live | Stream a BOQ export artifact from `public/exports/` |
+| POST | `/v1/erp/cost-search` | live | Query CWICR semantic unit-cost matches |
+| POST | `/v1/erp/phases` | [stub 501] | Push 4D/5D phase assignments into OpenConstructionERP |
 
 ## /v1/georef (11 endpoints)
 

@@ -1,0 +1,269 @@
+matrix:
+  id: lattice.ddc.capability-matrix.v1
+  generated_at: 2026-05-12T17:11:47Z
+  local_repo_root: /home/runner/work/lattice-platform/lattice-platform
+  intent: Map every planned DDC capability to its local home, target runtime surface, current implementation state, validation signal, and delivery wave.
+
+surfaces:
+  - id: ddc-skills
+    name: DDC Skills corpus
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/skills/README.md
+    classification: direct runtime feature
+    adoption_mode: adapted to LATTICE
+  - id: cwicr
+    name: CWICR cost intelligence
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/README.md
+    classification: data enrichment service
+    adoption_mode: adapted to LATTICE
+  - id: openconstructionerp
+    name: OpenConstructionERP
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/README.md
+    classification: direct runtime feature
+    adoption_mode: adapted to LATTICE
+  - id: n8n-patterns
+    name: n8n workflow patterns
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/README.md
+    classification: pipeline template source
+    adoption_mode: adapted to LATTICE
+  - id: admin-dashboard
+    name: DDC admin dashboard
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/README.md
+    classification: ui/admin feature
+    adoption_mode: adapted to LATTICE
+  - id: converters
+    name: Linux fallback converters
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/README.md
+    classification: fallback operator tool
+    adoption_mode: intentionally limited
+
+capabilities:
+  - id: skills-harvest
+    capability: Skill corpus harvest
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/skills/
+    target_surface: /home/runner/work/lattice-platform/lattice-platform/skills/ddc/
+    current_state: docs only; sync pending
+    gap: Pull the upstream skill corpus into the local skill tree
+    priority: high
+    wave: wave-1
+    validation: Skill count and metadata completeness match the harvested inventory
+  - id: skills-semantic-index
+    capability: Skill semantic indexing
+    local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/contracts/bridge-semantic.v1.yaml
+    target_surface: lattice/bridge/semantic/semantic_sidecars
+    current_state: semantic infra exists; DDC seed missing
+    gap: Ingest skill documents into semantic_sidecars with embeddings
+    priority: high
+    wave: wave-1
+    validation: Semantic search returns DDC skill matches for construction intents
+  - id: skills-search-api
+    capability: Skill search API
+    local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/service/routes/semantic.py
+    target_surface: POST /v1/semantic/search
+    current_state: live generic semantic search
+    gap: Add DDC-aware query presets and filters
+    priority: medium
+    wave: wave-3
+    validation: DDC skill queries resolve against semantic_sidecars with usable rankings
+  - id: cwicr-seed
+    capability: CWICR dataset seeding
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh
+    target_surface: Qdrant collection cwicr
+    current_state: shell stub
+    gap: Download, embed, batch load, and verify the CWICR collection
+    priority: high
+    wave: wave-1
+    validation: Qdrant point count matches the seeded source dataset
+  - id: cwicr-cost-search
+    capability: CWICR semantic cost lookup
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
+    target_surface: POST /v1/erp/cost-search
+    current_state: python stub
+    gap: Execute vector search and return ranked cost matches
+    priority: high
+    wave: wave-1
+    validation: Element descriptions return region-filtered ranked CWICR matches
+  - id: ifc-cost-enrichment
+    capability: IFC cost enrichment
+    local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
+    target_surface: lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}
+    current_state: schema columns exist
+    gap: Write search results back into owned Pixeltable rows
+    priority: high
+    wave: wave-2
+    validation: ifc_elements rows show unit cost, region, and freshness timestamps
+  - id: boq-sync
+    capability: BOQ creation and sync
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
+    target_surface: POST /v1/erp/boq
+    current_state: adapter stub
+    gap: Project IFC rows into ERP payloads and persist returned ERP identifiers
+    priority: high
+    wave: wave-2
+    validation: Every BOQ-attached element has erp_item_id and unit_cost
+  - id: boq-read
+    capability: BOQ retrieval
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
+    target_surface: GET /v1/erp/boq/{project_id}
+    current_state: Planned only
+    gap: Return project BOQ documents from OpenConstructionERP
+    priority: high
+    wave: wave-2
+    validation: Project BOQ round-trips cleanly through the sidecar endpoint
+  - id: boq-export
+    capability: BOQ export
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py
+    target_surface: GET /v1/erp/export/{project_id}
+    current_state: adapter stub
+    gap: Generate Excel and CSV exports in public/exports
+    priority: medium
+    wave: wave-2
+    validation: Export endpoint streams a valid BOQ artifact
+  - id: phases-sync
+    capability: 4D/5D phase sync
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py
+    target_surface: POST /v1/erp/phases
+    current_state: adapter stub
+    gap: Join schedule phases to IFC rows and push ERP phase assignments
+    priority: high
+    wave: wave-2
+    validation: Project phase records in the ERP align with local schedule metadata
+  - id: admin-sql
+    capability: DDC admin SQL layer
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/
+    target_surface: DuckDB WASM parquet queries
+    current_state: 3 of 7 panel queries present
+    gap: Expand the SQL contract to cover all admin panels
+    priority: high
+    wave: wave-3
+    validation: Admin panels resolve against parquet exports without ad-hoc SQL
+  - id: admin-route
+    capability: Admin dashboard route
+    local_home: /home/runner/work/lattice-platform/lattice-platform/src/routes/admin/index.tsx
+    target_surface: /admin
+    current_state: Planned only
+    gap: Render the DDC capability map and dashboard surface in the UI
+    priority: high
+    wave: wave-3
+    validation: The operator UI renders the mapped DDC surface in one place
+  - id: cost-per-zone
+    capability: Cost per zone analysis
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/README.md
+    target_surface: /analysis and /admin
+    current_state: Planned only
+    gap: Join IFC elements to site zones and expose spatial cost totals
+    priority: medium
+    wave: wave-3
+    validation: Zone-level cost totals can be queried from parquet exports
+  - id: cost-overlay
+    capability: deck.gl cost overlay
+    local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
+    target_surface: Context B /analysis
+    current_state: Planned only
+    gap: Drive deck.gl analytical layers from enriched unit cost data
+    priority: medium
+    wave: wave-3
+    validation: Cost overlay renders from unit_cost-backed analytics data
+  - id: quantity-takeoff-agent
+    capability: Quantity takeoff agent
+    local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
+    target_surface: runtime agent + evidence ledger
+    current_state: Planned only
+    gap: Orchestrate quantities, cost search, BOQ writeback, and evidence capture
+    priority: high
+    wave: wave-2
+    validation: Agent runs produce BOQ-linked evidence rows end to end
+  - id: n8n-harvest
+    capability: n8n workflow harvest
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/workflows/
+    target_surface: upstream workflow JSON mirrors
+    current_state: docs only
+    gap: Pull priority DDC workflow exports into the local workspace
+    priority: medium
+    wave: wave-1
+    validation: Expected workflow templates exist under ddc/n8n/workflows
+  - id: n8n-translation
+    capability: n8n to FastAPI translation
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/pipeline-templates/
+    target_surface: pixeltable/service/routes/*
+    current_state: Planned only
+    gap: Convert priority DAGs into native route handlers and templates
+    priority: high
+    wave: wave-2
+    validation: Priority workflow templates are callable without n8n
+  - id: fallback-ifc
+    capability: Fallback IFC converter
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md
+    target_surface: OrbStack operator path
+    current_state: docs only
+    gap: Install only when real IFC parse failures justify it
+    priority: low
+    wave: wave-4
+    validation: Operators can invoke the fallback parse path on demand
+  - id: fallback-dwg
+    capability: Fallback DWG converter
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md
+    target_surface: OrbStack operator path
+    current_state: docs only
+    gap: Install only when binary DWG edge cases appear
+    priority: low
+    wave: wave-4
+    validation: Operators can invoke the fallback DWG parse path on demand
+  - id: mirror-ddc-health
+    capability: Mirror-state ERP sync health
+    local_home: /home/runner/work/lattice-platform/lattice-platform/reality/mirror/README.md
+    target_surface: lattice/reality/mirror_state
+    current_state: Mirror concept exists
+    gap: Feed ERP and DDC freshness into mirror-state checks
+    priority: medium
+    wave: wave-4
+    validation: Mirror state reflects DDC freshness alongside the other platform layers
+  - id: ddc-evidence
+    capability: DDC evidence and logging
+    local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
+    target_surface: lattice/execution/evidence and runtime ledger
+    current_state: schema support exists; events not emitted
+    gap: Emit DDC skill, ERP, and CWICR audit events
+    priority: high
+    wave: wave-1
+    validation: DDC actions are queryable in evidence and stream-event tables
+
+pipeline:
+  - stage: wave-1
+    name: Foundation
+    scope:
+      - skills-harvest
+      - skills-semantic-index
+      - cwicr-seed
+      - cwicr-cost-search
+      - n8n-harvest
+      - ddc-evidence
+  - stage: wave-2
+    name: Core value path
+    scope:
+      - ifc-cost-enrichment
+      - boq-sync
+      - boq-read
+      - boq-export
+      - phases-sync
+      - quantity-takeoff-agent
+      - n8n-translation
+  - stage: wave-3
+    name: Operator surface
+    scope:
+      - admin-sql
+      - admin-route
+      - cost-per-zone
+      - cost-overlay
+      - skills-search-api
+  - stage: wave-4
+    name: Resilience
+    scope:
+      - fallback-ifc
+      - fallback-dwg
+      - mirror-ddc-health
+
+exclusions:
+  - ddc-rvtconverter is excluded because LATTICE does not accept Revit at the boundary
+  - ddc-dgnconverter is excluded because LATTICE does not accept DGN or MicroStation
+  - n8n runtime import is excluded because workflows must be translated to native FastAPI handlers
+  - converter-first ingest is excluded because IfcOpenShell plus ezdxf remains the primary path
