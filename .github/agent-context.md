@@ -1,7 +1,7 @@
 ## LATTICE Agent Context (v1, static)
 
 Generated: 2026-05-12 (UTC)
-Branch: `fix/marpa-378-remove-agent-lane-remnants` @ `320aaa6`
+Branch: `main`
 Source of truth: `meta/harness/docs/` on `feature/meta-harness`
 Sourced from: `.github/copilot-instructions.md` (locked stack + cardinal rules),
   `meta/sync-contract.md` (teams + field directions),
@@ -27,6 +27,7 @@ This file is a flat, generated-once context export for downstream agents
 | Real agent  | `claude -p` CLI subprocess (Claude Max auth)      |
 
 ## Cardinal Rules (1–23)
+
 
 
 1. **Never propose `@itwin/core-backend`.** Pixeltable replaces SQLite/SnapshotDb/BriefcaseDb.
@@ -120,7 +121,8 @@ Magic Words and `linear-sync-check.yml` patterns accept both `LAT-XX` and `MARPA
 ## Agent Execution Model
 
 Any capable coding agent can pick up any open issue. Attribution is by Linear
-comment and PR author, not by file-path jurisdiction.
+comment and PR author, not by file-path jurisdiction. No agent has exclusive
+ownership of any path — every agent is responsible for everything.
 
 Hard prohibitions apply to every agent: landed migrations are write-once,
 secrets and `.env*` are human-only, branch protection and merges to `main`

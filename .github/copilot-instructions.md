@@ -120,6 +120,18 @@ Branches use a `<type>/marpa-<NNN>-<slug>` pattern where `<type>` is `feat`,
 Agent name does not appear in the branch — attribution is by Linear comment
 and PR author.
 
+Lane labels dispatch work and identify stewardship. They do not create exclusive
+file-path jurisdiction for ordinary implementation artifacts.
+
+| Agent | Branch prefix | Linear label | Stewardship |
+|---|---|---|---|
+| Codex CLI | `codex/` | `codex` | migrations (new), service, server routes, scripts |
+| Claude Code | `claude/` | `claude-code` | multi-file refactors, .claude/, analysis/ |
+| GitHub Copilot | `copilot/` | `copilot` | .github/, scripts (single-file), meta (single-file) |
+| Warp PI | `warp-pi/` | `warp-pi` | scripts/, shell ops, Phase B bootstrap |
+| Hermes | `hermes/` | `hermes` | meta/harness/docs/, analysis/, research |
+| Human only | `human/` | `human-only` | secrets, OAuth, branch protection, merges, protected deletions |
+
 ## Hard prohibitions (apply to every agent — no exceptions)
 
 - Editing landed migrations `pixeltable/migrations/0001`–`0016`
@@ -133,6 +145,12 @@ and PR author.
 Everything else — any file, any directory — is fair game for any agent that
 picks up the issue. Attribution is by Linear comment + PR author, not by
 file-path jurisdiction.
+
+Hard prohibitions survive the stewardship model: existing migrations are
+write-once, secrets and `.env*` are human-only, branch protection and merges to
+`main` are human-only, and deletions of migrations, issues, or branches are
+human-only. Changes under `.claude/rules/` must be the explicit purpose of a PR,
+not incidental drift.
 
 ## Style preferences
 
