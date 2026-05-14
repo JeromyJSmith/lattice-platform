@@ -18,6 +18,14 @@
         "INFRANODUS_API_KEY": "${INFRANODUS_API_KEY}"
       }
     },
+    "vectorworks": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "fastmcp",
+        "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/vw-python/mcp_bridge.py"
+      ]
+    },
     "3d-asset-gen": {
       "command": "uv",
       "args": [
