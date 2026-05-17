@@ -11,7 +11,6 @@ import os
 import subprocess
 from pathlib import Path
 
-from lib import current_run_dir
 from lib import ensure_run_dir
 from lib import evaluate_data
 from lib import propose_repairs_data
@@ -20,6 +19,7 @@ from lib import session_summary_path
 from lib import write_determinism_check
 from lib import write_input_manifest
 from lib import write_json
+from lib import write_document_contract_summary
 from lib import write_normalized_source_summary
 from lib import write_real_fixture_evaluation_artifacts
 from lib import write_research_grounding_summary
@@ -45,14 +45,6 @@ def run_context(run_id: str):
             os.environ.pop("FRE_RUN_ID", None)
         else:
             os.environ["FRE_RUN_ID"] = original
-
-
-def next_run_id() -> str:
-    runs_dir = FRE_ROOT / "runs"
-    existing = sorted(path.name for path in runs_dir.iterdir() if path.is_dir() and path.name.startswith("RUN-"))
-    last = existing[-1] if existing else "RUN-2026-05-16-0000"
-    prefix, number = last.rsplit("-", 1)
-    return f"{prefix}-{int(number) + 1:04d}"
 
 
 def latest_scored_run() -> tuple[str | None, int]:
@@ -112,6 +104,7 @@ def execute_cycle(run_id: str) -> dict:
     with run_context(run_id):
         ensure_run_dir()
         write_input_manifest()
+        write_document_contract_summary()
         write_normalized_source_summary()
         write_research_grounding_summary()
         write_determinism_check()

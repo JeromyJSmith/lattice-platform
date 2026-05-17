@@ -1,3 +1,16 @@
+---
+document_type: fre-goal
+contract_role: beacon
+owner: evaluation-agent
+status: bounded-evaluation
+required_metrics:
+  - research_grounding
+  - schema_validity
+  - example_validation
+  - repair_task_count
+  - promotion_readiness
+---
+
 # FRE Kernel Goal
 
 ## Mission
@@ -72,3 +85,10 @@ The evaluation is complete only when the hard review can say:
 - what remains intentionally out of scope
 - whether the kernel is still only `ADOPT WITH AMENDMENTS`
 - or whether it truly earns `ADOPT`
+
+## Bottom Matter
+
+- [x] Mission is bounded to `meta/harness/fre/`
+- [x] Required metrics are explicit
+- [x] Ratchet rule is stated
+- [ ] Full adoption into core Meta-Harness is approved

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -42,6 +43,7 @@ ALLOWED_MAPPING_STATUSES = {"clean", "partial", "conflict", "reject", "needs_ext
 FORBIDDEN_GREEN_TERM = "definition_of_" + "green"
 REQUIRED_RUN_ARTIFACTS = [
     "input-manifest.yaml",
+    "document-contract.json",
     "normalized-source-summary.md",
     "research-grounding.json",
     "schema-validation.json",
@@ -85,6 +87,12 @@ class FailureObservation:
     missing_value: str | None = None
 
 
+@dataclass(frozen=True)
+class ChecklistItem:
+    text: str
+    checked: bool
+
+
 def current_run_id() -> str:
     return os.environ.get("FRE_RUN_ID", DEFAULT_RUN_ID)
 
@@ -96,6 +104,29 @@ def current_run_dir() -> Path:
 def session_summary_path(run_id: str | None = None) -> Path:
     target_run_id = run_id or current_run_id()
     return FRE_ROOT / "docs" / "sessions" / f"{target_run_id}.md"
+
+
+def next_run_id() -> str:
+    runs_dir = FRE_ROOT / "runs"
+    existing = sorted(path.name for path in runs_dir.iterdir() if path.is_dir() and path.name.startswith("RUN-"))
+    last = existing[-1] if existing else "RUN-2026-05-16-0000"
+    prefix, number = last.rsplit("-", 1)
+    return f"{prefix}-{int(number) + 1:04d}"
+
+
+@contextmanager
+def cli_run_context():
+    """Allocate a fresh run id for standalone commands unless one is pinned."""
+    original = os.environ.get("FRE_RUN_ID")
+    if original is None:
+        os.environ["FRE_RUN_ID"] = next_run_id()
+    try:
+        yield
+    finally:
+        if original is None:
+            os.environ.pop("FRE_RUN_ID", None)
+        else:
+            os.environ["FRE_RUN_ID"] = original
 
 
 def read_text(path: Path) -> str:
@@ -123,6 +154,145 @@ def write_yaml(path: Path, payload: Any) -> None:
 def write_text(path: Path, payload: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(payload, encoding="utf-8")
+
+
+def parse_simple_yaml_block(text: str) -> dict[str, Any]:
+    """Parse a narrow YAML subset used by FRE front matter.
+
+    Supported:
+    - key: value
+    - key:
+        - item
+        - item
+    """
+    payload: dict[str, Any] = {}
+    current_list_key: str | None = None
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("- "):
+            if current_list_key is None:
+                raise ValueError(f"List item without active key: {raw_line}")
+            payload.setdefault(current_list_key, []).append(stripped[2:].strip())
+            continue
+        if ":" not in stripped:
+            raise ValueError(f"Unsupported YAML line: {raw_line}")
+        key, value = stripped.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if not value:
+            payload[key] = []
+            current_list_key = key
+            continue
+        payload[key] = value
+        current_list_key = None
+    return payload
+
+
+def extract_front_matter(text: str) -> dict[str, Any] | None:
+    if not text.startswith("---\n"):
+        return None
+    parts = text.split("\n---\n", 1)
+    if len(parts) != 2:
+        return None
+    return parse_simple_yaml_block(parts[0][4:])
+
+
+def extract_bottom_matter(text: str) -> dict[str, Any] | None:
+    patterns = [
+        r"(?ms)^## Bottom Matter\s*\n(?P<body>.+)$",
+        r"(?ms)^## Checklist\s*\n(?P<body>.+)$",
+        r"(?ms)<!-- bottom-matter:start -->\s*\n(?P<body>.+?)\n<!-- bottom-matter:end -->\s*$",
+    ]
+    body = None
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            body = match.group("body").strip()
+            break
+    if not body:
+        return None
+
+    checklist: list[ChecklistItem] = []
+    for line in body.splitlines():
+        item_match = re.match(r"^\s*-\s\[(?P<state>[ xX])\]\s(?P<text>.+?)\s*$", line)
+        if item_match:
+            checklist.append(
+                ChecklistItem(
+                    text=item_match.group("text"),
+                    checked=item_match.group("state").lower() == "x",
+                )
+            )
+    if not checklist:
+        return None
+    return {
+        "checklist": [{"text": item.text, "checked": item.checked} for item in checklist],
+        "total": len(checklist),
+        "completed": sum(1 for item in checklist if item.checked),
+    }
+
+
+def markdown_contract_paths() -> list[Path]:
+    roots = [
+        FRE_ROOT / "README.md",
+        FRE_ROOT / "GOAL.md",
+        FRE_ROOT / "CLAUDE.md",
+        FRE_ROOT / "GoldenPath.md",
+        FRE_ROOT / "docs",
+        FRE_ROOT / "skills",
+    ]
+    paths: list[Path] = []
+    for root in roots:
+        if root.is_file() and root.suffix == ".md":
+            paths.append(root)
+        elif root.is_dir():
+            paths.extend(sorted(root.rglob("*.md")))
+    return paths
+
+
+def document_contract_status() -> dict[str, Any]:
+    documents = []
+    front_matter_count = 0
+    bottom_matter_count = 0
+    parse_errors: list[str] = []
+    for path in markdown_contract_paths():
+        rel = path.relative_to(FRE_ROOT).as_posix()
+        text = read_text(path)
+        try:
+            front_matter = extract_front_matter(text)
+        except ValueError as exc:
+            parse_errors.append(f"{rel}:front_matter:{exc}")
+            front_matter = None
+        bottom_matter = extract_bottom_matter(text)
+        if front_matter:
+            front_matter_count += 1
+        if bottom_matter:
+            bottom_matter_count += 1
+        documents.append(
+            {
+                "path": rel,
+                "has_front_matter": bool(front_matter),
+                "has_bottom_matter": bool(bottom_matter),
+                "front_matter_keys": sorted(front_matter.keys()) if front_matter else [],
+                "bottom_matter_completed": bottom_matter["completed"] if bottom_matter else 0,
+                "bottom_matter_total": bottom_matter["total"] if bottom_matter else 0,
+            }
+        )
+    return {
+        "status": "pass" if not parse_errors else "fail",
+        "front_matter_count": front_matter_count,
+        "bottom_matter_count": bottom_matter_count,
+        "parse_errors": parse_errors,
+        "documents": documents,
+    }
+
+
+def write_document_contract_summary() -> Path:
+    path = ensure_run_dir() / "document-contract.json"
+    write_json(path, document_contract_status())
+    return path
 
 
 def ensure_run_dir() -> Path:

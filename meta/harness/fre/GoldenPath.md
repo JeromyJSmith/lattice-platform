@@ -1,3 +1,14 @@
+---
+document_type: fre-golden-path
+contract_role: execution
+owner: evaluation-agent
+status: bounded-ratchet
+entrypoints:
+  - uv run pytest meta/harness/fre/tests
+  - uv run python meta/harness/fre/harness/evaluate.py
+  - uv run python meta/harness/fre/harness/iterate.py
+---
+
 # FRE Kernel Golden Path
 
 ## Purpose
@@ -70,6 +81,10 @@ uv run python meta/harness/fre/harness/evaluate_real_fixtures.py
 uv run python meta/harness/fre/harness/iterate.py
 ```
 
+If `FRE_RUN_ID` is not already set, each standalone command allocates a fresh
+run directory automatically. Use `FRE_RUN_ID=...` only when intentionally
+pinning multiple commands to the same run artifact set.
+
 ## Success Signal
 
 The kernel may only claim a stronger state when:
@@ -79,3 +94,10 @@ The kernel may only claim a stronger state when:
 3. current-run fixture evidence passes,
 4. the score improves honestly,
 5. the promotion decision matches the evidence.
+
+## Bottom Matter
+
+- [x] Standalone commands allocate a fresh run unless `FRE_RUN_ID` is pinned
+- [x] Current-run artifacts are required before stronger claims
+- [x] Iteration path stays bounded inside `meta/harness/fre/`
+- [ ] Production runtime integration is allowed
