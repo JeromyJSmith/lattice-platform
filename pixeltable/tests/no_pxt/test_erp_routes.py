@@ -224,3 +224,39 @@ def test_export_streams_generated_file(tmp_path: Path, monkeypatch):
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/csv")
     assert "Planting" in response.text
+
+
+def test_export_normalizes_project_id_before_adapter_call(tmp_path: Path, monkeypatch):
+    """Normalize the project id before exporting and stream the sanitized filename."""
+    seen: list[tuple[str, str]] = []
+
+    def _export(project_id: str, fmt: str = "xlsx") -> str:
+        seen.append((project_id, fmt))
+        export_path = tmp_path / "boq-proj-1.csv"
+        export_path.write_text("id,name\n1,Planting\n")
+        return str(export_path)
+
+    monkeypatch.setattr(erp._COST_EXPORT, "export_boq", _export)
+    client = TestClient(_app(tmp_path))
+    response = client.get("/v1/erp/export/%20proj-1%20?fmt=csv")
+    assert response.status_code == 200
+    assert seen == [("proj-1", "csv")]
+    assert 'filename="boq-proj-1.csv"' in response.headers["content-disposition"]
+
+
+def test_export_surfaces_upstream_404(tmp_path: Path, monkeypatch):
+    """Preserve upstream export 404s with a concrete blocker message."""
+    request = httpx.Request("GET", "http://localhost:8080/api/boq/export?project_id=proj-404&format=csv")
+    response = httpx.Response(404, request=request, json={"detail": "Not Found"})
+
+    def _export(project_id: str, fmt: str = "xlsx") -> str:
+        raise httpx.HTTPStatusError("Not Found", request=request, response=response)
+
+    monkeypatch.setattr(erp._COST_EXPORT, "export_boq", _export)
+    client = TestClient(_app(tmp_path))
+    route_response = client.get("/v1/erp/export/proj-404?fmt=csv")
+    assert route_response.status_code == 404
+    assert (
+        route_response.json()["detail"]
+        == "upstream ERP returned 404 for /api/boq/export (project_id=proj-404, fmt=csv)"
+    )

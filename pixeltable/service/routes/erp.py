@@ -86,6 +86,25 @@ def _as_boq_read_http_error(exc: Exception, project_id: str) -> HTTPException:
     return _as_http_error(exc, "boq fetch failed")
 
 
+def _as_export_http_error(exc: Exception, project_id: str, fmt: str) -> HTTPException:
+    if isinstance(exc, NotImplementedError):
+        return HTTPException(status_code=501, detail=str(exc))
+    if isinstance(exc, ValueError):
+        return HTTPException(status_code=400, detail=str(exc))
+    if isinstance(exc, httpx.HTTPStatusError):
+        request_path = exc.request.url.path
+        if exc.response.status_code == 404:
+            return HTTPException(
+                status_code=404,
+                detail=f"upstream ERP returned 404 for {request_path} (project_id={project_id}, fmt={fmt})",
+            )
+        return HTTPException(
+            status_code=502,
+            detail=f"boq export failed: upstream ERP returned {exc.response.status_code} for {request_path}",
+        )
+    return _as_http_error(exc, "boq export failed")
+
+
 def _coerce_score(row: dict[str, Any]) -> float | None:
     value = row.get("score")
     if isinstance(value, bool):
@@ -292,17 +311,17 @@ def get_boq(project_id: str):
 @router.get("/export/{project_id}")
 def get_export(project_id: str, fmt: str = Query(default="xlsx", pattern="^(xlsx|csv)$")):
     """Stream a generated BOQ export for one project."""
-    if not project_id.strip():
-        raise HTTPException(status_code=400, detail="project_id required")
+    normalized_project_id = _normalize_project_id(project_id)
+    normalized_fmt = fmt.lower()
     try:
-        output_path = Path(_COST_EXPORT.export_boq(project_id, fmt))
+        output_path = Path(_COST_EXPORT.export_boq(normalized_project_id, normalized_fmt))
     except Exception as exc:
-        raise _as_http_error(exc, "boq export failed") from exc
-    if not output_path.exists():
+        raise _as_export_http_error(exc, normalized_project_id, normalized_fmt) from exc
+    if not output_path.exists() or not output_path.is_file():
         raise HTTPException(status_code=500, detail=f"export missing at {output_path}")
     media_type = (
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        if fmt == "xlsx"
+        if normalized_fmt == "xlsx"
         else "text/csv"
     )
     return FileResponse(output_path, media_type=media_type, filename=output_path.name)

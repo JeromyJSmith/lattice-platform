@@ -68,6 +68,28 @@ capabilities:
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-17-boq-read-proof.json
 
+  - id: boq-export
+    surface: route
+    name: OpenConstructionERP BOQ export
+    state: ACTIVE
+    description: Serve GET /v1/erp/export/{project_id} through the sidecar, stream the generated BOQ artifact, and fail closed when the upstream ERP export contract or verifier project data is not ready.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/erp/cost-export.py
+      - pixeltable/service/routes/erp.py
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-erp-boq-export.py
+    invoked_by:
+      - GET /v1/erp/export/{project_id}
+      - POST /v1/harness/capabilities/runs
+      - future /admin DDC dashboard
+    serves:
+      - OpenConstructionERP integration
+      - BOQ export
+      - verifier-backed promotion evidence
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-17-boq-export-proof.json
+
   - id: cwicr-qdrant-cost-search
     surface: service_adapter
     name: CWICR Qdrant cost search

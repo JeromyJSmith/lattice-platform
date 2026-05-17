@@ -188,8 +188,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py",
     targetSurface: "GET /v1/erp/export/{project_id}",
-    currentState: "Route contract landing",
-    gap: "Generate Excel and CSV exports in public/exports.",
+    currentState: "Verifier-backed route; live proof currently failing",
+    gap: "localhost:8080 returns 404 for GET /api/boq/export; live ERP export contract or verifier project data is not ready.",
     priority: "medium",
     wave: "wave-2",
     validation: "Export endpoint streams a valid BOQ artifact.",

@@ -96,6 +96,16 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "command": ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"],
         "expected_returncode": 0,
         "timeout_seconds": 120,
+    },
+    "boq-export": {
+        "kind": "script_exit_code",
+        "action_id": "run-boq-export",
+        "job_id": "boq-export",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "python", "scripts/verify-erp-boq-export.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
     }
 }
 

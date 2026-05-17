@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capability_id": "boq-export",
+  "job_id": "boq-export",
+  "run_id": "boq-export-2026-05-17T23-52-47.052Z",
+  "started_at": "2026-05-17T23:52:46Z",
+  "completed_at": "2026-05-17T23:52:47Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "scripts/verify-erp-boq-export.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-17-boq-export-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "OpenConstructionERP BOQ export probe returned 404 for http://localhost:8080/api/boq/export?project_id=ddc-boq-proof-project&format=csv; live dependency or verifier project data is not ready.\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "OpenConstructionERP BOQ export probe returned 404 for http://localhost:8080/api/boq/export?project_id=ddc-boq-proof-project&format=csv; live dependency or verifier project data is not ready.\n"
+  },
+  "metrics": {
+    "latency_ms": 303,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

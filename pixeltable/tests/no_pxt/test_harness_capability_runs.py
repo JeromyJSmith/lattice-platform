@@ -39,6 +39,21 @@ def test_cwicr_cost_search_exposes_run_contract() -> None:
     assert contract["command"] == ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"]
 
 
+def test_boq_export_exposes_run_contract() -> None:
+    """The BOQ export verifier row exposes an allowlisted runnable proof contract."""
+    capability = {"id": "boq-export"}
+
+    action = harness.run_action(capability)
+    contract = harness.run_contract(capability)
+
+    assert action is not None
+    assert action["kind"] == "script_exit_code"
+    assert action["job_id"] == "boq-export"
+    assert contract is not None
+    assert contract["request"]["timeout_seconds"] == 120
+    assert contract["command"] == ["uv", "run", "python", "scripts/verify-erp-boq-export.py"]
+
+
 def test_python_docstring_rule_run_writes_evidence(
     tmp_path: Path,
     monkeypatch: Any,
@@ -154,6 +169,64 @@ def test_cwicr_cost_search_run_writes_evidence(
     assert result["verification"]["status"] == "passed"
     assert evidence["capability_id"] == "cwicr-qdrant-cost-search"
     assert evidence["verification"]["returncode"] == 0
+
+
+def test_boq_export_run_writes_evidence(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """The BOQ export verifier contract persists its proof artifact with the action timeout."""
+    calls: list[dict[str, Any]] = []
+
+    def fake_run(
+        command: list[str],
+        cwd: Path,
+        capture_output: bool,
+        text: bool,
+        check: bool,
+        timeout: int,
+    ) -> SimpleNamespace:
+        """Record the BOQ export verifier invocation instead of executing a subprocess."""
+        calls.append(
+            {
+                "command": command,
+                "cwd": cwd,
+                "capture_output": capture_output,
+                "text": text,
+                "check": check,
+                "timeout": timeout,
+            }
+        )
+        return SimpleNamespace(returncode=1, stdout="", stderr="upstream ERP export contract not ready\n")
+
+    monkeypatch.setattr(harness, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(harness.subprocess, "run", fake_run)
+
+    result = harness.run_capability(
+        {
+            "capability_id": "boq-export",
+            "output": "meta/harness/docs/sessions/test-boq-export.json",
+        }
+    )
+
+    evidence_path = tmp_path / "meta/harness/docs/sessions/test-boq-export.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    assert calls == [
+        {
+            "command": ["uv", "run", "python", "scripts/verify-erp-boq-export.py"],
+            "cwd": tmp_path,
+            "capture_output": True,
+            "text": True,
+            "check": False,
+            "timeout": 120,
+        }
+    ]
+    assert result["ok"] is False
+    assert result["artifact"] == "meta/harness/docs/sessions/test-boq-export.json"
+    assert result["verification"]["status"] == "failed"
+    assert evidence["capability_id"] == "boq-export"
+    assert evidence["verification"]["returncode"] == 1
 
 
 def test_diagnostic_status_uses_proof_verification_semantics(tmp_path: Path) -> None:
