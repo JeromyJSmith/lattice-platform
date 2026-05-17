@@ -83,14 +83,28 @@ function modelLabel(capabilityId: string): string {
   return "deterministic-keyword-ripgrep";
 }
 
-function buildBenchmarkReport(
+export function buildBenchmarkReport(
   body: SidecarRunBody,
   capabilityId: string,
 ): BenchmarkReport {
   const success = body.ok === true;
-  const verifierPassed =
-    body.verification?.status === "passed" ||
-    body.verification?.returncode === 0;
+  const verificationStatus = body.verification?.status;
+  const verifierPassed = verificationStatus === "passed";
+  const verifierReviewOnly =
+    verificationStatus === "review_required" ||
+    verificationStatus === "unverified";
+  const trust =
+    success && verifierPassed
+      ? "live_verified"
+      : verifierReviewOnly
+        ? "uploaded_unverified"
+        : "live_failed";
+  const reportVerificationStatus =
+    success && verifierPassed
+      ? "passed"
+      : verifierReviewOnly
+        ? "unverified"
+        : "failed";
   return {
     benchmark_name: `${capabilityId} live browser run`,
     purpose:
@@ -104,16 +118,23 @@ function buildBenchmarkReport(
     ],
     provenance: {
       source: "sidecar_live_run",
-      trust: success && verifierPassed ? "live_verified" : "live_failed",
-      label: success && verifierPassed ? "Live verified sidecar proof" : "Live failed sidecar proof",
+      trust,
+      label:
+        trust === "live_verified"
+          ? "Live verified sidecar proof"
+          : trust === "uploaded_unverified"
+            ? "Live sidecar run requires review"
+            : "Live failed sidecar proof",
       artifact: body.artifact,
       verified_at: new Date().toISOString(),
     },
     verification: {
-      status: success && verifierPassed ? "passed" : "failed",
+      status: reportVerificationStatus,
       message:
         success && verifierPassed
           ? "Sidecar execution and verifier both passed."
+          : verifierReviewOnly
+            ? "Sidecar execution completed, but verification is review-only or unverified."
           : "Sidecar execution or verifier failed.",
     },
     models: [

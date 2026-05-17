@@ -267,6 +267,7 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
     """Inspect JSON proof artifacts for explicit verification statuses when available."""
     statuses: list[dict[str, str]] = []
     unreadable: list[str] = []
+    unverified_json: list[str] = []
     for candidate in proof_paths:
         try:
             path = resolve_repo_path(root, candidate)
@@ -284,18 +285,27 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
             status = verification.get("status")
             if isinstance(status, str) and status:
                 statuses.append({"path": candidate, "status": status})
+                continue
+        unverified_json.append(candidate)
 
     failing = [item["path"] for item in statuses if item["status"] == "failed"]
     review_required = [
         item["path"] for item in statuses if item["status"] in {"review_required", "unverified"}
     ]
+    unknown_status = [
+        item["path"]
+        for item in statuses
+        if item["status"] not in {"passed", "failed", "review_required", "unverified"}
+    ]
     passed = [item["path"] for item in statuses if item["status"] == "passed"]
     return {
         "statuses": statuses,
         "passed": passed,
-        "review_required": review_required,
+        "review_required": review_required + unverified_json + unknown_status,
         "failed": failing,
         "unreadable": unreadable,
+        "unverified_json": unverified_json,
+        "unknown_status": unknown_status,
     }
 
 
@@ -407,6 +417,7 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
         and not missing_proof
         and not proof_verification["failed"]
         and not proof_verification["review_required"]
+        and not proof_verification["unreadable"]
     ):
         color = "green"
         label = "pass"
@@ -415,6 +426,10 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
             if not proof_verification["passed"]
             else "Contract wires and proof evidence are present, and verification artifacts passed."
         )
+    elif state == "ACTIVE" and proof_verification["unreadable"]:
+        color = "red"
+        label = "fail"
+        troubleshooting = "Proof evidence exists, but at least one artifact is unreadable or malformed JSON."
     elif state == "ACTIVE" and proof_verification["failed"]:
         color = "red"
         label = "fail"

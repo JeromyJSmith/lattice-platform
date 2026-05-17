@@ -12,6 +12,8 @@ export type CapabilityStatus = {
     review_required: string[];
     failed: string[];
     unreadable: string[];
+    unverified_json: string[];
+    unknown_status: string[];
   };
   troubleshooting: string;
 };

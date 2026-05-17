@@ -141,3 +141,43 @@ def test_diagnostic_status_marks_failed_verification_red(tmp_path: Path) -> None
     assert status["proof_verification"]["failed"] == [
         "meta/harness/docs/sessions/cwicr-proof.json"
     ]
+
+
+def test_diagnostic_status_marks_legacy_json_review_required(tmp_path: Path) -> None:
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text(json.dumps({"benchmark_name": "legacy-proof"}), encoding="utf-8")
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.json"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "amber"
+    assert status["label"] == "review-required"
+    assert status["proof_verification"]["unverified_json"] == [
+        "meta/harness/docs/sessions/cwicr-proof.json"
+    ]
+
+
+def test_diagnostic_status_marks_malformed_json_failed(tmp_path: Path) -> None:
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text("{not-json", encoding="utf-8")
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.json"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "red"
+    assert status["label"] == "fail"
+    assert status["proof_verification"]["unreadable"] == [
+        "meta/harness/docs/sessions/cwicr-proof.json"
+    ]
