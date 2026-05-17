@@ -1,0 +1,399 @@
+{
+  "comparisons": {
+    "first": {
+      "examples": {
+        "invalid_examples": [
+          {
+            "example": "examples/fre-loop.invalid.green-terminology.json",
+            "matched_expected": true,
+            "observed_failures": [
+              {
+                "failure_class": "REQUIRED_FIELD_MISSING",
+                "field": "validation_pass_criteria",
+                "missing_value": null
+              },
+              {
+                "failure_class": "ADDITIONAL_PROPERTY_NOT_ALLOWED",
+                "field": "definition_of_green",
+                "missing_value": null
+              }
+            ],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "examples/fre-loop.invalid.missing-promotion.json",
+            "matched_expected": true,
+            "observed_failures": [
+              {
+                "failure_class": "AUTHORITY_CHAIN_MISSING_REQUIRED_VALUE",
+                "field": "authority_chain",
+                "missing_value": "promotion_decision"
+              }
+            ],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          }
+        ],
+        "valid_examples": [
+          {
+            "example": "fre-loop.valid.json",
+            "failures": [],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "gate-result.valid.json",
+            "failures": [],
+            "schema": "gate-result.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "repair-task.valid.json",
+            "failures": [],
+            "schema": "repair-task.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "promotion-decision.valid.json",
+            "failures": [],
+            "schema": "promotion-decision.schema.json",
+            "status": "pass"
+          }
+        ]
+      },
+      "fixtures": {
+        "all_passed": true,
+        "fixture_count": 2,
+        "fixtures": [
+          {
+            "checks": [
+              {
+                "check": "schema_version",
+                "status": "pass"
+              },
+              {
+                "check": "tool_id",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance",
+                "status": "pass"
+              },
+              {
+                "check": "task",
+                "status": "pass"
+              },
+              {
+                "check": "selected_files",
+                "status": "pass"
+              },
+              {
+                "check": "verification",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance.source_repo",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance.source_commit",
+                "status": "pass"
+              },
+              {
+                "check": "verification.command",
+                "status": "pass"
+              },
+              {
+                "check": "verification.status",
+                "status": "pass"
+              }
+            ],
+            "exists": true,
+            "fixture_id": "FIXTURE-0001",
+            "name": "golden-path-proof-run",
+            "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json",
+            "status": "pass",
+            "type": "json_proof_artifact"
+          },
+          {
+            "checks": [
+              {
+                "check": "Golden Path 002",
+                "status": "pass"
+              },
+              {
+                "check": "Committed Baseline",
+                "status": "pass"
+              },
+              {
+                "check": "Purpose Clarification From Research",
+                "status": "pass"
+              },
+              {
+                "check": "Capability Mapping Lens",
+                "status": "pass"
+              }
+            ],
+            "exists": true,
+            "fixture_id": "FIXTURE-0002",
+            "name": "handoff-next-session",
+            "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/HANDOFF-NEXT-SESSION.md",
+            "status": "pass",
+            "type": "markdown_handoff"
+          }
+        ],
+        "passed_count": 2,
+        "run_id": "RUN-2026-05-16-0013"
+      },
+      "mapping": {
+        "conflicts": [],
+        "invalid": [],
+        "missing": [],
+        "rows": {
+          "artifact": "partial",
+          "promotion_decision": "partial",
+          "repair_task": "clean",
+          "scorecard": "clean",
+          "source_record": "partial",
+          "validation_pass_criteria": "clean"
+        },
+        "status": "pass"
+      },
+      "research": {
+        "evidence": [
+          "docs/research-grounding.md",
+          "docs/research-findings.md",
+          "../CLAUDE.md",
+          "../GOAL.md"
+        ],
+        "missing": [],
+        "source_packet_exists": true,
+        "status": "pass"
+      },
+      "schemas": {
+        "all_valid": true,
+        "schemas": [
+          {
+            "issues": [],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "gate-result.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "promotion-decision.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "repair-task.schema.json",
+            "status": "pass"
+          }
+        ]
+      }
+    },
+    "second": {
+      "examples": {
+        "invalid_examples": [
+          {
+            "example": "examples/fre-loop.invalid.green-terminology.json",
+            "matched_expected": true,
+            "observed_failures": [
+              {
+                "failure_class": "REQUIRED_FIELD_MISSING",
+                "field": "validation_pass_criteria",
+                "missing_value": null
+              },
+              {
+                "failure_class": "ADDITIONAL_PROPERTY_NOT_ALLOWED",
+                "field": "definition_of_green",
+                "missing_value": null
+              }
+            ],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "examples/fre-loop.invalid.missing-promotion.json",
+            "matched_expected": true,
+            "observed_failures": [
+              {
+                "failure_class": "AUTHORITY_CHAIN_MISSING_REQUIRED_VALUE",
+                "field": "authority_chain",
+                "missing_value": "promotion_decision"
+              }
+            ],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          }
+        ],
+        "valid_examples": [
+          {
+            "example": "fre-loop.valid.json",
+            "failures": [],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "gate-result.valid.json",
+            "failures": [],
+            "schema": "gate-result.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "repair-task.valid.json",
+            "failures": [],
+            "schema": "repair-task.schema.json",
+            "status": "pass"
+          },
+          {
+            "example": "promotion-decision.valid.json",
+            "failures": [],
+            "schema": "promotion-decision.schema.json",
+            "status": "pass"
+          }
+        ]
+      },
+      "fixtures": {
+        "all_passed": true,
+        "fixture_count": 2,
+        "fixtures": [
+          {
+            "checks": [
+              {
+                "check": "schema_version",
+                "status": "pass"
+              },
+              {
+                "check": "tool_id",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance",
+                "status": "pass"
+              },
+              {
+                "check": "task",
+                "status": "pass"
+              },
+              {
+                "check": "selected_files",
+                "status": "pass"
+              },
+              {
+                "check": "verification",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance.source_repo",
+                "status": "pass"
+              },
+              {
+                "check": "source_provenance.source_commit",
+                "status": "pass"
+              },
+              {
+                "check": "verification.command",
+                "status": "pass"
+              },
+              {
+                "check": "verification.status",
+                "status": "pass"
+              }
+            ],
+            "exists": true,
+            "fixture_id": "FIXTURE-0001",
+            "name": "golden-path-proof-run",
+            "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json",
+            "status": "pass",
+            "type": "json_proof_artifact"
+          },
+          {
+            "checks": [
+              {
+                "check": "Golden Path 002",
+                "status": "pass"
+              },
+              {
+                "check": "Committed Baseline",
+                "status": "pass"
+              },
+              {
+                "check": "Purpose Clarification From Research",
+                "status": "pass"
+              },
+              {
+                "check": "Capability Mapping Lens",
+                "status": "pass"
+              }
+            ],
+            "exists": true,
+            "fixture_id": "FIXTURE-0002",
+            "name": "handoff-next-session",
+            "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/HANDOFF-NEXT-SESSION.md",
+            "status": "pass",
+            "type": "markdown_handoff"
+          }
+        ],
+        "passed_count": 2,
+        "run_id": "RUN-2026-05-16-0013"
+      },
+      "mapping": {
+        "conflicts": [],
+        "invalid": [],
+        "missing": [],
+        "rows": {
+          "artifact": "partial",
+          "promotion_decision": "partial",
+          "repair_task": "clean",
+          "scorecard": "clean",
+          "source_record": "partial",
+          "validation_pass_criteria": "clean"
+        },
+        "status": "pass"
+      },
+      "research": {
+        "evidence": [
+          "docs/research-grounding.md",
+          "docs/research-findings.md",
+          "../CLAUDE.md",
+          "../GOAL.md"
+        ],
+        "missing": [],
+        "source_packet_exists": true,
+        "status": "pass"
+      },
+      "schemas": {
+        "all_valid": true,
+        "schemas": [
+          {
+            "issues": [],
+            "schema": "fre-loop.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "gate-result.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "promotion-decision.schema.json",
+            "status": "pass"
+          },
+          {
+            "issues": [],
+            "schema": "repair-task.schema.json",
+            "status": "pass"
+          }
+        ]
+      }
+    }
+  },
+  "status": "pass"
+}

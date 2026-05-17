@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/gate-result.schema.json",
+  "title": "Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gate_id",
+    "status",
+    "blocking",
+    "reason",
+    "evidence"
+  ],
+  "properties": {
+    "gate_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "pending"
+      ]
+    },
+    "blocking": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

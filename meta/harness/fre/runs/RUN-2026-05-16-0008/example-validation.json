@@ -1,0 +1,61 @@
+{
+  "invalid_examples": [
+    {
+      "example": "examples/fre-loop.invalid.green-terminology.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "validation_pass_criteria",
+          "missing_value": null
+        },
+        {
+          "failure_class": "ADDITIONAL_PROPERTY_NOT_ALLOWED",
+          "field": "definition_of_green",
+          "missing_value": null
+        }
+      ],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/fre-loop.invalid.missing-promotion.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "AUTHORITY_CHAIN_MISSING_REQUIRED_VALUE",
+          "field": "authority_chain",
+          "missing_value": "promotion_decision"
+        }
+      ],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    }
+  ],
+  "valid_examples": [
+    {
+      "example": "fre-loop.valid.json",
+      "failures": [],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "gate-result.valid.json",
+      "failures": [],
+      "schema": "gate-result.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "repair-task.valid.json",
+      "failures": [],
+      "schema": "repair-task.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "promotion-decision.valid.json",
+      "failures": [],
+      "schema": "promotion-decision.schema.json",
+      "status": "pass"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "run_id": "RUN-2026-05-16-0002",
+  "required_metrics": [
+    "example_validation",
+    "promotion_readiness",
+    "repair_task_count",
+    "schema_validity"
+  ],
+  "metrics": {
+    "schema_validity": "pass",
+    "example_validation": "pass",
+    "repair_task_count": 0,
+    "promotion_readiness": "ADOPT WITH AMENDMENTS"
+  },
+  "scores": {
+    "deterministic_execution": 2,
+    "schema_clarity": 2,
+    "repair_task_usefulness": 2,
+    "lattice_vocabulary_compatibility": 1,
+    "real_artifact_usefulness": 0,
+    "integration_restraint": 2,
+    "evidence_quality": 2,
+    "restart_readiness": 2
+  },
+  "total_score": 13,
+  "required_run_artifacts": {
+    "input-manifest.yaml": true,
+    "normalized-source-summary.md": true,
+    "schema-validation.json": true,
+    "example-validation.json": true,
+    "gate-results.json": true,
+    "scorecard.yaml": true,
+    "repair-tasks.yaml": true,
+    "report.md": true,
+    "promotion-decision.md": true
+  }
+}

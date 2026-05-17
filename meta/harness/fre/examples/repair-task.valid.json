@@ -1,0 +1,13 @@
+{
+  "id": "REPAIR-0001",
+  "title": "Evaluate real LATTICE fixtures",
+  "reason": "Real artifact usefulness is still unproven in Phase 1.",
+  "blocking_gate_ids": [
+    "real_fixture_pressure_test"
+  ],
+  "acceptance_criteria": [
+    "Run the loop against two real LATTICE artifacts.",
+    "Record reports for both runs."
+  ],
+  "owner": "evaluation-agent"
+}

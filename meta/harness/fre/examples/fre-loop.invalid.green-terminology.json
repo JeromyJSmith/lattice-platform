@@ -1,0 +1,50 @@
+{
+  "id": "FRE-LOOP-GREEN-TERMINOLOGY",
+  "version": "0.1.0",
+  "source_record": {
+    "source_packet": "/Volumes/PixelTable/VW_iTWIN_Bridge/fre-test-eval-improvement 76019c48ec2441c0a42a1ac7a3f9b49b.md",
+    "normalized_at": "2026-05-16"
+  },
+  "authority_chain": [
+    "research",
+    "source",
+    "schema",
+    "examples",
+    "validation",
+    "metrics",
+    "repair_task",
+    "promotion_decision"
+  ],
+  "definition_of_green": [
+    "all tests pass"
+  ],
+  "metrics": [
+    "research_grounding",
+    "schema_validity",
+    "example_validation",
+    "repair_task_count",
+    "promotion_readiness"
+  ],
+  "stages": [
+    {
+      "name": "research",
+      "kind": "input"
+    },
+    {
+      "name": "source",
+      "kind": "input"
+    },
+    {
+      "name": "schema",
+      "kind": "contract"
+    },
+    {
+      "name": "validation",
+      "kind": "artifact"
+    },
+    {
+      "name": "promotion_decision",
+      "kind": "decision"
+    }
+  ]
+}

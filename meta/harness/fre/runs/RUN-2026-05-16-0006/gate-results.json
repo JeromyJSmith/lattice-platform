@@ -1,0 +1,53 @@
+[
+  {
+    "blocking": true,
+    "evidence": [
+      "docs/research-grounding.md",
+      "docs/research-findings.md"
+    ],
+    "gate_id": "research_grounding",
+    "reason": "Research grounding exists before schema execution and scoring.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "schema-validation.json"
+    ],
+    "gate_id": "schema_validity",
+    "reason": "All FRE schemas parse under Draft 2020-12.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "example-validation.json",
+      "examples/expected-failures.yaml"
+    ],
+    "gate_id": "example_validation",
+    "reason": "Valid examples pass and invalid examples fail for expected reasons.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "../docs/fre-to-lattice-map.md"
+    ],
+    "gate_id": "mapping_contract",
+    "reason": "FRE fields are mapped to LATTICE concepts with explicit transfer statuses.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "fixtures/golden-path-proof-run.json",
+      "fixtures/handoff-next-session.json",
+      "docs/phase3-fixture-selection.md",
+      "runs/RUN-2026-05-16-0004/real-fixture-evaluation.json",
+      "runs/RUN-2026-05-16-0004/real-fixture-evaluation.md"
+    ],
+    "gate_id": "real_fixture_pressure_test",
+    "reason": "Phase 3 runs against at least two real LATTICE artifacts.",
+    "status": "pass"
+  }
+]

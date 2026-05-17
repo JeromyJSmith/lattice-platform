@@ -1,0 +1,39 @@
+[
+  {
+    "blocking": true,
+    "evidence": [
+      "schema-validation.json"
+    ],
+    "gate_id": "schema_validity",
+    "reason": "All FRE schemas parse under Draft 2020-12.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "example-validation.json",
+      "examples/expected-failures.yaml"
+    ],
+    "gate_id": "example_validation",
+    "reason": "Valid examples pass and invalid examples fail for expected reasons.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "../docs/fre-to-lattice-map.md"
+    ],
+    "gate_id": "mapping_contract",
+    "reason": "FRE fields are mapped to LATTICE concepts with explicit transfer statuses.",
+    "status": "pass"
+  },
+  {
+    "blocking": true,
+    "evidence": [
+      "../docs/gaps.md"
+    ],
+    "gate_id": "real_fixture_pressure_test",
+    "reason": "Phase 3 has not yet run against two real LATTICE artifacts.",
+    "status": "fail"
+  }
+]

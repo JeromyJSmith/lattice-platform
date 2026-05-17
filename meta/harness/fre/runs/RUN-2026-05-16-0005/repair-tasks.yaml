@@ -1,0 +1,17 @@
+{
+  "repair_tasks": [
+    {
+      "id": "REPAIR-0001",
+      "title": "Resolve research_grounding",
+      "reason": "Research grounding exists before schema execution and scoring.",
+      "blocking_gate_ids": [
+        "research_grounding"
+      ],
+      "acceptance_criteria": [
+        "Gate `research_grounding` changes from fail to pass.",
+        "Updated run artifacts record the resolved outcome."
+      ],
+      "owner": "evaluation-agent"
+    }
+  ]
+}

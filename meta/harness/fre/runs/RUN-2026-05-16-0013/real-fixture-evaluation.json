@@ -1,0 +1,84 @@
+{
+  "all_passed": true,
+  "fixture_count": 2,
+  "fixtures": [
+    {
+      "checks": [
+        {
+          "check": "schema_version",
+          "status": "pass"
+        },
+        {
+          "check": "tool_id",
+          "status": "pass"
+        },
+        {
+          "check": "source_provenance",
+          "status": "pass"
+        },
+        {
+          "check": "task",
+          "status": "pass"
+        },
+        {
+          "check": "selected_files",
+          "status": "pass"
+        },
+        {
+          "check": "verification",
+          "status": "pass"
+        },
+        {
+          "check": "source_provenance.source_repo",
+          "status": "pass"
+        },
+        {
+          "check": "source_provenance.source_commit",
+          "status": "pass"
+        },
+        {
+          "check": "verification.command",
+          "status": "pass"
+        },
+        {
+          "check": "verification.status",
+          "status": "pass"
+        }
+      ],
+      "exists": true,
+      "fixture_id": "FIXTURE-0001",
+      "name": "golden-path-proof-run",
+      "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json",
+      "status": "pass",
+      "type": "json_proof_artifact"
+    },
+    {
+      "checks": [
+        {
+          "check": "Golden Path 002",
+          "status": "pass"
+        },
+        {
+          "check": "Committed Baseline",
+          "status": "pass"
+        },
+        {
+          "check": "Purpose Clarification From Research",
+          "status": "pass"
+        },
+        {
+          "check": "Capability Mapping Lens",
+          "status": "pass"
+        }
+      ],
+      "exists": true,
+      "fixture_id": "FIXTURE-0002",
+      "name": "handoff-next-session",
+      "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/HANDOFF-NEXT-SESSION.md",
+      "status": "pass",
+      "type": "markdown_handoff"
+    }
+  ],
+  "passed_count": 2,
+  "run_id": "RUN-2026-05-16-0013"
+}

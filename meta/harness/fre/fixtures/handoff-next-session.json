@@ -1,0 +1,13 @@
+{
+  "id": "FIXTURE-0002",
+  "name": "handoff-next-session",
+  "type": "markdown_handoff",
+  "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/HANDOFF-NEXT-SESSION.md",
+  "must_contain": [
+    "Golden Path 002",
+    "Committed Baseline",
+    "Purpose Clarification From Research",
+    "Capability Mapping Lens"
+  ],
+  "purpose": "Prove the FRE kernel can inspect a real restart-ready handoff and detect goal, baseline, mapping, and continuity structure."
+}

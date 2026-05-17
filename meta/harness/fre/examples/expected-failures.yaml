@@ -1,0 +1,29 @@
+{
+  "expected_failures": [
+    {
+      "example": "examples/fre-loop.invalid.green-terminology.json",
+      "schema": "fre-loop.schema.json",
+      "expected_failure_classes": [
+        "REQUIRED_FIELD_MISSING",
+        "ADDITIONAL_PROPERTY_NOT_ALLOWED"
+      ],
+      "expected_fields": [
+        "validation_pass_criteria",
+        "definition_of_green"
+      ]
+    },
+    {
+      "example": "examples/fre-loop.invalid.missing-promotion.json",
+      "schema": "fre-loop.schema.json",
+      "expected_failure_classes": [
+        "AUTHORITY_CHAIN_MISSING_REQUIRED_VALUE"
+      ],
+      "expected_fields": [
+        "authority_chain"
+      ],
+      "expected_missing_values": [
+        "promotion_decision"
+      ]
+    }
+  ]
+}

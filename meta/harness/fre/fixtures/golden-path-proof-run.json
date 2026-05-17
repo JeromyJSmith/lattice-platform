@@ -1,0 +1,21 @@
+{
+  "id": "FIXTURE-0001",
+  "name": "golden-path-proof-run",
+  "type": "json_proof_artifact",
+  "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/docs/sessions/2026-05-12-codebase-context-proof-run.json",
+  "must_have_top_level_keys": [
+    "schema_version",
+    "tool_id",
+    "source_provenance",
+    "task",
+    "selected_files",
+    "verification"
+  ],
+  "must_have_nested_keys": [
+    "source_provenance.source_repo",
+    "source_provenance.source_commit",
+    "verification.command",
+    "verification.status"
+  ],
+  "purpose": "Prove the FRE kernel can inspect a real LATTICE proof artifact and detect evidence, provenance, and verification structure."
+}

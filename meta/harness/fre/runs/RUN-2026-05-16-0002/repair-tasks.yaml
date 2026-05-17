@@ -1,0 +1,17 @@
+{
+  "repair_tasks": [
+    {
+      "id": "REPAIR-0001",
+      "title": "Resolve real_fixture_pressure_test",
+      "reason": "Phase 3 has not yet run against two real LATTICE artifacts.",
+      "blocking_gate_ids": [
+        "real_fixture_pressure_test"
+      ],
+      "acceptance_criteria": [
+        "Gate `real_fixture_pressure_test` changes from fail to pass.",
+        "Updated run artifacts record the resolved outcome."
+      ],
+      "owner": "evaluation-agent"
+    }
+  ]
+}

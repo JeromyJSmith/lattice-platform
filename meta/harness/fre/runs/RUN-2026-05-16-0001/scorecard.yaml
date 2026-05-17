@@ -1,0 +1,26 @@
+{
+  "run_id": "RUN-2026-05-16-0001",
+  "required_metrics": [
+    "example_validation",
+    "promotion_readiness",
+    "repair_task_count",
+    "schema_validity"
+  ],
+  "metrics": {
+    "schema_validity": "pass",
+    "example_validation": "pass",
+    "repair_task_count": 1,
+    "promotion_readiness": "ADOPT WITH AMENDMENTS"
+  },
+  "scores": {
+    "deterministic_execution": 2,
+    "schema_clarity": 1,
+    "repair_task_usefulness": 1,
+    "lattice_vocabulary_compatibility": 1,
+    "real_artifact_usefulness": 0,
+    "integration_restraint": 2,
+    "evidence_quality": 1,
+    "restart_readiness": 1
+  },
+  "total_score": 9
+}

@@ -1,0 +1,10 @@
+{
+  "evidence": [
+    "docs/research-grounding.md",
+    "docs/research-findings.md"
+  ],
+  "missing": [
+    "docs/research-grounding.md::source packet"
+  ],
+  "status": "fail"
+}

@@ -1,0 +1,25 @@
+{
+  "all_valid": true,
+  "schemas": [
+    {
+      "issues": [],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "gate-result.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "promotion-decision.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "repair-task.schema.json",
+      "status": "pass"
+    }
+  ]
+}

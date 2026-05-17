@@ -1,0 +1,9 @@
+{
+  "gate_id": "schema_validity",
+  "status": "pass",
+  "blocking": true,
+  "reason": "All schemas parse under Draft 2020-12.",
+  "evidence": [
+    "schema-validation.json"
+  ]
+}

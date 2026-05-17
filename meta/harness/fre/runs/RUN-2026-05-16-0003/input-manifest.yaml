@@ -1,0 +1,15 @@
+{
+  "run_id": "RUN-2026-05-16-0003",
+  "branch": "feat/fre-meta-harness-eval",
+  "base_commit": "d02328e",
+  "worktree": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval",
+  "source_packet": "/Volumes/PixelTable/VW_iTWIN_Bridge/fre-test-eval-improvement 76019c48ec2441c0a42a1ac7a3f9b49b.md",
+  "commands": [
+    "uv run python meta/harness/fre/harness/validate_schema.py",
+    "uv run python meta/harness/fre/harness/validate_examples.py",
+    "uv run python meta/harness/fre/harness/evaluate.py",
+    "uv run python meta/harness/fre/harness/propose_repairs.py",
+    "uv run python meta/harness/fre/harness/report.py",
+    "uv run pytest meta/harness/fre/tests"
+  ]
+}

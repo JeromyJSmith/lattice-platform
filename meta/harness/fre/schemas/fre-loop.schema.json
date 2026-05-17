@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/fre-loop.schema.json",
+  "title": "FRE Loop",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "source_record",
+    "authority_chain",
+    "validation_pass_criteria",
+    "metrics",
+    "stages"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^FRE-LOOP-[A-Z0-9-]+$"
+    },
+    "version": {
+      "type": "string",
+      "const": "0.1.0"
+    },
+    "source_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_packet",
+        "normalized_at"
+      ],
+      "properties": {
+        "source_packet": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized_at": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "authority_chain": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "const": "research"
+        }
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "research",
+          "source",
+          "schema",
+          "examples",
+          "validation",
+          "metrics",
+          "repair_task",
+          "promotion_decision"
+        ]
+      },
+      "contains": {
+        "const": "promotion_decision"
+      }
+    },
+    "validation_pass_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 5,
+      "items": {
+        "type": "string",
+        "enum": [
+          "research_grounding",
+          "schema_validity",
+          "example_validation",
+          "repair_task_count",
+          "promotion_readiness"
+        ]
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 5,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "kind"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "research"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          }
+        }
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "kind"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "research",
+              "source",
+              "schema",
+              "examples",
+              "validation",
+              "metrics",
+              "repair_task",
+              "promotion_decision"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "input",
+              "contract",
+              "artifact",
+              "decision"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
