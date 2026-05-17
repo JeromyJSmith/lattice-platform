@@ -88,6 +88,8 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
     }
 }
 
+ALLOWED_PROOF_VERIFICATION_STATUSES = {"passed", "failed", "review_required", "unverified"}
+
 
 SAMPLE_BENCHMARK_REPORT: dict[str, Any] = {
     "benchmark_name": "Meta-Harness proof-run gate",
@@ -271,12 +273,30 @@ def collect_proof_paths(proof_evidence: Any) -> list[str]:
     return []
 
 
-def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, Any]:
+def _is_int_returncode(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _artifact_matches_candidate(root: Path, candidate: str, artifact: str) -> bool:
+    try:
+        return resolve_repo_path(root, artifact) == resolve_repo_path(root, candidate)
+    except HTTPException:
+        return False
+
+
+def proof_verification_status(
+    root: Path,
+    proof_paths: list[str],
+    *,
+    expected_capability_id: str | None = None,
+) -> dict[str, Any]:
     """Inspect JSON proof artifacts for explicit verification statuses when available."""
     statuses: list[dict[str, str]] = []
     unreadable: list[str] = []
     unverified_json: list[str] = []
     non_json: list[str] = []
+    artifact_mismatch: list[str] = []
+    capability_mismatch: list[str] = []
     for candidate in proof_paths:
         try:
             path = resolve_repo_path(root, candidate)
@@ -292,11 +312,37 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
         except Exception:
             unreadable.append(candidate)
             continue
+        capability_id = payload.get("capability_id")
+        artifact = payload.get("artifact")
         verification = payload.get("verification")
         if isinstance(verification, dict):
             status = verification.get("status")
             returncode = verification.get("returncode")
-            if isinstance(status, str) and status and isinstance(returncode, int):
+            if not isinstance(status, str) or not status:
+                unverified_json.append(candidate)
+                continue
+            if status not in ALLOWED_PROOF_VERIFICATION_STATUSES:
+                statuses.append({"path": candidate, "status": status})
+                continue
+            if not isinstance(capability_id, str) or not capability_id:
+                unverified_json.append(candidate)
+                continue
+            if expected_capability_id is not None and capability_id != expected_capability_id:
+                capability_mismatch.append(candidate)
+                continue
+            if not isinstance(artifact, str) or not artifact:
+                unverified_json.append(candidate)
+                continue
+            if not _artifact_matches_candidate(root, candidate, artifact):
+                artifact_mismatch.append(candidate)
+                continue
+            if status == "passed" and (not _is_int_returncode(returncode) or returncode != 0):
+                unverified_json.append(candidate)
+                continue
+            if status != "passed" and returncode is not None and not _is_int_returncode(returncode):
+                unverified_json.append(candidate)
+                continue
+            if status in ALLOWED_PROOF_VERIFICATION_STATUSES:
                 statuses.append({"path": candidate, "status": status})
                 continue
         unverified_json.append(candidate)
@@ -314,12 +360,14 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
     return {
         "statuses": statuses,
         "passed": passed,
-        "review_required": review_required + unverified_json + unknown_status,
+        "review_required": review_required + unverified_json + unknown_status + artifact_mismatch + capability_mismatch,
         "failed": failing,
         "unreadable": unreadable,
         "unverified_json": unverified_json,
         "unknown_status": unknown_status,
         "non_json": non_json,
+        "artifact_mismatch": artifact_mismatch,
+        "capability_mismatch": capability_mismatch,
     }
 
 
@@ -421,7 +469,11 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
     missing_proof_contract = state == "ACTIVE" and not proof_paths
     missing_wires = [path for path in wired_at if "/" in path and not path_exists(root, path)]
     missing_proof = [path for path in proof_paths if not path_exists(root, path)]
-    proof_verification = proof_verification_status(root, proof_paths)
+    proof_verification = proof_verification_status(
+        root,
+        proof_paths,
+        expected_capability_id=str(capability.get("id", "")) or None,
+    )
 
     if (
         state == "ACTIVE"
@@ -433,6 +485,8 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
         and not proof_verification["review_required"]
         and not proof_verification["unreadable"]
         and not proof_verification["non_json"]
+        and not proof_verification["artifact_mismatch"]
+        and not proof_verification["capability_mismatch"]
     ):
         color = "green"
         label = "pass"
@@ -456,7 +510,7 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
     elif state == "ACTIVE" and proof_verification["review_required"]:
         color = "amber"
         label = "review-required"
-        troubleshooting = "Proof evidence exists, but at least one artifact is review-only or unverified."
+        troubleshooting = "Proof evidence exists, but at least one artifact is review-only, unverified, or fails proof identity checks."
     elif state == "ACTIVE" and missing_proof_contract and not missing_contract and not missing_wires:
         color = "amber"
         label = "contract-only"

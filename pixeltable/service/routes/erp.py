@@ -56,6 +56,8 @@ def _as_http_error(exc: Exception, detail: str) -> HTTPException:
 
 def _coerce_score(row: dict[str, Any]) -> float | None:
     value = row.get("score")
+    if isinstance(value, bool):
+        return None
     if isinstance(value, int | float):
         return float(value)
     return None
@@ -104,11 +106,13 @@ def post_boq(
     store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
+    """Sync a BOQ payload into the ERP adapter for one project."""
     project_id = (body.get("project_id") or "").strip()
     if not project_id:
         raise HTTPException(status_code=400, detail="project_id required")
 
     def do():
+        """Execute the idempotent BOQ sync."""
         try:
             result = _BOQ_ADAPTER.sync_boq(project_id, pxt=pxt)
         except Exception as exc:
@@ -120,6 +124,7 @@ def post_boq(
 
 @router.get("/boq/{project_id}")
 def get_boq(project_id: str):
+    """Fetch the ERP BOQ snapshot for one project."""
     if not project_id.strip():
         raise HTTPException(status_code=400, detail="project_id required")
     try:
@@ -131,6 +136,7 @@ def get_boq(project_id: str):
 
 @router.get("/export/{project_id}")
 def get_export(project_id: str, fmt: str = Query(default="xlsx", pattern="^(xlsx|csv)$")):
+    """Stream a generated BOQ export for one project."""
     if not project_id.strip():
         raise HTTPException(status_code=400, detail="project_id required")
     try:
@@ -149,6 +155,7 @@ def get_export(project_id: str, fmt: str = Query(default="xlsx", pattern="^(xlsx
 
 @router.post("/cost-search")
 def post_cost_search(body: dict[str, Any] = Body(...)):
+    """Search CWICR cost rows and classify the returned proof strength."""
     description = (body.get("description") or "").strip()
     if not description:
         raise HTTPException(status_code=400, detail="description required")
@@ -180,11 +187,13 @@ def post_phases(
     store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
+    """Sync ERP phase data for one project."""
     project_id = (body.get("project_id") or "").strip()
     if not project_id:
         raise HTTPException(status_code=400, detail="project_id required")
 
     def do():
+        """Execute the idempotent phase sync."""
         try:
             result = _PHASE_ADAPTER.sync_phases(project_id)
         except Exception as exc:

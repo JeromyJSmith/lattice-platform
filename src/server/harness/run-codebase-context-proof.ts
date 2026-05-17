@@ -50,7 +50,7 @@ type BenchmarkReport = {
       success: boolean;
       latency_ms: number;
       cost_usd: number;
-      score: number;
+      score: number | null;
       output?: string;
       failure_mode?: string | null;
     }>;
@@ -86,13 +86,28 @@ function modelLabel(capabilityId: string): string {
 export function buildBenchmarkReport(
   body: SidecarRunBody,
   capabilityId: string,
+  expectedArtifact?: string,
 ): BenchmarkReport {
   const success = body.ok === true;
+  const artifact =
+    typeof body.artifact === "string" && body.artifact.length > 0
+      ? body.artifact
+      : undefined;
   const verificationStatus = body.verification?.status;
-  const verifierPassed = verificationStatus === "passed";
+  const verifierReturnedZero = body.verification?.returncode === 0;
+  const artifactMatchesRequested =
+    typeof expectedArtifact !== "string" || artifact === expectedArtifact;
+  const verifierPassed =
+    verificationStatus === "passed" &&
+    verifierReturnedZero &&
+    typeof artifact === "string" &&
+    artifactMatchesRequested;
   const verifierReviewOnly =
     verificationStatus === "review_required" ||
-    verificationStatus === "unverified";
+    verificationStatus === "unverified" ||
+    (verificationStatus === "passed" && !verifierPassed);
+  const proofIdentityGap =
+    verificationStatus === "passed" && !artifactMatchesRequested;
   const trust =
     success && verifierPassed
       ? "live_verified"
@@ -113,7 +128,8 @@ export function buildBenchmarkReport(
     prompt_iterations: [
       {
         capability: capabilityId,
-        expected: "sidecar execution succeeds and verifier returns zero",
+        expected:
+          "sidecar execution succeeds, verifier returns zero, and the proof artifact matches the requested browser run path",
       },
     ],
     provenance: {
@@ -125,7 +141,7 @@ export function buildBenchmarkReport(
           : trust === "uploaded_unverified"
             ? "Live sidecar run requires review"
             : "Live failed sidecar proof",
-      artifact: body.artifact,
+      artifact,
       verified_at: new Date().toISOString(),
     },
     verification: {
@@ -133,6 +149,8 @@ export function buildBenchmarkReport(
       message:
         success && verifierPassed
           ? "Sidecar execution and verifier both passed."
+          : proofIdentityGap
+            ? "Sidecar execution completed, but the proof artifact path did not match the requested browser run output."
           : verifierReviewOnly
             ? "Sidecar execution completed, but verification is review-only or unverified."
           : "Sidecar execution or verifier failed.",
@@ -147,8 +165,8 @@ export function buildBenchmarkReport(
             success,
             latency_ms: body.latency_ms ?? 0,
             cost_usd: 0,
-            score: success ? 1 : 0,
-            output: body.artifact,
+            score: null,
+            output: artifact,
             failure_mode: success ? null : body.stderr || "sidecar run failed",
           },
           {
@@ -156,7 +174,7 @@ export function buildBenchmarkReport(
             success: verifierPassed,
             latency_ms: 0,
             cost_usd: 0,
-            score: verifierPassed ? 1 : 0,
+            score: null,
             output: body.verification?.stdout,
             failure_mode: verifierPassed
               ? null
@@ -210,6 +228,6 @@ async function runCapabilityById(capabilityId: string) {
     stdout: body.stdout ?? "",
     stderr: body.stderr ?? "",
     verification: body.verification ?? {},
-    report: buildBenchmarkReport(body, capabilityId),
+    report: buildBenchmarkReport(body, capabilityId, output),
   };
 }

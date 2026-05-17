@@ -84,11 +84,14 @@ def test_python_docstring_rule_run_writes_evidence(
 
 
 def test_diagnostic_status_uses_proof_verification_semantics(tmp_path: Path) -> None:
+    """Keep review-only proof artifacts amber instead of green."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text(
         json.dumps(
             {
+                "capability_id": "cwicr-qdrant-cost-search",
+                "artifact": "meta/harness/docs/sessions/cwicr-proof.json",
                 "verification": {
                     "status": "review_required",
                     "message": "Top CWICR match is review-only.",
@@ -114,11 +117,14 @@ def test_diagnostic_status_uses_proof_verification_semantics(tmp_path: Path) -> 
 
 
 def test_diagnostic_status_marks_failed_verification_red(tmp_path: Path) -> None:
+    """Mark failed verifier artifacts red."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text(
         json.dumps(
             {
+                "capability_id": "cwicr-qdrant-cost-search",
+                "artifact": "meta/harness/docs/sessions/cwicr-proof.json",
                 "verification": {
                     "status": "failed",
                     "message": "Top CWICR match is too weak.",
@@ -145,6 +151,7 @@ def test_diagnostic_status_marks_failed_verification_red(tmp_path: Path) -> None
 
 
 def test_diagnostic_status_marks_legacy_json_review_required(tmp_path: Path) -> None:
+    """Downgrade legacy JSON artifacts that lack verifier metadata."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text(json.dumps({"benchmark_name": "legacy-proof"}), encoding="utf-8")
@@ -165,6 +172,7 @@ def test_diagnostic_status_marks_legacy_json_review_required(tmp_path: Path) -> 
 
 
 def test_diagnostic_status_marks_malformed_json_failed(tmp_path: Path) -> None:
+    """Mark malformed JSON artifacts as failed proof."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text("{not-json", encoding="utf-8")
@@ -185,6 +193,7 @@ def test_diagnostic_status_marks_malformed_json_failed(tmp_path: Path) -> None:
 
 
 def test_diagnostic_status_marks_non_json_proof_review_required(tmp_path: Path) -> None:
+    """Downgrade non-JSON proof artifacts to review-required."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.md"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text("# proof\n", encoding="utf-8")
@@ -205,6 +214,7 @@ def test_diagnostic_status_marks_non_json_proof_review_required(tmp_path: Path) 
 
 
 def test_diagnostic_status_marks_forged_minimal_json_review_required(tmp_path: Path) -> None:
+    """Reject minimal self-attested passed JSON as verifier-backed proof."""
     proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
     proof_path.parent.mkdir(parents=True, exist_ok=True)
     proof_path.write_text(
@@ -227,7 +237,76 @@ def test_diagnostic_status_marks_forged_minimal_json_review_required(tmp_path: P
     ]
 
 
+def test_diagnostic_status_marks_artifact_mismatch_review_required(tmp_path: Path) -> None:
+    """Downgrade proof artifacts whose embedded path does not match the registry path."""
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text(
+        json.dumps(
+            {
+                "capability_id": "cwicr-qdrant-cost-search",
+                "artifact": "meta/harness/docs/sessions/other-proof.json",
+                "verification": {
+                    "status": "passed",
+                    "message": "Verifier returned zero.",
+                    "returncode": 0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.json"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "amber"
+    assert status["label"] == "review-required"
+    assert status["proof_verification"]["artifact_mismatch"] == [
+        "meta/harness/docs/sessions/cwicr-proof.json"
+    ]
+
+
+def test_diagnostic_status_marks_capability_mismatch_review_required(tmp_path: Path) -> None:
+    """Downgrade proof artifacts bound to a different capability id."""
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text(
+        json.dumps(
+            {
+                "capability_id": "different-capability",
+                "artifact": "meta/harness/docs/sessions/cwicr-proof.json",
+                "verification": {
+                    "status": "passed",
+                    "message": "Verifier returned zero.",
+                    "returncode": 0,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.json"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "amber"
+    assert status["label"] == "review-required"
+    assert status["proof_verification"]["capability_mismatch"] == [
+        "meta/harness/docs/sessions/cwicr-proof.json"
+    ]
+
+
 def test_normalize_report_provenance_downgrades_uploaded_self_attested_live_proof() -> None:
+    """Never trust uploaded reports that self-attest as live verified proof."""
     provenance, verification = harness.normalize_report_provenance(
         {
             "benchmark_name": "forged live proof",

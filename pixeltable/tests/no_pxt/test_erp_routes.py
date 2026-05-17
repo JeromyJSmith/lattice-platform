@@ -1,3 +1,5 @@
+"""Pure-Python tests for ERP route proof semantics."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -18,6 +20,7 @@ def _app(tmp_path: Path) -> FastAPI:
 
 
 def test_cost_search_requires_description(tmp_path: Path):
+    """Reject cost-search requests that omit the description."""
     client = TestClient(_app(tmp_path))
     response = client.post("/v1/erp/cost-search", json={"region": "US", "top": 3})
     assert response.status_code == 400
@@ -25,6 +28,7 @@ def test_cost_search_requires_description(tmp_path: Path):
 
 
 def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
+    """Mark high-confidence numeric scores as passed proof."""
     monkeypatch.setattr(
         erp._COST_SEARCH,
         "search",
@@ -46,6 +50,7 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
 
 
 def test_cost_search_marks_review_only_matches(tmp_path: Path, monkeypatch):
+    """Downgrade mid-range numeric scores to review-only proof."""
     monkeypatch.setattr(
         erp._COST_SEARCH,
         "search",
@@ -67,6 +72,7 @@ def test_cost_search_marks_review_only_matches(tmp_path: Path, monkeypatch):
 
 
 def test_cost_search_marks_weak_matches_failed(tmp_path: Path, monkeypatch):
+    """Fail weak numeric scores instead of treating them as verified proof."""
     monkeypatch.setattr(
         erp._COST_SEARCH,
         "search",
@@ -87,6 +93,7 @@ def test_cost_search_marks_weak_matches_failed(tmp_path: Path, monkeypatch):
 
 
 def test_cost_search_marks_no_rows_failed(tmp_path: Path, monkeypatch):
+    """Fail cost-search requests that return no rows."""
     monkeypatch.setattr(erp._COST_SEARCH, "search", lambda description, region, top: [])
     client = TestClient(_app(tmp_path))
     response = client.post(
@@ -101,7 +108,30 @@ def test_cost_search_marks_no_rows_failed(tmp_path: Path, monkeypatch):
     assert body["verification"]["status"] == "failed"
 
 
+def test_cost_search_rejects_boolean_scores_as_numeric_proof(tmp_path: Path, monkeypatch):
+    """Treat boolean scores as missing proof strength instead of numeric evidence."""
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {"item_id": "cwicr-1", "name": description, "unit_cost_region": region, "score": True}
+        ],
+    )
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 4},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["confidence"]["top_score"] is None
+    assert body["confidence"]["signal"] == "none"
+    assert body["verification"]["status"] == "failed"
+
+
 def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):
+    """Expose BOQ sync stubs as 501 responses."""
     monkeypatch.setattr(
         erp._BOQ_ADAPTER,
         "sync_boq",
@@ -118,6 +148,7 @@ def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):
 
 
 def test_export_streams_generated_file(tmp_path: Path, monkeypatch):
+    """Stream generated BOQ exports with the expected media type."""
     export_path = tmp_path / "boq-proj-1.csv"
     export_path.write_text("id,name\n1,Planting\n")
     monkeypatch.setattr(erp._COST_EXPORT, "export_boq", lambda project_id, fmt="xlsx": str(export_path))
