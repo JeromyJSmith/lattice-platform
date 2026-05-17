@@ -18,6 +18,17 @@ type SidecarRunBody = {
   };
 };
 
+type CapabilityProofResult = {
+  ok: boolean;
+  sidecar_ok: boolean;
+  capability_id: string;
+  artifact: string;
+  stdout: string;
+  stderr: string;
+  verification: NonNullable<SidecarRunBody["verification"]>;
+  report: BenchmarkReport;
+};
+
 type BenchmarkReport = {
   benchmark_name: string;
   purpose: string;
@@ -89,24 +100,32 @@ export function buildBenchmarkReport(
   expectedArtifact?: string,
 ): BenchmarkReport {
   const success = body.ok === true;
+  const returnedCapabilityId =
+    typeof body.capability_id === "string" && body.capability_id.length > 0
+      ? body.capability_id
+      : undefined;
   const artifact =
     typeof body.artifact === "string" && body.artifact.length > 0
       ? body.artifact
       : undefined;
   const verificationStatus = body.verification?.status;
   const verifierReturnedZero = body.verification?.returncode === 0;
+  const capabilityMatchesRequested = returnedCapabilityId === capabilityId;
   const artifactMatchesRequested =
     typeof expectedArtifact !== "string" || artifact === expectedArtifact;
   const verifierPassed =
     verificationStatus === "passed" &&
     verifierReturnedZero &&
+    capabilityMatchesRequested &&
     typeof artifact === "string" &&
     artifactMatchesRequested;
   const verifierReviewOnly =
     verificationStatus === "review_required" ||
     verificationStatus === "unverified" ||
     (verificationStatus === "passed" && !verifierPassed);
-  const proofIdentityGap =
+  const capabilityIdentityGap =
+    verificationStatus === "passed" && !capabilityMatchesRequested;
+  const artifactIdentityGap =
     verificationStatus === "passed" && !artifactMatchesRequested;
   const trust =
     success && verifierPassed
@@ -129,7 +148,7 @@ export function buildBenchmarkReport(
       {
         capability: capabilityId,
         expected:
-          "sidecar execution succeeds, verifier returns zero, and the proof artifact matches the requested browser run path",
+          "sidecar execution succeeds, verifier returns zero, and both the returned capability id and proof artifact match the requested browser run",
       },
     ],
     provenance: {
@@ -149,7 +168,11 @@ export function buildBenchmarkReport(
       message:
         success && verifierPassed
           ? "Sidecar execution and verifier both passed."
-          : proofIdentityGap
+          : capabilityIdentityGap && artifactIdentityGap
+            ? "Sidecar execution completed, but both the returned capability id and proof artifact path did not match the requested browser run."
+          : capabilityIdentityGap
+            ? "Sidecar execution completed, but the returned capability id did not match the requested capability."
+          : artifactIdentityGap
             ? "Sidecar execution completed, but the proof artifact path did not match the requested browser run output."
           : verifierReviewOnly
             ? "Sidecar execution completed, but verification is review-only or unverified."
@@ -178,11 +201,33 @@ export function buildBenchmarkReport(
             output: body.verification?.stdout,
             failure_mode: verifierPassed
               ? null
-              : body.verification?.stderr || "verifier failed",
+              : capabilityIdentityGap
+                ? "returned capability id mismatched requested capability"
+                : artifactIdentityGap
+                  ? "proof artifact path mismatched requested browser run output"
+                  : body.verification?.stderr || "verifier failed",
           },
         ],
       },
     ],
+  };
+}
+
+export function buildCapabilityProofResult(
+  body: SidecarRunBody,
+  capabilityId: string,
+  expectedArtifact?: string,
+): CapabilityProofResult {
+  const report = buildBenchmarkReport(body, capabilityId, expectedArtifact);
+  return {
+    ok: report.verification.status === "passed",
+    sidecar_ok: body.ok === true,
+    capability_id: body.capability_id ?? capabilityId,
+    artifact: body.artifact ?? expectedArtifact ?? "",
+    stdout: body.stdout ?? "",
+    stderr: body.stderr ?? "",
+    verification: body.verification ?? {},
+    report,
   };
 }
 
@@ -221,13 +266,5 @@ async function runCapabilityById(capabilityId: string) {
   }
 
   const body = response.body as SidecarRunBody;
-  return {
-    ok: body.ok === true,
-    capability_id: body.capability_id ?? capabilityId,
-    artifact: body.artifact ?? output,
-    stdout: body.stdout ?? "",
-    stderr: body.stderr ?? "",
-    verification: body.verification ?? {},
-    report: buildBenchmarkReport(body, capabilityId, output),
-  };
+  return buildCapabilityProofResult(body, capabilityId, output);
 }

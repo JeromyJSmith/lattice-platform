@@ -50,6 +50,13 @@ type BenchmarkReport = {
   models: ModelReport[];
 };
 
+type CodebaseContextProofResult = {
+  ok: boolean;
+  sidecar_ok: boolean;
+  artifact?: string;
+  report: BenchmarkReport;
+};
+
 const SAMPLE_REPORT: BenchmarkReport = {
   benchmark_name: "Meta-Harness proof-run gate",
   purpose:
@@ -215,14 +222,14 @@ function HarnessBenchmarksPage() {
                 message: "Running registered FastAPI sidecar job...",
               });
               try {
-                const result = await runCodebaseContextProof();
-                setReport(result.report as BenchmarkReport);
+                const result =
+                  (await runCodebaseContextProof()) as CodebaseContextProofResult;
+                const proofPassed = result.report.verification.status === "passed";
+                setReport(result.report);
                 setPlaybackStep(null);
                 setRunStatus({
-                  state: result.ok ? "passed" : "failed",
-                  message: result.ok
-                    ? "Golden Path 001 passed through the sidecar."
-                    : "Golden Path 001 returned a failed result.",
+                  state: proofPassed ? "passed" : "failed",
+                  message: result.report.verification.message,
                   artifact: result.artifact,
                 });
               } catch (error) {

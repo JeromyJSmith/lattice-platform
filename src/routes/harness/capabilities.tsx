@@ -29,7 +29,14 @@ type RunResult = {
 
 type CapabilityProofResult = {
   ok: boolean;
+  sidecar_ok: boolean;
   artifact?: string;
+  report: {
+    verification: {
+      status: "unverified" | "passed" | "failed";
+      message: string;
+    };
+  };
 };
 
 type CapabilityFilter =
@@ -100,11 +107,12 @@ function HarnessCapabilitiesPage() {
       const result = (await runCapabilityProof({
         data: { capabilityId: capability.id },
       })) as CapabilityProofResult;
+      const proofPassed = result.report.verification.status === "passed";
       setRunResults((current) => ({
         ...current,
         [capability.id]: {
-          state: result.ok ? "passed" : "failed",
-          message: result.ok ? "Proof passed." : "Proof returned a failure.",
+          state: proofPassed ? "passed" : "failed",
+          message: result.report.verification.message,
           artifact: result.artifact,
         },
       }));
