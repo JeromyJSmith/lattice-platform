@@ -48,6 +48,26 @@ capabilities:
       - admin dashboard
     proof_evidence: []
 
+  - id: boq-read
+    surface: route
+    name: OpenConstructionERP BOQ read
+    state: ACTIVE
+    description: Serve GET /v1/erp/boq/{project_id} through the sidecar and fail closed when the upstream ERP BOQ contract or verifier data is not ready.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/erp/boq-adapter.py
+      - pixeltable/service/routes/erp.py
+      - scripts/verify-erp-boq-read.py
+    invoked_by:
+      - GET /v1/erp/boq/{project_id}
+      - future /admin DDC dashboard
+    serves:
+      - OpenConstructionERP integration
+      - BOQ retrieval
+      - verifier-backed promotion evidence
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-17-boq-read-proof.json
+
   - id: cwicr-qdrant-cost-search
     surface: service_adapter
     name: CWICR Qdrant cost search

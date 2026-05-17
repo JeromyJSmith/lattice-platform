@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import httpx
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -175,6 +176,42 @@ def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):
     )
     assert response.status_code == 501
     assert response.json()["detail"] == "boq sync pending"
+
+
+def test_boq_read_strips_project_id_before_adapter_call(tmp_path: Path, monkeypatch):
+    """Normalize the project id before calling the BOQ read adapter."""
+    seen: list[str] = []
+
+    def _fetch(project_id: str):
+        seen.append(project_id)
+        return {
+            "ok": True,
+            "project_id": project_id,
+            "erp_base": "http://localhost:8080",
+            "boq": {"items": []},
+        }
+
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "fetch_boq", _fetch)
+    client = TestClient(_app(tmp_path))
+    response = client.get("/v1/erp/boq/%20proj-1%20")
+    assert response.status_code == 200
+    assert response.json()["project_id"] == "proj-1"
+    assert seen == ["proj-1"]
+
+
+def test_boq_read_surfaces_upstream_404(tmp_path: Path, monkeypatch):
+    """Preserve upstream BOQ 404s with a concrete blocker message."""
+    request = httpx.Request("GET", "http://localhost:8080/api/boq/proj-404")
+    response = httpx.Response(404, request=request, json={"detail": "Not Found"})
+
+    def _fetch(project_id: str):
+        raise httpx.HTTPStatusError("Not Found", request=request, response=response)
+
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "fetch_boq", _fetch)
+    client = TestClient(_app(tmp_path))
+    route_response = client.get("/v1/erp/boq/proj-404")
+    assert route_response.status_code == 404
+    assert route_response.json()["detail"] == "upstream ERP returned 404 for /api/boq/proj-404 (project_id=proj-404)"
 
 
 def test_export_streams_generated_file(tmp_path: Path, monkeypatch):

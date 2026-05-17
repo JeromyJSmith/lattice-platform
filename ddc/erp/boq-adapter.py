@@ -49,16 +49,27 @@ def sync_boq(project_id: str, pxt: Any | None = None) -> dict:
     # return {"updated": len(rows), "project_id": project_id}
 
 
+def _normalize_boq_payload(payload: Any) -> dict[str, Any] | list[Any]:
+    if isinstance(payload, dict | list):
+        return payload
+    raise RuntimeError("OpenConstructionERP BOQ response must be a JSON object or array")
+
+
 def fetch_boq(project_id: str) -> dict:
+    """Return one project's current BOQ document from OpenConstructionERP."""
+    normalized_project_id = project_id.strip()
     with httpx.Client(base_url=ERP_BASE, timeout=30.0) as client:
-        response = client.get(f"/api/boq/{project_id}")
+        response = client.get(f"/api/boq/{normalized_project_id}")
         response.raise_for_status()
-        payload = response.json()
+        try:
+            payload = response.json()
+        except ValueError as exc:
+            raise RuntimeError("OpenConstructionERP BOQ response was not valid JSON") from exc
     return {
         "ok": True,
-        "project_id": project_id,
+        "project_id": normalized_project_id,
         "erp_base": ERP_BASE,
-        "boq": payload,
+        "boq": _normalize_boq_payload(payload),
     }
 
 

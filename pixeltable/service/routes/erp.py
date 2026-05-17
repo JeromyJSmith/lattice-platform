@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
+import httpx
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
 
@@ -57,6 +58,32 @@ def _as_http_error(exc: Exception, detail: str) -> HTTPException:
     if isinstance(exc, NotImplementedError):
         return HTTPException(status_code=501, detail=str(exc))
     return HTTPException(status_code=502, detail=f"{detail}: {exc!s}")
+
+
+def _normalize_project_id(value: Any) -> str:
+    if not isinstance(value, str):
+        raise HTTPException(status_code=400, detail="project_id required")
+    project_id = value.strip()
+    if not project_id:
+        raise HTTPException(status_code=400, detail="project_id required")
+    return project_id
+
+
+def _as_boq_read_http_error(exc: Exception, project_id: str) -> HTTPException:
+    if isinstance(exc, NotImplementedError):
+        return HTTPException(status_code=501, detail=str(exc))
+    if isinstance(exc, httpx.HTTPStatusError):
+        request_path = exc.request.url.path
+        if exc.response.status_code == 404:
+            return HTTPException(
+                status_code=404,
+                detail=f"upstream ERP returned 404 for {request_path} (project_id={project_id})",
+            )
+        return HTTPException(
+            status_code=502,
+            detail=f"boq fetch failed: upstream ERP returned {exc.response.status_code} for {request_path}",
+        )
+    return _as_http_error(exc, "boq fetch failed")
 
 
 def _coerce_score(row: dict[str, Any]) -> float | None:
@@ -254,12 +281,11 @@ def post_boq(
 @router.get("/boq/{project_id}")
 def get_boq(project_id: str):
     """Fetch the ERP BOQ snapshot for one project."""
-    if not project_id.strip():
-        raise HTTPException(status_code=400, detail="project_id required")
+    normalized_project_id = _normalize_project_id(project_id)
     try:
-        result = _BOQ_ADAPTER.fetch_boq(project_id)
+        result = _BOQ_ADAPTER.fetch_boq(normalized_project_id)
     except Exception as exc:
-        raise _as_http_error(exc, "boq fetch failed") from exc
+        raise _as_boq_read_http_error(exc, normalized_project_id) from exc
     return result
 
 

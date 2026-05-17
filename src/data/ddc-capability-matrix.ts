@@ -176,8 +176,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "GET /v1/erp/boq/{project_id}",
-    currentState: "Route contract landing",
-    gap: "Return project BOQ documents from OpenConstructionERP.",
+    currentState: "Verifier-backed route; live proof currently failing",
+    gap: "localhost:8080 returns 404 for GET /api/boq/{project_id}; live ERP BOQ contract or verifier project data is not ready.",
     priority: "high",
     wave: "wave-2",
     validation: "Project BOQ round-trips cleanly through the sidecar endpoint.",

@@ -104,8 +104,8 @@ capabilities:
     capability: BOQ retrieval
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: GET /v1/erp/boq/{project_id}
-    current_state: Planned only
-    gap: Return project BOQ documents from OpenConstructionERP
+    current_state: verifier-backed route; live proof currently failing
+    gap: localhost:8080 returns 404 for GET /api/boq/{project_id}; live ERP BOQ contract or verifier project data is not ready
     priority: high
     wave: wave-2
     validation: Project BOQ round-trips cleanly through the sidecar endpoint

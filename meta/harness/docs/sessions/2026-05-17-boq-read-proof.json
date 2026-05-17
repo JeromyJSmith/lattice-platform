@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capability_id": "boq-read",
+  "job_id": "boq-read",
+  "run_id": "boq-read-2026-05-17T23-46-34Z",
+  "started_at": "2026-05-17T23:46:34Z",
+  "completed_at": "2026-05-17T23:46:35Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "../scripts/verify-erp-boq-read.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/pixeltable",
+  "artifact": "meta/harness/docs/sessions/2026-05-17-boq-read-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "OpenConstructionERP BOQ probe returned 404 for http://localhost:8080/api/boq/ddc-boq-proof-project; live dependency or verifier project data is not ready.\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "OpenConstructionERP BOQ probe returned 404 for http://localhost:8080/api/boq/ddc-boq-proof-project; live dependency or verifier project data is not ready.\n"
+  },
+  "metrics": {
+    "latency_ms": 301,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}
