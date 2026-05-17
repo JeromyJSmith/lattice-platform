@@ -23,6 +23,7 @@
   ],
   "metrics": [
     "research_grounding",
+    "document_contract",
     "schema_validity",
     "example_validation",
     "repair_task_count",

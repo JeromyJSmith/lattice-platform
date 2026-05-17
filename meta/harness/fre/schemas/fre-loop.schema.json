@@ -77,11 +77,12 @@
     "metrics": {
       "type": "array",
       "uniqueItems": true,
-      "minItems": 5,
+      "minItems": 6,
       "items": {
         "type": "string",
         "enum": [
           "research_grounding",
+          "document_contract",
           "schema_validity",
           "example_validation",
           "repair_task_count",

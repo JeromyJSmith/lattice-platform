@@ -16,6 +16,7 @@ DEFAULT_RUN_ID = "RUN-2026-05-16-0001"
 
 REQUIRED_METRICS = {
     "research_grounding",
+    "document_contract",
     "schema_validity",
     "example_validation",
     "repair_task_count",
@@ -830,6 +831,7 @@ def compare_to_previous_run() -> dict[str, Any] | None:
 
 
 def evaluate_data() -> dict[str, Any]:
+    document_status = document_contract_status()
     schema_result = check_all_schemas()
     example_result = validate_examples_data()
     mapping_status = mapping_contract_status()
@@ -845,6 +847,13 @@ def evaluate_data() -> dict[str, Any]:
             "blocking": True,
             "reason": "Research grounding and provenance exist before schema execution and scoring.",
             "evidence": research_status["evidence"],
+        },
+        {
+            "gate_id": "document_contract",
+            "status": document_status["status"],
+            "blocking": True,
+            "reason": "Human-facing markdown contract docs parse cleanly with required front matter and checklist-style bottom matter.",
+            "evidence": ["document-contract.json", "GOAL.md", "GoldenPath.md", "skills/fre-research-ratchet/SKILL.md"],
         },
         {
             "gate_id": "schema_validity",
@@ -894,6 +903,11 @@ def evaluate_data() -> dict[str, Any]:
         1 if mapping_status["conflicts"] else 2
     )
     deterministic_execution = 2 if determinism["status"] == "pass" else 0
+    document_contract_quality = (
+        2
+        if document_status["status"] == "pass" and document_status["front_matter_count"] >= 1 and document_status["bottom_matter_count"] >= 1
+        else 0
+    )
     evidence_quality = 2 if all(artifact_status.values()) and fixture_status["status"] == "pass" else (
         1 if artifact_status else 0
     )
@@ -905,14 +919,15 @@ def evaluate_data() -> dict[str, Any]:
         "lattice_vocabulary_compatibility": lattice_vocabulary_compatibility,
         "real_artifact_usefulness": 2 if fixture_status["status"] == "pass" else 0,
         "integration_restraint": 2,
+        "document_contract_quality": document_contract_quality,
         "evidence_quality": evidence_quality,
         "restart_readiness": restart_readiness,
     }
     total_score = sum(scores.values())
 
     if blocking_failures:
-        decision = "ADOPT WITH AMENDMENTS" if total_score >= 9 else "REJECT"
-    elif total_score == 16:
+        decision = "REJECT"
+    elif total_score == 18:
         decision = "ADOPT"
     elif total_score >= 9:
         decision = "ADOPT WITH AMENDMENTS"
@@ -933,8 +948,9 @@ def evaluate_data() -> dict[str, Any]:
             "required_metrics": sorted(REQUIRED_METRICS),
             "metrics": {
                 "research_grounding": gates[0]["status"],
-                "schema_validity": gates[1]["status"],
-                "example_validation": gates[2]["status"],
+                "document_contract": gates[1]["status"],
+                "schema_validity": gates[2]["status"],
+                "example_validation": gates[3]["status"],
                 "repair_task_count": len(repairs),
                 "promotion_readiness": decision,
             },
