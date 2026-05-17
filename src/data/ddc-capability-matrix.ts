@@ -86,7 +86,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "/home/runner/work/lattice-platform/lattice-platform/ddc/skills/",
     targetSurface:
       "/home/runner/work/lattice-platform/lattice-platform/skills/ddc/",
-    currentState: "Docs only; sync pending",
+    currentState: "Local corpus harvested into skills/ddc",
     gap: "Pull the upstream skill corpus into the local skill tree.",
     priority: "high",
     wave: "wave-1",
@@ -99,7 +99,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/contracts/bridge-semantic.v1.yaml",
     targetSurface: "lattice/bridge/semantic/semantic_sidecars",
-    currentState: "Semantic infra exists; DDC seed missing",
+    currentState: "DDC SKILL corpus seeded into semantic_sidecars",
     gap: "Ingest skill documents into semantic_sidecars with embeddings.",
     priority: "high",
     wave: "wave-1",
@@ -125,7 +125,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh",
     targetSurface: "Qdrant collection cwicr",
-    currentState: "Shell stub",
+    currentState: "Idempotent seed script loads local sample collection into Qdrant",
     gap: "Download, embed, batch load, and verify the CWICR collection.",
     priority: "high",
     wave: "wave-1",
@@ -137,7 +137,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py",
     targetSurface: "POST /v1/erp/cost-search",
-    currentState: "Python stub",
+    currentState: "CLI and ERP endpoint return region-filtered semantic matches",
     gap: "Execute vector search and return ranked cost matches.",
     priority: "high",
     wave: "wave-1",
@@ -273,7 +273,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/n8n/workflows/",
     targetSurface: "upstream workflow JSON mirrors",
-    currentState: "Docs only",
+    currentState: "Workflow packs mirrored under ddc/n8n/workflows",
     gap: "Pull priority DDC workflow exports into the local workspace.",
     priority: "medium",
     wave: "wave-1",
@@ -334,7 +334,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py",
     targetSurface: "lattice/execution/evidence and runtime ledger",
-    currentState: "Schema support exists; events not emitted",
+    currentState: "Section events emitted from ERP/CWICR routes",
     gap: "Emit DDC skill, ERP, and CWICR audit events.",
     priority: "high",
     wave: "wave-1",

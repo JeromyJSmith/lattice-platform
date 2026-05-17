@@ -41,7 +41,7 @@ capabilities:
     capability: Skill corpus harvest
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/skills/
     target_surface: /home/runner/work/lattice-platform/lattice-platform/skills/ddc/
-    current_state: docs only; sync pending
+    current_state: local corpus harvested into skills/ddc
     gap: Pull the upstream skill corpus into the local skill tree
     priority: high
     wave: wave-1
@@ -50,7 +50,7 @@ capabilities:
     capability: Skill semantic indexing
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/contracts/bridge-semantic.v1.yaml
     target_surface: lattice/bridge/semantic/semantic_sidecars
-    current_state: semantic infra exists; DDC seed missing
+    current_state: DDC SKILL corpus seeded into semantic_sidecars
     gap: Ingest skill documents into semantic_sidecars with embeddings
     priority: high
     wave: wave-1
@@ -68,7 +68,7 @@ capabilities:
     capability: CWICR dataset seeding
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh
     target_surface: Qdrant collection cwicr
-    current_state: shell stub
+    current_state: idempotent seed script loads local sample collection into Qdrant
     gap: Download, embed, batch load, and verify the CWICR collection
     priority: high
     wave: wave-1
@@ -77,7 +77,7 @@ capabilities:
     capability: CWICR semantic cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
     target_surface: POST /v1/erp/cost-search
-    current_state: python stub
+    current_state: CLI and ERP endpoint return region-filtered semantic matches
     gap: Execute vector search and return ranked cost matches
     priority: high
     wave: wave-1
@@ -176,7 +176,7 @@ capabilities:
     capability: n8n workflow harvest
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/workflows/
     target_surface: upstream workflow JSON mirrors
-    current_state: docs only
+    current_state: workflow packs mirrored under ddc/n8n/workflows
     gap: Pull priority DDC workflow exports into the local workspace
     priority: medium
     wave: wave-1
@@ -221,7 +221,7 @@ capabilities:
     capability: DDC evidence and logging
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
     target_surface: lattice/execution/evidence and runtime ledger
-    current_state: schema support exists; events not emitted
+    current_state: section_events rows emitted from ERP/CWICR routes
     gap: Emit DDC skill, ERP, and CWICR audit events
     priority: high
     wave: wave-1

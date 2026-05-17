@@ -1,0 +1,24 @@
+{
+  "name": "n8n-workflow-automation",
+  "version": "2.0.0",
+  "description": "Build no-code/low-code automation workflows for construction using n8n. Automate data extraction, cost estimation, report generation, and system integrations without writing code.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

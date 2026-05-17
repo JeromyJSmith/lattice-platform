@@ -1,7 +1,21 @@
-# DDC Skills (adapted)
+# DDC Skill Corpus Mirror
 
-This directory mirrors the 221 `SKILL.md` patterns from the DDC_Skills repository, lightly adapted for LATTICE: paths rewritten to LATTICE conventions, references to DDC-specific tooling replaced with LATTICE equivalents (Pixeltable, FastAPI sidecar, etc.).
+This directory mirrors the upstream DDC skill corpus from:
 
-Source of truth on first sync: `~/DDC_Skills` or wherever you locally cloned that repo. Run the sync via the future `scripts/sync-ddc-skills.ts` (open work — see backlog).
+- `projects/DDC_Skills_for_AI_Agents_in_Construction-main`
 
-**Rule:** keep the skill BODY identical to upstream where possible; only path/tool references change. That way upstream improvements are easy to merge in.
+The mirror is refreshed with:
+
+```bash
+uv run scripts/harvest_ddc_assets.py --skills-only
+```
+
+Current structure keeps upstream top-level groups:
+
+- `1_DDC_Toolkit/`
+- `2_DDC_Book/`
+- `3_DDC_Insights/`
+- `4_DDC_Curated/`
+- `5_DDC_Innovative/`
+
+Each skill package contributes an upstream `SKILL.md` that can be indexed and searched by LATTICE semantic services.

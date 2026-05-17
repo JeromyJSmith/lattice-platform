@@ -1,0 +1,24 @@
+{
+  "name": "n8n-cost-estimation",
+  "version": "2.0.0",
+  "description": "Build n8n pipeline for automated cost estimation from Revit/IFC using DDC CWICR database and LLM classification.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "BIM",
+    "cost-management",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

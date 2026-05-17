@@ -1,0 +1,22 @@
+{
+  "name": "n8n-photo-report",
+  "version": "2.0.0",
+  "description": "Automate construction photo report generation using n8n with AI-powered image analysis.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

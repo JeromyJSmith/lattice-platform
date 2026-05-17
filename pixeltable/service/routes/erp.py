@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import importlib.util
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
@@ -52,6 +54,24 @@ def _as_http_error(exc: Exception, detail: str) -> HTTPException:
     return HTTPException(status_code=502, detail=f"{detail}: {exc!s}")
 
 
+def _emit_ddc_event(pxt: Any, event_type: str, payload: dict[str, Any]) -> None:
+    try:
+        table = pxt.get_table("lattice/harness/section_events")
+        table.insert(
+            [
+                {
+                    "event_id": str(uuid4()),
+                    "section": "ddc",
+                    "event_type": event_type,
+                    "payload": payload,
+                    "occurred_at": datetime.now(timezone.utc),
+                }
+            ]
+        )
+    except Exception as exc:  # best-effort telemetry only
+        log.warning("failed to emit ddc section event: %s", exc)
+
+
 @router.post("/boq")
 def post_boq(
     body: dict[str, Any] = Body(...),
@@ -68,19 +88,29 @@ def post_boq(
             result = _BOQ_ADAPTER.sync_boq(project_id, pxt=pxt)
         except Exception as exc:
             raise _as_http_error(exc, "boq sync failed") from exc
+        _emit_ddc_event(
+            pxt,
+            "ddc.erp.boq.sync",
+            {"project_id": project_id, "ok": True},
+        )
         return {"ok": True, "project_id": project_id, "result": result}
 
     return with_idempotency(store, idem_key, do)
 
 
 @router.get("/boq/{project_id}")
-def get_boq(project_id: str):
+def get_boq(project_id: str, pxt: Any = Depends(get_pxt)):
     if not project_id.strip():
         raise HTTPException(status_code=400, detail="project_id required")
     try:
         result = _BOQ_ADAPTER.fetch_boq(project_id)
     except Exception as exc:
         raise _as_http_error(exc, "boq fetch failed") from exc
+    _emit_ddc_event(
+        pxt,
+        "ddc.erp.boq.fetch",
+        {"project_id": project_id, "ok": True},
+    )
     return result
 
 
@@ -103,7 +133,7 @@ def get_export(project_id: str, fmt: str = Query(default="xlsx", pattern="^(xlsx
 
 
 @router.post("/cost-search")
-def post_cost_search(body: dict[str, Any] = Body(...)):
+def post_cost_search(body: dict[str, Any] = Body(...), pxt: Any = Depends(get_pxt)):
     description = (body.get("description") or "").strip()
     if not description:
         raise HTTPException(status_code=400, detail="description required")
@@ -113,12 +143,18 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
         rows = _COST_SEARCH.search(description, region, top)
     except Exception as exc:
         raise _as_http_error(exc, "cost search failed") from exc
+    _emit_ddc_event(
+        pxt,
+        "ddc.cwicr.cost-search",
+        {"description": description, "region": region, "top": top, "rows": len(rows)},
+    )
     return {"ok": True, "description": description, "region": region, "top": top, "rows": rows}
 
 
 @router.post("/phases")
 def post_phases(
     body: dict[str, Any] = Body(...),
+    pxt: Any = Depends(get_pxt),
     store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
@@ -131,6 +167,11 @@ def post_phases(
             result = _PHASE_ADAPTER.sync_phases(project_id)
         except Exception as exc:
             raise _as_http_error(exc, "phase sync failed") from exc
+        _emit_ddc_event(
+            pxt,
+            "ddc.erp.phase.sync",
+            {"project_id": project_id, "ok": True},
+        )
         return {"ok": True, "project_id": project_id, "result": result}
 
     return with_idempotency(store, idem_key, do)
