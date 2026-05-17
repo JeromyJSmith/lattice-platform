@@ -59,16 +59,20 @@ capabilities:
       - ddc/cwicr/INSTALL.md
       - ddc/cwicr/seed-qdrant.sh
       - ddc/cwicr/cost-search.py
+      - pixeltable/service/routes/erp.py
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-cwicr-cost-search.py
     invoked_by:
-      - future POST /v1/erp/cost-search
-      - future CWICR cost-search proof fixture
-      - future /admin DDC dashboard
+      - POST /v1/erp/cost-search
+      - POST /v1/harness/capabilities/runs
+      - /admin DDC dashboard
     serves:
       - CWICR cost lookup
       - deck.gl cost overlay
       - BOQ unit cost enrichment
       - admin dashboard
-    proof_evidence: []
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-17-cwicr-qdrant-cost-search-proof.json
 
   - id: ddc-n8n-workflow-pattern-extraction
     surface: workflow_reference

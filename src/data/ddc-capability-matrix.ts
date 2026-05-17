@@ -137,12 +137,12 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py",
     targetSurface: "POST /v1/erp/cost-search",
-    currentState: "Python stub",
-    gap: "Execute vector search and return ranked cost matches.",
+    currentState: "Verifier-backed route; live proof currently failing",
+    gap: "localhost:6333 is not serving the expected Qdrant /health contract for live proof.",
     priority: "high",
     wave: "wave-1",
     validation:
-      "Element descriptions return region-filtered ranked CWICR matches.",
+      "Element descriptions return region-filtered ranked CWICR matches with passed verification.",
   },
   {
     id: "ifc-cost-enrichment",

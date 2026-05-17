@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "capability_id": "cwicr-qdrant-cost-search",
+  "job_id": "cwicr-qdrant-cost-search",
+  "run_id": "cwicr-qdrant-cost-search-2026-05-17T23-28-26.680Z",
+  "started_at": "2026-05-17T23:28:26Z",
+  "completed_at": "2026-05-17T23:28:26Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "scripts/verify-cwicr-cost-search.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-17-cwicr-qdrant-cost-search-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "Qdrant health check failed: Client error '404 Not Found' for url 'http://localhost:6333/health'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "Qdrant health check failed: Client error '404 Not Found' for url 'http://localhost:6333/health'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\n"
+  },
+  "metrics": {
+    "latency_ms": 308,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

@@ -47,6 +47,36 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
     assert body["rows"][0]["item_id"] == "cwicr-1"
     assert body["confidence"]["signal"] == "high"
     assert body["verification"]["status"] == "passed"
+    assert body["trust_contract"]["surface"] == "POST /v1/erp/cost-search"
+    assert body["trust_contract"]["status"] == "passed"
+    assert body["trust_contract"]["thresholds"]["verified_gte"] == erp.MIN_RELIABLE_SCORE
+
+
+def test_cost_search_rejects_invalid_top_as_bad_request(tmp_path: Path):
+    """Reject invalid top values at the route boundary instead of surfacing adapter errors."""
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 0},
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == f"top must be between 1 and {erp.MAX_COST_SEARCH_TOP}"
+
+
+def test_cost_search_rejects_malformed_adapter_rows(tmp_path: Path, monkeypatch):
+    """Fail closed when the adapter returns rows that do not satisfy the route contract."""
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [{"item_id": "cwicr-1"}],
+    )
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 3},
+    )
+    assert response.status_code == 502
+    assert response.json()["detail"] == "cost search returned empty name"
 
 
 def test_cost_search_marks_review_only_matches(tmp_path: Path, monkeypatch):

@@ -85,6 +85,17 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "endpoint": "POST /v1/harness/capabilities/runs",
         "command": ["uv", "run", "python", "scripts/check-python-docstrings.py"],
         "expected_returncode": 0,
+        "timeout_seconds": 60,
+    },
+    "cwicr-qdrant-cost-search": {
+        "kind": "script_exit_code",
+        "action_id": "run-cwicr-qdrant-cost-search",
+        "job_id": "cwicr-qdrant-cost-search",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
     }
 }
 
@@ -433,7 +444,7 @@ def run_contract(capability: dict[str, Any]) -> dict[str, Any] | None:
         "endpoint": "/v1/harness/capabilities/runs",
         "request": {
             "capability_id": capability_id,
-            "timeout_seconds": 60,
+            "timeout_seconds": int(action.get("timeout_seconds", 60)),
         },
         "command": action.get("command"),
         "returns": {
@@ -707,7 +718,7 @@ def run_script_exit_code_capability(capability_id: str, body: dict[str, Any]) ->
     if not isinstance(command, list) or not all(isinstance(item, str) for item in command):
         raise HTTPException(status_code=500, detail=f"invalid command contract for {capability_id}")
 
-    timeout_seconds = validate_timeout_seconds(body)
+    timeout_seconds = validate_timeout_seconds(body, default=int(action.get("timeout_seconds", 60)))
     root = repo_root()
     output = resolve_repo_path(
         root,

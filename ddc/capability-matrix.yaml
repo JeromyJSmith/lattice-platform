@@ -77,11 +77,11 @@ capabilities:
     capability: CWICR semantic cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
     target_surface: POST /v1/erp/cost-search
-    current_state: python stub
-    gap: Execute vector search and return ranked cost matches
+    current_state: verifier-backed route; live proof currently failing
+    gap: localhost:6333 is not serving the expected Qdrant /health contract for live proof
     priority: high
     wave: wave-1
-    validation: Element descriptions return region-filtered ranked CWICR matches
+    validation: Element descriptions return region-filtered ranked CWICR matches with passed verification
   - id: ifc-cost-enrichment
     capability: IFC cost enrichment
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
