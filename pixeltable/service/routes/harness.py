@@ -134,7 +134,11 @@ SAMPLE_BENCHMARK_REPORT: dict[str, Any] = {
 }
 
 
-def normalize_report_provenance(report: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def normalize_report_provenance(
+    report: dict[str, Any],
+    *,
+    ingest_source: str = "uploaded",
+) -> tuple[dict[str, Any], dict[str, Any]]:
     """Normalize benchmark provenance and verification into an explicit trust contract."""
     provenance = report.get("provenance")
     verification = report.get("verification")
@@ -152,7 +156,7 @@ def normalize_report_provenance(report: dict[str, Any]) -> tuple[dict[str, Any],
     verification_status = verification.get("status")
     verification_message = verification.get("message")
 
-    if source == "sample":
+    if ingest_source == "sample" or source == "sample":
         normalized_provenance = {
             "source": "sample",
             "trust": "synthetic",
@@ -164,9 +168,13 @@ def normalize_report_provenance(report: dict[str, Any]) -> tuple[dict[str, Any],
         }
         return normalized_provenance, normalized_verification
 
-    if source in {"sidecar_live_run", "sidecar_import"} and verification_status in {"passed", "failed"}:
+    if (
+        ingest_source in {"sidecar_live_run", "sidecar_import"}
+        and source in {"sidecar_live_run", "sidecar_import"}
+        and verification_status in {"passed", "failed"}
+    ):
         normalized_provenance = {
-            "source": source,
+            "source": ingest_source,
             "trust": "live_verified" if verification_status == "passed" else "live_failed",
             "label": str(
                 label
@@ -191,7 +199,7 @@ def normalize_report_provenance(report: dict[str, Any]) -> tuple[dict[str, Any],
         return normalized_provenance, normalized_verification
 
     normalized_provenance = {
-        "source": "uploaded",
+        "source": "uploaded" if ingest_source == "uploaded" else ingest_source,
         "trust": "uploaded_unverified",
         "label": str(label or "Uploaded unverified report"),
     }
@@ -268,12 +276,16 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
     statuses: list[dict[str, str]] = []
     unreadable: list[str] = []
     unverified_json: list[str] = []
+    non_json: list[str] = []
     for candidate in proof_paths:
         try:
             path = resolve_repo_path(root, candidate)
         except HTTPException:
             continue
-        if not path.exists() or path.suffix != ".json":
+        if not path.exists():
+            continue
+        if path.suffix != ".json":
+            non_json.append(candidate)
             continue
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
@@ -283,7 +295,8 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
         verification = payload.get("verification")
         if isinstance(verification, dict):
             status = verification.get("status")
-            if isinstance(status, str) and status:
+            returncode = verification.get("returncode")
+            if isinstance(status, str) and status and isinstance(returncode, int):
                 statuses.append({"path": candidate, "status": status})
                 continue
         unverified_json.append(candidate)
@@ -306,6 +319,7 @@ def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, A
         "unreadable": unreadable,
         "unverified_json": unverified_json,
         "unknown_status": unknown_status,
+        "non_json": non_json,
     }
 
 
@@ -418,6 +432,7 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
         and not proof_verification["failed"]
         and not proof_verification["review_required"]
         and not proof_verification["unreadable"]
+        and not proof_verification["non_json"]
     ):
         color = "green"
         label = "pass"
@@ -430,6 +445,10 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
         color = "red"
         label = "fail"
         troubleshooting = "Proof evidence exists, but at least one artifact is unreadable or malformed JSON."
+    elif state == "ACTIVE" and proof_verification["non_json"]:
+        color = "amber"
+        label = "review-required"
+        troubleshooting = "Proof evidence exists, but at least one artifact is non-JSON and cannot be verifier-backed proof."
     elif state == "ACTIVE" and proof_verification["failed"]:
         color = "red"
         label = "fail"
@@ -732,7 +751,14 @@ def run_single_file_agent(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
 @router.get("/benchmarks/sample-report")
 def get_benchmark_sample_report() -> dict[str, Any]:
     """Return a Benchy-compatible sample report for console rendering."""
-    return {"ok": True, "report": SAMPLE_BENCHMARK_REPORT}
+    provenance, verification = normalize_report_provenance(
+        SAMPLE_BENCHMARK_REPORT,
+        ingest_source="sample",
+    )
+    report = dict(SAMPLE_BENCHMARK_REPORT)
+    report["provenance"] = provenance
+    report["verification"] = verification
+    return {"ok": True, "report": report}
 
 
 @router.post("/benchmarks/reports/validate")
@@ -759,7 +785,10 @@ def validate_benchmark_report(body: dict[str, Any] = Body(...)) -> dict[str, Any
             raise HTTPException(status_code=400, detail=f"models[{index}].results must be a list")
         run_count += len(results)
 
-    normalized_provenance, normalized_verification = normalize_report_provenance(report)
+    normalized_provenance, normalized_verification = normalize_report_provenance(
+        report,
+        ingest_source="uploaded",
+    )
     normalized_report = dict(report)
     normalized_report["provenance"] = normalized_provenance
     normalized_report["verification"] = normalized_verification

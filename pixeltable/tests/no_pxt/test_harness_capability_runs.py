@@ -122,6 +122,7 @@ def test_diagnostic_status_marks_failed_verification_red(tmp_path: Path) -> None
                 "verification": {
                     "status": "failed",
                     "message": "Top CWICR match is too weak.",
+                    "returncode": 1,
                 }
             }
         ),
@@ -181,3 +182,69 @@ def test_diagnostic_status_marks_malformed_json_failed(tmp_path: Path) -> None:
     assert status["proof_verification"]["unreadable"] == [
         "meta/harness/docs/sessions/cwicr-proof.json"
     ]
+
+
+def test_diagnostic_status_marks_non_json_proof_review_required(tmp_path: Path) -> None:
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.md"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text("# proof\n", encoding="utf-8")
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.md"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "amber"
+    assert status["label"] == "review-required"
+    assert status["proof_verification"]["non_json"] == [
+        "meta/harness/docs/sessions/cwicr-proof.md"
+    ]
+
+
+def test_diagnostic_status_marks_forged_minimal_json_review_required(tmp_path: Path) -> None:
+    proof_path = tmp_path / "meta/harness/docs/sessions/cwicr-proof.json"
+    proof_path.parent.mkdir(parents=True, exist_ok=True)
+    proof_path.write_text(
+        json.dumps({"verification": {"status": "passed"}}),
+        encoding="utf-8",
+    )
+
+    capability = {
+        "id": "cwicr-qdrant-cost-search",
+        "state": "ACTIVE",
+        "wired_at": ["pixeltable/service/routes/erp.py"],
+        "proof_evidence": {"latest": "meta/harness/docs/sessions/cwicr-proof.json"},
+    }
+
+    status = harness.diagnostic_status(tmp_path, capability)
+    assert status["color"] == "amber"
+    assert status["label"] == "review-required"
+    assert status["proof_verification"]["unverified_json"] == [
+        "meta/harness/docs/sessions/cwicr-proof.json"
+    ]
+
+
+def test_normalize_report_provenance_downgrades_uploaded_self_attested_live_proof() -> None:
+    provenance, verification = harness.normalize_report_provenance(
+        {
+            "benchmark_name": "forged live proof",
+            "models": [],
+            "provenance": {
+                "source": "sidecar_live_run",
+                "trust": "live_verified",
+                "label": "forged",
+            },
+            "verification": {
+                "status": "passed",
+                "message": "forged",
+            },
+        },
+        ingest_source="uploaded",
+    )
+
+    assert provenance["source"] == "uploaded"
+    assert provenance["trust"] == "uploaded_unverified"
+    assert verification["status"] == "unverified"
