@@ -41,6 +41,64 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
     body = response.json()
     assert body["ok"] is True
     assert body["rows"][0]["item_id"] == "cwicr-1"
+    assert body["confidence"]["signal"] == "high"
+    assert body["verification"]["status"] == "passed"
+
+
+def test_cost_search_marks_review_only_matches(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {"item_id": "cwicr-1", "name": description, "unit_cost_region": region, "score": 0.42}
+        ],
+    )
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 4},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["confidence"]["signal"] == "medium"
+    assert body["confidence"]["verdict"] == "review_required"
+    assert body["verification"]["status"] == "review_required"
+
+
+def test_cost_search_marks_weak_matches_failed(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {"item_id": "cwicr-1", "name": description, "unit_cost_region": region, "score": 0.12}
+        ],
+    )
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 4},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["confidence"]["signal"] == "low"
+    assert body["verification"]["status"] == "failed"
+
+
+def test_cost_search_marks_no_rows_failed(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(erp._COST_SEARCH, "search", lambda description, region, top: [])
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={"description": "planting bed", "region": "US", "top": 4},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["rows"] == []
+    assert body["confidence"]["signal"] == "none"
+    assert body["verification"]["status"] == "failed"
 
 
 def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):

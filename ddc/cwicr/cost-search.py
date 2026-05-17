@@ -9,6 +9,14 @@ Output: JSON array on stdout, one object per match:
        "unit_cost": 47.50, "unit_currency": "USD",
        "unit_cost_region": "US", "score": 0.81 }, ...]
 
+Score interpretation used by the LATTICE ERP route:
+    score >= 0.55   reliable candidate for verified automation
+    score >= 0.25   review-only candidate, not verified proof
+    score < 0.25    weak candidate, not usable proof
+
+This helper returns ranked hits only. API-layer callers should apply
+confidence classification before presenting the result as proof.
+
 Tracked in meta/FEATURE_BACKLOG.md § DDC INTEGRATION → "CWICR cost search".
 
 Stub. See INSTALL.md and the acceptance criteria on the matching GitHub issue

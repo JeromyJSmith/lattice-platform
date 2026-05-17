@@ -102,6 +102,15 @@ SAMPLE_BENCHMARK_REPORT: dict[str, Any] = {
             "expected": "proof_run_required_before_registry_promotion",
         }
     ],
+    "provenance": {
+        "source": "sample",
+        "trust": "synthetic",
+        "label": "Synthetic sample report",
+    },
+    "verification": {
+        "status": "unverified",
+        "message": "Sample data only. Do not treat this report as live proof.",
+    },
     "models": [
         {
             "model": "qwen3:14b",
@@ -123,6 +132,77 @@ SAMPLE_BENCHMARK_REPORT: dict[str, Any] = {
         },
     ],
 }
+
+
+def normalize_report_provenance(report: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Normalize benchmark provenance and verification into an explicit trust contract."""
+    provenance = report.get("provenance")
+    verification = report.get("verification")
+
+    if not isinstance(provenance, dict):
+        provenance = {}
+    if not isinstance(verification, dict):
+        verification = {}
+
+    source = provenance.get("source")
+    trust = provenance.get("trust")
+    label = provenance.get("label")
+    artifact = provenance.get("artifact")
+    verified_at = provenance.get("verified_at")
+    verification_status = verification.get("status")
+    verification_message = verification.get("message")
+
+    if source == "sample":
+        normalized_provenance = {
+            "source": "sample",
+            "trust": "synthetic",
+            "label": str(label or "Synthetic sample report"),
+        }
+        normalized_verification = {
+            "status": "unverified",
+            "message": str(verification_message or "Sample data only. Do not treat this report as live proof."),
+        }
+        return normalized_provenance, normalized_verification
+
+    if source in {"sidecar_live_run", "sidecar_import"} and verification_status in {"passed", "failed"}:
+        normalized_provenance = {
+            "source": source,
+            "trust": "live_verified" if verification_status == "passed" else "live_failed",
+            "label": str(
+                label
+                or ("Live verified sidecar proof" if verification_status == "passed" else "Live failed sidecar proof")
+            ),
+        }
+        if isinstance(artifact, str) and artifact:
+            normalized_provenance["artifact"] = artifact
+        if isinstance(verified_at, str) and verified_at:
+            normalized_provenance["verified_at"] = verified_at
+        normalized_verification = {
+            "status": verification_status,
+            "message": str(
+                verification_message
+                or (
+                    "Sidecar-backed proof report is verified."
+                    if verification_status == "passed"
+                    else "Sidecar-backed proof report failed verification."
+                )
+            ),
+        }
+        return normalized_provenance, normalized_verification
+
+    normalized_provenance = {
+        "source": "uploaded",
+        "trust": "uploaded_unverified",
+        "label": str(label or "Uploaded unverified report"),
+    }
+    normalized_verification = {
+        "status": "unverified",
+        "message": str(
+            verification_message
+            or "Uploaded JSON is structurally valid but is not live verified proof."
+        ),
+    }
+    return normalized_provenance, normalized_verification
 
 
 @router.get("/single-file-agents/catalog")
@@ -171,12 +251,52 @@ def normalize_list(value: Any) -> list[str]:
 def collect_proof_paths(proof_evidence: Any) -> list[str]:
     """Return proof evidence paths from registry proof metadata."""
     if isinstance(proof_evidence, dict):
-        return [str(value) for value in proof_evidence.values() if isinstance(value, str)]
+        return [
+            str(value)
+            for key, value in proof_evidence.items()
+            if isinstance(value, str) and not str(key).startswith("_")
+        ]
     if isinstance(proof_evidence, list):
         return [str(value) for value in proof_evidence]
     if isinstance(proof_evidence, str):
         return [proof_evidence]
     return []
+
+
+def proof_verification_status(root: Path, proof_paths: list[str]) -> dict[str, Any]:
+    """Inspect JSON proof artifacts for explicit verification statuses when available."""
+    statuses: list[dict[str, str]] = []
+    unreadable: list[str] = []
+    for candidate in proof_paths:
+        try:
+            path = resolve_repo_path(root, candidate)
+        except HTTPException:
+            continue
+        if not path.exists() or path.suffix != ".json":
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            unreadable.append(candidate)
+            continue
+        verification = payload.get("verification")
+        if isinstance(verification, dict):
+            status = verification.get("status")
+            if isinstance(status, str) and status:
+                statuses.append({"path": candidate, "status": status})
+
+    failing = [item["path"] for item in statuses if item["status"] == "failed"]
+    review_required = [
+        item["path"] for item in statuses if item["status"] in {"review_required", "unverified"}
+    ]
+    passed = [item["path"] for item in statuses if item["status"] == "passed"]
+    return {
+        "statuses": statuses,
+        "passed": passed,
+        "review_required": review_required,
+        "failed": failing,
+        "unreadable": unreadable,
+    }
 
 
 def infer_serves(capability: dict[str, Any]) -> list[str]:
@@ -277,11 +397,32 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
     missing_proof_contract = state == "ACTIVE" and not proof_paths
     missing_wires = [path for path in wired_at if "/" in path and not path_exists(root, path)]
     missing_proof = [path for path in proof_paths if not path_exists(root, path)]
+    proof_verification = proof_verification_status(root, proof_paths)
 
-    if state == "ACTIVE" and not missing_contract and not missing_proof_contract and not missing_wires and not missing_proof:
+    if (
+        state == "ACTIVE"
+        and not missing_contract
+        and not missing_proof_contract
+        and not missing_wires
+        and not missing_proof
+        and not proof_verification["failed"]
+        and not proof_verification["review_required"]
+    ):
         color = "green"
         label = "pass"
-        troubleshooting = "Contract wires and proof evidence are present."
+        troubleshooting = (
+            "Contract wires and proof evidence are present."
+            if not proof_verification["passed"]
+            else "Contract wires and proof evidence are present, and verification artifacts passed."
+        )
+    elif state == "ACTIVE" and proof_verification["failed"]:
+        color = "red"
+        label = "fail"
+        troubleshooting = "Proof evidence exists, but at least one verifier reported failed."
+    elif state == "ACTIVE" and proof_verification["review_required"]:
+        color = "amber"
+        label = "review-required"
+        troubleshooting = "Proof evidence exists, but at least one artifact is review-only or unverified."
     elif state == "ACTIVE" and missing_proof_contract and not missing_contract and not missing_wires:
         color = "amber"
         label = "contract-only"
@@ -308,6 +449,7 @@ def diagnostic_status(root: Path, capability: dict[str, Any]) -> dict[str, Any]:
         "color": color,
         "missing_wires": missing_wires,
         "missing_proof": missing_proof,
+        "proof_verification": proof_verification,
         "troubleshooting": troubleshooting,
     }
 
@@ -602,9 +744,17 @@ def validate_benchmark_report(body: dict[str, Any] = Body(...)) -> dict[str, Any
             raise HTTPException(status_code=400, detail=f"models[{index}].results must be a list")
         run_count += len(results)
 
+    normalized_provenance, normalized_verification = normalize_report_provenance(report)
+    normalized_report = dict(report)
+    normalized_report["provenance"] = normalized_provenance
+    normalized_report["verification"] = normalized_verification
+
     return {
         "ok": True,
         "benchmark_name": benchmark_name,
         "model_count": len(models),
         "run_count": run_count,
+        "provenance": normalized_provenance,
+        "verification": normalized_verification,
+        "report": normalized_report,
     }

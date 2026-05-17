@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Play, RefreshCw, Upload, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { runCodebaseContextProof } from "#/server/harness/run-codebase-context-proof";
+import { validateBenchmarkReport } from "#/server/harness/validate-benchmark-report";
 
 export const Route = createFileRoute("/harness/benchmarks")({
   component: HarnessBenchmarksPage,
@@ -26,7 +27,26 @@ type BenchmarkReport = {
   benchmark_name: string;
   purpose: string;
   base_prompt?: string;
-  prompt_iterations?: unknown[];
+  prompt_iterations?: Array<Record<string, string>>;
+  provenance: {
+    source:
+      | "sample"
+      | "uploaded"
+      | "sidecar_live_run"
+      | "sidecar_import";
+    trust:
+      | "synthetic"
+      | "uploaded_unverified"
+      | "live_verified"
+      | "live_failed";
+    label: string;
+    artifact?: string;
+    verified_at?: string;
+  };
+  verification: {
+    status: "unverified" | "passed" | "failed";
+    message: string;
+  };
   models: ModelReport[];
 };
 
@@ -42,6 +62,15 @@ const SAMPLE_REPORT: BenchmarkReport = {
       expected: "proof_run_required_before_registry_promotion",
     },
   ],
+  provenance: {
+    source: "sample",
+    trust: "synthetic",
+    label: "Synthetic sample report",
+  },
+  verification: {
+    status: "unverified",
+    message: "Sample data only. Do not treat this report as live proof.",
+  },
   models: [
     {
       model: "qwen3:14b",
@@ -169,7 +198,9 @@ function HarnessBenchmarksPage() {
               accept="application/json,.json"
               onChange={(event) => {
                 const file = event.currentTarget.files?.[0];
-                if (file) void readReportFile(file, setReport);
+                if (file) {
+                  void readReportFile(file, setReport, setRunStatus);
+                }
                 event.currentTarget.value = "";
               }}
             />
@@ -226,6 +257,10 @@ function HarnessBenchmarksPage() {
             onClick={() => {
               setReport(SAMPLE_REPORT);
               setPlaybackStep(null);
+              setRunStatus({
+                state: "idle",
+                message: "Showing the synthetic sample report. Not live proof.",
+              });
             }}
           >
             <RefreshCw size={16} />
@@ -270,10 +305,26 @@ function HarnessBenchmarksPage() {
             <p className="m-0 mt-1 text-sm text-[var(--sea-ink-soft)]">
               {report.purpose}
             </p>
+            <p className="m-0 mt-2 text-xs font-semibold uppercase tracking-wide text-[var(--sea-ink-soft)]">
+              {report.provenance.label} · {report.verification.message}
+            </p>
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] px-3 py-1 text-xs font-semibold text-[var(--sea-ink-soft)]">
-            <Zap size={14} />
-            Step {Math.min(activeStep, stepCount)} / {stepCount}
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase ${
+                report.provenance.trust === "live_verified"
+                  ? "border-[rgba(46,125,50,0.25)] bg-[rgba(46,125,50,0.12)] text-[rgb(46,125,50)]"
+                  : report.provenance.trust === "live_failed"
+                    ? "border-[rgba(183,28,28,0.25)] bg-[rgba(183,28,28,0.12)] text-[rgb(183,28,28)]"
+                    : "border-[rgba(191,87,0,0.25)] bg-[rgba(191,87,0,0.12)] text-[rgb(140,72,0)]"
+              }`}
+            >
+              {report.provenance.trust.replaceAll("_", " ")}
+            </span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] px-3 py-1 text-xs font-semibold text-[var(--sea-ink-soft)]">
+              <Zap size={14} />
+              Step {Math.min(activeStep, stepCount)} / {stepCount}
+            </div>
           </div>
         </div>
 
@@ -404,13 +455,36 @@ function ModelRow({
 async function readReportFile(
   file: File,
   setReport: (report: BenchmarkReport) => void,
+  setRunStatus: (status: {
+    state: "idle" | "running" | "passed" | "failed";
+    message: string;
+    artifact?: string;
+  }) => void,
 ) {
   const text = await file.text();
   const parsed = JSON.parse(text) as BenchmarkReport;
-  if (!parsed.benchmark_name || !Array.isArray(parsed.models)) {
-    throw new Error("Benchmark report must include benchmark_name and models.");
-  }
-  setReport(parsed);
+  const result = (await validateBenchmarkReport({
+    data: { report: parsed },
+  })) as {
+    report: BenchmarkReport;
+    verification?: {
+      status?: "unverified" | "passed" | "failed";
+      message?: string;
+    };
+  };
+  setReport(result.report as BenchmarkReport);
+  setRunStatus({
+    state:
+      result.verification?.status === "passed"
+        ? "passed"
+        : result.verification?.status === "failed"
+          ? "failed"
+          : "idle",
+    message:
+      typeof result.verification?.message === "string"
+        ? result.verification.message
+        : "Uploaded report loaded as unverified evidence.",
+  });
 }
 
 function summarizeReport(report: BenchmarkReport) {

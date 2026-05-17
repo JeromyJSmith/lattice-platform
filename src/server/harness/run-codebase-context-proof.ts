@@ -22,7 +22,26 @@ type BenchmarkReport = {
   benchmark_name: string;
   purpose: string;
   base_prompt: string;
-  prompt_iterations: Array<Record<string, unknown>>;
+  prompt_iterations: Array<Record<string, string>>;
+  provenance: {
+    source:
+      | "sample"
+      | "uploaded"
+      | "sidecar_live_run"
+      | "sidecar_import";
+    trust:
+      | "synthetic"
+      | "uploaded_unverified"
+      | "live_verified"
+      | "live_failed";
+    label: string;
+    artifact?: string;
+    verified_at?: string;
+  };
+  verification: {
+    status: "unverified" | "passed" | "failed";
+    message: string;
+  };
   models: Array<{
     model: string;
     provider: string;
@@ -83,6 +102,20 @@ function buildBenchmarkReport(
         expected: "sidecar execution succeeds and verifier returns zero",
       },
     ],
+    provenance: {
+      source: "sidecar_live_run",
+      trust: success && verifierPassed ? "live_verified" : "live_failed",
+      label: success && verifierPassed ? "Live verified sidecar proof" : "Live failed sidecar proof",
+      artifact: body.artifact,
+      verified_at: new Date().toISOString(),
+    },
+    verification: {
+      status: success && verifierPassed ? "passed" : "failed",
+      message:
+        success && verifierPassed
+          ? "Sidecar execution and verifier both passed."
+          : "Sidecar execution or verifier failed.",
+    },
     models: [
       {
         model: modelLabel(capabilityId),

@@ -6,6 +6,13 @@ export type CapabilityStatus = {
   color: "green" | "amber" | "red";
   missing_wires: string[];
   missing_proof: string[];
+  proof_verification?: {
+    statuses: Array<{ path: string; status: string }>;
+    passed: string[];
+    review_required: string[];
+    failed: string[];
+    unreadable: string[];
+  };
   troubleshooting: string;
 };
 

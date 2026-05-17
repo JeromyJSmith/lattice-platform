@@ -23,6 +23,8 @@ router = APIRouter(dependencies=[Depends(require_local_socket_or_token)])
 log = logging.getLogger("vwbridge.erp")
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
+MIN_REVIEW_SCORE = 0.25
+MIN_RELIABLE_SCORE = 0.55
 
 
 def _load_module(name: str, relative_path: str):
@@ -50,6 +52,49 @@ def _as_http_error(exc: Exception, detail: str) -> HTTPException:
     if isinstance(exc, NotImplementedError):
         return HTTPException(status_code=501, detail=str(exc))
     return HTTPException(status_code=502, detail=f"{detail}: {exc!s}")
+
+
+def _coerce_score(row: dict[str, Any]) -> float | None:
+    value = row.get("score")
+    if isinstance(value, int | float):
+        return float(value)
+    return None
+
+
+def _classify_cost_search(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    top_row = rows[0] if rows else None
+    top_score = _coerce_score(top_row) if top_row else None
+    if top_score is None:
+        return {
+            "top_score": None,
+            "signal": "none",
+            "reliable": False,
+            "verdict": "failed",
+            "message": "No CWICR match was returned.",
+        }
+    if top_score >= MIN_RELIABLE_SCORE:
+        return {
+            "top_score": top_score,
+            "signal": "high",
+            "reliable": True,
+            "verdict": "passed",
+            "message": "Top CWICR match met the reliable threshold.",
+        }
+    if top_score >= MIN_REVIEW_SCORE:
+        return {
+            "top_score": top_score,
+            "signal": "medium",
+            "reliable": False,
+            "verdict": "review_required",
+            "message": "Top CWICR match is review-only and must not be treated as verified proof.",
+        }
+    return {
+        "top_score": top_score,
+        "signal": "low",
+        "reliable": False,
+        "verdict": "failed",
+        "message": "Top CWICR match is too weak for verified cost evidence.",
+    }
 
 
 @router.post("/boq")
@@ -113,7 +158,20 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
         rows = _COST_SEARCH.search(description, region, top)
     except Exception as exc:
         raise _as_http_error(exc, "cost search failed") from exc
-    return {"ok": True, "description": description, "region": region, "top": top, "rows": rows}
+    confidence = _classify_cost_search(rows)
+    verification = {
+        "status": confidence["verdict"],
+        "message": confidence["message"],
+    }
+    return {
+        "ok": confidence["reliable"],
+        "description": description,
+        "region": region,
+        "top": top,
+        "rows": rows,
+        "confidence": confidence,
+        "verification": verification,
+    }
 
 
 @router.post("/phases")
