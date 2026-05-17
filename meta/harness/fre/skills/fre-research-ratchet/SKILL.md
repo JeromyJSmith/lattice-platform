@@ -102,3 +102,10 @@ How this skill maps onto the LATTICE Meta-Harness and local autoresearch loop.
 ### `scripts/run_fre_research_first_cycle.sh`
 
 Deterministic wrapper for the research-first FRE cycle.
+
+## Bottom Matter
+
+- [x] Research-first authority chain is explicit
+- [x] Ratchet acceptance rule is stated
+- [x] Outputs are restart-ready
+- [ ] Cross-repo adoption beyond bounded FRE is approved

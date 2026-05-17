@@ -22,6 +22,11 @@ REQUIRED_METRICS = {
     "repair_task_count",
     "promotion_readiness",
 }
+REQUIRED_DOCUMENT_CONTRACT_PATHS = {
+    "GOAL.md",
+    "GoldenPath.md",
+    "skills/fre-research-ratchet/SKILL.md",
+}
 RESEARCH_DOC_PATHS = [
     FRE_ROOT / "docs" / "research-grounding.md",
     FRE_ROOT / "docs" / "research-findings.md",
@@ -227,7 +232,7 @@ def extract_bottom_matter(text: str) -> dict[str, Any] | None:
                 )
             )
     if not checklist:
-        return None
+        raise ValueError("Bottom matter section found without valid checklist items")
     return {
         "checklist": [{"text": item.text, "checked": item.checked} for item in checklist],
         "total": len(checklist),
@@ -258,6 +263,8 @@ def document_contract_status() -> dict[str, Any]:
     front_matter_count = 0
     bottom_matter_count = 0
     parse_errors: list[str] = []
+    missing_front_matter: list[str] = []
+    missing_bottom_matter: list[str] = []
     for path in markdown_contract_paths():
         rel = path.relative_to(FRE_ROOT).as_posix()
         text = read_text(path)
@@ -266,11 +273,20 @@ def document_contract_status() -> dict[str, Any]:
         except ValueError as exc:
             parse_errors.append(f"{rel}:front_matter:{exc}")
             front_matter = None
-        bottom_matter = extract_bottom_matter(text)
+        try:
+            bottom_matter = extract_bottom_matter(text)
+        except ValueError as exc:
+            parse_errors.append(f"{rel}:bottom_matter:{exc}")
+            bottom_matter = None
         if front_matter:
             front_matter_count += 1
         if bottom_matter:
             bottom_matter_count += 1
+        if rel in REQUIRED_DOCUMENT_CONTRACT_PATHS:
+            if not front_matter:
+                missing_front_matter.append(rel)
+            if not bottom_matter:
+                missing_bottom_matter.append(rel)
         documents.append(
             {
                 "path": rel,
@@ -282,10 +298,13 @@ def document_contract_status() -> dict[str, Any]:
             }
         )
     return {
-        "status": "pass" if not parse_errors else "fail",
+        "status": "pass" if not parse_errors and not missing_front_matter and not missing_bottom_matter else "fail",
         "front_matter_count": front_matter_count,
         "bottom_matter_count": bottom_matter_count,
         "parse_errors": parse_errors,
+        "required_documents": sorted(REQUIRED_DOCUMENT_CONTRACT_PATHS),
+        "missing_front_matter": missing_front_matter,
+        "missing_bottom_matter": missing_bottom_matter,
         "documents": documents,
     }
 

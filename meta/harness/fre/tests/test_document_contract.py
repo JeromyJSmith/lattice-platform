@@ -13,6 +13,8 @@ from lib import document_contract_status
 from lib import evaluate_data
 from lib import extract_bottom_matter
 from lib import extract_front_matter
+from lib import read_text
+from lib import REQUIRED_METRICS
 from lib import write_document_contract_summary
 
 
@@ -33,12 +35,23 @@ def test_extract_bottom_matter_from_checklist_section() -> None:
     assert payload["completed"] == 1
 
 
+def test_extract_bottom_matter_raises_on_malformed_section() -> None:
+    try:
+        extract_bottom_matter("# Example\n\n## Bottom Matter\nnot a checklist\n")
+    except ValueError as exc:
+        assert "without valid checklist items" in str(exc)
+    else:
+        raise AssertionError("Expected malformed bottom matter to raise ValueError")
+
+
 def test_document_contract_status_reports_front_matter() -> None:
     payload = document_contract_status()
     assert payload["status"] == "pass"
     assert payload["front_matter_count"] >= 1
     assert payload["bottom_matter_count"] >= 1
     assert payload["parse_errors"] == []
+    assert payload["missing_front_matter"] == []
+    assert payload["missing_bottom_matter"] == []
 
 
 def test_document_contract_gate_fails_on_parse_error(monkeypatch) -> None:
@@ -58,6 +71,53 @@ def test_document_contract_gate_fails_on_parse_error(monkeypatch) -> None:
     assert payload["scorecard"]["metrics"]["document_contract"] == "fail"
     assert payload["scorecard"]["blocking_failed_gates"] >= 1
     assert payload["promotion_decision"]["status"] == "REJECT"
+
+
+def test_document_contract_gate_fails_without_required_front_matter(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "lib.document_contract_status",
+        lambda: {
+            "status": "fail",
+            "front_matter_count": 2,
+            "bottom_matter_count": 3,
+            "parse_errors": [],
+            "required_documents": ["GOAL.md", "GoldenPath.md", "skills/fre-research-ratchet/SKILL.md"],
+            "missing_front_matter": ["GOAL.md"],
+            "missing_bottom_matter": [],
+            "documents": [],
+        },
+    )
+    payload = evaluate_data()
+    gate = next(item for item in payload["gate_results"] if item["gate_id"] == "document_contract")
+    assert gate["status"] == "fail"
+    assert payload["promotion_decision"]["status"] == "REJECT"
+
+
+def test_document_contract_gate_fails_without_required_bottom_matter(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "lib.document_contract_status",
+        lambda: {
+            "status": "fail",
+            "front_matter_count": 3,
+            "bottom_matter_count": 1,
+            "parse_errors": [],
+            "required_documents": ["GOAL.md", "GoldenPath.md", "skills/fre-research-ratchet/SKILL.md"],
+            "missing_front_matter": [],
+            "missing_bottom_matter": ["skills/fre-research-ratchet/SKILL.md"],
+            "documents": [],
+        },
+    )
+    payload = evaluate_data()
+    gate = next(item for item in payload["gate_results"] if item["gate_id"] == "document_contract")
+    assert gate["status"] == "fail"
+    assert payload["promotion_decision"]["status"] == "REJECT"
+
+
+def test_goal_required_metrics_sync_with_runtime_contract() -> None:
+    goal_text = read_text(Path(__file__).resolve().parents[1] / "GOAL.md")
+    front_matter = extract_front_matter(goal_text)
+    assert front_matter is not None
+    assert set(front_matter["required_metrics"]) == REQUIRED_METRICS
 
 
 def test_cli_run_context_allocates_fresh_run() -> None:

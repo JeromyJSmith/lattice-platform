@@ -5,6 +5,7 @@ owner: evaluation-agent
 status: bounded-evaluation
 required_metrics:
   - research_grounding
+  - document_contract
   - schema_validity
   - example_validation
   - repair_task_count
@@ -60,6 +61,7 @@ No score may increase because of:
 The bounded kernel must measure:
 
 - `research_grounding`
+- `document_contract`
 - `schema_validity`
 - `example_validation`
 - `repair_task_count`
