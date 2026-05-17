@@ -55,6 +55,8 @@ Thumbs.db
 # ---- Nested git repos (vendored skill bundles, etc.) ----
 # Keep the content, exclude their upstream .git history.
 .claude/skills/*/.git/
+external/vectorworks-mcp-github/.git/
+external/vectorworks-mcp-github/mcp-server/target/
 
 # ---- Local git worktrees ----
 # .claude/worktrees/ holds git worktree checkouts of other branches.

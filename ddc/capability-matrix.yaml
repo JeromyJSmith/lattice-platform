@@ -190,6 +190,24 @@ capabilities:
     priority: high
     wave: wave-2
     validation: Priority workflow templates are callable without n8n
+  - id: n8n-mcp-integration
+    capability: n8n MCP server integration
+    local_home: /home/runner/work/lattice-platform/lattice-platform/.mcp.json
+    target_surface: mcp server n8n (npx n8n-mcp)
+    current_state: MCP entry wired with credential placeholders and capability artifacts
+    gap: Provision live n8n API credentials and verify management tool calls
+    priority: high
+    wave: wave-2
+    validation: n8n MCP core tools run in agent runtime; management tools pass with live credentials
+  - id: vectorworks-mcp-github
+    capability: GitHub Vectorworks MCP server integration
+    local_home: /home/runner/work/lattice-platform/lattice-platform/scripts/run-vectorworks-github-mcp.sh
+    target_surface: mcp server vectorworks-github (rust stdio bridge)
+    current_state: GitHub server cloned, compiled, and wired in .mcp.json
+    gap: Load SDK plugin bridge in live Vectorworks session and verify tool calls
+    priority: high
+    wave: wave-2
+    validation: Vectorworks MCP tools succeed against live socket bridge
   - id: fallback-ifc
     capability: Fallback IFC converter
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md
@@ -247,6 +265,8 @@ pipeline:
       - phases-sync
       - quantity-takeoff-agent
       - n8n-translation
+      - n8n-mcp-integration
+      - vectorworks-mcp-github
   - stage: wave-3
     name: Operator surface
     scope:

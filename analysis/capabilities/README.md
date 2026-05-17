@@ -46,6 +46,8 @@ IndyDevDan / Disler repositories selected for LATTICE are incorporated as doctri
 | `graphify-capability-registry.yaml` | Graphify CLI plus repo-local MCP wrapper and platform installers | github.com/safishamsi/graphify |
 | `graphify-safishamsi-capability-registry.yaml` | Graphifyy (Python multi-format + YouTube ingestion) | github.com/safishamsi/graphify |
 | `gitnexus-capability-registry.yaml` | GitNexus (MCP + group tools + skills + hooks) | github.com/abhigyanpatwari/GitNexus |
+| `n8n-mcp-capability-registry.yaml` | n8n MCP node/template intelligence plus optional n8n workflow management tools | github.com/czlonkowski/n8n-mcp |
+| `vectorworks-mcp-github-capability-registry.yaml` | GitHub Vectorworks MCP Rust server + SDK plugin socket bridge tool surface | github.com/mako-357/vectorworks-mcp |
 
 ## Schema reference
 

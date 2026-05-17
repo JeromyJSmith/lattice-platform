@@ -1,0 +1,31 @@
+# spec-verified: vectorworks-mcp README + Cargo metadata 2026-05-17
+tool: vectorworks-mcp-github
+tool_version: c4b8c48
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/vectorworks-mcp-github-capability-harvest.md
+  matrix: analysis/capabilities/vectorworks-mcp-github-capability-matrix.md
+harnesses:
+  - harness: agent-runtime
+    capabilities:
+      - id: cli-vectorworks-github-mcp-server
+        registry_state: ACTIVE
+        purpose: Provide a GitHub-sourced Vectorworks MCP stdio server in local runtime config.
+        proof:
+          command: scripts/run-vectorworks-github-mcp.sh
+          evidence: scripts/run-vectorworks-github-mcp.sh
+          verified_at: 2026-05-17
+          outcome: Launcher script provisions/builds upstream Rust MCP server and launches stdio runtime.
+        verification:
+          command: rg -n "\"vectorworks-github\"" .mcp.json
+          evidence: .mcp.json
+        docs_coverage:
+          required: true
+          source: analysis/capabilities/vectorworks-mcp-github-capability-harvest.md
+  - harness: vw-actuation
+    capabilities:
+      - id: mcp-vectorworks-read-write-tools
+        registry_state: BLOCKED
+        purpose: Read and mutate Vectorworks documents through MCP tools.
+        blocker: Bridge socket not connected because Vectorworks plugin bridge is not running.
+        blocker_resolution_path: Build/load VW plugin, start MCP Bridge menu command, then validate tool calls.

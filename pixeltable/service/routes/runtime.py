@@ -54,6 +54,7 @@ def post_events(
 def list_runs(
     pxt = Depends(get_pxt),
     limit: int = Query(default=100, ge=1, le=1000),
+    include_mock: bool = Query(default=False),
 ):
     """Return the most recent rows from `lattice/execution/agent_runs`.
 
@@ -77,6 +78,8 @@ def list_runs(
             "task":       task or "",
             "started_at": started.isoformat() if started is not None else None,
         })
+    if not include_mock:
+        rows = [row for row in rows if (row.get("agent_kind") or "").lower() != "mock"]
     rows.sort(key=lambda x: x["started_at"] or "", reverse=True)
     return {"rows": rows[:limit], "count": len(rows)}
 

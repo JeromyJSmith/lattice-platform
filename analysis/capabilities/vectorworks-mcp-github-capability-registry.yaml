@@ -1,0 +1,59 @@
+# spec-verified: vectorworks-mcp README + Cargo metadata 2026-05-17
+tool: vectorworks-mcp-github
+tool_version: c4b8c48
+canonical_docs: https://github.com/mako-357/vectorworks-mcp
+last_harvested: 2026-05-17
+harvested_by: codex-gpt-5
+capabilities:
+  - id: cli-vectorworks-github-mcp-server
+    surface: cli_command
+    name: vectorworks-mcp-server
+    state: ACTIVE
+    description: GitHub-sourced Rust MCP server binary for Vectorworks bridge transport.
+    wired_at:
+      - .mcp.json
+      - scripts/run-vectorworks-github-mcp.sh
+    invoked_by:
+      - project-local MCP runtime
+  - id: mcp-get-drawing-info
+    surface: mcp_tool
+    name: get_drawing_info
+    state: BLOCKED
+    description: Returns drawing metadata from the active Vectorworks document.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.
+  - id: mcp-list-layers
+    surface: mcp_tool
+    name: list_layers
+    state: BLOCKED
+    description: Lists document layers from Vectorworks.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.
+  - id: mcp-create-line
+    surface: mcp_tool
+    name: create_line
+    state: BLOCKED
+    description: Creates line geometry in the active document.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.
+  - id: mcp-create-rect
+    surface: mcp_tool
+    name: create_rect
+    state: BLOCKED
+    description: Creates rectangle geometry in the active document.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.
+  - id: mcp-create-circle
+    surface: mcp_tool
+    name: create_circle
+    state: BLOCKED
+    description: Creates circle geometry in the active document.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.
+  - id: mcp-run-script
+    surface: mcp_tool
+    name: run_script
+    state: BLOCKED
+    description: Executes VectorScript or Python script within Vectorworks.
+    blocker: Vectorworks plugin socket bridge is not connected in this environment.
+    blocker_resolution_path: Load/start VW MCP Bridge plugin and verify socket connectivity.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import time
 from datetime import UTC, datetime
@@ -10,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 
 from service.deps import require_local_socket_or_token
 
@@ -125,6 +126,92 @@ SAMPLE_BENCHMARK_REPORT: dict[str, Any] = {
 }
 
 
+def benchmark_reports_dir() -> Path:
+    """Return the canonical Benchy reports directory."""
+    return repo_root() / "meta" / "harness" / "benchy" / "server" / "reports"
+
+
+def trimmed_text(value: Any, limit: int = 240) -> str | None:
+    """Return a compact string representation for large benchmark fields."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    if len(text) <= limit:
+        return text
+    return text[:limit].rstrip() + "…"
+
+
+def normalize_benchmark_result(result: dict[str, Any], index: int) -> dict[str, Any]:
+    """Normalize a Benchy row to the operator console benchmark shape."""
+    prompt_response = result.get("prompt_response")
+    prompt_blob = result.get("input_prompt")
+    latency_ms = 0
+    provider = None
+    if isinstance(prompt_response, dict):
+        latency_ms = int(prompt_response.get("total_duration_ms") or 0)
+        provider = prompt_response.get("provider")
+    success = bool(result.get("correct"))
+    prompt_label = f"prompt {index + 1}"
+    if isinstance(prompt_blob, str):
+        first_line = next((line.strip() for line in prompt_blob.splitlines() if line.strip()), "")
+        if first_line:
+            prompt_label = first_line[:64]
+    return {
+        "prompt": prompt_label,
+        "success": success,
+        "latency_ms": latency_ms,
+        "cost_usd": 0,
+        "score": 1 if success else 0,
+        "output": trimmed_text(result.get("execution_result")),
+        "provider": provider,
+    }
+
+
+def normalize_benchmark_model(model: dict[str, Any]) -> dict[str, Any] | None:
+    """Normalize one benchmark model block to the console shape."""
+    model_name = model.get("model")
+    raw_results = model.get("results")
+    if not isinstance(model_name, str) or not isinstance(raw_results, list):
+        return None
+    if raw_results and isinstance(raw_results[0], dict) and "prompt" in raw_results[0]:
+        return {
+            "model": model_name,
+            "provider": model.get("provider"),
+            "results": raw_results,
+        }
+    normalized_results = [
+        normalize_benchmark_result(result, index)
+        for index, result in enumerate(raw_results)
+        if isinstance(result, dict)
+    ]
+    return {
+        "model": model_name,
+        "provider": "mlx",
+        "results": normalized_results,
+    }
+
+
+def normalize_benchmark_report(raw: dict[str, Any]) -> dict[str, Any] | None:
+    """Normalize arbitrary benchmark report JSON for the TanStack console."""
+    benchmark_name = raw.get("benchmark_name")
+    purpose = raw.get("purpose")
+    models = raw.get("models")
+    if not isinstance(benchmark_name, str) or not isinstance(models, list):
+        return None
+    normalized_models = [
+        model for item in models if isinstance(item, dict) for model in [normalize_benchmark_model(item)] if model is not None
+    ]
+    if not normalized_models:
+        return None
+    return {
+        "benchmark_name": benchmark_name,
+        "purpose": purpose if isinstance(purpose, str) else "Imported benchmark report.",
+        "base_prompt": raw.get("base_prompt") if isinstance(raw.get("base_prompt"), str) else "",
+        "prompt_iterations": raw.get("prompt_iterations") if isinstance(raw.get("prompt_iterations"), list) else [],
+        "models": normalized_models,
+    }
+
+
 @router.get("/single-file-agents/catalog")
 def list_single_file_agent_catalog() -> dict[str, Any]:
     """Return the LATTICE candidate catalog for single-file harness agents."""
@@ -171,7 +258,7 @@ def normalize_list(value: Any) -> list[str]:
 def collect_proof_paths(proof_evidence: Any) -> list[str]:
     """Return proof evidence paths from registry proof metadata."""
     if isinstance(proof_evidence, dict):
-        return [str(value) for value in proof_evidence.values() if isinstance(value, str)]
+        return [value for value in proof_evidence.values() if isinstance(value, str)]
     if isinstance(proof_evidence, list):
         return [str(value) for value in proof_evidence]
     if isinstance(proof_evidence, str):
@@ -576,6 +663,105 @@ def run_single_file_agent(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
 def get_benchmark_sample_report() -> dict[str, Any]:
     """Return a Benchy-compatible sample report for console rendering."""
     return {"ok": True, "report": SAMPLE_BENCHMARK_REPORT}
+
+
+@router.get("/benchmarks/reports")
+def list_benchmark_reports(limit: int = Query(default=20, ge=1, le=100)) -> dict[str, Any]:
+    """Return normalized benchmark reports harvested from local Benchy artifacts."""
+    root = repo_root()
+    report_dir = benchmark_reports_dir()
+    if not report_dir.exists():
+        return {"ok": True, "reports": []}
+
+    reports: list[dict[str, Any]] = []
+    for path in sorted(report_dir.glob("*.json"), key=lambda item: item.stat().st_mtime, reverse=True):
+        if len(reports) >= limit:
+            break
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(raw, dict):
+            continue
+        normalized = normalize_benchmark_report(raw)
+        if normalized is None:
+            continue
+        reports.append(
+            {
+                "artifact": path.relative_to(root).as_posix(),
+                "updated_at": datetime.fromtimestamp(path.stat().st_mtime, tz=UTC).isoformat().replace("+00:00", "Z"),
+                "report": normalized,
+            }
+        )
+
+    return {"ok": True, "reports": reports}
+
+
+@router.post("/models/smoke")
+def run_model_smoke_test(body: dict[str, Any] = Body(default_factory=dict)) -> dict[str, Any]:
+    """Run a local-model smoke test through the LATTICE llm router."""
+    root = repo_root()
+    model = body.get("model", "prism-ml/Ternary-Bonsai-4B-mlx-2bit")
+    if not isinstance(model, str) or not model.strip():
+        raise HTTPException(status_code=400, detail="model must be a non-empty string")
+
+    expected = "BONSAI_4B_OK"
+    timeout_seconds = int(body.get("timeout_seconds", 90))
+    if timeout_seconds < 10 or timeout_seconds > 300:
+        raise HTTPException(status_code=400, detail="timeout_seconds must be between 10 and 300")
+
+    command = [
+        "python3",
+        "meta/harness/bin/llm",
+        f"--backend=mlx-lm:{model}",
+        f"--timeout={timeout_seconds}",
+        f"Reply with exactly: {expected}",
+    ]
+    started = time.monotonic()
+    try:
+        result = subprocess.run(
+            command,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout_seconds + 5,
+        )
+    except subprocess.TimeoutExpired as exc:
+        latency_ms = int((time.monotonic() - started) * 1000)
+        return {
+            "ok": False,
+            "model": model,
+            "expected": expected,
+            "latency_ms": latency_ms,
+            "returncode": -1,
+            "stdout": exc.stdout if isinstance(exc.stdout, str) else "",
+            "stderr": exc.stderr if isinstance(exc.stderr, str) else f"Timed out after {timeout_seconds}s.",
+            "verification": {
+                "status": "failed",
+                "message": "smoke test timed out",
+            },
+            "command": shlex.join(command),
+        }
+
+    latency_ms = int((time.monotonic() - started) * 1000)
+    stdout = result.stdout or ""
+    stderr = result.stderr or ""
+    ok = result.returncode == 0 and expected in stdout
+    return {
+        "ok": ok,
+        "model": model,
+        "expected": expected,
+        "latency_ms": latency_ms,
+        "returncode": result.returncode,
+        "stdout": stdout,
+        "stderr": stderr,
+        "verification": {
+            "status": "passed" if ok else "failed",
+            "message": "local Bonsai smoke test passed" if ok else "expected marker not found in output",
+        },
+        "command": shlex.join(command),
+    }
 
 
 @router.post("/benchmarks/reports/validate")

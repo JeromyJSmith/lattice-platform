@@ -1,0 +1,31 @@
+# spec-verified: n8n-mcp README + npm metadata 2026-05-17
+tool: n8n-mcp
+tool_version: 2.53.0
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/n8n-mcp-capability-harvest.md
+  matrix: analysis/capabilities/n8n-mcp-capability-matrix.md
+harnesses:
+  - harness: agent-runtime
+    capabilities:
+      - id: mcp-core-docs-and-search
+        registry_state: ACTIVE
+        purpose: Expose n8n node and template discovery to agent flows through MCP.
+        proof:
+          command: npx -y n8n-mcp
+          evidence: .mcp.json
+          verified_at: 2026-05-17
+          outcome: n8n MCP server launch command is wired in repo-local MCP config.
+        verification:
+          command: rg -n "\"n8n\"" .mcp.json
+          evidence: .mcp.json
+        docs_coverage:
+          required: true
+          source: analysis/capabilities/n8n-mcp-capability-harvest.md
+  - harness: workflow-actuation
+    capabilities:
+      - id: mcp-workflow-management
+        registry_state: BLOCKED
+        purpose: Manage live n8n workflows once runtime credentials are provisioned.
+        blocker: Missing live n8n endpoint/API key in runtime environment.
+        blocker_resolution_path: Set N8N_API_URL + N8N_API_KEY, then verify with n8n_health_check.

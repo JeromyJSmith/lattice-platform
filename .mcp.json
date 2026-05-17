@@ -18,12 +18,26 @@
         "INFRANODUS_API_KEY": "${INFRANODUS_API_KEY}"
       }
     },
+    "n8n": {
+      "command": "npx",
+      "args": ["-y", "n8n-mcp"],
+      "env": {
+        "N8N_API_URL": "${N8N_API_URL}",
+        "N8N_API_KEY": "${N8N_API_KEY}"
+      }
+    },
     "vectorworks": {
       "command": "uv",
       "args": [
         "run",
         "--with", "fastmcp",
         "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/vw-python/mcp_bridge.py"
+      ]
+    },
+    "vectorworks-github": {
+      "command": "bash",
+      "args": [
+        "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/scripts/run-vectorworks-github-mcp.sh"
       ]
     },
     "3d-asset-gen": {

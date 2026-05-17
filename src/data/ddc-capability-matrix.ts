@@ -292,6 +292,31 @@ export const ddcCapabilities: Array<DdcCapability> = [
     validation: "Priority workflow templates are callable without n8n.",
   },
   {
+    id: "n8n-mcp-integration",
+    capability: "n8n MCP server integration",
+    localHome: "/home/runner/work/lattice-platform/lattice-platform/.mcp.json",
+    targetSurface: "mcp server n8n (npx n8n-mcp)",
+    currentState:
+      "MCP entry wired with credential placeholders and capability artifacts",
+    gap: "Provision live n8n API credentials and verify management tool calls.",
+    priority: "high",
+    wave: "wave-2",
+    validation:
+      "n8n MCP core tools run in agent runtime; management tools pass with live credentials.",
+  },
+  {
+    id: "vectorworks-mcp-github",
+    capability: "GitHub Vectorworks MCP server integration",
+    localHome:
+      "/home/runner/work/lattice-platform/lattice-platform/scripts/run-vectorworks-github-mcp.sh",
+    targetSurface: "mcp server vectorworks-github (rust stdio bridge)",
+    currentState: "GitHub server cloned, compiled, and wired in .mcp.json",
+    gap: "Load SDK plugin bridge in live Vectorworks session and verify tool calls.",
+    priority: "high",
+    wave: "wave-2",
+    validation: "Vectorworks MCP tools succeed against live socket bridge.",
+  },
+  {
     id: "fallback-ifc",
     capability: "Fallback IFC converter",
     localHome:
@@ -367,6 +392,8 @@ export const ddcPipelineStages: Array<DdcPipelineStage> = [
       "phases-sync",
       "quantity-takeoff-agent",
       "n8n-translation",
+      "n8n-mcp-integration",
+      "vectorworks-mcp-github",
     ],
   },
   {

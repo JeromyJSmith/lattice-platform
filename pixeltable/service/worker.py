@@ -2,19 +2,11 @@
 
 A single asyncio task polls `lattice/execution/agent_runs` for rows with
 `status == "pending"`, claims each by transitioning to `running`, then
-streams an agent response into `lattice/execution/agent_stream_events`
+streams a real agent response into `lattice/execution/agent_stream_events`
 before writing the terminal `run.completed` event.
 
-Two backends:
-  - Real Claude via the local `claude -p` CLI subprocess (uses your
-    existing Claude Max auth — no API key needed). Stdout is read line
-    by line; each non-empty line becomes one `stream.delta` row.
-  - Deterministic mock (4 chunks, 600ms apart) when `claude` is not on
-    PATH — so the worker never crashes on hosts without the CLI.
-
-The Pixeltable write path is identical for both. Same table, same seq
-ordering, same `run.completed` transition. The only thing that changes
-is where the chunks come from and what `agent_kind` gets recorded.
+No mock backend is allowed. If the local `claude` CLI is unavailable, runs
+are marked failed with an explicit operator-facing error event.
 """
 
 from __future__ import annotations
@@ -32,7 +24,6 @@ from service.upsert import upsert_runtime_event
 log = logging.getLogger("vwbridge.worker")
 
 POLL_INTERVAL_S = 1.0
-MOCK_DELTA_GAP_S = 0.6
 
 # ---- in-process pub/sub for SSE -------------------------------------------
 # One asyncio.Queue per active SSE subscriber, keyed by run_id. The worker
@@ -75,22 +66,6 @@ SYSTEM_PROMPT = (
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
-
-
-def _backend_label() -> str:
-    return "claude-cli" if CLAUDE_CLI else "mock"
-
-
-async def _mock_chunks(task: str) -> AsyncIterator[str]:
-    """Fallback streamer — deterministic 4 chunks with visible gaps."""
-    for chunk in (
-        f"Mock agent received task: {task!r}.",
-        "Thinking…",
-        "Sketching a plan: parse → reason → respond.",
-        f"Done. (mock) Task '{task}' has no real side-effects.",
-    ):
-        await asyncio.sleep(MOCK_DELTA_GAP_S)
-        yield chunk
 
 
 async def _claude_cli_chunks(task: str) -> AsyncIterator[str]:
@@ -199,13 +174,16 @@ async def _write_completed(pxt, *, run_id: str, thread_id: str, task: str,
 async def _stream_run(pxt, run_id: str, thread_id: str, task: str,
                       started_at: str, agent_kind: str) -> None:
     """Run a single dispatched run: emit stream.delta events, then run.completed."""
-    use_real = agent_kind == "claude-cli" and CLAUDE_CLI is not None
+    if CLAUDE_CLI is None:
+        raise RuntimeError(
+            "claude CLI is not available on PATH; refusing to run without a real agent backend"
+        )
+
     log.info("streaming run %s mode=%s task=%r", run_id, agent_kind, task)
 
     try:
-        chunks = _claude_cli_chunks(task) if use_real else _mock_chunks(task)
         seq = 0
-        async for text in chunks:
+        async for text in _claude_cli_chunks(task):
             seq += 1
             await _emit_delta(pxt, run_id=run_id, thread_id=thread_id, seq=seq, text=text)
 
@@ -234,12 +212,9 @@ async def _stream_run(pxt, run_id: str, thread_id: str, task: str,
 def _claim_pending(pxt) -> list[dict[str, Any]]:
     """Return pending rows and transition them to `running`.
 
-    The pending → running transition stamps `agent_kind` based on whether
-    the `claude` CLI is on PATH at claim time. That field persists
-    through to the terminal `run.completed` event.
+    The pending → running transition keeps the run's requested `agent_kind`
+    and does not substitute a mock backend.
     """
-    agent_kind = _backend_label()
-
     t = pxt.get_table("lattice/execution/agent_runs")
     df = t.where(t.status == "pending").select(
         t.run_id, t.thread_id, t.started_at, t.raw_event,
@@ -254,6 +229,11 @@ def _claim_pending(pxt) -> list[dict[str, Any]]:
         payload = raw.get("payload") if isinstance(raw, dict) else {}
         task = (payload or {}).get("task", "") if isinstance(payload, dict) else ""
         thread_id = r.get("thread_id") or "thread-local"
+        agent_kind = (r.get("agent_kind") or "") if isinstance(r, dict) else ""
+        if not agent_kind and isinstance(payload, dict):
+            agent_kind = payload.get("agent_kind", "")
+        if not agent_kind:
+            agent_kind = "claude-cli"
         started = r.get("started_at")
         started_iso = started.isoformat() if started is not None else _now_iso()
 
@@ -276,8 +256,11 @@ def _claim_pending(pxt) -> list[dict[str, Any]]:
 
 
 async def worker_loop(pxt, stop_event: asyncio.Event) -> None:
-    log.info("worker_loop started (poll=%.1fs, backend=%s, claude_cli=%s)",
-             POLL_INTERVAL_S, _backend_label(), CLAUDE_CLI or "(not found on PATH)")
+    log.info(
+        "worker_loop started (poll=%.1fs, claude_cli=%s)",
+        POLL_INTERVAL_S,
+        CLAUDE_CLI or "(not found on PATH)",
+    )
     while not stop_event.is_set():
         try:
             for claim in _claim_pending(pxt):

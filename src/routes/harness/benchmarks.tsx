@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Play, RefreshCw, Upload, Zap } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { listBenchmarkReports } from "#/server/harness/list-benchmark-reports";
+import { runBonsaiSmokeTest } from "#/server/harness/run-bonsai-smoke-test";
+import {
+  bonsaiUseCaseScenarios,
+  runBonsaiUseCase,
+} from "#/server/harness/run-bonsai-use-case";
 import { runCodebaseContextProof } from "#/server/harness/run-codebase-context-proof";
 
 export const Route = createFileRoute("/harness/benchmarks")({
@@ -129,12 +135,46 @@ const SAMPLE_REPORT: BenchmarkReport = {
 
 function HarnessBenchmarksPage() {
   const [report, setReport] = useState<BenchmarkReport>(SAMPLE_REPORT);
+  const [availableReports, setAvailableReports] = useState<
+    Array<{ artifact: string; updated_at: string; report: BenchmarkReport }>
+  >([]);
+  const [selectedArtifact, setSelectedArtifact] = useState<string | null>(null);
   const [playbackStep, setPlaybackStep] = useState<number | null>(null);
   const [runStatus, setRunStatus] = useState<{
     state: "idle" | "running" | "passed" | "failed";
     message: string;
     artifact?: string;
   }>({ state: "idle", message: "Ready to run Golden Path 001." });
+  const [scenarioId, setScenarioId] = useState<string>(
+    bonsaiUseCaseScenarios[0]?.id ?? "",
+  );
+  const [useCaseNote, setUseCaseNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const payload = await listBenchmarkReports();
+        if (cancelled || !payload.ok || payload.reports.length === 0) return;
+        setAvailableReports(payload.reports);
+        const latest = payload.reports[0];
+        setSelectedArtifact(latest.artifact);
+        setReport(latest.report);
+        setPlaybackStep(null);
+        setRunStatus({
+          state: "idle",
+          message: "Loaded latest local benchmark artifact.",
+          artifact: latest.artifact,
+        });
+      } catch {
+        // Keep sample report fallback when sidecar benchmark artifacts are unavailable.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const summary = useMemo(() => summarizeReport(report), [report]);
   const maxLatency = Math.max(
     1,
@@ -160,6 +200,50 @@ function HarnessBenchmarksPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {bonsaiUseCaseScenarios.length > 0 ? (
+            <label className="inline-flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-2 text-sm font-semibold shadow-sm">
+              Use case
+              <select
+                className="rounded-md border border-[var(--line)] bg-white px-2 py-1 text-xs"
+                value={scenarioId}
+                onChange={(event) => setScenarioId(event.currentTarget.value)}
+              >
+                {bonsaiUseCaseScenarios.map((scenario) => (
+                  <option key={scenario.id} value={scenario.id}>
+                    {scenario.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+          {availableReports.length > 0 ? (
+            <label className="inline-flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-2 text-sm font-semibold shadow-sm">
+              Report
+              <select
+                className="rounded-md border border-[var(--line)] bg-white px-2 py-1 text-xs"
+                value={selectedArtifact ?? ""}
+                onChange={(event) => {
+                  const artifact = event.currentTarget.value;
+                  const next = availableReports.find((entry) => entry.artifact === artifact);
+                  if (!next) return;
+                  setSelectedArtifact(artifact);
+                  setReport(next.report);
+                  setPlaybackStep(null);
+                  setRunStatus({
+                    state: "idle",
+                    message: "Loaded local benchmark artifact.",
+                    artifact: next.artifact,
+                  });
+                }}
+              >
+                {availableReports.map((entry) => (
+                  <option key={entry.artifact} value={entry.artifact}>
+                    {entry.report.benchmark_name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-2 text-sm font-semibold shadow-sm">
             <Upload size={16} />
             Load JSON
@@ -210,6 +294,72 @@ function HarnessBenchmarksPage() {
           </button>
           <button
             type="button"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-2 text-sm font-semibold shadow-sm disabled:cursor-wait disabled:opacity-70"
+            disabled={runStatus.state === "running"}
+            onClick={async () => {
+              setRunStatus({
+                state: "running",
+                message: "Running Bonsai 4B local smoke test...",
+              });
+              try {
+                const result = await runBonsaiSmokeTest();
+                setRunStatus({
+                  state: result.ok ? "passed" : "failed",
+                  message: result.ok
+                    ? `Bonsai smoke test passed in ${Math.round(result.latency_ms)}ms.`
+                    : "Bonsai smoke test failed.",
+                  artifact: result.command,
+                });
+              } catch (error) {
+                setRunStatus({
+                  state: "failed",
+                  message:
+                    error instanceof Error
+                      ? error.message
+                      : "Bonsai smoke test failed.",
+                });
+              }
+            }}
+          >
+            <Zap size={16} />
+            Smoke Bonsai 4B
+          </button>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--lagoon)] px-3 py-2 text-sm font-semibold text-white shadow-sm disabled:cursor-wait disabled:opacity-70"
+            disabled={runStatus.state === "running" || !scenarioId}
+            onClick={async () => {
+              setRunStatus({
+                state: "running",
+                message: "Running Juniper use-case through CWICR + Bonsai 4B...",
+              });
+              try {
+                const result = await runBonsaiUseCase({ data: { scenarioId } });
+                setUseCaseNote(result.note);
+                const estimateText = result.estimate
+                  ? `${result.estimate.totalCost.toLocaleString()} ${result.estimate.currency}`
+                  : "suppressed";
+                setRunStatus({
+                  state: result.ok ? "passed" : "failed",
+                  message: `${result.scenario.label} | ${result.verification.message} | confidence ${result.confidence.signal} (${result.confidence.topScore.toFixed(3)}) | estimate ${estimateText}.`,
+                  artifact: result.command,
+                });
+              } catch (error) {
+                setRunStatus({
+                  state: "failed",
+                  message:
+                    error instanceof Error
+                      ? error.message
+                      : "Juniper use-case run failed.",
+                });
+              }
+            }}
+          >
+            <Play size={16} />
+            Run Bonsai Use Case
+          </button>
+          <button
+            type="button"
             className="inline-flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-2 text-sm font-semibold shadow-sm"
             onClick={() =>
               setPlaybackStep((current) =>
@@ -226,6 +376,7 @@ function HarnessBenchmarksPage() {
             onClick={() => {
               setReport(SAMPLE_REPORT);
               setPlaybackStep(null);
+              setSelectedArtifact(null);
             }}
           >
             <RefreshCw size={16} />
@@ -260,6 +411,11 @@ function HarnessBenchmarksPage() {
           <code className="mt-3 block rounded-lg border border-[var(--line)] bg-[rgba(23,58,64,0.08)] p-3 text-xs">
             {runStatus.artifact}
           </code>
+        ) : null}
+        {useCaseNote ? (
+          <pre className="mt-3 max-h-72 overflow-auto rounded-lg border border-[var(--line)] bg-[rgba(23,58,64,0.08)] p-3 text-xs whitespace-pre-wrap">
+            {useCaseNote}
+          </pre>
         ) : null}
       </section>
 

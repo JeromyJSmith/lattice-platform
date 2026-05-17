@@ -58,6 +58,17 @@ export interface HarnessCapabilityRunRequest {
   timeout_seconds?: number;
 }
 
+export interface ModelSmokeTestRequest {
+  model?: string;
+  timeout_seconds?: number;
+}
+
+export interface ErpCostSearchRequest {
+  description: string;
+  region?: string;
+  top?: number;
+}
+
 export class SidecarClient {
   readonly mode: "uds" | "tcp";
   readonly socketPath?: string;
@@ -136,6 +147,28 @@ export class SidecarClient {
   /** Convenience: fetch the sample Benchy-compatible benchmark report. */
   async getHarnessBenchmarkSampleReport(): Promise<SidecarResponse> {
     return this.get("/v1/harness/benchmarks/sample-report");
+  }
+
+  /** Convenience: list normalized benchmark reports from local Benchy artifacts. */
+  async listHarnessBenchmarkReports(limit = 20): Promise<SidecarResponse> {
+    const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(100, limit)) : 20;
+    return this.get(`/v1/harness/benchmarks/reports?limit=${safeLimit}`);
+  }
+
+  /** Convenience: run a local model smoke test via sidecar. */
+  async runHarnessModelSmokeTest(
+    payload: ModelSmokeTestRequest,
+    idempotencyKey?: string,
+  ): Promise<SidecarResponse> {
+    return this.post("/v1/harness/models/smoke", payload, idempotencyKey);
+  }
+
+  /** Convenience: run ERP CWICR cost search. */
+  async runErpCostSearch(
+    payload: ErpCostSearchRequest,
+    idempotencyKey?: string,
+  ): Promise<SidecarResponse> {
+    return this.post("/v1/erp/cost-search", payload, idempotencyKey);
   }
 
   /** Convenience: read all capability registries as a diagnostic matrix. */

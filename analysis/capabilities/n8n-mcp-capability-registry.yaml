@@ -1,0 +1,98 @@
+# spec-verified: n8n-mcp README + npm metadata 2026-05-17
+tool: n8n-mcp
+tool_version: 2.53.0
+canonical_docs: https://github.com/czlonkowski/n8n-mcp
+last_harvested: 2026-05-17
+harvested_by: codex-gpt-5
+capabilities:
+  - id: mcp-tools-documentation
+    surface: mcp_tool
+    name: tools_documentation
+    state: ACTIVE
+    description: Returns guidance for n8n-mcp tool usage and sequencing.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n MCP server in project-local runtime
+  - id: mcp-search-nodes
+    surface: mcp_tool
+    name: search_nodes
+    state: ACTIVE
+    description: Searches n8n node catalog across core and community surfaces.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-get-node
+    surface: mcp_tool
+    name: get_node
+    state: ACTIVE
+    description: Returns node schema, docs, versions, and operation details.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-validate-node
+    surface: mcp_tool
+    name: validate_node
+    state: ACTIVE
+    description: Validates node configuration before runtime deployment.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-validate-workflow
+    surface: mcp_tool
+    name: validate_workflow
+    state: ACTIVE
+    description: Validates complete workflow structure and expressions.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-search-templates
+    surface: mcp_tool
+    name: search_templates
+    state: ACTIVE
+    description: Finds n8n templates by metadata, task, node, or keyword.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-get-template
+    surface: mcp_tool
+    name: get_template
+    state: ACTIVE
+    description: Retrieves deployable template JSON and node structure.
+    wired_at:
+      - .mcp.json
+      - analysis/capabilities/n8n-mcp-capability-harvest.md
+    invoked_by:
+      - n8n workflow design planning
+  - id: mcp-manage-workflows
+    surface: mcp_tool
+    name: n8n_create_workflow / n8n_update_full_workflow / n8n_update_partial_workflow / n8n_delete_workflow / n8n_list_workflows
+    state: BLOCKED
+    description: Full CRUD workflow management against a live n8n API instance.
+    blocker: Missing runtime values for N8N_API_URL and N8N_API_KEY.
+    blocker_resolution_path: Provide credentials in environment and verify with n8n_health_check.
+  - id: mcp-execution-operations
+    surface: mcp_tool
+    name: n8n_test_workflow / n8n_executions
+    state: BLOCKED
+    description: Trigger and inspect workflow execution on a live n8n server.
+    blocker: No authenticated n8n target instance configured yet.
+    blocker_resolution_path: Configure n8n API credentials and run test execution checks.
+  - id: mcp-security-and-credentials
+    surface: mcp_tool
+    name: n8n_manage_credentials / n8n_audit_instance / n8n_health_check
+    state: BLOCKED
+    description: Performs credential lifecycle operations and security/audit checks.
+    blocker: Live n8n API connectivity and privileged credentials are not provisioned.
+    blocker_resolution_path: Provision scoped n8n API key and run health + audit verification.

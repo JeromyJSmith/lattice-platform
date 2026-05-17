@@ -11,7 +11,7 @@ export type RunRow = {
 export const listRuns = createServerFn({ method: "GET" }).handler(async () => {
   const base = process.env.PIXELTABLE_SERVICE_URL ?? "http://127.0.0.1:7770";
   try {
-    const res = await fetch(`${base}/v1/runtime/runs?limit=100`);
+    const res = await fetch(`${base}/v1/runtime/runs?limit=100&include_mock=false`);
     if (!res.ok) {
       return [];
     }
