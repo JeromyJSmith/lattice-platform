@@ -64,6 +64,11 @@ external/vectorworks-mcp-github/mcp-server/target/
 # committing them creates recursion since this worktree is itself inside.
 .claude/worktrees/
 
+# ---- Local Vectorworks authoring files ----
+# Keep heavy project binaries local; do not version them in Git.
+projects/vectorworks project files/**/*.vwx
+projects/vectorworks project files/**/*.lck
+
 # ---- Misc ----
 *.tmp
 *.bak
