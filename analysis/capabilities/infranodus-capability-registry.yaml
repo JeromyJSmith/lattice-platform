@@ -1,299 +1,214 @@
 # spec-verified: code.claude.com/docs 2026-05-11
 tool: infranodus
-tool_version: mcp-server-infranodus@latest (pinned at Phase 1 install)
+tool_version: npx infranodus-mcp-server (live tool surface harvested 2026-05-14)
 canonical_docs: https://infranodus.com/api/
-last_harvested: 2026-05-11
-harvested_by: claude-opus-4-7 (Amendment 06)
-
-# Capability rows below are the harvest output. All 20 MCP tools + 14 skills enumerated.
-# Each row carries state ACTIVE | DEFERRED | BLOCKED per .claude/rules/zero-dead-dna.md.
-
+last_harvested: 2026-05-14
+harvested_by: codex-gpt-5
 capabilities:
-  # ─── MCP TOOLS (20) ───
-  - id: analyze_text
+  - id: mcp-search
+    surface: mcp_tool
+    name: search
+    state: DEFERRED
+    description: Search the InfraNodus knowledge base.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-reuse
+    tracking_issue: 19
+  - id: mcp-fetch
+    surface: mcp_tool
+    name: fetch
+    state: DEFERRED
+    description: Fetch content by identifier from the InfraNodus knowledge base.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-reuse
+    tracking_issue: 19
+  - id: mcp-list-graphs
+    surface: mcp_tool
+    name: list_graphs
+    state: DEFERRED
+    description: List available graphs in the InfraNodus workspace.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-reuse
+    tracking_issue: 19
+  - id: mcp-get-more-tools
+    surface: mcp_tool
+    name: get_more_tools
+    state: DEFERRED
+    description: Discover additional InfraNodus tools at runtime.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-reuse
+    tracking_issue: 19
+  - id: mcp-retrieve-from-knowledge-base
+    surface: mcp_tool
+    name: retrieve_from_knowledge_base
+    state: DEFERRED
+    description: Retrieve graph-backed answers with optional graph summary.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-reuse
+    tracking_issue: 19
+  - id: mcp-analyze-text
     surface: mcp_tool
     name: analyze_text
-    state: ACTIVE
-    description: Convert raw text to knowledge graph; primary intake for desires/goals/failures corpora
-    wired_at: [meta/harness/bootstrap/build-gap-analysis.py]
-    invoked_by: [autoresearch loop, gap-analysis tool]
-
-  - id: create_knowledge_graph
-    surface: mcp_tool
-    name: create_knowledge_graph
-    state: ACTIVE
-    description: Construct persistent named graph in InfraNodus workspace
-    wired_at: [analysis/infranodus/README.md]
-    invoked_by: [autoresearch loop initial setup]
-
-  - id: analyze_existing_graph_by_name
-    surface: mcp_tool
-    name: analyze_existing_graph_by_name
-    state: ACTIVE
-    description: Re-read previously-created graph for diff/compare cycles
-    wired_at: [analysis/infranodus/README.md]
-    invoked_by: [autoresearch loop iteration N>1]
-
-  - id: generate_content_gaps
+    state: DEFERRED
+    description: Convert raw text into a knowledge graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: curated-doc-graphing
+    tracking_issue: 19
+  - id: mcp-generate-content-gaps
     surface: mcp_tool
     name: generate_content_gaps
     state: ACTIVE
-    description: Identify structural gaps in corpus; primary signal for proposer briefs
-    wired_at: [meta/harness/bootstrap/run-autoresearch.sh]
-    invoked_by: [autoresearch loop pre-propose step]
-
-  - id: develop_latent_topics
-    surface: mcp_tool
-    name: develop_latent_topics
-    state: ACTIVE
-    description: Surface underrepresented but bridge-worthy topics; optimize=latent mode
-    wired_at: [analysis/infranodus/README.md]
-    invoked_by: [autoresearch loop when plateau detected]
-
-  - id: develop_conceptual_bridges
-    surface: mcp_tool
-    name: develop_conceptual_bridges
-    state: ACTIVE
-    description: Connect discourse to broader context; cross-section harness use
-    wired_at: [analysis/infranodus/README.md]
-    invoked_by: [Global Meta-Harness cross-section synthesis]
-
-  - id: generate_topical_clusters
+    description: Identify structural gaps between concepts in the curated docs corpus.
+    wired_at:
+      - meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+    invoked_by:
+      - curated-doc gap-analysis proof
+  - id: mcp-generate-topical-clusters
     surface: mcp_tool
     name: generate_topical_clusters
-    state: ACTIVE
-    description: Cluster detection over goals/desires corpora; powers section split decisions
-    wired_at: [meta/harness/bootstrap/build-gap-analysis.py]
-    invoked_by: [gap-analysis tool]
-
-  - id: generate_research_questions
-    surface: mcp_tool
-    name: generate_research_questions
     state: DEFERRED
-    description: Generate clarifying questions from gaps
+    description: Cluster the graph into topical areas.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: curated-doc-graphing
     tracking_issue: 19
-
-  - id: generate_research_ideas
-    surface: mcp_tool
-    name: generate_research_ideas
-    state: DEFERRED
-    description: Generate research idea candidates from latent topics
-    reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
-    tracking_issue: 19
-
-  - id: develop_text_tool
+  - id: mcp-develop-text-tool
     surface: mcp_tool
     name: develop_text_tool
     state: DEFERRED
-    description: Combined optimize+latent+bridges single-call workflow
-    reason: redundant-with-other-tool
-    target_phase: revisit-if-rate-limit-pressure
+    description: Combined text optimization, latent topic, and bridge workflow.
+    reason: out-of-scope-for-current-phase
+    target_phase: doc-substrate-automation
     tracking_issue: 19
-
-  - id: optimize_text_structure
+  - id: mcp-optimize-text-structure
     surface: mcp_tool
     name: optimize_text_structure
+    state: ACTIVE
+    description: Diagnose discourse structure and recommend better organization.
+    wired_at:
+      - meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+    invoked_by:
+      - curated-doc gap-analysis proof
+  - id: mcp-develop-latent-topics
+    surface: mcp_tool
+    name: develop_latent_topics
     state: DEFERRED
-    description: Bias/focus/dispersion auto-detect + suggestions
+    description: Surface underrepresented topics from the current discourse.
     reason: out-of-scope-for-current-phase
-    target_phase: phase-5-section-prose-QA
+    target_phase: doc-substrate-automation
     tracking_issue: 19
-
-  - id: difference_between_texts
+  - id: mcp-develop-conceptual-bridges
+    surface: mcp_tool
+    name: develop_conceptual_bridges
+    state: DEFERRED
+    description: Generate conceptual bridges between distant clusters.
+    reason: out-of-scope-for-current-phase
+    target_phase: doc-substrate-automation
+    tracking_issue: 19
+  - id: mcp-difference-between-texts
     surface: mcp_tool
     name: difference_between_texts
     state: ACTIVE
-    description: Goal-vs-implementation diff; backs goal-vs-implementation.diff.json
-    wired_at: [analysis/infranodus/goal-vs-implementation.diff.json]
-    invoked_by: [autoresearch loop sync step]
-
-  - id: overlap_between_texts
+    description: Compare current docs against desired execution or operator flows.
+    wired_at:
+      - meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+    invoked_by:
+      - curated-doc gap-analysis proof
+  - id: mcp-overlap-between-texts
     surface: mcp_tool
     name: overlap_between_texts
     state: DEFERRED
-    description: Find conceptual overlap between two corpora
+    description: Compare overlap between multiple texts or graphs.
     reason: out-of-scope-for-current-phase
-    target_phase: cross-section-harness-sync
+    target_phase: cross-corpus-diffing
     tracking_issue: 19
-
-  - id: merged_graph_from_texts
+  - id: mcp-merged-graph-from-texts
     surface: mcp_tool
     name: merged_graph_from_texts
     state: DEFERRED
-    description: Build combined graph from multiple corpora
+    description: Build one merged graph from multiple texts or graphs.
     reason: out-of-scope-for-current-phase
-    target_phase: Global-Meta-Harness-rollup
+    target_phase: cross-corpus-diffing
     tracking_issue: 19
-
-  - id: generate_contextual_hint
+  - id: mcp-generate-contextual-hint
     surface: mcp_tool
     name: generate_contextual_hint
-    state: ACTIVE
-    description: Lightweight structural summary for proposer brief enrichment
-    wired_at: [meta/harness/bootstrap/run-autoresearch.sh]
-    invoked_by: [proposer brief construction]
-
-  - id: retrieve_from_knowledge_base
-    surface: mcp_tool
-    name: retrieve_from_knowledge_base
-    state: ACTIVE
-    description: GraphRAG retrieval with includeGraphSummary
-    wired_at: [pixeltable/knowledge/tools.py]   # added in Amendment 07
-    invoked_by: [search_research, search_tutorials substrate queries]
-
-  - id: generate_seo_report
-    surface: mcp_tool
-    name: generate_seo_report
-    state: BLOCKED
-    description: Comprehensive SEO content gap report
-    blocker: Not applicable to LATTICE (no SEO surface) — would consume tokens with zero value
-    blocker_resolution_path: Permanent BLOCKED; remove if LATTICE ever ships a public marketing site
-
-  - id: analyze_google_search_results
+    state: DEFERRED
+    description: Generate a compact structural summary for a graph or text.
+    reason: out-of-scope-for-current-phase
+    target_phase: doc-substrate-automation
+    tracking_issue: 19
+  - id: mcp-analyze-google-search-results
     surface: mcp_tool
     name: analyze_google_search_results
     state: BLOCKED
-    description: SERP analysis
-    blocker: Same as generate_seo_report — no public SEO surface in LATTICE
-    blocker_resolution_path: Permanent BLOCKED
-
-  - id: memory_add_relations
+    description: Analyze search-engine result pages for SEO work.
+    blocker: LATTICE has no active SEO or marketing-site capability harvesting lane.
+    blocker_resolution_path: Keep blocked unless a public marketing or SEO surface becomes an explicit project concern.
+  - id: mcp-analyze-related-search-queries
+    surface: mcp_tool
+    name: analyze_related_search_queries
+    state: BLOCKED
+    description: Analyze related search query patterns for SEO work.
+    blocker: LATTICE has no active SEO or marketing-site capability harvesting lane.
+    blocker_resolution_path: Keep blocked unless a public marketing or SEO surface becomes an explicit project concern.
+  - id: mcp-search-queries-vs-search-results
+    surface: mcp_tool
+    name: search_queries_vs_search_results
+    state: BLOCKED
+    description: Compare target queries with current search results for SEO work.
+    blocker: LATTICE has no active SEO or marketing-site capability harvesting lane.
+    blocker_resolution_path: Keep blocked unless a public marketing or SEO surface becomes an explicit project concern.
+  - id: mcp-generate-seo-report
+    surface: mcp_tool
+    name: generate_seo_report
+    state: BLOCKED
+    description: Generate a comprehensive SEO report.
+    blocker: LATTICE has no active SEO or marketing-site capability harvesting lane.
+    blocker_resolution_path: Keep blocked unless a public marketing or SEO surface becomes an explicit project concern.
+  - id: mcp-memory-add-relations
     surface: mcp_tool
     name: memory_add_relations
     state: DEFERRED
-    description: Persist knowledge-graph relations to InfraNodus memory layer
+    description: Persist graph relations to InfraNodus memory storage.
     reason: awaiting-upstream-dep
-    target_phase: post-Phase-8-Pixeltable-substrate-mature
+    target_phase: post-pixeltable-knowledge-substrate
     tracking_issue: 19
-
-  - id: memory_get_relations
+  - id: mcp-memory-get-relations
     surface: mcp_tool
     name: memory_get_relations
     state: DEFERRED
-    description: Retrieve persisted relations
+    description: Retrieve persisted graph relations from InfraNodus memory storage.
     reason: awaiting-upstream-dep
-    target_phase: post-Phase-8-Pixeltable-substrate-mature
+    target_phase: post-pixeltable-knowledge-substrate
     tracking_issue: 19
-
-  # ─── SKILLS (14, bundled via github.com/infranodus/skills) ───
-  - id: cognitive-variability-skill
-    surface: skill
-    name: cognitive-variability
+  - id: mcp-generate-research-questions
+    surface: mcp_tool
+    name: generate_research_questions
     state: DEFERRED
-    description: Detect when discourse becomes uniform/biased
+    description: Generate research questions from identified gaps.
     reason: out-of-scope-for-current-phase
-    target_phase: phase-5-section-prose-QA
+    target_phase: doc-substrate-automation
     tracking_issue: 19
-
-  - id: critical-perspective-skill
-    surface: skill
-    name: critical-perspective
+  - id: mcp-generate-research-ideas
+    surface: mcp_tool
+    name: generate_research_ideas
     state: DEFERRED
-    description: Generate counter-arguments to surface blind spots
+    description: Generate research idea candidates from current discourse.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: doc-substrate-automation
     tracking_issue: 19
-
-  - id: ontology-creator-skill
-    surface: skill
-    name: ontology-creator
-    state: ACTIVE
-    description: Builds taxonomies from text; useful for DesireRecord category extraction
-    wired_at: ["analysis/infranodus/README.md (referenced for desire intake)"]
-    invoked_by: ["DesireRecord intake pipeline (Issue #13)"]
-
-  - id: llm-wiki-skill
-    surface: skill
-    name: llm-wiki
+  - id: mcp-generate-knowledge-graph
+    surface: mcp_tool
+    name: generate_knowledge_graph
     state: DEFERRED
-    description: Auto-curate internal wiki from LLM outputs
-    reason: redundant-with-other-tool
-    target_phase: revisit-if-doc-substrate-insufficient
-    tracking_issue: 19
-
-  - id: shifting-perspective-skill
-    surface: skill
-    name: shifting-perspective
-    state: DEFERRED
-    description: Re-frame discourse from alternate viewpoint
+    description: Build a knowledge graph from text, URL, or existing graph input.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: curated-doc-graphing
     tracking_issue: 19
-
-  - id: graph-rag-skill
-    surface: skill
-    name: graph-rag
-    state: ACTIVE
-    description: Reference RAG-with-graph pattern; informs LATTICE retrieve_from_knowledge_base wiring
-    wired_at: [pixeltable/knowledge/tools.py]
-    invoked_by: [Amendment 07 substrate]
-
-  - id: content-gap-skill
-    surface: skill
-    name: content-gap
-    state: ACTIVE
-    description: How to read/act on generate_content_gaps output
-    wired_at: [meta/harness/bootstrap/run-autoresearch.sh]
-    invoked_by: [proposer brief construction]
-
-  - id: discourse-drift-skill
-    surface: skill
-    name: discourse-drift
+  - id: mcp-generate-responses-from-graph
+    surface: mcp_tool
+    name: generate_responses_from_graph
     state: DEFERRED
-    description: Track narrowing over time
+    description: Generate responses directly from a graph or graph-backed context.
     reason: out-of-scope-for-current-phase
-    target_phase: phase-5-cross-iteration-QA
+    target_phase: graph-memory-reuse
     tracking_issue: 19
-
-  - id: bias-detection-skill
-    surface: skill
-    name: bias-detection
-    state: DEFERRED
-    description: Identify over-represented nodes
-    reason: out-of-scope-for-current-phase
-    target_phase: phase-5-section-prose-QA
-    tracking_issue: 19
-
-  - id: question-generation-skill
-    surface: skill
-    name: question-generation
-    state: DEFERRED
-    description: Produce clarifying questions from gaps
-    reason: redundant-with-other-tool
-    target_phase: revisit-if-proposer-needs-question-mode
-    tracking_issue: 19
-
-  - id: corpus-shaping-skill
-    surface: skill
-    name: corpus-shaping
-    state: ACTIVE
-    description: 6-point input checklist; informs .claude/rules/infranodus-corpus.md
-    wired_at: [.claude/rules/infranodus-corpus.md]
-    invoked_by: [pre-flight for any analysis/infranodus/ write]
-
-  - id: graph-summary-skill
-    surface: skill
-    name: graph-summary
-    state: ACTIVE
-    description: Compact summary generation for proposer briefs
-    wired_at: [meta/harness/bootstrap/run-autoresearch.sh]
-    invoked_by: [proposer brief construction]
-
-  - id: gateway-concepts-skill
-    surface: skill
-    name: gateway-concepts
-    state: ACTIVE
-    description: Identify high-betweenness bridge nodes for RAG seeding
-    wired_at: [meta/harness/bootstrap/run-autoresearch.sh]
-    invoked_by: [autoresearch loop retrieval step]
-
-  - id: optimize-mode-router-skill
-    surface: skill
-    name: optimize-mode-router
-    state: ACTIVE
-    description: Decision logic for gaps/develop/reinforce/latent mode selection
-    wired_at: [meta/harness/sections/*/HARNESS.md, analysis/infranodus/README.md]
-    invoked_by: [each section harness pre-propose step]

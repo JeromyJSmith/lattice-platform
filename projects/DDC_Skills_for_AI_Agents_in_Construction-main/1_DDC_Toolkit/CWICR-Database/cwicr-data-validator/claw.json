@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-data-validator",
+  "version": "2.0.0",
+  "description": "Validate CWICR data quality and estimate inputs. Check for errors, inconsistencies, outliers, and missing data.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "data-processing",
+    "quality",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

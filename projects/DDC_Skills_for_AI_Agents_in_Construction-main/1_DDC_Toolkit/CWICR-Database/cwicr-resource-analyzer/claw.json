@@ -1,0 +1,22 @@
+{
+  "name": "cwicr-resource-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze construction resources (labor, materials, equipment) from DDC CWICR database. Calculate resource requirements, productivity metrics, and optimization recommendations.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "procurement",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

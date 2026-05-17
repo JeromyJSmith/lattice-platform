@@ -1,0 +1,468 @@
+# spec-verified: code.claude.com/docs 2026-05-11
+tool: graphify
+tool_version: 0.7.18
+canonical_docs: https://github.com/safishamsi/graphify
+last_harvested: 2026-05-14
+harvested_by: codex-gpt-5
+capabilities:
+  - id: cli-install
+    surface: cli_command
+    name: graphify install
+    state: DEFERRED
+    description: Generic platform installer entrypoint.
+    reason: redundant-with-other-tool
+    target_phase: revisit-if-platform-auto-detect-needed
+    tracking_issue: 19
+  - id: cli-uninstall
+    surface: cli_command
+    name: graphify uninstall
+    state: DEFERRED
+    description: Remove Graphify from detected platforms.
+    reason: out-of-scope-for-current-phase
+    target_phase: post-capability-harvest-admin-cleanup
+    tracking_issue: 19
+  - id: cli-path
+    surface: cli_command
+    name: graphify path
+    state: DEFERRED
+    description: Find the shortest path between two graph nodes.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-backed-exploration
+    tracking_issue: 19
+  - id: cli-explain
+    surface: cli_command
+    name: graphify explain
+    state: DEFERRED
+    description: Explain a node and its neighbors from graph.json.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-backed-exploration
+    tracking_issue: 19
+  - id: cli-clone
+    surface: cli_command
+    name: graphify clone
+    state: DEFERRED
+    description: Clone a GitHub repository for Graphify analysis.
+    reason: out-of-scope-for-current-phase
+    target_phase: source-acquisition-policy
+    tracking_issue: 19
+  - id: cli-merge-driver
+    surface: cli_command
+    name: graphify merge-driver
+    state: DEFERRED
+    description: Git merge driver for graph.json artifacts.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-artifact-collaboration
+    tracking_issue: 19
+  - id: cli-merge-graphs
+    surface: cli_command
+    name: graphify merge-graphs
+    state: DEFERRED
+    description: Merge multiple graph.json files into one cross-repo graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: cross-repo-capability-mapping
+    tracking_issue: 19
+  - id: cli-add
+    surface: cli_command
+    name: graphify add
+    state: DEFERRED
+    description: Fetch a URL into raw content and update the graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: source-acquisition-policy
+    tracking_issue: 19
+  - id: cli-watch
+    surface: cli_command
+    name: graphify watch
+    state: DEFERRED
+    description: Watch a folder and rebuild the graph on changes.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-refresh-automation
+    tracking_issue: 19
+  - id: cli-update
+    surface: cli_command
+    name: graphify update
+    state: ACTIVE
+    description: Re-extract code files and refresh the local AST graph without LLM calls.
+    wired_at:
+      - AGENTS.md
+      - meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md
+    invoked_by:
+      - capability-research bounded proof
+      - Codex startup guidance
+  - id: cli-cluster-only
+    surface: cli_command
+    name: graphify cluster-only
+    state: DEFERRED
+    description: Re-run clustering over an existing graph.json.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-report-tuning
+    tracking_issue: 19
+  - id: cli-query
+    surface: cli_command
+    name: graphify query
+    state: ACTIVE
+    description: Traverse graph.json to answer graph-structured questions.
+    wired_at:
+      - meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md
+    invoked_by:
+      - capability-research bounded proof
+  - id: cli-save-result
+    surface: cli_command
+    name: graphify save-result
+    state: DEFERRED
+    description: Save Q and A memory artifacts for graph feedback loops.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-memory-feedback
+    tracking_issue: 19
+  - id: cli-check-update
+    surface: cli_command
+    name: graphify check-update
+    state: DEFERRED
+    description: Check whether semantic re-extraction is pending.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-refresh-automation
+    tracking_issue: 19
+  - id: cli-tree
+    surface: cli_command
+    name: graphify tree
+    state: DEFERRED
+    description: Emit a collapsible tree HTML view from graph.json.
+    reason: out-of-scope-for-current-phase
+    target_phase: operator-facing-graph-views
+    tracking_issue: 19
+  - id: cli-extract
+    surface: cli_command
+    name: graphify extract
+    state: DEFERRED
+    description: Full AST plus semantic extraction with an LLM backend.
+    reason: awaiting-api-key
+    target_phase: post-docs-first-semantic-pass
+    tracking_issue: 19
+  - id: cli-global-add
+    surface: cli_command
+    name: graphify global add
+    state: DEFERRED
+    description: Add or update a project graph in the global graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: cross-repo-capability-mapping
+    tracking_issue: 19
+  - id: cli-global-remove
+    surface: cli_command
+    name: graphify global remove
+    state: DEFERRED
+    description: Remove a project graph from the global graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: cross-repo-capability-mapping
+    tracking_issue: 19
+  - id: cli-global-list
+    surface: cli_command
+    name: graphify global list
+    state: DEFERRED
+    description: List repositories in the global graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: cross-repo-capability-mapping
+    tracking_issue: 19
+  - id: cli-global-path
+    surface: cli_command
+    name: graphify global path
+    state: DEFERRED
+    description: Print the location of the global graph file.
+    reason: out-of-scope-for-current-phase
+    target_phase: cross-repo-capability-mapping
+    tracking_issue: 19
+  - id: cli-benchmark
+    surface: cli_command
+    name: graphify benchmark
+    state: DEFERRED
+    description: Measure token reduction versus naive full-corpus use.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-ops-benchmarking
+    tracking_issue: 19
+  - id: cli-export-callflow-html
+    surface: cli_command
+    name: graphify export callflow-html
+    state: DEFERRED
+    description: Emit Mermaid-based architecture and call-flow HTML.
+    reason: out-of-scope-for-current-phase
+    target_phase: operator-facing-graph-views
+    tracking_issue: 19
+  - id: cli-hook-install
+    surface: cli_command
+    name: graphify hook install
+    state: DEFERRED
+    description: Install Git post-commit and post-checkout hooks.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-refresh-automation
+    tracking_issue: 19
+  - id: cli-hook-uninstall
+    surface: cli_command
+    name: graphify hook uninstall
+    state: DEFERRED
+    description: Remove Git hooks installed by Graphify.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-refresh-automation
+    tracking_issue: 19
+  - id: cli-hook-status
+    surface: cli_command
+    name: graphify hook status
+    state: DEFERRED
+    description: Check whether Graphify Git hooks are installed.
+    reason: out-of-scope-for-current-phase
+    target_phase: graph-refresh-automation
+    tracking_issue: 19
+  - id: cli-gemini-install
+    surface: cli_command
+    name: graphify gemini install
+    state: DEFERRED
+    description: Install Graphify guidance for Gemini CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-gemini-uninstall
+    surface: cli_command
+    name: graphify gemini uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Gemini CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-cursor-install
+    surface: cli_command
+    name: graphify cursor install
+    state: DEFERRED
+    description: Install Graphify guidance for Cursor.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-cursor-uninstall
+    surface: cli_command
+    name: graphify cursor uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Cursor.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-claude-install
+    surface: cli_command
+    name: graphify claude install
+    state: DEFERRED
+    description: Install Graphify guidance for Claude Code.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-claude-uninstall
+    surface: cli_command
+    name: graphify claude uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Claude Code.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-codex-install
+    surface: cli_command
+    name: graphify codex install
+    state: ACTIVE
+    description: Install Graphify guidance into the repo AGENTS.md for Codex.
+    wired_at:
+      - AGENTS.md
+    invoked_by:
+      - Codex repo guidance
+  - id: cli-codex-uninstall
+    surface: cli_command
+    name: graphify codex uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from AGENTS.md.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-opencode-install
+    surface: cli_command
+    name: graphify opencode install
+    state: DEFERRED
+    description: Install Graphify guidance for OpenCode.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-opencode-uninstall
+    surface: cli_command
+    name: graphify opencode uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from OpenCode.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-aider-install
+    surface: cli_command
+    name: graphify aider install
+    state: DEFERRED
+    description: Install Graphify guidance for Aider.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-aider-uninstall
+    surface: cli_command
+    name: graphify aider uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Aider.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-copilot-install
+    surface: cli_command
+    name: graphify copilot install
+    state: DEFERRED
+    description: Install Graphify skill guidance for GitHub Copilot CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-copilot-uninstall
+    surface: cli_command
+    name: graphify copilot uninstall
+    state: DEFERRED
+    description: Remove Graphify skill guidance from GitHub Copilot CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-vscode-install
+    surface: cli_command
+    name: graphify vscode install
+    state: DEFERRED
+    description: Install Graphify guidance for VS Code Copilot Chat.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-vscode-uninstall
+    surface: cli_command
+    name: graphify vscode uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from VS Code Copilot Chat.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-claw-install
+    surface: cli_command
+    name: graphify claw install
+    state: DEFERRED
+    description: Install Graphify guidance for OpenClaw.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-claw-uninstall
+    surface: cli_command
+    name: graphify claw uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from OpenClaw.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-droid-install
+    surface: cli_command
+    name: graphify droid install
+    state: DEFERRED
+    description: Install Graphify guidance for Factory Droid.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-droid-uninstall
+    surface: cli_command
+    name: graphify droid uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Factory Droid.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-trae-install
+    surface: cli_command
+    name: graphify trae install
+    state: DEFERRED
+    description: Install Graphify guidance for Trae.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-trae-uninstall
+    surface: cli_command
+    name: graphify trae uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Trae.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-trae-cn-install
+    surface: cli_command
+    name: graphify trae-cn install
+    state: DEFERRED
+    description: Install Graphify guidance for Trae CN.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-trae-cn-uninstall
+    surface: cli_command
+    name: graphify trae-cn uninstall
+    state: DEFERRED
+    description: Remove Graphify guidance from Trae CN.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-antigravity-install
+    surface: cli_command
+    name: graphify antigravity install
+    state: DEFERRED
+    description: Install Graphify rules and workflows for Google Antigravity.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-antigravity-uninstall
+    surface: cli_command
+    name: graphify antigravity uninstall
+    state: DEFERRED
+    description: Remove Graphify rules and workflows from Google Antigravity.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-hermes-install
+    surface: cli_command
+    name: graphify hermes install
+    state: DEFERRED
+    description: Install Graphify skill guidance for Hermes.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-hermes-uninstall
+    surface: cli_command
+    name: graphify hermes uninstall
+    state: DEFERRED
+    description: Remove Graphify skill guidance from Hermes.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-kiro-install
+    surface: cli_command
+    name: graphify kiro install
+    state: DEFERRED
+    description: Install Graphify skill guidance for Kiro IDE and CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-kiro-uninstall
+    surface: cli_command
+    name: graphify kiro uninstall
+    state: DEFERRED
+    description: Remove Graphify skill guidance from Kiro IDE and CLI.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-pi-install
+    surface: cli_command
+    name: graphify pi install
+    state: DEFERRED
+    description: Install Graphify skill guidance for Pi coding agent.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-pi-uninstall
+    surface: cli_command
+    name: graphify pi uninstall
+    state: DEFERRED
+    description: Remove Graphify skill guidance from Pi coding agent.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19

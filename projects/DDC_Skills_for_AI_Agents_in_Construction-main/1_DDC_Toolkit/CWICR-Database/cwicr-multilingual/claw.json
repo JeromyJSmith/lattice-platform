@@ -1,0 +1,21 @@
+{
+  "name": "cwicr-multilingual",
+  "version": "2.0.0",
+  "description": "Work with CWICR database across 9 languages. Cross-language matching, translation, and regional pricing.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

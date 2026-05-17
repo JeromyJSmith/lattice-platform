@@ -1,0 +1,21 @@
+{
+  "name": "bim-classification-ai",
+  "version": "2.0.0",
+  "description": "Classify BIM elements using AI and standard classification systems. Map elements to UniFormat, MasterFormat, OmniClass, and CWICR codes.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

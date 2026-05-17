@@ -1,0 +1,23 @@
+{
+  "name": "bim-validation-report",
+  "version": "2.0.0",
+  "description": "Generate comprehensive BIM model validation reports. Check data quality, completeness, and compliance with standards.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "safety",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

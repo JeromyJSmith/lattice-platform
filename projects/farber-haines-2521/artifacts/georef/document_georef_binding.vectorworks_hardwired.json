@@ -1,0 +1,29 @@
+{
+  "_origin": "Vectorworks active document synced after manual CRS/location update",
+  "project_id": "farber-haines-2521",
+  "binding_id": "document_georef_binding_vectorworks_hardwired",
+  "binding_status": "runtime_apply",
+  "allow_apply": true,
+  "binding_kind": "vectorworks_project_hardwire",
+  "strategy": "manual_document_georef_plus_hardwired_anchor_record",
+  "control_point_id": "anchor_wgs84_reference",
+  "epsg_code": 2231,
+  "target_wgs84_lat": 40.0370784,
+  "target_wgs84_lon": -105.2845774,
+  "user_origin_absolute_x": 799.4679627382823,
+  "user_origin_absolute_y": -717.2747968857685,
+  "vectorworks_snapshot": {
+    "document_is_georeferenced": true,
+    "gis_origin": {
+      "lat": 40.0370784,
+      "lon": -105.2845774,
+      "angle_to_north": 0.0
+    },
+    "user_origin": {
+      "x": 799.4679627382823,
+      "y": -717.2747968857685
+    },
+    "epsg_code": 2231
+  },
+  "notes": "CRS kept as EPSG:2231 (NAD83 / Colorado North ftUS); lat/lon set in Vectorworks Document Georeferencing UI."
+}

@@ -1,0 +1,22 @@
+{
+  "name": "rfi-management",
+  "version": "2.0.0",
+  "description": "Complete RFI (Request for Information) management system. Create, track, route, and analyze RFIs with automatic notifications and response deadline tracking.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

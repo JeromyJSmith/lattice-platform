@@ -1,0 +1,72 @@
+{
+  "ok": true,
+  "dry_run": false,
+  "apply_requested": true,
+  "apply_performed": false,
+  "apply_block_reason": "Fit apply failed: Command '['/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/pixeltable/.venv/bin/python', '/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/pixeltable/scripts/apply_farber_haines_georef_fit.py', '--max-rmse', '5.0', '--max-residual', '15.0']' returned non-zero exit status 1.",
+  "thresholds": {
+    "max_rmse": 5.0,
+    "max_residual": 15.0
+  },
+  "post_export": {
+    "ok": true,
+    "selected_json": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/artifacts/georef/farber_haines_selected_reference_points.json",
+    "selected_source": "artifact_json",
+    "authoritative_json": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/farber_haines_point_pairs_authoritative_template.json",
+    "matched_json": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/artifacts/georef/farber_haines_point_pairs_matched.json",
+    "match_summary_json": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/artifacts/georef/farber_haines_point_pairs_match_summary.json",
+    "selected_export_generated_at_utc": "2026-05-17T01:02:15Z",
+    "selected_object_signature_sha256": "recreated-from-pixeltable-georef-control-points",
+    "matched_point_count": 4,
+    "fit_run": true,
+    "fit_json": "/tmp/farber_haines_georef_fit.json",
+    "binding_json": "/tmp/farber_haines_georef_binding_candidate.json",
+    "notes": "Fit ran because at least 3 matched points were available."
+  },
+  "match_summary": {
+    "project_id": "farber-haines-2521",
+    "selected_source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+    "selected_source_basename": "_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+    "selected_export_generated_at_utc": "2026-05-17T01:02:15Z",
+    "selected_export_version": "v1-recreated-from-pixeltable",
+    "selected_object_signature_sha256": "recreated-from-pixeltable-georef-control-points",
+    "selected_document_is_georeferenced": true,
+    "selected_active_layer_is_georeferenced": true,
+    "selected_count": 2,
+    "matched_count": 4,
+    "matched_point_ids": [
+      "parcel_corner_1",
+      "parcel_corner_2",
+      "parcel_corner_3",
+      "parcel_corner_4"
+    ],
+    "unmatched_point_ids": [
+      "Q-8",
+      "M-405-1",
+      "M-405",
+      "R-8",
+      "P-1",
+      "M-405-2",
+      "L-405",
+      "M-15",
+      "V-8-1",
+      "CO060010N0700W0_100340"
+    ],
+    "boundary_object_label": "Parcel Boundary (recreated) | Site-PropertyBoundary | Design Layer-1",
+    "notes": [
+      "Matched 4 parcel corners from selected boundary object `Parcel Boundary (recreated) | Site-PropertyBoundary | Design Layer-1`.",
+      "Matched 0 named control / benchmark rows from selected objects."
+    ]
+  },
+  "fit_summary": {
+    "fit_run": true,
+    "matched_point_count": 4,
+    "fit_json": "/tmp/farber_haines_georef_fit.json",
+    "binding_json": "/tmp/farber_haines_georef_binding_candidate.json",
+    "rmse": 1.1641532182693481e-09,
+    "max_residual": 1.877140660839749e-09,
+    "binding_status": "candidate",
+    "thresholds_pass": true
+  },
+  "apply_result": null
+}

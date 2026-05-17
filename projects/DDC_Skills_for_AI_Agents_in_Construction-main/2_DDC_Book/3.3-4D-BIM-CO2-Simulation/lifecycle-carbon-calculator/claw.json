@@ -1,0 +1,23 @@
+{
+  "name": "lifecycle-carbon-calculator",
+  "version": "2.0.0",
+  "description": "Calculate embodied carbon and lifecycle emissions for construction materials and projects. Support sustainable design decisions with carbon data.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "scheduling",
+    "data-processing",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

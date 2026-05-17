@@ -1,0 +1,23 @@
+{
+  "name": "budget-variance-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze budget vs actual cost variances. Identify overruns, forecast final costs, and generate variance reports.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "reporting",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

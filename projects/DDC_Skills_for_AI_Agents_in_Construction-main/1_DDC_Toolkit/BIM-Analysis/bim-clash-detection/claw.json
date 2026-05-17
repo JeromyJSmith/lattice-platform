@@ -1,0 +1,22 @@
+{
+  "name": "bim-clash-detection",
+  "version": "2.0.0",
+  "description": "Detect and analyze geometric clashes in BIM models. Identify MEP, structural, and architectural conflicts before construction.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "machine-learning",
+    "GIS"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

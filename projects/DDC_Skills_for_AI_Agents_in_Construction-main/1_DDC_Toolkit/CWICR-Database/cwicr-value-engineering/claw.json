@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-value-engineering",
+  "version": "2.0.0",
+  "description": "Perform value engineering analysis using CWICR data. Identify cost-saving alternatives while maintaining function and quality.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

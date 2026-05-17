@@ -1,0 +1,23 @@
+{
+  "name": "project-kpi-dashboard",
+  "version": "2.0.0",
+  "description": "Create interactive KPI dashboards for construction projects. Track schedule, cost, quality, and safety metrics in real-time.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "safety"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

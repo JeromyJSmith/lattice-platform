@@ -1,0 +1,23 @@
+{
+  "name": "co2-estimation",
+  "version": "2.0.0",
+  "description": "Calculate carbon footprint of construction projects. Estimate CO2 emissions from materials, transportation, and construction processes using emission factors databases.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "BIM",
+    "scheduling",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

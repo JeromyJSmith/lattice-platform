@@ -13,6 +13,7 @@ const columns = [
     header: "Run ID",
     cell: (info) => {
       const id = info.getValue();
+      if (typeof id !== "string" || id.length === 0) return "—";
       const short = id.length > 8 ? id.slice(-8) : id;
       return (
         <span title={id} className="font-mono">

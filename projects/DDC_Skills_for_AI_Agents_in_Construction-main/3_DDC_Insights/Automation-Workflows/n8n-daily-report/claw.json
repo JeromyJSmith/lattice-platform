@@ -1,0 +1,22 @@
+{
+  "name": "n8n-daily-report",
+  "version": "2.0.0",
+  "description": "Automate daily construction report generation using n8n workflow automation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

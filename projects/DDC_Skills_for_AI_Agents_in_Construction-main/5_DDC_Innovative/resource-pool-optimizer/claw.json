@@ -1,0 +1,19 @@
+{
+  "name": "resource-pool-optimizer",
+  "version": "2.0.0",
+  "description": "Optimize shared resource pools across multiple construction projects. Balance resource allocation, minimize conflicts, and maximize utilization across the portfolio.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

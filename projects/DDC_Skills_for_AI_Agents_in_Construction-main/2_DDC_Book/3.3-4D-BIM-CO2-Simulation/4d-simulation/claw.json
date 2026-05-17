@@ -1,0 +1,22 @@
+{
+  "name": "4d-simulation",
+  "version": "2.0.0",
+  "description": "Create 4D construction simulations by linking BIM elements to project schedules. Generate time-based visualizations, sequence analysis, and construction phasing with Gantt integration.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "scheduling",
+    "sustainability"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

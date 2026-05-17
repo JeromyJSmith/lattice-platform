@@ -1,0 +1,23 @@
+{
+  "name": "bim-consistency-checker",
+  "version": "2.0.0",
+  "description": "Check BIM model consistency: naming conventions, parameter completeness, spatial relationships, and data integrity across model elements.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "machine-learning",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

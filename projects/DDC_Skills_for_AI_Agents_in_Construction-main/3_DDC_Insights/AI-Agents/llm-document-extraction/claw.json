@@ -1,0 +1,22 @@
+{
+  "name": "llm-document-extraction",
+  "version": "2.0.0",
+  "description": "Extract structured data from construction documents using LLMs. Process RFIs, submittals, contracts, specifications. Convert unstructured PDFs to structured JSON/Excel.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

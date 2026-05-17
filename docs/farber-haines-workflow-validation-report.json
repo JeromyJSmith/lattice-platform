@@ -1,0 +1,340 @@
+{
+  "generated_at": "2026-05-17T00:27:57.811167+00:00",
+  "project_id": "farber-haines-2521",
+  "working_copy_vwx": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+  "overall_status": "fail",
+  "highest_value_gap": "Solve the Vectorworks-to-world binding from real survey corners/stakes, then write the fit back to `lattice.bridge.project_georef`. That is the highest-value blocker because Cesium/iTwin alignment, IFC georef trust, and downstream overlay validation all depend on it.",
+  "checks": {
+    "pricing": {
+      "status": "pass",
+      "summary": "Pricing and estimate exports are live in Pixeltable and on disk.",
+      "details": [
+        "Pixeltable summary rows: 33",
+        "Pixeltable object rows: 313",
+        "Summary CSV rows: 33",
+        "Object CSV rows: 313"
+      ]
+    },
+    "georef_seed": {
+      "status": "warn",
+      "summary": "Project georef seed is live, but the document binding is still unresolved.",
+      "details": [
+        "Live project_georef row present: True",
+        "EPSG code: 2876",
+        "Control points in seed: 4",
+        "Binding status: unresolved"
+      ]
+    },
+    "vw_binding": {
+      "status": "fail",
+      "summary": "Vectorworks-to-world binding is still unresolved.",
+      "details": [
+        "Binding status: unresolved",
+        "Allow apply: False",
+        "VW origin X: None",
+        "VW origin Y: None",
+        "VW scale: None",
+        "VW rotation deg: None",
+        "Transform present: False",
+        "Document georeferenced: 0",
+        "Review reason: document_not_georeferenced;no_survey_point_or_stake_anchor;no_model_extents"
+      ]
+    },
+    "survey_control": {
+      "status": "fail",
+      "summary": "No live survey-control solve has been applied yet.",
+      "details": [
+        "Survey CSV applied live: False",
+        "Survey file path: ",
+        "Selected reference JSON present: False",
+        "Point-pairs working JSON present: False",
+        "Fit JSON present: False",
+        "Cycle report present: True",
+        "Cycle report error: post-export georef run failed: missing selected reference export: /Users/ojeromyo/Desktop/farber_haines_selected_reference_points.json"
+      ]
+    },
+    "georef_operator": {
+      "status": "warn",
+      "summary": "Georef operator path is healthy and fail-closed, but waiting on a real Vectorworks selected-reference export.",
+      "details": [
+        "Authoritative point-pair package present: True",
+        "Authoritative source summary present: True",
+        "Selected reference JSON present: False",
+        "Cycle report present: True",
+        "Cycle report ok: False",
+        "Cycle report error: post-export georef run failed: missing selected reference export: /Users/ojeromyo/Desktop/farber_haines_selected_reference_points.json"
+      ]
+    },
+    "ifc": {
+      "status": "warn",
+      "summary": "IFC export runs, but the current working-copy export still has CRS, semantic typing, or custom-property payload gaps.",
+      "details": [
+        "IFC export result ok: True",
+        "IFC file present: True",
+        "Current working-copy IFC4x3 export present: True",
+        "Current working-copy IFC schema: IFC4X3_ADD2",
+        "Current working-copy IFC projected CRS EPSG: 3857",
+        "Current working-copy IFC IfcGeographicElement count: 1034",
+        "Mapped objects in audit: 66",
+        "Unmapped objects in audit: 6497",
+        "Direct IFC setter failures sampled: 12",
+        "Current working-copy IFC issue: hardscape_not_typed_as_ifcslab",
+        "Current working-copy IFC issue: unexpected_crs:3857",
+        "Current working-copy IFC issue: missing_marpa_cost_pset",
+        "Current working-copy IFC issue: missing_project_cost_payload"
+      ]
+    },
+    "ifc_project_settings": {
+      "status": "warn",
+      "summary": "IFC project export dialog settings are still un-audited for Farber-Haines.",
+      "details": [
+        "IFC project-properties summary present: False",
+        "IFC project-properties CSV present: False",
+        "IFC project fields read: 0",
+        "IFC project required fields missing: 0",
+        "IFC project document_georeferenced snapshot: None"
+      ]
+    },
+    "plant_assets": {
+      "status": "pass",
+      "summary": "Local plant 3D asset pipeline surfaces are present on disk.",
+      "details": [
+        "TRELLIS server present: True",
+        "TRELLIS UI present: True",
+        "TRELLIS outputs dir present: True",
+        "Phase1 extract present: True",
+        "Viewer dir present: True"
+      ]
+    },
+    "docs": {
+      "status": "pass",
+      "summary": "Presentation and operator docs are in place.",
+      "details": [
+        "estimation_brief: True",
+        "record_export_matrix: True",
+        "georef_lock_plan: True",
+        "georef_live_sequence: True",
+        "henry_meeting_focus: True"
+      ]
+    }
+  },
+  "live": {
+    "project_georef_present": true,
+    "project_georef_config_version": "1",
+    "summary_row_count": 33,
+    "object_row_count": 313,
+    "sample_summary_row": {
+      "id": "a706371ff9cd4001b82f51ae4b1a7f30",
+      "project_id": "farber-haines-2521",
+      "ingest_run_id": "summary-20260516T232840Z",
+      "source_csv": "/Users/ojeromyo/Desktop/vw_cost_estimate_summary.csv",
+      "class_name": "L-Boulder",
+      "description": "Boulders - Granite,  Avg 1.5 ton 18\u201dx18\u201dx36\u201d",
+      "unit": "ton",
+      "measure_basis": "Manual Review",
+      "quantity": 0.0,
+      "unit_cost": 650.0,
+      "total_cost": 0.0,
+      "objects_counted": 83,
+      "mapping_confidence": "",
+      "budget_description": "",
+      "budget_section": "",
+      "notes": "",
+      "ingested_at": "2026-05-16 17:28:40.368539-06:00"
+    },
+    "sample_object_row": {
+      "id": "423a048e3dfd4936939cd78f355d9a27",
+      "project_id": "farber-haines-2521",
+      "ingest_run_id": "objects-20260516T232840Z",
+      "source_csv": "/Users/ojeromyo/Desktop/vw_cost_estimate_object_rows.csv",
+      "object_uuid": "0165f539-93f0-43d2-87fa-6deb890a690e",
+      "class_name": "L-Boulder",
+      "layer_name": "Proposed Site Plan",
+      "object_type": "21",
+      "description": "Boulders - Granite,  Avg 1.5 ton 18\u201dx18\u201dx36\u201d",
+      "unit": "ton",
+      "measure_basis": "Manual Review",
+      "quantity": 0.0,
+      "unit_cost": 650.0,
+      "total_cost": 0.0,
+      "ingested_at": "2026-05-16 17:28:40.396991-06:00"
+    }
+  },
+  "files": {
+    "summary_csv": {
+      "path": "/Users/ojeromyo/Desktop/vw_cost_estimate_summary.csv",
+      "exists": true,
+      "size_bytes": 3025
+    },
+    "object_csv": {
+      "path": "/Users/ojeromyo/Desktop/vw_cost_estimate_object_rows.csv",
+      "exists": true,
+      "size_bytes": 44606
+    },
+    "mapping_csv": {
+      "path": "/Users/ojeromyo/Desktop/vw_class_budget_mapping_first_pass.csv",
+      "exists": true,
+      "size_bytes": 18107
+    },
+    "project_georef_seed": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/georef.config.seed.json",
+      "exists": true,
+      "size_bytes": 6904
+    },
+    "project_georef_evidence": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/georef.evidence.register.json",
+      "exists": true,
+      "size_bytes": 5187
+    },
+    "binding_json": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/georef/document_georef_binding.json",
+      "exists": true,
+      "size_bytes": 907
+    },
+    "control_points_json": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/georef/control_points_wgs84_provisional.json",
+      "exists": true,
+      "size_bytes": 1475
+    },
+    "georef_audit_json": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/data/vw_extract/_audit_georeference_last_run.json",
+      "exists": true,
+      "size_bytes": 1622
+    },
+    "ifc_audit_json": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/data/vw_extract/_audit_ifc_assignment_last_run.json",
+      "exists": true,
+      "size_bytes": 779
+    },
+    "ifc_project_props_json": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/data/vw_extract/_audit_ifc_project_props_last_run.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "ifc_project_properties_csv": {
+      "path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/data/vw_exports/farber-haines-2521/ifc_project_properties.csv",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "ifc_export_result": {
+      "path": "/tmp/farber_haines_ifc_probe/export_result.json",
+      "exists": true,
+      "size_bytes": 421
+    },
+    "ifc_probe_file": {
+      "path": "/tmp/farber_haines_ifc_probe/farber_haines_probe_20260516T231627Z.ifc",
+      "exists": true,
+      "size_bytes": 5495
+    },
+    "ifc_diag_json": {
+      "path": "/Users/ojeromyo/Desktop/fh_ifc_diag.json",
+      "exists": true,
+      "size_bytes": 2618
+    },
+    "ifc4x3_export_file": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.ifc",
+      "exists": true,
+      "size_bytes": 608236
+    },
+    "ifc4x3_assessment_json": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-ifc-export-assessment.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "ifc4x3_assessment_md": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-ifc-export-assessment.md",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "fit_json": {
+      "path": "/tmp/farber_haines_georef_fit.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "fit_binding_candidate": {
+      "path": "/tmp/farber_haines_georef_binding_candidate.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "cycle_report_json": {
+      "path": "/tmp/farber_haines_georef_cycle_report.json",
+      "exists": true,
+      "size_bytes": 672
+    },
+    "selected_reference_json": {
+      "path": "/Users/ojeromyo/Desktop/farber_haines_selected_reference_points.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "selected_reference_csv": {
+      "path": "/Users/ojeromyo/Desktop/farber_haines_selected_reference_points.csv",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "point_pairs_working": {
+      "path": "/Users/ojeromyo/Desktop/farber_haines_point_pairs_working.json",
+      "exists": false,
+      "size_bytes": 0
+    },
+    "authoritative_point_pairs": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/farber_haines_point_pairs_authoritative_template.json",
+      "exists": true,
+      "size_bytes": 8313
+    },
+    "authoritative_georef_source_summary": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/farber_haines_authoritative_georef_sources_summary.json",
+      "exists": true,
+      "size_bytes": 5248
+    },
+    "trellis_server": {
+      "path": "/Volumes/PixelTable/MARPA_918_JUNIPER/experiments/trees_sage/trellis_server.py",
+      "exists": true,
+      "size_bytes": 5623
+    },
+    "trellis_html": {
+      "path": "/Volumes/PixelTable/MARPA_918_JUNIPER/experiments/trees_sage/trellis.html",
+      "exists": true,
+      "size_bytes": 11998
+    },
+    "trellis_outputs_dir": {
+      "path": "/Volumes/PixelTable/MARPA_918_JUNIPER/experiments/trees_sage/trellis_outputs",
+      "exists": true,
+      "size_bytes": 256
+    },
+    "phase1_extract": {
+      "path": "/Volumes/PixelTable/MARPA_918_JUNIPER/src/python/extract/phase1_extract.py",
+      "exists": true,
+      "size_bytes": 21833
+    },
+    "viewer_dir": {
+      "path": "/Volumes/PixelTable/MARPA_918_JUNIPER/viewer",
+      "exists": true,
+      "size_bytes": 128
+    },
+    "estimation_brief": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-vectorworks-estimation-brief.md",
+      "exists": true,
+      "size_bytes": 23331
+    },
+    "record_export_matrix": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-record-export-matrix.md",
+      "exists": true,
+      "size_bytes": 7551
+    },
+    "georef_lock_plan": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-georef-lock-plan.md",
+      "exists": true,
+      "size_bytes": 4335
+    },
+    "georef_live_sequence": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-georef-live-update-sequence.md",
+      "exists": true,
+      "size_bytes": 1534
+    },
+    "henry_meeting_focus": {
+      "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/docs/farber-haines-henry-meeting-focus.md",
+      "exists": true,
+      "size_bytes": 3502
+    }
+  }
+}

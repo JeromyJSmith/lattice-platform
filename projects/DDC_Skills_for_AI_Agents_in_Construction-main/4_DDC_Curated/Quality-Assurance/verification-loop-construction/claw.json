@@ -1,0 +1,23 @@
+{
+  "name": "verification-loop-construction",
+  "version": "2.0.0",
+  "description": "Comprehensive verification system for construction automation deliverables. Use after completing estimates, schedules, reports, or data processing tasks to ensure quality.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "scheduling",
+    "data-processing",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

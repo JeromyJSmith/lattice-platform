@@ -1,0 +1,22 @@
+{
+  "name": "quality-control-workflow",
+  "version": "2.0.0",
+  "description": "Construction quality control workflow automation. Manage QC inspections, track defects, generate NCRs, and ensure specification compliance throughout the project.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "quality",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

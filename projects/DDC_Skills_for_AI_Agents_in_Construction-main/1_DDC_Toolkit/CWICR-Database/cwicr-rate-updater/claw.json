@@ -1,0 +1,22 @@
+{
+  "name": "cwicr-rate-updater",
+  "version": "2.0.0",
+  "description": "Update CWICR resource rates with current market prices. Integrate external price data, apply inflation adjustments, and maintain rate history.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

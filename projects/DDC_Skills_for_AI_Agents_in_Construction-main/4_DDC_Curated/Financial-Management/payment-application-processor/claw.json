@@ -1,0 +1,21 @@
+{
+  "name": "payment-application-processor",
+  "version": "2.0.0",
+  "description": "Process construction payment applications. Validate schedule of values, calculate retainage, track billing status, and generate G702/G703 forms.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "cost-management",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

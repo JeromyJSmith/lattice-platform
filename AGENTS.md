@@ -289,21 +289,22 @@ This repo uses the `graphifyy` package, which installs the `graphify` CLI.
 This project is indexed by GitNexus as **lattice-platform-scoped** (9468 symbols, 11983 relationships, 110 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+>
+> Current verified state as of `2026-05-14`: `analyze`, `mcp`, `list`, `status`, and
+> `cypher` are proven. Scoped `query`, `context`, `impact`, and `detect-changes`
+> are currently blocked until the stale scoped index is refreshed and re-verified.
 
 ## Always Do
 
-- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
-- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
-- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
-- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+- Re-run `npx gitnexus analyze` whenever `status` reports the scoped index is stale.
+- Prefer `gitnexus status`, `gitnexus list`, and `gitnexus cypher` for live verification until the blocked scoped calls are re-proven.
+- If you need blast-radius or context analysis, first restore `impact`, `query`, `context`, and `detect-changes` to a passing state with a bounded proof.
 
 ## Never Do
 
-- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
-- NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
+- NEVER pretend scoped `query`, `context`, `impact`, or `detect-changes` are healthy when the current repo state says otherwise.
 - NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
-- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+- NEVER leave a stale scoped index unreported when using GitNexus output as evidence.
 
 ## Resources
 

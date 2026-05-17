@@ -1,0 +1,22 @@
+{
+  "name": "progress-monitoring-cv",
+  "version": "2.0.0",
+  "description": "Monitor construction progress using computer vision. Analyze site photos and drone imagery to track work completion, detect safety issues, and compare against BIM models.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "safety",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

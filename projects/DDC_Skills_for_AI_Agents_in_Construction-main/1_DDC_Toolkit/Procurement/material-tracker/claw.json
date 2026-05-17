@@ -1,0 +1,20 @@
+{
+  "name": "material-tracker",
+  "version": "2.0.0",
+  "description": "Track material orders, deliveries, and inventory on construction sites. Monitor lead times, delivery status, and stock levels.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

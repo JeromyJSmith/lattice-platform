@@ -1,0 +1,21 @@
+{
+  "name": "subcontractor-prequalification",
+  "version": "2.0.0",
+  "description": "Prequalify subcontractors based on safety, financial, and performance criteria.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

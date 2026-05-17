@@ -1,0 +1,22 @@
+{
+  "name": "n8n-project-management",
+  "version": "2.0.0",
+  "description": "Build a complete project management system with Telegram bot, task distribution, and photo reports using n8n. Based on DDC Project Management repository.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

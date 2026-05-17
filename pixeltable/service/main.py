@@ -19,6 +19,8 @@ from contextlib import asynccontextmanager
 from importlib import import_module
 from pathlib import Path
 
+from fastapi.staticfiles import StaticFiles
+
 try:
     FastAPI = import_module("fastapi").FastAPI
 except ModuleNotFoundError as exc:  # pragma: no cover - environment wiring guard
@@ -46,6 +48,7 @@ from service.routes import (
     reality as r_reality,
     runtime as r_runtime,
     semantic as r_semantic,
+    trellis as r_trellis,
     vw as r_vw,
 )
 from service.settings import Settings, load as load_settings  # noqa: E402
@@ -150,3 +153,9 @@ app.include_router(r_harness_health.router, prefix="/v1/harness",  tags=["harnes
 app.include_router(r_georef.router,         prefix="/v1/georef",    tags=["georef"])
 app.include_router(r_reality.router,        prefix="/v1/reality",   tags=["reality"])
 app.include_router(r_projects.router,       prefix="/v1/projects",  tags=["projects"])
+app.include_router(r_trellis.router,        prefix="/v1/trellis",   tags=["trellis"])
+
+# Serve local TRELLIS GLB outputs so the browser Three.js viewer can load them
+_TRELLIS_OUT = _HERE.parents[1] / "runtime-runs" / "trellis-outputs"
+_TRELLIS_OUT.mkdir(parents=True, exist_ok=True)
+app.mount("/trellis-outputs", StaticFiles(directory=str(_TRELLIS_OUT)), name="trellis-outputs")

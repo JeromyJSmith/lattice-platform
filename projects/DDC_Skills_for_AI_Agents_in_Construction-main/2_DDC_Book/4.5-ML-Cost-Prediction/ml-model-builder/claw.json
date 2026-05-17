@@ -1,0 +1,22 @@
+{
+  "name": "ml-model-builder",
+  "version": "2.0.0",
+  "description": "Build ML models for construction predictions. Train and evaluate custom models for cost, duration, and risk prediction.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

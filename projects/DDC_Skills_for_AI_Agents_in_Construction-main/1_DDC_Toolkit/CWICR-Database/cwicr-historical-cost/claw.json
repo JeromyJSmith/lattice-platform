@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-historical-cost",
+  "version": "2.0.0",
+  "description": "Track and analyze historical cost data using CWICR. Compare actual vs estimated costs, build project cost database, and improve future estimates.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "excel-to-rvt",
+  "version": "2.0.0",
+  "description": "Import Excel data into RVT projects. Update element parameters, create schedules, and sync external data sources.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "scheduling",
+    "data-processing",
+    "CAD"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

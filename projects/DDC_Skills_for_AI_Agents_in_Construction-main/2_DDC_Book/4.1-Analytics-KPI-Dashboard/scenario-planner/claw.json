@@ -1,0 +1,23 @@
+{
+  "name": "scenario-planner",
+  "version": "2.0.0",
+  "description": "What-if analysis for construction projects: model different scenarios and their cost/schedule/resource impacts. Compare alternatives and optimize decisions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

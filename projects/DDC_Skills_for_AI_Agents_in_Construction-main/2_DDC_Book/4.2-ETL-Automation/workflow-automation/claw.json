@@ -1,0 +1,21 @@
+{
+  "name": "workflow-automation",
+  "version": "2.0.0",
+  "description": "Automate construction data workflows. Build ETL pipelines and DAG workflows for recurring tasks.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

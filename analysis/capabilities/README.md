@@ -43,9 +43,9 @@ IndyDevDan / Disler repositories selected for LATTICE are incorporated as doctri
 | `pixeltable-capability-registry.yaml` | Pixeltable data store and computed-column runtime | docs.pixeltable.com |
 | `web-ifc-capability-registry.yaml` | web-ifc browser IFC parser surface | thatopen.github.io/engine_web-ifc |
 | `infranodus-capability-registry.yaml` | InfraNodus MCP server + skills bundle | github.com/infranodus/mcp-server-infranodus + github.com/infranodus/skills |
-| `graphify-parisgroup-capability-registry.yaml` | Graphify (Rust CLI + MCP + slash + skills + agents) | github.com/parisgroup-ai/graphify |
-| `gitnexus-capability-registry.yaml` | GitNexus (MCP + group tools + skills + hooks) | github.com/abhigyanpatwari/GitNexus |
+| `graphify-capability-registry.yaml` | Graphify CLI plus repo-local MCP wrapper and platform installers | github.com/safishamsi/graphify |
 | `graphify-safishamsi-capability-registry.yaml` | Graphifyy (Python multi-format + YouTube ingestion) | github.com/safishamsi/graphify |
+| `gitnexus-capability-registry.yaml` | GitNexus (MCP + group tools + skills + hooks) | github.com/abhigyanpatwari/GitNexus |
 
 ## Schema reference
 

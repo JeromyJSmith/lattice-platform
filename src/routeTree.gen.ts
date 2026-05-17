@@ -28,6 +28,7 @@ import { Route as RunsRunIdRouteImport } from './routes/runs/$runId'
 import { Route as ReplayRunIdRouteImport } from './routes/replay/$runId'
 import { Route as HarnessCapabilitiesRouteImport } from './routes/harness/capabilities'
 import { Route as HarnessBenchmarksRouteImport } from './routes/harness/benchmarks'
+import { Route as GenaiTrellisRouteImport } from './routes/genai/trellis'
 import { Route as EvidenceArtifactIdRouteImport } from './routes/evidence/$artifactId'
 import { Route as DemoStoreRouteImport } from './routes/demo/store'
 import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
@@ -144,6 +145,11 @@ const HarnessBenchmarksRoute = HarnessBenchmarksRouteImport.update({
   path: '/harness/benchmarks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GenaiTrellisRoute = GenaiTrellisRouteImport.update({
+  id: '/genai/trellis',
+  path: '/genai/trellis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EvidenceArtifactIdRoute = EvidenceArtifactIdRouteImport.update({
   id: '/evidence/$artifactId',
   path: '/evidence/$artifactId',
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/genai/trellis': typeof GenaiTrellisRoute
   '/harness/benchmarks': typeof HarnessBenchmarksRoute
   '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
@@ -297,6 +304,7 @@ export interface FileRoutesByTo {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/genai/trellis': typeof GenaiTrellisRoute
   '/harness/benchmarks': typeof HarnessBenchmarksRoute
   '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/demo/better-auth': typeof DemoBetterAuthRoute
   '/demo/store': typeof DemoStoreRoute
   '/evidence/$artifactId': typeof EvidenceArtifactIdRoute
+  '/genai/trellis': typeof GenaiTrellisRoute
   '/harness/benchmarks': typeof HarnessBenchmarksRoute
   '/harness/capabilities': typeof HarnessCapabilitiesRoute
   '/replay/$runId': typeof ReplayRunIdRoute
@@ -382,6 +391,7 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/genai/trellis'
     | '/harness/benchmarks'
     | '/harness/capabilities'
     | '/replay/$runId'
@@ -423,6 +433,7 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/genai/trellis'
     | '/harness/benchmarks'
     | '/harness/capabilities'
     | '/replay/$runId'
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/demo/better-auth'
     | '/demo/store'
     | '/evidence/$artifactId'
+    | '/genai/trellis'
     | '/harness/benchmarks'
     | '/harness/capabilities'
     | '/replay/$runId'
@@ -506,6 +518,7 @@ export interface RootRouteChildren {
   DemoBetterAuthRoute: typeof DemoBetterAuthRoute
   DemoStoreRoute: typeof DemoStoreRoute
   EvidenceArtifactIdRoute: typeof EvidenceArtifactIdRoute
+  GenaiTrellisRoute: typeof GenaiTrellisRoute
   HarnessBenchmarksRoute: typeof HarnessBenchmarksRoute
   HarnessCapabilitiesRoute: typeof HarnessCapabilitiesRoute
   ReplayRunIdRoute: typeof ReplayRunIdRoute
@@ -672,6 +685,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HarnessBenchmarksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/genai/trellis': {
+      id: '/genai/trellis'
+      path: '/genai/trellis'
+      fullPath: '/genai/trellis'
+      preLoaderRoute: typeof GenaiTrellisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/evidence/$artifactId': {
       id: '/evidence/$artifactId'
       path: '/evidence/$artifactId'
@@ -826,6 +846,7 @@ const rootRouteChildren: RootRouteChildren = {
   DemoBetterAuthRoute: DemoBetterAuthRoute,
   DemoStoreRoute: DemoStoreRoute,
   EvidenceArtifactIdRoute: EvidenceArtifactIdRoute,
+  GenaiTrellisRoute: GenaiTrellisRoute,
   HarnessBenchmarksRoute: HarnessBenchmarksRoute,
   HarnessCapabilitiesRoute: HarnessCapabilitiesRoute,
   ReplayRunIdRoute: ReplayRunIdRoute,

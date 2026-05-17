@@ -1,0 +1,45 @@
+{
+  "export_kind": "vectorworks_selected_reference_points",
+  "export_version": 2,
+  "export_generated_at_utc": "2026-05-17T18:03:45.771545+00:00",
+  "project_id": "farber-haines-2521",
+  "source_vwx": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+  "source_vwx_basename": "_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+  "georef_snapshot": {
+    "document_is_georeferenced": true,
+    "gis_origin": {
+      "lat": 40.0370784,
+      "lon": -105.2845774,
+      "angle_to_north": 0.0
+    },
+    "user_origin": {
+      "x": 799.4679627382823,
+      "y": -717.2747968857685
+    },
+    "epsg_code": 2231
+  },
+  "selected_count": 1,
+  "object_signature_sha256": "878dd1a1-0927-4364-bf02-3c196e6cd050",
+  "objects": [
+    {
+      "object_uuid": "878dd1a1-0927-4364-bf02-3c196e6cd050",
+      "name": "LATTICE_GEOREF_anchor_wgs84_reference",
+      "class_name": "LATTICE-Georef-Control",
+      "layer_name": "L2.01",
+      "type_n": 17,
+      "center_point": {
+        "x": 799.467963,
+        "y": -717.274797
+      },
+      "bbox": {
+        "min_x": 799.467963,
+        "min_y": -717.274797,
+        "max_x": 799.467963,
+        "max_y": -717.274797,
+        "center_x": 799.467963,
+        "center_y": -717.274797
+      },
+      "vertices": []
+    }
+  ]
+}

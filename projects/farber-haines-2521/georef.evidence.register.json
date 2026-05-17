@@ -1,0 +1,105 @@
+{
+  "project_id": "farber-haines-2521",
+  "project_name": "Farber-Haines [2521]",
+  "updated_at": "2026-05-17T00:01:25.251539+00:00",
+  "purpose": "Track every georeference evidence source available for Farber-Haines, including control, parcel, OSM, overlay, iTwin, and splat references.",
+  "vectorworks": {
+    "original_vwx": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521].vwx",
+    "working_copy_vwx": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+    "document_binding_status": "unresolved",
+    "document_allow_apply": false
+  },
+  "core_location": {
+    "target_lat_wgs84": 40.0370784,
+    "target_lon_wgs84": -105.2845774,
+    "epsg_code": 2876,
+    "elevation_m": 1666.34,
+    "true_north_degrees": 0.0,
+    "google_maps_url": "https://www.google.com/maps/@40.0370784,-105.2845774,20z"
+  },
+  "survey_control": {
+    "status": "authoritative_candidates_present",
+    "control_points_path": "/Volumes/PixelTable/GROVE_HARNESS/juniper2026/georef/control_points_wgs84_provisional.json",
+    "control_point_count": 4,
+    "control_points": [
+      {
+        "control_point_id": "parcel_corner_nw_provisional",
+        "description": "Northwest parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03718,
+        "lon_wgs84": -105.28469
+      },
+      {
+        "control_point_id": "parcel_corner_ne_provisional",
+        "description": "Northeast parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03718,
+        "lon_wgs84": -105.28441
+      },
+      {
+        "control_point_id": "parcel_corner_se_provisional",
+        "description": "Southeast parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03638,
+        "lon_wgs84": -105.28441
+      },
+      {
+        "control_point_id": "parcel_corner_sw_provisional",
+        "description": "Southwest parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03638,
+        "lon_wgs84": -105.2847
+      }
+    ],
+    "stake_coordinate_source": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/farber_haines_control_candidates.csv",
+    "authoritative_point_pair_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/farber_haines_point_pairs_authoritative_template.json",
+    "survey_file_path": "",
+    "county_control_json_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/boulder_county_control_bank_near_site.json",
+    "city_benchmark_json_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/boulder_city_benchmarks_near_site.json",
+    "notes": "Replace provisional parcel corners with matched VW survey stakes/corners when available; county and city control candidates may already be present."
+  },
+  "parcel_boundary": {
+    "shapefile_path": "",
+    "geojson_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/boulder_county_parcel_146124100105.geojson",
+    "kml_path": "",
+    "geopackage_path": "",
+    "county_json_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/sources/boulder_county_parcel_146124100105.json",
+    "county_source_url": "https://maps.bouldercounty.org/arcgis/rest/services/PARCELS/PARCELS_OWNER/FeatureServer/0",
+    "notes": "Use county parcel geometry for boundary sanity and fit confirmation."
+  },
+  "osm": {
+    "status": "candidate_reference",
+    "osm_geojson_path": "",
+    "osm_node_id": "",
+    "osm_way_id": "",
+    "osm_relation_id": "",
+    "notes": "Useful for parcel sanity and surrounding context, not primary stake truth."
+  },
+  "plan_image_overlays": {
+    "full_landscape_plan_image": "",
+    "planting_plan_image": "",
+    "additional_plan_images": [],
+    "overlay_target": "iTwin_or_threejs_reference_stack",
+    "notes": "Use exported 2D plan images as turn-on/off alignment references over georeferenced context."
+  },
+  "itwin_and_threejs": {
+    "ifc_probe_path": "/tmp/farber_haines_ifc_probe/farber_haines_probe_20260516T231627Z.ifc",
+    "itwin_overlay_status": "planned",
+    "threejs_overlay_status": "planned",
+    "notes": "Use 2D image overlays and georeferenced model checks to visually confirm orientation and placement."
+  },
+  "gaussian_splat": {
+    "status": "future_candidate",
+    "site_images_path": "",
+    "splat_output_path": "",
+    "alignment_method": "control_points",
+    "notes": "If a current-site splat is generated, align it against the same control-point authority used for the project georef."
+  },
+  "config_seed": {
+    "path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/farber-haines-2521/georef.config.seed.json"
+  }
+}

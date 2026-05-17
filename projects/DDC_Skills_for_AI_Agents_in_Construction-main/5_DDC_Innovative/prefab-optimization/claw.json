@@ -1,0 +1,21 @@
+{
+  "name": "prefab-optimization",
+  "version": "2.0.0",
+  "description": "Optimize prefabrication and modular construction workflows. Plan module sequencing, factory scheduling, transportation logistics, and on-site assembly for maximum efficiency.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "automation",
+    "GIS"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

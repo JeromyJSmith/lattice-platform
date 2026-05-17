@@ -1,0 +1,20 @@
+{
+  "name": "schedule-delay-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze schedule delays, identify causes, and calculate time impacts using delay analysis methods.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

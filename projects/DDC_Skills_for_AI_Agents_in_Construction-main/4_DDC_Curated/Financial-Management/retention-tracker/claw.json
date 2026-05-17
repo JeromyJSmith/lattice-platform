@@ -1,0 +1,20 @@
+{
+  "name": "retention-tracker",
+  "version": "2.0.0",
+  "description": "Track construction retainage/retention amounts. Monitor held amounts by subcontractor, track release conditions, and manage retainage billing.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

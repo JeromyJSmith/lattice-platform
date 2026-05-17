@@ -1,0 +1,23 @@
+{
+  "name": "subcontractor-payment-tracker",
+  "version": "2.0.0",
+  "description": "Track subcontractor payments, lien waivers, and compliance. Manage payment schedules and documentation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "safety"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

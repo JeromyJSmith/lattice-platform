@@ -1,0 +1,23 @@
+{
+  "name": "multi-agent-estimation",
+  "version": "2.0.0",
+  "description": "Build multi-agent AI systems for construction estimation. Use CrewAI/LangGraph to orchestrate specialized agents: QTO agent, pricing agent, validation agent. Automate complex estimation workflows.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "quality",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

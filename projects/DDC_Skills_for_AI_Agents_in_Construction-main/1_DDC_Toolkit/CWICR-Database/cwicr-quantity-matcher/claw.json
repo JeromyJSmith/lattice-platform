@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-quantity-matcher",
+  "version": "2.0.0",
+  "description": "Match BIM quantities to CWICR work items. Map element categories to cost codes, validate quantities, and generate cost-linked QTOs.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "BIM",
+    "cost-management",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

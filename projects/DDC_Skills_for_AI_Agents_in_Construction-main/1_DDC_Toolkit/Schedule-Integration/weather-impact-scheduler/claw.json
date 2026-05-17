@@ -1,0 +1,21 @@
+{
+  "name": "weather-impact-scheduler",
+  "version": "2.0.0",
+  "description": "Analyze weather impact on construction schedule. Predict delays and adjust activities based on forecast.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "scheduling",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

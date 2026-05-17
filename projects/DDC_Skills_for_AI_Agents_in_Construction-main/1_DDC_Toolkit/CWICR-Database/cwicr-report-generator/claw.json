@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-report-generator",
+  "version": "2.0.0",
+  "description": "Generate professional cost estimation reports from CWICR calculations. HTML, PDF, Excel outputs with charts and breakdowns.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

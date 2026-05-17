@@ -1,0 +1,21 @@
+{
+  "name": "decision-support",
+  "version": "2.0.0",
+  "description": "Provide data-driven decision support for construction. Analyze multiple factors and recommend optimal project decisions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

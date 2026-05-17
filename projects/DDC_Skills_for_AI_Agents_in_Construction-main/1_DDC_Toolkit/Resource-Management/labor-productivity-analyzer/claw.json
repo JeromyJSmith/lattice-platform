@@ -1,0 +1,19 @@
+{
+  "name": "labor-productivity-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze labor productivity by trade, activity, and location. Track efficiency and identify improvement opportunities.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "carbon-calculator",
+  "version": "2.0.0",
+  "description": "Calculate embodied carbon in construction materials. Track CO2 emissions, compare alternatives, and generate sustainability reports.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "procurement",
+    "sustainability"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

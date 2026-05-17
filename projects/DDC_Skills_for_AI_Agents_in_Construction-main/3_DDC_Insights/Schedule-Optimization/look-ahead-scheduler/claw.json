@@ -1,0 +1,20 @@
+{
+  "name": "look-ahead-scheduler",
+  "version": "2.0.0",
+  "description": "Generate rolling look-ahead schedules for construction. Create 2-week, 3-week, or 6-week look-aheads with constraint analysis and crew coordination.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

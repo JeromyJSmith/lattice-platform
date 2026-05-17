@@ -1,0 +1,21 @@
+{
+  "name": "document-classification-nlp",
+  "version": "2.0.0",
+  "description": "Automatically classify and extract information from construction documents using NLP. Categorize RFIs, submittals, change orders, specifications, and contracts.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

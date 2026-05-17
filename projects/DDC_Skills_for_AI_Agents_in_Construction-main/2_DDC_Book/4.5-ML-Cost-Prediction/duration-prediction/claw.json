@@ -1,0 +1,22 @@
+{
+  "name": "duration-prediction",
+  "version": "2.0.0",
+  "description": "Predict project duration using k-NN and regression. Estimate timeline based on similar historical projects.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

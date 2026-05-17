@@ -1,0 +1,281 @@
+{
+  "objectIdFieldName": "OBJECTID",
+  "globalIdFieldName": "",
+  "geometryType": "esriGeometryPolygon",
+  "spatialReference": {
+    "wkid": 2876,
+    "latestWkid": 2876
+  },
+  "fields": [
+    {
+      "name": "Shape__Area",
+      "alias": "Shape.STArea()",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "Shape__Length",
+      "alias": "Shape.STLength()",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+    },
+    {
+      "name": "CreatedDate",
+      "alias": "CreatedDate",
+      "type": "esriFieldTypeDate",
+      "length": 8
+    },
+    {
+      "name": "AccountNo",
+      "alias": "AccountNo",
+      "type": "esriFieldTypeString",
+      "length": 25
+    },
+    {
+      "name": "ParcelNo",
+      "alias": "ParcelNo",
+      "type": "esriFieldTypeString",
+      "length": 23
+    },
+    {
+      "name": "StrNum",
+      "alias": "StrNum",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Street",
+      "alias": "Street",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "StrPrx",
+      "alias": "StrPrx",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+    },
+    {
+      "name": "StrSuf",
+      "alias": "StrSuf",
+      "type": "esriFieldTypeString",
+      "length": 4
+    },
+    {
+      "name": "StrUnit",
+      "alias": "StrUnit",
+      "type": "esriFieldTypeString",
+      "length": 15
+    },
+    {
+      "name": "StrCity",
+      "alias": "StrCity",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "SubCode",
+      "alias": "SubCode",
+      "type": "esriFieldTypeString",
+      "length": 15
+    },
+    {
+      "name": "SubDscr",
+      "alias": "SubDscr",
+      "type": "esriFieldTypeString",
+      "length": 255
+    },
+    {
+      "name": "Section",
+      "alias": "Section",
+      "type": "esriFieldTypeString",
+      "length": 3
+    },
+    {
+      "name": "Township",
+      "alias": "Township",
+      "type": "esriFieldTypeString",
+      "length": 3
+    },
+    {
+      "name": "Range",
+      "alias": "Range",
+      "type": "esriFieldTypeString",
+      "length": 3
+    },
+    {
+      "name": "Block",
+      "alias": "Block",
+      "type": "esriFieldTypeString",
+      "length": 6
+    },
+    {
+      "name": "Lot",
+      "alias": "Lot",
+      "type": "esriFieldTypeString",
+      "length": 6
+    },
+    {
+      "name": "OwnerName",
+      "alias": "OwnerName",
+      "type": "esriFieldTypeString",
+      "length": 100
+    },
+    {
+      "name": "CareOf",
+      "alias": "CareOf",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "MailAddr1",
+      "alias": "MailAddr1",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "MailAddr2",
+      "alias": "MailAddr2",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "MailCity",
+      "alias": "MailCity",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "MailState",
+      "alias": "MailState",
+      "type": "esriFieldTypeString",
+      "length": 2
+    },
+    {
+      "name": "MailZip",
+      "alias": "MailZip",
+      "type": "esriFieldTypeString",
+      "length": 10
+    },
+    {
+      "name": "MailCountry",
+      "alias": "MailCountry",
+      "type": "esriFieldTypeString",
+      "length": 50
+    },
+    {
+      "name": "RoleCode",
+      "alias": "RoleCode",
+      "type": "esriFieldTypeString",
+      "length": 16
+    },
+    {
+      "name": "PctOwn",
+      "alias": "PctOwn",
+      "type": "esriFieldTypeSingle"
+    },
+    {
+      "name": "TaxArea",
+      "alias": "TaxArea",
+      "type": "esriFieldTypeString",
+      "length": 16
+    },
+    {
+      "name": "Nbhd",
+      "alias": "Nbhd",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "MillLevy",
+      "alias": "MillLevy",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "Legal",
+      "alias": "Legal",
+      "type": "esriFieldTypeString",
+      "length": 1073741822
+    },
+    {
+      "name": "AcctType",
+      "alias": "AcctType",
+      "type": "esriFieldTypeString",
+      "length": 100
+    },
+    {
+      "name": "assessor_ASR_PARCELS_PARCEL_NO",
+      "alias": "assessor.ASR.PARCELS.PARCEL_NO",
+      "type": "esriFieldTypeString",
+      "length": 12
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "Shape__Area": 22962.773056750644,
+        "Shape__Length": 740.2644673561026,
+        "OBJECTID": 80512455,
+        "CreatedDate": 1778782830000,
+        "AccountNo": "R0005342",
+        "ParcelNo": "146124100105",
+        "StrNum": 918,
+        "Street": "JUNIPER",
+        "StrPrx": null,
+        "StrSuf": "AVE",
+        "StrUnit": null,
+        "StrCity": "BOULDER",
+        "SubCode": "9906",
+        "SubDscr": "TR, NBR 128,158,172-178 FOOTHILLS",
+        "Section": "24",
+        "Township": "1N",
+        "Range": "71",
+        "Block": "      ",
+        "Lot": "      ",
+        "OwnerName": "FARBER PAUL & HENA V HAINES",
+        "CareOf": null,
+        "MailAddr1": "918 JUNIPER AVE",
+        "MailAddr2": null,
+        "MailCity": "BOULDER",
+        "MailState": "CO",
+        "MailZip": "80304-1726",
+        "MailCountry": null,
+        "RoleCode": "P",
+        "PctOwn": 1.0,
+        "TaxArea": "000010",
+        "Nbhd": null,
+        "MillLevy": 89.2,
+        "Legal": "TRACT 396 A 24-1N-71 BOOK 1301 PAGE 340 BCR              ",
+        "AcctType": "RESIDENTIAL",
+        "assessor_ASR_PARCELS_PARCEL_NO": null
+      },
+      "geometry": {
+        "rings": [
+          [
+            [
+              3060285.1310936064,
+              1256173.6188902557
+            ],
+            [
+              3060285.2839896083,
+              1256465.5490665287
+            ],
+            [
+              3060363.6630616784,
+              1256464.8190825284
+            ],
+            [
+              3060364.409109682,
+              1256174.1480422616
+            ],
+            [
+              3060285.1310936064,
+              1256173.6188902557
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

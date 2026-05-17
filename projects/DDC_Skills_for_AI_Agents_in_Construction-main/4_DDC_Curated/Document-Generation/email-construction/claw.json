@@ -1,0 +1,21 @@
+{
+  "name": "email-construction",
+  "version": "2.0.0",
+  "description": "Email generation for construction workflows: RFI responses, submittal transmittals, meeting notices, change order notifications. Professional templates with context-aware content.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

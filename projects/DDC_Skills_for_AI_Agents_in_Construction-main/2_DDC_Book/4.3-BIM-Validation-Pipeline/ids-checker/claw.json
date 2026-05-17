@@ -1,0 +1,23 @@
+{
+  "name": "ids-checker",
+  "version": "2.0.0",
+  "description": "Check BIM data against IDS (Information Delivery Specification). Validate model information requirements and compliance.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "safety",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

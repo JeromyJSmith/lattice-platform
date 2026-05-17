@@ -1,0 +1,22 @@
+{
+  "name": "progress-photo-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze construction site photos to track progress, detect safety issues, and compare against BIM models using computer vision.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "safety",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

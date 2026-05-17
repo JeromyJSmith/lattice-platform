@@ -1,0 +1,20 @@
+{
+  "name": "meeting-minutes-generator",
+  "version": "2.0.0",
+  "description": "Generate structured construction meeting minutes. Track action items, decisions, and attendees.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

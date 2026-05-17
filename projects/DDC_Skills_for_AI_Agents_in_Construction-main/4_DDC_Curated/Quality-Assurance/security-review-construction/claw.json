@@ -1,0 +1,22 @@
+{
+  "name": "security-review-construction",
+  "version": "2.0.0",
+  "description": "Security review checklist for construction software systems. Use when building integrations, APIs, data pipelines, or dashboards for construction projects.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

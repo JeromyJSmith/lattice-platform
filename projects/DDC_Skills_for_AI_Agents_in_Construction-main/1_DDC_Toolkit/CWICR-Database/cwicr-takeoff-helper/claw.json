@@ -1,0 +1,21 @@
+{
+  "name": "cwicr-takeoff-helper",
+  "version": "2.0.0",
+  "description": "Assist with quantity takeoff using CWICR data. Calculate quantities from dimensions, apply waste factors, and suggest related work items.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

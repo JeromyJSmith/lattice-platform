@@ -1,0 +1,22 @@
+{
+  "name": "change-order-processor",
+  "version": "2.0.0",
+  "description": "Process and manage construction change orders. Track costs, approvals, and impact on schedule and budget.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

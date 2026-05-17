@@ -1,0 +1,23 @@
+{
+  "name": "co2-carbon-footprint",
+  "version": "2.0.0",
+  "description": "Calculate CO2 emissions and carbon footprint from BIM model data. Analyze embodied carbon by material, element, and building system.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "machine-learning",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "budget-variance-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze construction budget variances. Compare estimated vs actual costs, identify trends, forecast final costs, and generate variance reports for cost control.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "reporting",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

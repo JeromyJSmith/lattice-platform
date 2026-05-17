@@ -1,0 +1,68 @@
+# spec-verified: gitnexus --help 2026-05-14
+tool: gitnexus
+tool_version: 1.6.3
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/gitnexus-capability-harvest.md
+  matrix: analysis/capabilities/gitnexus-capability-matrix.md
+harnesses:
+  - harness: capability-research
+    capabilities:
+      - id: cli-analyze
+        registry_state: ACTIVE
+        purpose: Build a scoped code graph for bounded capability and harness research.
+        proof:
+          command: node_modules/.bin/gitnexus analyze --skip-agents-md --name lattice-platform-scoped
+          evidence: meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+          verified_at: 2026-05-13
+          outcome: Scoped index was created successfully for a bounded subset.
+        verification:
+          command: node_modules/.bin/gitnexus status
+          evidence: meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md
+      - id: cli-status
+        registry_state: ACTIVE
+        purpose: Check whether the current repo index is fresh enough to trust.
+        proof:
+          command: node_modules/.bin/gitnexus status
+          evidence: meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+          verified_at: 2026-05-13
+          outcome: Status reported a healthy bounded index during the initial proof.
+        verification:
+          command: node_modules/.bin/gitnexus status
+          evidence: AGENTS.md
+        docs_coverage:
+          required: true
+          source: AGENTS.md
+      - id: cli-cypher
+        registry_state: ACTIVE
+        purpose: Run raw graph checks when query-style surfaces are not trustworthy.
+        proof:
+          command: node_modules/.bin/gitnexus cypher "MATCH (f:File) RETURN f LIMIT 3" -r lattice-platform-scoped
+          evidence: meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+          verified_at: 2026-05-13
+          outcome: Raw Cypher returned file nodes from the scoped index.
+        verification:
+          command: node_modules/.bin/gitnexus cypher "MATCH (f:File) RETURN f LIMIT 1" -r lattice-platform-scoped
+          evidence: meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md
+  - harness: agent-runtime
+    capabilities:
+      - id: cli-mcp
+        registry_state: ACTIVE
+        purpose: Expose GitNexus through the repo-local MCP configuration.
+        proof:
+          command: node_modules/.bin/gitnexus mcp
+          evidence: .mcp.json
+          verified_at: 2026-05-14
+          outcome: Repo-local MCP entry points at the GitNexus stdio server.
+        verification:
+          command: rg -n "\"gitnexus\"" .mcp.json
+          evidence: .mcp.json
+        docs_coverage:
+          required: true
+          source: .mcp.json

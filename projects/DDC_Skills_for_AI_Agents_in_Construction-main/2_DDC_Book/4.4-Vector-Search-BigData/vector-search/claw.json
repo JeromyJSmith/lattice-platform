@@ -1,0 +1,21 @@
+{
+  "name": "vector-search",
+  "version": "2.0.0",
+  "description": "Implement semantic vector search for construction data. Build AI-powered search using embeddings and vector databases (Qdrant, ChromaDB) for intelligent querying of specifications, standards, and project documents.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

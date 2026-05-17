@@ -1,0 +1,21 @@
+{
+  "name": "submittal-tracker",
+  "version": "2.0.0",
+  "description": "Track construction submittals through the review process. Manage approvals, revisions, and compliance.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

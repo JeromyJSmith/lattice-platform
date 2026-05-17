@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-overhead-markup",
+  "version": "2.0.0",
+  "description": "Apply overhead, profit, and markup to CWICR estimates. Calculate indirect costs, general conditions, and contractor margins.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

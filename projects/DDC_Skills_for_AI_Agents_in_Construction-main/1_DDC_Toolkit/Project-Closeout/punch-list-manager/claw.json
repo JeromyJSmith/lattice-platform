@@ -1,0 +1,19 @@
+{
+  "name": "punch-list-manager",
+  "version": "2.0.0",
+  "description": "Manage construction punch lists for project closeout. Track deficiencies, assign corrections, and monitor completion status.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

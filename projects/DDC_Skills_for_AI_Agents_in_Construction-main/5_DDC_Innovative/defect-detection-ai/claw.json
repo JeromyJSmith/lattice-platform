@@ -1,0 +1,19 @@
+{
+  "name": "defect-detection-ai",
+  "version": "2.0.0",
+  "description": "AI-powered construction defect detection using computer vision. Identify cracks, spalling, corrosion, and other defects in concrete, steel, and building components from images and video.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

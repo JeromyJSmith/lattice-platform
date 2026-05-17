@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 80512455,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -105.28469892374471,
+              40.03638355626466
+            ],
+            [
+              -105.28441578838898,
+              40.03638448012195
+            ],
+            [
+              -105.28441592900927,
+              40.03718242616871
+            ],
+            [
+              -105.28469584626599,
+              40.03718495286019
+            ],
+            [
+              -105.28469892374471,
+              40.03638355626466
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "Shape__Area": 22962.773056750644,
+        "Shape__Length": 740.2644673561026,
+        "OBJECTID": 80512455,
+        "CreatedDate": 1778782830000,
+        "AccountNo": "R0005342",
+        "ParcelNo": "146124100105",
+        "StrNum": 918,
+        "Street": "JUNIPER",
+        "StrPrx": null,
+        "StrSuf": "AVE",
+        "StrUnit": null,
+        "StrCity": "BOULDER",
+        "SubCode": "9906",
+        "SubDscr": "TR, NBR 128,158,172-178 FOOTHILLS",
+        "Section": "24",
+        "Township": "1N",
+        "Range": "71",
+        "Block": "      ",
+        "Lot": "      ",
+        "OwnerName": "FARBER PAUL & HENA V HAINES",
+        "CareOf": null,
+        "MailAddr1": "918 JUNIPER AVE",
+        "MailAddr2": null,
+        "MailCity": "BOULDER",
+        "MailState": "CO",
+        "MailZip": "80304-1726",
+        "MailCountry": null,
+        "RoleCode": "P",
+        "PctOwn": 1,
+        "TaxArea": "000010",
+        "Nbhd": null,
+        "MillLevy": 89.2,
+        "Legal": "TRACT 396 A 24-1N-71 BOOK 1301 PAGE 340 BCR              ",
+        "AcctType": "RESIDENTIAL",
+        "assessor_ASR_PARCELS_PARCEL_NO": null
+      }
+    }
+  ]
+}

@@ -1,5 +1,4 @@
 import { runtimeIngestionSchema } from "./ingestion-schema";
-import { resolveSidecarClient, SidecarClient } from "./sidecar-client";
 
 export function getPixeltableIngestionStatus() {
   const env = typeof process !== "undefined" ? process.env : {};
@@ -16,5 +15,3 @@ export function getPixeltableIngestionStatus() {
   };
 }
 
-export { SidecarClient };
-export const defaultSidecarClient = resolveSidecarClient();

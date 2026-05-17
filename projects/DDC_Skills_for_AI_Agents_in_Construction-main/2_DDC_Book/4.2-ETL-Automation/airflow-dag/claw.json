@@ -1,0 +1,23 @@
+{
+  "name": "airflow-dag",
+  "version": "2.0.0",
+  "description": "Create Apache Airflow DAGs for construction data pipelines. Orchestrate ETL, validation, and reporting workflows.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "quality",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

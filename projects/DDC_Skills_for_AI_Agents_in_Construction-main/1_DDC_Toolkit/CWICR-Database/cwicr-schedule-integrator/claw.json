@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-schedule-integrator",
+  "version": "2.0.0",
+  "description": "Integrate CWICR cost data with project schedules. Link work items to schedule activities, generate cost-loaded schedules, and cash flow projections.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

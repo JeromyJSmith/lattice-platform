@@ -1,0 +1,22 @@
+{
+  "name": "bim-to-schedule-4d",
+  "version": "2.0.0",
+  "description": "Create 4D construction simulations by linking BIM models with project schedules.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "scheduling",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

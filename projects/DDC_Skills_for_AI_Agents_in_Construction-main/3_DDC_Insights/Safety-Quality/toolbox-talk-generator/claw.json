@@ -1,0 +1,21 @@
+{
+  "name": "toolbox-talk-generator",
+  "version": "2.0.0",
+  "description": "Generate safety toolbox talks for construction crews. Create contextual safety briefings based on weather, work activities, and recent incidents. Support multiple languages.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

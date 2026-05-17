@@ -1,0 +1,24 @@
+{
+  "name": "safety-inspection-checklist",
+  "version": "2.0.0",
+  "description": "Digital safety inspection checklists for construction sites. Generate, conduct, and track safety inspections with automated reporting and compliance monitoring.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "reporting",
+    "quality",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

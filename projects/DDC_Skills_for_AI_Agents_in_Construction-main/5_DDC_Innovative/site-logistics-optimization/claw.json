@@ -1,0 +1,21 @@
+{
+  "name": "site-logistics-optimization",
+  "version": "2.0.0",
+  "description": "Optimize construction site logistics including material delivery scheduling, crane positioning, storage area allocation, and traffic flow using operations research and simulation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "procurement",
+    "GIS"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

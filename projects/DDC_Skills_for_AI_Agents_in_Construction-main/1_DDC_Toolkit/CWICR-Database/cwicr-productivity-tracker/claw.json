@@ -1,0 +1,22 @@
+{
+  "name": "cwicr-productivity-tracker",
+  "version": "2.0.0",
+  "description": "Track actual vs planned productivity using CWICR norms. Calculate productivity rates, identify variances, and generate performance reports.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

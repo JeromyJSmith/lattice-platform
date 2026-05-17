@@ -1,0 +1,21 @@
+{
+  "name": "cashflow-forecaster",
+  "version": "2.0.0",
+  "description": "Forecast construction project cash flow. Project income and expenses, identify funding gaps, and optimize payment timing for improved financial management.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "cost-management",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

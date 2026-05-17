@@ -1,0 +1,22 @@
+{
+  "name": "cwicr-material-procurement",
+  "version": "2.0.0",
+  "description": "Generate material procurement lists from CWICR data. Calculate quantities with waste factors, group by supplier categories, and create purchase orders.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "procurement",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

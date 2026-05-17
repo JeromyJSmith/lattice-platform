@@ -1,0 +1,22 @@
+{
+  "name": "cwicr-bid-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze contractor bids against CWICR benchmarks. Identify pricing anomalies, compare bid components, and support bid evaluation decisions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "procurement",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

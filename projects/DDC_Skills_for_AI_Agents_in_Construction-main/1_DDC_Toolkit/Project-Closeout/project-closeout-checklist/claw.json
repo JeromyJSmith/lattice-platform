@@ -1,0 +1,22 @@
+{
+  "name": "project-closeout-checklist",
+  "version": "2.0.0",
+  "description": "Manage project closeout activities. Track completion of documentation, warranties, and final inspections.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "document-management",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

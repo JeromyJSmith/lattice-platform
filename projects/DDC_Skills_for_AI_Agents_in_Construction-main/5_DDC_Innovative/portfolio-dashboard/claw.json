@@ -1,0 +1,20 @@
+{
+  "name": "portfolio-dashboard",
+  "version": "2.0.0",
+  "description": "Multi-project portfolio analytics dashboard. Aggregate KPIs across projects, track portfolio health, compare performance, and support executive decision-making.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

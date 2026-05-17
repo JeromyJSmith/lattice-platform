@@ -1,0 +1,22 @@
+{
+  "name": "pdf-construction",
+  "version": "2.0.0",
+  "description": "PDF processing for construction documents: RFIs, submittals, specifications, drawing packages. Extract data, merge packages, fill forms.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "document-management",
+    "CAD"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

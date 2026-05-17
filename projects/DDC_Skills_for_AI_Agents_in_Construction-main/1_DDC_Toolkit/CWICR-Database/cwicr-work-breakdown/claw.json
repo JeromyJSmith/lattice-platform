@@ -1,0 +1,21 @@
+{
+  "name": "cwicr-work-breakdown",
+  "version": "2.0.0",
+  "description": "Break down CWICR work items into component resources. Decompose aggregate items, analyze resource composition, and generate detailed bills of resources.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

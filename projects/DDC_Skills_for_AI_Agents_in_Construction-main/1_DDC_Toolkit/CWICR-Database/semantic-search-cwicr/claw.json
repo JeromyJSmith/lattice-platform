@@ -1,0 +1,23 @@
+{
+  "name": "semantic-search-cwicr",
+  "version": "2.0.0",
+  "description": "Semantic search in DDC CWICR construction database using vector embeddings. Find similar work items and resources for cost estimation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

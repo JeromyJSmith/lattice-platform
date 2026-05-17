@@ -1,0 +1,23 @@
+{
+  "name": "payment-application-generator",
+  "version": "2.0.0",
+  "description": "Generate AIA-style payment applications. Track schedule of values, calculate retention, and produce payment documentation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

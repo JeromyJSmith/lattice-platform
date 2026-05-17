@@ -1,0 +1,21 @@
+{
+  "name": "cwicr-equipment-planner",
+  "version": "2.0.0",
+  "description": "Plan equipment requirements using CWICR norms. Calculate equipment hours, scheduling, utilization rates, and rental vs purchase analysis.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

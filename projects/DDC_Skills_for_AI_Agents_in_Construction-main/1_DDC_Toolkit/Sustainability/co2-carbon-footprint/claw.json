@@ -1,0 +1,20 @@
+{
+  "name": "co2-carbon-footprint",
+  "version": "2.0.0",
+  "description": "Calculate and track CO2 emissions and carbon footprint for construction projects.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "sustainability"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

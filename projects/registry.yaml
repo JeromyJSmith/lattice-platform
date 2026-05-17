@@ -14,6 +14,15 @@ projects:
   added: '2026-05-13'
   vw_files:
   - data/Vectorworks Files/_Farber-Haines [2521] (1).ifc
+- id: farber-haines-2521
+  name: Farber-Haines [2521]
+  path: /Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/vectorworks project files
+  pixeltable_namespace: lattice/projects/farber-haines-2521
+  added: '2026-05-16'
+  vw_files:
+  - _Farber-Haines [2521].vwx
+  ifc_exports:
+  - /tmp/farber_haines_ifc_probe/farber_haines_probe_20260516T231627Z.ifc
 - id: vw-universe
   name: Vw Universe
   path: /Volumes/PixelTable/vw-universe

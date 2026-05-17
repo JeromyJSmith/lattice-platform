@@ -1,0 +1,24 @@
+{
+  "name": "schema-validation",
+  "version": "2.0.0",
+  "description": "JSON/data schema validation for construction data exchange: API payloads, file imports, BIM exports. Ensure data structure compliance before processing.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "safety",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

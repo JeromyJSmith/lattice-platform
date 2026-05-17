@@ -1,0 +1,23 @@
+{
+  "name": "weather-impact-analysis",
+  "version": "2.0.0",
+  "description": "Analyze weather data impact on construction schedules. Predict weather delays, optimize work scheduling based on forecasts, and calculate weather-related risk factors for project planning.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "scheduling",
+    "data-processing",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

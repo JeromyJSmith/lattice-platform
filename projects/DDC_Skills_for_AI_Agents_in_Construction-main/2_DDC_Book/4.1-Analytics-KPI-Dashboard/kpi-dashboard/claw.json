@@ -1,0 +1,22 @@
+{
+  "name": "kpi-dashboard",
+  "version": "2.0.0",
+  "description": "Build KPI dashboards for construction projects. Track CPI, SPI, quality, safety metrics in real-time.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "reporting",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

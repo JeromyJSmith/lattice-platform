@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-escalation",
+  "version": "2.0.0",
+  "description": "Apply price escalation to CWICR estimates over time. Calculate inflation adjustments, material price indices, and labor rate increases.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "data-processing",
+    "procurement",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

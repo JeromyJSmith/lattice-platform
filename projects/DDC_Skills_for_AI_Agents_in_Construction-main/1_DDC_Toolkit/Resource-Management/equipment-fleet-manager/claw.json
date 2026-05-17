@@ -1,0 +1,19 @@
+{
+  "name": "equipment-fleet-manager",
+  "version": "2.0.0",
+  "description": "Manage construction equipment fleet. Track utilization, maintenance, and assignments.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

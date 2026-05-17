@@ -1,0 +1,21 @@
+{
+  "name": "bim-to-schedule-4d",
+  "version": "2.0.0",
+  "description": "Link BIM elements to schedule activities for 4D simulation. Visualize construction sequence over time.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

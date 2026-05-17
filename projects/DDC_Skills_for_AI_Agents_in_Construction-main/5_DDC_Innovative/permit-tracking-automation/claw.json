@@ -1,0 +1,22 @@
+{
+  "name": "permit-tracking-automation",
+  "version": "2.0.0",
+  "description": "Automate construction permit tracking and management. Monitor application status, track renewal deadlines, manage document requirements, and integrate with municipal systems.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "schedule-forecaster",
+  "version": "2.0.0",
+  "description": "Predict project completion dates using ML models. Forecast schedule delays based on current progress, historical patterns, and risk factors.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-location-factor",
+  "version": "2.0.0",
+  "description": "Apply geographic location factors to CWICR estimates. Adjust costs for regional labor rates, material prices, and market conditions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

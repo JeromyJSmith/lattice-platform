@@ -1,0 +1,22 @@
+{
+  "name": "as-built-documentation",
+  "version": "2.0.0",
+  "description": "Automate as-built documentation and digital handover for construction. Compile project records, generate O&M manuals, create asset databases, and ensure complete project closeout.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

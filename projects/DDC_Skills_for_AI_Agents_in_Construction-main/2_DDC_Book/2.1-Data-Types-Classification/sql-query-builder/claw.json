@@ -1,0 +1,20 @@
+{
+  "name": "sql-query-builder",
+  "version": "2.0.0",
+  "description": "Build SQL queries for construction databases. Generate optimized SQL queries for construction data retrieval",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

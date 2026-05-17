@@ -54,12 +54,12 @@ mirrors:
       - api-reference
       - operating-mode-guide
 
-  - tool: graphify-parisgroup
-    source_repo: https://github.com/parisgroup-ai/graphify
+  - tool: graphify
+    source_repo: https://github.com/safishamsi/graphify
     sparse_path: docs/
-    local_path: ~/.lattice-doc-mirrors/graphify-parisgroup
+    local_path: ~/.lattice-doc-mirrors/graphify
     llms_txt: null
-    doc_base_url: https://github.com/parisgroup-ai/graphify
+    doc_base_url: https://github.com/safishamsi/graphify
     version_file: Cargo.toml
     category_map:
       - cli-reference

@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-change-order",
+  "version": "2.0.0",
+  "description": "Process construction change orders using CWICR data. Calculate cost impact, compare to original estimate, and generate change order documentation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

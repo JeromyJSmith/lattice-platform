@@ -1,0 +1,23 @@
+{
+  "name": "pptx-construction",
+  "version": "2.0.0",
+  "description": "PowerPoint generation for construction: project updates, stakeholder presentations, progress reports, bid presentations. Automated slide creation with charts and data.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "document-management",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

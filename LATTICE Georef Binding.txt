@@ -1,0 +1,1 @@
+farber-haines-2521,3857,document_georef_binding_vectorworks_hardwired,set_user_origin_absolute_then_bind_epsg,anchor_wgs84_reference,40.0370784,-105.2845774,799.4679627382823,-717.2747968857685,hardwired,2026-05-17T01:24:50.571755+00:00,Vectorworks active document

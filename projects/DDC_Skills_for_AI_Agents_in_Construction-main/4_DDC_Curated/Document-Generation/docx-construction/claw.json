@@ -1,0 +1,21 @@
+{
+  "name": "docx-construction",
+  "version": "2.0.0",
+  "description": "Word document generation for construction: contracts, proposals, reports, specifications, transmittals. Template-based with dynamic content insertion.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "document-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "5000-projects-analysis",
+  "version": "2.0.0",
+  "description": "Analyze 5000+ IFC and Revit projects at scale for patterns, benchmarks, and insights. Big data analysis for construction.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

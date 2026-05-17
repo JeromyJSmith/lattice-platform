@@ -1,0 +1,207 @@
+{
+  "$schema": "../../georef/schema/georef.config.schema.json",
+  "project": {
+    "project_id": "farber-haines-2521",
+    "name": "Farber-Haines [2521]",
+    "address": "918 Juniper Ave, Boulder, CO 80304, USA",
+    "client_name": "Farber-Haines"
+  },
+  "coordinate_system": {
+    "epsg_code": "EPSG:2876",
+    "proj_string": "",
+    "wkt_crs": "PROJCS[\"NAD_1983_HARN_StatePlane_Colorado_North_FIPS_0501_Feet\",\n    GEOGCS[\"GCS_North_American_1983_HARN\",\n        DATUM[\"D_North_American_1983_HARN\",\n            SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],\n        PRIMEM[\"Greenwich\",0.0],\n        UNIT[\"Degree\",0.0174532925199433]],\n    PROJECTION[\"Lambert_Conformal_Conic\"],\n    PARAMETER[\"False_Easting\",3000000.0],\n    PARAMETER[\"False_Northing\",1000000.0],\n    PARAMETER[\"Central_Meridian\",-105.5],\n    PARAMETER[\"Standard_Parallel_1\",39.71666666666667],\n    PARAMETER[\"Standard_Parallel_2\",40.78333333333333],\n    PARAMETER[\"Latitude_Of_Origin\",39.33333333333334],\n    UNIT[\"Foot_US\",0.3048006096012192],\n    AUTHORITY[\"EPSG\",\"2876\"]]",
+    "vertical_datum": "NAVD88",
+    "units": "us_survey_feet"
+  },
+  "origin": {
+    "longitude": -105.2845774,
+    "latitude": 40.0370784,
+    "elevation_m": 1666.34,
+    "true_north_degrees": 0.0,
+    "google_maps_url": "https://www.google.com/maps/@40.0370784,-105.2845774,20z",
+    "what3words": "",
+    "plus_code": ""
+  },
+  "ifc_georef": {
+    "ref_latitude": null,
+    "ref_longitude": null,
+    "ref_elevation": null,
+    "placement_matrix": null
+  },
+  "vw_internal": {
+    "origin_x": 799.4679627382823,
+    "origin_y": -717.2747968857685,
+    "scale": 1.0,
+    "rotation_deg": 0.0,
+    "units": "document_units_review_required"
+  },
+  "survey": {
+    "easting": null,
+    "northing": null,
+    "elevation_units": "feet",
+    "benchmark_elevation_m": 1666.34,
+    "state_plane_zone": "Colorado North FIPS 0501",
+    "control_points": [
+      {
+        "control_point_id": "parcel_corner_nw_provisional",
+        "description": "Northwest parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03718,
+        "lon_wgs84": -105.28469
+      },
+      {
+        "control_point_id": "parcel_corner_ne_provisional",
+        "description": "Northeast parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03718,
+        "lon_wgs84": -105.28441
+      },
+      {
+        "control_point_id": "parcel_corner_se_provisional",
+        "description": "Southeast parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03638,
+        "lon_wgs84": -105.28441
+      },
+      {
+        "control_point_id": "parcel_corner_sw_provisional",
+        "description": "Southwest parcel corner (provisional from screenshot)",
+        "quality_class": "provisional_map_corner",
+        "confidence": 0.6,
+        "lat_wgs84": 40.03638,
+        "lon_wgs84": -105.2847
+      }
+    ],
+    "benchmark_id": "anchor_wgs84_reference",
+    "surveyor_name": "",
+    "survey_date": "",
+    "survey_file_path": ""
+  },
+  "site_boundary": {
+    "geojson": {
+      "type": "Feature",
+      "id": 80512455,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -105.28469892374471,
+              40.03638355626466
+            ],
+            [
+              -105.28441578838898,
+              40.03638448012195
+            ],
+            [
+              -105.28441592900927,
+              40.03718242616871
+            ],
+            [
+              -105.28469584626599,
+              40.03718495286019
+            ],
+            [
+              -105.28469892374471,
+              40.03638355626466
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "Shape__Area": 22962.773056750644,
+        "Shape__Length": 740.2644673561026,
+        "OBJECTID": 80512455,
+        "CreatedDate": 1778782830000,
+        "AccountNo": "R0005342",
+        "ParcelNo": "146124100105",
+        "StrNum": 918,
+        "Street": "JUNIPER",
+        "StrPrx": null,
+        "StrSuf": "AVE",
+        "StrUnit": null,
+        "StrCity": "BOULDER",
+        "SubCode": "9906",
+        "SubDscr": "TR, NBR 128,158,172-178 FOOTHILLS",
+        "Section": "24",
+        "Township": "1N",
+        "Range": "71",
+        "Block": "      ",
+        "Lot": "      ",
+        "OwnerName": "FARBER PAUL & HENA V HAINES",
+        "CareOf": null,
+        "MailAddr1": "918 JUNIPER AVE",
+        "MailAddr2": null,
+        "MailCity": "BOULDER",
+        "MailState": "CO",
+        "MailZip": "80304-1726",
+        "MailCountry": null,
+        "RoleCode": "P",
+        "PctOwn": 1,
+        "TaxArea": "000010",
+        "Nbhd": null,
+        "MillLevy": 89.2,
+        "Legal": "TRACT 396 A 24-1N-71 BOOK 1301 PAGE 340 BCR              ",
+        "AcctType": "RESIDENTIAL",
+        "assessor_ASR_PARCELS_PARCEL_NO": null
+      }
+    },
+    "wkt_wgs84": "POLYGON((-105.28469892374471 40.03638355626466, -105.28441578838898 40.03638448012195, -105.28441592900927 40.03718242616871, -105.28469584626599 40.03718495286019, -105.28469892374471 40.03638355626466))",
+    "wkt_project": "POLYGON((3060285.1310936064 1256173.6188902557, 3060285.2839896083 1256465.5490665287, 3060363.6630616784 1256464.8190825284, 3060364.409109682 1256174.1480422616, 3060285.1310936064 1256173.6188902557))",
+    "bounding_box": [
+      -105.28469892374471,
+      40.03638355626466,
+      -105.28441578838898,
+      40.03718495286019
+    ],
+    "kml_file": "",
+    "shapefile": "",
+    "geopackage": "",
+    "area_m2": null
+  },
+  "osm": {
+    "node_id": "",
+    "way_id": "",
+    "relation_id": "",
+    "geojson_file": "",
+    "last_fetched": ""
+  },
+  "elevation": {
+    "dem_file_path": "",
+    "dem_source": "USGS_3DEP",
+    "dem_resolution_m": 1.0,
+    "min_elevation_m": null,
+    "max_elevation_m": null
+  },
+  "aerial_imagery": {
+    "orthophoto_file_path": "",
+    "orthophoto_source": "",
+    "orthophoto_resolution_cm": null,
+    "orthophoto_date": "",
+    "streetview_lat": null,
+    "streetview_lon": null,
+    "streetview_heading": null
+  },
+  "transforms": {
+    "vw_to_wgs84": null,
+    "wgs84_to_ecef": null,
+    "project_to_utm": null,
+    "ifc_to_wgs84": null
+  },
+  "metadata": {
+    "source_priority": [
+      "survey",
+      "ifc",
+      "gps",
+      "google_maps",
+      "osm"
+    ],
+    "config_version": "1",
+    "created_at": "2026-05-16T23:44:42.279335+00:00",
+    "updated_at": "2026-05-16T23:58:07.082656+00:00",
+    "notes": "Seed updated from Boulder County parcel geometry for AccountNo R0005342 / ParcelNo 146124100105. Document binding remains unresolved until matched VW survey/corner/stake points are solved."
+  }
+}

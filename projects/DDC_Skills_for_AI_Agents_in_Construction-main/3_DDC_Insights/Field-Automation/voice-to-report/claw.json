@@ -1,0 +1,23 @@
+{
+  "name": "voice-to-report",
+  "version": "2.0.0",
+  "description": "Convert voice recordings to structured construction reports. Field workers speak, AI transcribes and formats. Supports daily reports, safety observations, progress updates.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "reporting",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

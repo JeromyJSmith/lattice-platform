@@ -1,0 +1,23 @@
+{
+  "name": "material-tracking-iot",
+  "version": "2.0.0",
+  "description": "IoT-based material tracking for construction sites. Monitor material delivery, storage conditions, usage, and inventory with sensors, RFID, GPS, and real-time dashboards.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "reporting",
+    "document-management",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "productivity-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze labor productivity from site data. Compare planned vs actual, identify trends, benchmark against industry standards.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

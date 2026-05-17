@@ -1,0 +1,21 @@
+{
+  "name": "big-data-analysis",
+  "version": "2.0.0",
+  "description": "Analyze large-scale construction datasets. Process thousands of projects for patterns, benchmarks, and predictive insights.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "as-built-documentation",
+  "version": "2.0.0",
+  "description": "Manage as-built documentation for project closeout. Track drawing markups, coordinate updates, and verify completeness.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "quality",
+    "GIS",
+    "CAD"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,339 @@
+{
+  "displayFieldName": "BMID",
+  "fieldAliases": {
+    "OBJECTID": "OBJECTID",
+    "BMID": "BMID",
+    "LOCATION": "LOCATION",
+    "ELEVATION": "ELEVATION",
+    "BKPG": "BKPG",
+    "FOUND": "FOUND",
+    "INTERMED": "INTERMED",
+    "COMMENTS": "COMMENTS",
+    "DESCRIPTION": "DESCRIPTION",
+    "DESCRIPTION2": "DESCRIPTION2",
+    "COBDATUM": "COBDATUM",
+    "NGVD29DATUM": "NGVD29DATUM",
+    "NGVD88DATUM": "NGVD88DATUM",
+    "NGVD88ADJ": "NGVD88ADJ",
+    "NGS88": "NGS88"
+  },
+  "geometryType": "esriGeometryPoint",
+  "spatialReference": {
+    "wkid": 2876,
+    "latestWkid": 2876
+  },
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
+    },
+    {
+      "name": "BMID",
+      "type": "esriFieldTypeString",
+      "alias": "BMID",
+      "length": 13
+    },
+    {
+      "name": "LOCATION",
+      "type": "esriFieldTypeString",
+      "alias": "LOCATION",
+      "length": 42
+    },
+    {
+      "name": "ELEVATION",
+      "type": "esriFieldTypeDouble",
+      "alias": "ELEVATION"
+    },
+    {
+      "name": "BKPG",
+      "type": "esriFieldTypeInteger",
+      "alias": "BKPG"
+    },
+    {
+      "name": "FOUND",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "FOUND"
+    },
+    {
+      "name": "INTERMED",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "INTERMED"
+    },
+    {
+      "name": "COMMENTS",
+      "type": "esriFieldTypeString",
+      "alias": "COMMENTS",
+      "length": 254
+    },
+    {
+      "name": "DESCRIPTION",
+      "type": "esriFieldTypeString",
+      "alias": "DESCRIPTION",
+      "length": 59
+    },
+    {
+      "name": "DESCRIPTION2",
+      "type": "esriFieldTypeString",
+      "alias": "DESCRIPTION2",
+      "length": 29
+    },
+    {
+      "name": "COBDATUM",
+      "type": "esriFieldTypeDouble",
+      "alias": "COBDATUM"
+    },
+    {
+      "name": "NGVD29DATUM",
+      "type": "esriFieldTypeDouble",
+      "alias": "NGVD29DATUM"
+    },
+    {
+      "name": "NGVD88DATUM",
+      "type": "esriFieldTypeDouble",
+      "alias": "NGVD88DATUM"
+    },
+    {
+      "name": "NGVD88ADJ",
+      "type": "esriFieldTypeDouble",
+      "alias": "NGVD88ADJ"
+    },
+    {
+      "name": "NGS88",
+      "type": "esriFieldTypeDouble",
+      "alias": "NGS88"
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "OBJECTID": 169,
+        "BMID": "V-8-1",
+        "LOCATION": " ",
+        "ELEVATION": 5540.23,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 1,
+        "COMMENTS": "BK2410 PG10",
+        "DESCRIPTION": "FND CITY BOULDER CAP",
+        "DESCRIPTION2": "INTER 4TH & JUNIPER",
+        "COBDATUM": 5540.23,
+        "NGVD29DATUM": 5540.63,
+        "NGVD88DATUM": 5543.99,
+        "NGVD88ADJ": 5543.84,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3058348.7691399753,
+        "y": 1256485.2639108896
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 195,
+        "BMID": "E-8",
+        "LOCATION": "INT. 14TH & IRIS",
+        "ELEVATION": 5422.59,
+        "BKPG": 0,
+        "FOUND": 0,
+        "INTERMED": 0,
+        "COMMENTS": " ",
+        "DESCRIPTION": "SPIKE IN LIGHT POLE, SE COR. INT.",
+        "DESCRIPTION2": "INT. 14TH & IRIS",
+        "COBDATUM": 0.0,
+        "NGVD29DATUM": 0.0,
+        "NGVD88DATUM": 0.0,
+        "NGVD88ADJ": 0.0,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3061733.4431448877,
+        "y": 1256137.0789117217
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 364,
+        "BMID": "M-405-2",
+        "LOCATION": " ",
+        "ELEVATION": 5445.83,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 1,
+        "COMMENTS": "BK2411 PG17",
+        "DESCRIPTION": "FND CUT L AT NW CORNER HEADWALL",
+        "DESCRIPTION2": "INTER OF FOREST AND 8TH",
+        "COBDATUM": 5445.83,
+        "NGVD29DATUM": 5446.23,
+        "NGVD88DATUM": 5449.58,
+        "NGVD88ADJ": 5449.43,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3059635.968009144,
+        "y": 1254871.753030315
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 43,
+        "BMID": "R-8",
+        "LOCATION": "INT. 6TH & HAWTHORN",
+        "ELEVATION": 5486.63,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2411 PG9",
+        "DESCRIPTION": "RR SPIKE IN POLE, N. SIDE INT.",
+        "DESCRIPTION2": "NW INT HAWTHORN AND 6TH STS",
+        "COBDATUM": 5486.63,
+        "NGVD29DATUM": 5487.03,
+        "NGVD88DATUM": 5490.38,
+        "NGVD88ADJ": 5490.23,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3059013.6431383044,
+        "y": 1255653.1828978956
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 170,
+        "BMID": "M-405",
+        "LOCATION": " ",
+        "ELEVATION": 5429.82,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2410 PG38",
+        "DESCRIPTION": "FND 1/2 IN. ROD DOWN 0.4 IN PVC TUBE WITH SURVEY COVER",
+        "DESCRIPTION2": "INTER OF BROADWAY AND GRAPE",
+        "COBDATUM": 5429.82,
+        "NGVD29DATUM": 5430.22,
+        "NGVD88DATUM": 5433.55,
+        "NGVD88ADJ": 5433.4,
+        "NGS88": 5433.44
+      },
+      "geometry": {
+        "x": 3060961.1681146324,
+        "y": 1255353.9318559766
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 196,
+        "BMID": "M-405-1",
+        "LOCATION": " ",
+        "ELEVATION": 5437.88,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2410 PG35",
+        "DESCRIPTION": "FND CUT L AT NW CORNER HEADWALL",
+        "DESCRIPTION2": "BROADWAY AND IRIS",
+        "COBDATUM": 5437.88,
+        "NGVD29DATUM": 5438.28,
+        "NGVD88DATUM": 5441.61,
+        "NGVD88ADJ": 5441.46,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3061207.141047895,
+        "y": 1256239.276870057
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 42,
+        "BMID": "Q-8",
+        "LOCATION": "INT. 9TH & HAWTHORN",
+        "ELEVATION": 5455.7,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2411 PG4",
+        "DESCRIPTION": "1/2\" PIN 0.5' BLW. ASPH.",
+        "DESCRIPTION2": "HAWTHORN AND 9TH STS",
+        "COBDATUM": 5455.7,
+        "NGVD29DATUM": 5456.1,
+        "NGVD88DATUM": 5459.44,
+        "NGVD88ADJ": 5459.29,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3060017.7251196355,
+        "y": 1255660.7619509697
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 168,
+        "BMID": "L-405",
+        "LOCATION": " ",
+        "ELEVATION": 5481.1,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2410 PG24",
+        "DESCRIPTION": "FND 1/2 ROD DOWN 0.7",
+        "DESCRIPTION2": "INTER OF BROADWAY AND LINDEN",
+        "COBDATUM": 5481.1,
+        "NGVD29DATUM": 5481.5,
+        "NGVD88DATUM": 5484.84,
+        "NGVD88ADJ": 5484.69,
+        "NGS88": 5484.74
+      },
+      "geometry": {
+        "x": 3060935.373874888,
+        "y": 1257849.8789638132
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 45,
+        "BMID": "M-15",
+        "LOCATION": "NW CORNER LINDEN AVE &",
+        "ELEVATION": 5533.77,
+        "BKPG": 80552,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2410 PG28",
+        "DESCRIPTION": "CUT BOX ON CONC. LIGHT POLE BASE",
+        "DESCRIPTION2": "INTER LINDEN & LINDEN PARK",
+        "COBDATUM": 5533.77,
+        "NGVD29DATUM": 5534.17,
+        "NGVD88DATUM": 5537.52,
+        "NGVD88ADJ": 5537.37,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3059480.5621519685,
+        "y": 1257825.30092898
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 100,
+        "BMID": "P-1",
+        "LOCATION": "INT. BROADWAY & FOREST",
+        "ELEVATION": 5419.01,
+        "BKPG": 0,
+        "FOUND": 1,
+        "INTERMED": 0,
+        "COMMENTS": "BK2411PG14",
+        "DESCRIPTION": "FND 2 1/2 IN. ALUM CAP DOWN  0.7 IN RANGE BOX.",
+        "DESCRIPTION2": "BROADWAY AND FOREST",
+        "COBDATUM": 5419.01,
+        "NGVD29DATUM": 5419.41,
+        "NGVD88DATUM": 5422.74,
+        "NGVD88ADJ": 5422.59,
+        "NGS88": 0.0
+      },
+      "geometry": {
+        "x": 3061025.0629999638,
+        "y": 1254888.9970903099
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "ifc_path": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.ifc",
+  "size_bytes": 608236,
+  "schema": "IFC4X3_ADD2",
+  "header_description": "",
+  "projected_crs": {
+    "name": "EPSG:3857 WGS 84 / Pseudo-Mercator",
+    "epsg_code": "3857"
+  },
+  "map_conversion": {
+    "eastings": -8575524.35228859,
+    "northings": 4705852.25746973,
+    "orthogonal_height": 0.0,
+    "x_axis_abscissa": 0.0,
+    "x_axis_ordinate": 1.0
+  },
+  "entity_counts": {
+    "IFCPROJECT": 1,
+    "IFCSITE": 1,
+    "IFCBUILDING": 1,
+    "IFCBUILDINGSTOREY": 1,
+    "IFCGEOGRAPHICELEMENT": 1034,
+    "IFCSLAB": 0,
+    "IFCWALL": 0,
+    "IFCMEMBER": 0,
+    "IFCFURNISHINGELEMENT": 0,
+    "IFCPLANT": 0,
+    "IFCBUILDINGELEMENTPROXY": 0,
+    "IFCPROXY": 0
+  },
+  "term_hits": {
+    "project_cost_record": false,
+    "plant_record": false,
+    "unit_cost_field": false,
+    "total_cost_field": false,
+    "measure_basis_field": false,
+    "vwpset_marpa_object": false,
+    "vwpset_marpa_plant": false,
+    "vwpset_marpa_cost": false,
+    "vwpset_marpa_source": false,
+    "vwpset_marpa_exportqa": false,
+    "pset_vegetation_common": true
+  },
+  "status": "warn",
+  "issues": [
+    "hardscape_not_typed_as_ifcslab",
+    "unexpected_crs:3857",
+    "missing_marpa_cost_pset",
+    "missing_project_cost_payload"
+  ]
+}

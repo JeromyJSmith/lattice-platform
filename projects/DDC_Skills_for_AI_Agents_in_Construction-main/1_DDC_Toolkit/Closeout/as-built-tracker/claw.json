@@ -1,0 +1,21 @@
+{
+  "name": "as-built-tracker",
+  "version": "2.0.0",
+  "description": "Track as-built documentation and record drawings. Monitor submission status, manage revisions, and ensure completeness for handover.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "document-management",
+    "CAD"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

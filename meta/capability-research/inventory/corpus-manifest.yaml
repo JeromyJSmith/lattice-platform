@@ -41,7 +41,7 @@ registry_inputs:
   - analysis/capabilities/repo-census-004-odbc-capability-registry.yaml
   - analysis/capabilities/infranodus-capability-registry.yaml
   - analysis/capabilities/gitnexus-capability-registry.yaml
-  - analysis/capabilities/graphify-parisgroup-capability-registry.yaml
+  - analysis/capabilities/graphify-capability-registry.yaml
   - analysis/capabilities/graphify-safishamsi-capability-registry.yaml
 
 source_material:

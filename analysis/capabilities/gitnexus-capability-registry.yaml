@@ -1,281 +1,226 @@
 # spec-verified: code.claude.com/docs 2026-05-11
 tool: gitnexus
-tool_version: pinned at Phase 1 install (local devDependency)
+tool_version: 1.6.3
 canonical_docs: https://github.com/abhigyanpatwari/GitNexus
-last_harvested: 2026-05-11
-harvested_by: claude-opus-4-7 (Amendment 06)
-
-# 16 MCP tools + 5 group tools + 2 prompts + 4 skills + hooks
-# Install scope: LOCAL devDependency (user preference — NOT -g global)
-
+last_harvested: 2026-05-14
+harvested_by: codex-gpt-5
 capabilities:
-  # ─── MCP TOOLS (16) ───
-  - id: mcp-analyze
-    surface: mcp_tool
-    name: analyze
+  - id: cli-setup
+    surface: cli_command
+    name: gitnexus setup
+    state: DEFERRED
+    description: Configure editor and MCP integration for supported platforms.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-agent-tooling-rollout
+    tracking_issue: 19
+  - id: cli-analyze
+    surface: cli_command
+    name: gitnexus analyze
     state: ACTIVE
-    description: Index repo into execution-flow graph (call chains, processes)
-    wired_at: [Phase 1 install step]
-    invoked_by: [autoresearch loop initial indexing]
-
-  - id: mcp-search
-    surface: mcp_tool
-    name: search
+    description: Index a repository into the GitNexus knowledge graph.
+    wired_at:
+      - .mcp.json
+      - meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+      - AGENTS.md
+    invoked_by:
+      - capability-research bounded proof
+      - stale-index remediation guidance
+  - id: cli-index
+    surface: cli_command
+    name: gitnexus index
     state: DEFERRED
-    description: Hybrid BM25 + semantic search across indexed repo
-    reason: awaiting-upstream-dep
-    target_phase: phase-1-followup-search-health
+    description: Register an existing .gitnexus folder without re-analysis.
+    reason: out-of-scope-for-current-phase
+    target_phase: multi-repo-index-governance
     tracking_issue: 19
-
-  - id: mcp-impact
-    surface: mcp_tool
-    name: impact
+  - id: cli-serve
+    surface: cli_command
+    name: gitnexus serve
     state: DEFERRED
-    description: Blast-radius analysis for a file/symbol change
-    reason: awaiting-upstream-dep
-    target_phase: phase-1-followup-search-health
+    description: Start the local HTTP server for GitNexus web UI connections.
+    reason: out-of-scope-for-current-phase
+    target_phase: operator-facing-graph-views
     tracking_issue: 19
-
-  - id: mcp-detect_changes
-    surface: mcp_tool
-    name: detect_changes
+  - id: cli-mcp
+    surface: cli_command
+    name: gitnexus mcp
     state: ACTIVE
-    description: Pre-commit detection of risky changes (touches central nodes)
-    wired_at: [".claude/settings.json (PreToolUse hook — Phase 6)"]
-    invoked_by: [pre-commit hook]
-
-  - id: mcp-rename
-    surface: mcp_tool
-    name: rename
-    state: DEFERRED
-    description: Multi-file coordinated rename
-    reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
-    tracking_issue: 19
-
-  - id: mcp-cypher
-    surface: mcp_tool
-    name: cypher
+    description: Start the stdio MCP server for all indexed repositories.
+    wired_at:
+      - .mcp.json
+    invoked_by:
+      - Codex MCP configuration
+  - id: cli-list
+    surface: cli_command
+    name: gitnexus list
     state: ACTIVE
-    description: Raw Cypher query against LadybugDB graph; power-user access
-    wired_at: [.mcp.json]
-    invoked_by: [advanced queries from autoresearch loop]
-
-  - id: mcp-call_chain
-    surface: mcp_tool
-    name: call_chain
+    description: List all indexed repositories.
+    wired_at:
+      - meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+    invoked_by:
+      - capability-research bounded proof
+  - id: cli-status
+    surface: cli_command
+    name: gitnexus status
     state: ACTIVE
-    description: Trace call chain from entry point to leaf
-    wired_at: [.mcp.json]
-    invoked_by: [debugger workflows, section harnesses]
-
-  - id: mcp-callers
-    surface: mcp_tool
-    name: callers
+    description: Show index status for the current repository.
+    wired_at:
+      - AGENTS.md
+      - meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+    invoked_by:
+      - capability-research bounded proof
+      - stale-index remediation guidance
+  - id: cli-clean
+    surface: cli_command
+    name: gitnexus clean
+    state: DEFERRED
+    description: Delete the current repository index.
+    reason: out-of-scope-for-current-phase
+    target_phase: index-admin-cleanup
+    tracking_issue: 19
+  - id: cli-remove
+    surface: cli_command
+    name: gitnexus remove
+    state: DEFERRED
+    description: Remove a registered repository index by alias, name, or path.
+    reason: out-of-scope-for-current-phase
+    target_phase: index-admin-cleanup
+    tracking_issue: 19
+  - id: cli-wiki
+    surface: cli_command
+    name: gitnexus wiki
+    state: DEFERRED
+    description: Generate repository wiki output from the knowledge graph.
+    reason: out-of-scope-for-current-phase
+    target_phase: doc-substrate-automation
+    tracking_issue: 19
+  - id: cli-augment
+    surface: cli_command
+    name: gitnexus augment
+    state: BLOCKED
+    description: Augment a search pattern with knowledge graph context for hooks.
+    blocker: Query-backed interactive surfaces currently fail in this repo state with scoped runs exiting code -1.
+    blocker_resolution_path: Re-run analyze for lattice-platform-scoped, repair scoped query health, then validate augment in a bounded proof.
+  - id: cli-query
+    surface: cli_command
+    name: gitnexus query
+    state: BLOCKED
+    description: Search the knowledge graph for execution flows tied to a concept.
+    blocker: Scoped query attempts in the current lattice-platform-scoped index exit code -1 and prior proof recorded FTS instability.
+    blocker_resolution_path: Refresh the scoped index, validate query against one known symbol or route, then promote with a new proof artifact.
+  - id: cli-context
+    surface: cli_command
+    name: gitnexus context
+    state: BLOCKED
+    description: Show callers, callees, and processes for a symbol.
+    blocker: Current scoped context attempts exit code -1 in this environment.
+    blocker_resolution_path: Refresh the scoped index and validate context on a known indexed symbol before re-promoting.
+  - id: cli-impact
+    surface: cli_command
+    name: gitnexus impact
+    state: BLOCKED
+    description: Compute blast radius for changing a symbol.
+    blocker: Current scoped impact attempts exit code -1 in this environment.
+    blocker_resolution_path: Refresh the scoped index and validate impact on a known indexed symbol before re-promoting.
+  - id: cli-cypher
+    surface: cli_command
+    name: gitnexus cypher
     state: ACTIVE
-    description: List all callers of a symbol
-    wired_at: [.mcp.json]
-    invoked_by: [pre-edit reads]
-
-  - id: mcp-callees
-    surface: mcp_tool
-    name: callees
-    state: ACTIVE
-    description: List all callees from a symbol
-    wired_at: [.mcp.json]
-    invoked_by: [pre-edit reads]
-
-  - id: mcp-community_detection
-    surface: mcp_tool
-    name: community_detection
-    state: ACTIVE
-    description: Leiden community detection on call graph; suggests module groupings
-    wired_at: [meta/harness/bootstrap/health-report.py]
-    invoked_by: [graph_execution_health signal]
-
-  - id: mcp-entry_points
-    surface: mcp_tool
-    name: entry_points
-    state: ACTIVE
-    description: List all entry points (CLI, HTTP routes, scheduled jobs)
-    wired_at: [meta/harness/bootstrap/health-report.py]
-    invoked_by: [coverage analysis]
-
-  - id: mcp-dead_code
-    surface: mcp_tool
-    name: dead_code
-    state: ACTIVE
-    description: Find unreachable code paths
-    wired_at: ["scripts/audit-dead-dna.sh (Issue #17 full impl)"]
-    invoked_by: [dead-DNA audit]
-
-  - id: mcp-test_coverage
-    surface: mcp_tool
-    name: test_coverage
+    description: Execute raw Cypher against the GitNexus knowledge graph.
+    wired_at:
+      - meta/capability-research/inventory/gitnexus/2026-05-13-bounded-proof.md
+    invoked_by:
+      - capability-research bounded proof
+  - id: cli-detect-changes
+    surface: cli_command
+    name: gitnexus detect-changes
+    state: BLOCKED
+    description: Map git diff hunks to indexed symbols and affected execution flows.
+    blocker: Current scoped detect-changes attempts exit code -1 in this environment even though the command is still referenced in repo guidance.
+    blocker_resolution_path: Refresh the scoped index, validate detect-changes over an unstaged diff, then update repo guidance and promote again.
+  - id: cli-eval-server
+    surface: cli_command
+    name: gitnexus eval-server
     state: DEFERRED
-    description: Map tests to code coverage
-    reason: awaiting-upstream-dep
-    target_phase: post-test-pxt-runner-registered
-    tracking_issue: 19
-
-  - id: mcp-process_trace
-    surface: mcp_tool
-    name: process_trace
-    state: DEFERRED
-    description: Live process trace at runtime
+    description: Start the lightweight HTTP server for fast evaluation calls.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8-observability
+    target_phase: graph-ops-benchmarking
     tracking_issue: 19
-
-  - id: mcp-diff_graphs
-    surface: mcp_tool
-    name: diff_graphs
-    state: ACTIVE
-    description: Diff two graph snapshots (architectural drift)
-    wired_at: [".github/workflows/docs-sync-check.yml (Phase 7)"]
-    invoked_by: [CI on PRs]
-
-  - id: mcp-export_graph
-    surface: mcp_tool
-    name: export_graph
+  - id: cli-group
+    surface: cli_command
+    name: gitnexus group
     state: DEFERRED
-    description: Export full graph to external format
-    reason: redundant-with-other-tool
-    target_phase: never (LadybugDB native is sufficient)
-    tracking_issue: 19
-
-  # ─── GROUP TOOLS (5) — batch operations across multiple targets ───
-  - id: group-bulk_search
-    surface: mcp_tool
-    name: group.bulk_search
-    state: ACTIVE
-    description: Run search across multiple queries in one call
-    wired_at: [.mcp.json]
-    invoked_by: [proposer brief construction]
-
-  - id: group-bulk_impact
-    surface: mcp_tool
-    name: group.bulk_impact
-    state: ACTIVE
-    description: Compute impact for a list of files (e.g., entire PR)
-    wired_at: [".claude/settings.json (PreToolUse hook)"]
-    invoked_by: [pre-commit blast-radius check]
-
-  - id: group-bulk_callers
-    surface: mcp_tool
-    name: group.bulk_callers
-    state: DEFERRED
-    description: Bulk caller lookup
+    description: Manage repository groups for cross-index impact analysis.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  - id: group-bulk_call_chain
-    surface: mcp_tool
-    name: group.bulk_call_chain
+  - id: cli-group-create
+    surface: cli_command
+    name: gitnexus group create
     state: DEFERRED
-    description: Bulk call-chain trace
+    description: Create a new repository group with a template group.yaml.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  - id: group-bulk_explain
-    surface: mcp_tool
-    name: group.bulk_explain
+  - id: cli-group-add
+    surface: cli_command
+    name: gitnexus group add
     state: DEFERRED
-    description: Bulk symbol explanation
+    description: Add a repository to a group hierarchy.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  # ─── PROMPTS (2, shipped with GitNexus MCP) ───
-  - id: prompt-investigate
-    surface: prompt
-    name: investigate
-    state: ACTIVE
-    description: Guided investigation prompt template
-    wired_at: [.mcp.json]
-    invoked_by: [section harness debug workflows]
-
-  - id: prompt-refactor-plan
-    surface: prompt
-    name: refactor-plan
+  - id: cli-group-remove
+    surface: cli_command
+    name: gitnexus group remove
     state: DEFERRED
-    description: Refactor plan generation template
+    description: Remove a repository from a group.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  # ─── SKILLS (4, auto-generated by gitnexus analyze --skills) ───
-  - id: skill-gitnexus-introduction
-    surface: skill
-    name: gitnexus-introduction
+  - id: cli-group-list
+    surface: cli_command
+    name: gitnexus group list
     state: DEFERRED
-    description: Onboarding skill — when to query gitnexus vs grep
+    description: List all groups or the details of one group.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  - id: skill-gitnexus-blast-radius
-    surface: skill
-    name: gitnexus-blast-radius
+  - id: cli-group-status
+    surface: cli_command
+    name: gitnexus group status
     state: DEFERRED
-    description: How to read impact() output and act on it
+    description: Check staleness for a group and its repositories.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  - id: skill-gitnexus-cypher
-    surface: skill
-    name: gitnexus-cypher
+  - id: cli-group-sync
+    surface: cli_command
+    name: gitnexus group sync
     state: DEFERRED
-    description: Cypher query authoring guide
+    description: Build a contract registry and cross-links for a group.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8-advanced-queries
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19
-
-  - id: skill-gitnexus-architecture
-    surface: skill
-    name: gitnexus-architecture
+  - id: cli-group-impact
+    surface: cli_command
+    name: gitnexus group impact
+    state: BLOCKED
+    description: Run cross-repo impact analysis for a symbol inside a group.
+    blocker: Single-repo impact is currently failing in this environment, so cross-repo impact is not trustworthy yet.
+    blocker_resolution_path: Repair single-repo impact first, then validate group impact against a bounded group fixture.
+  - id: cli-group-query
+    surface: cli_command
+    name: gitnexus group query
+    state: BLOCKED
+    description: Search execution flows across all repositories in a group.
+    blocker: Single-repo query is currently failing in this environment, so group query is not trustworthy yet.
+    blocker_resolution_path: Repair single-repo query first, then validate group query against a bounded group fixture.
+  - id: cli-group-contracts
+    surface: cli_command
+    name: gitnexus group contracts
     state: DEFERRED
-    description: Understand GitNexus's own graph schema
+    description: Inspect the GitNexus contract registry for a group.
     reason: out-of-scope-for-current-phase
-    target_phase: post-Phase-8
-    tracking_issue: 19
-
-  # ─── HOOKS (PreToolUse + PostToolUse) ───
-  - id: hook-pretooluse-file-read
-    surface: hook
-    name: PreToolUse on Read
-    state: DEFERRED
-    description: Auto-enrich every Read with graph context (callers, callees, centrality)
-    reason: out-of-scope-for-current-phase
-    target_phase: phase-1-followup-hook-expansion
-    tracking_issue: 19
-
-  - id: hook-pretooluse-grep
-    surface: hook
-    name: PreToolUse on Grep
-    state: DEFERRED
-    description: Auto-enrich every Grep with graph context
-    reason: out-of-scope-for-current-phase
-    target_phase: phase-1-followup-hook-expansion
-    tracking_issue: 19
-
-  - id: hook-pretooluse-write
-    surface: hook
-    name: PreToolUse on Write
-    state: DEFERRED
-    description: Compute blast radius before Write; warn if touches central node
-    reason: out-of-scope-for-current-phase
-    target_phase: phase-1-followup-hook-expansion
-    tracking_issue: 19
-
-  - id: hook-posttooluse-write
-    surface: hook
-    name: PostToolUse on Write
-    state: DEFERRED
-    description: Re-index changed file post-Write so subsequent queries reflect change
-    reason: out-of-scope-for-current-phase
-    target_phase: phase-1-followup-hook-expansion
+    target_phase: cross-repo-capability-mapping
     tracking_issue: 19

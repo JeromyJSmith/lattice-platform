@@ -65,7 +65,7 @@ Use this boundary going forward:
 | `analysis/capabilities/repo-census-004-odbc-capability-registry.yaml` | Contract-only rows for ODBC/database-link material |
 | `analysis/capabilities/infranodus-capability-registry.yaml` | Existing InfraNodus capability harvest, needs readiness reconciliation |
 | `analysis/capabilities/gitnexus-capability-registry.yaml` | Existing GitNexus capability harvest, needs readiness reconciliation |
-| `analysis/capabilities/graphify-parisgroup-capability-registry.yaml` | Existing Graphify capability harvest, likely stale until install/path proof |
+| `analysis/capabilities/graphify-capability-registry.yaml` | Graphify CLI capability harvest for the current local graph workflow |
 | `analysis/capabilities/graphify-safishamsi-capability-registry.yaml` | Existing graphifyy capability harvest, likely stale until install/path proof |
 
 ### InfraNodus Skills Source
@@ -113,7 +113,7 @@ Summary:
 | Repo-census markdown under `meta/harness/docs/` | Research artifacts were mixed with harness execution docs | Moved to `meta/capability-research/census/` |
 | `analysis/capabilities/infranodus-capability-registry.yaml` | Some `wired_at` paths point to non-existent `analysis/infranodus/*` files | Reconcile in a future registry cleanup after tool docs land |
 | `analysis/capabilities/gitnexus-capability-registry.yaml` | Claims `.mcp.json`, generated skills, hooks, and graph outputs that may not exist in current repo state | Treat as harvested intent, not proven readiness |
-| `analysis/capabilities/graphify-parisgroup-capability-registry.yaml` | References `graphify.toml` and graph report paths that are not present in this audit | Do not run repo-wide Graphify until config and output paths are defined |
+| `analysis/capabilities/graphify-capability-registry.yaml` | Tracks the current Graphify CLI surface and repo-local wrapper; broader semantic and repo-wide runs are still deferred | Keep Graphify scoped to bounded proof and explicit output paths |
 | `analysis/capabilities/graphify-safishamsi-capability-registry.yaml` | References tutorial ingestion scripts and future substrate intake | Keep contract-only until proof fixture exists |
 | `3d_assets/` | Untracked local work appears in git status | Leave untouched; out of scope for capability research organization |
 

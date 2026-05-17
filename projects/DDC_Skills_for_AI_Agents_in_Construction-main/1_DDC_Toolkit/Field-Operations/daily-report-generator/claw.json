@@ -1,0 +1,24 @@
+{
+  "name": "daily-report-generator",
+  "version": "2.0.0",
+  "description": "Automatically generate daily construction reports from field data, worker inputs, weather, and progress photos. Creates professional PDF reports.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem",
+    "network"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

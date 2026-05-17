@@ -1,0 +1,54 @@
+# spec-verified: graphify --help 2026-05-14
+tool: graphify
+tool_version: 0.7.18
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/graphify-capability-harvest.md
+  matrix: analysis/capabilities/graphify-capability-matrix.md
+harnesses:
+  - harness: capability-research
+    capabilities:
+      - id: cli-update
+        registry_state: ACTIVE
+        purpose: Refresh the bounded local code graph before graph-backed capability reads.
+        proof:
+          command: graphify update .
+          evidence: meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md
+          verified_at: 2026-05-13
+          outcome: Bounded proof completed and wrote refreshed graphify artifacts.
+        verification:
+          command: graphify update .
+          evidence: graphify-out/graph.json
+        docs_coverage:
+          required: true
+          source: AGENTS.md
+      - id: cli-query
+        registry_state: ACTIVE
+        purpose: Ask bounded graph questions about current harness and route wiring.
+        proof:
+          command: graphify query "harness route" --graph graphify-out/graph.json
+          evidence: meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md
+          verified_at: 2026-05-13
+          outcome: Query returned nodes tied to pixeltable/service/routes/harness.py.
+        verification:
+          command: graphify query "harness route" --graph graphify-out/graph.json
+          evidence: meta/capability-research/inventory/graphify/2026-05-13-bounded-proof.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md
+  - harness: agent-guidance
+    capabilities:
+      - id: cli-codex-install
+        registry_state: ACTIVE
+        purpose: Keep Codex-facing repo instructions wired into AGENTS.md.
+        proof:
+          command: graphify codex install
+          evidence: AGENTS.md
+          verified_at: 2026-05-14
+          outcome: AGENTS.md contains the Graphify Codex guidance block.
+        verification:
+          command: rg -n "## graphify" AGENTS.md
+          evidence: AGENTS.md
+        docs_coverage:
+          required: true
+          source: AGENTS.md

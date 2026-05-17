@@ -1,0 +1,22 @@
+{
+  "name": "change-order-manager",
+  "version": "2.0.0",
+  "description": "Manage construction change orders from request to approval. Track costs, schedule impacts, and maintain audit trail for dispute prevention.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

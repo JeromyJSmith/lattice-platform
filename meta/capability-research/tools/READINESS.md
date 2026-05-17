@@ -136,9 +136,9 @@ intent, but not all rows are proven-ready in the current repo state.
 
 | Registry | Readiness gap |
 |---|---|
-| `analysis/capabilities/infranodus-capability-registry.yaml` | Several `wired_at` entries reference `analysis/infranodus/*`, which does not exist yet |
-| `analysis/capabilities/gitnexus-capability-registry.yaml` | Repo-local MCP and scoped index are real, but some ACTIVE rows still overclaim search/impact health and older hook shapes |
-| `analysis/capabilities/graphify-parisgroup-capability-registry.yaml` | Current installed CLI does not match several harvested rows (`graphify run`, MCP surfaces, generated slash-command paths) |
+| `analysis/capabilities/infranodus-capability-registry.yaml` | Re-harvested on 2026-05-14; active slice is now limited to the evidenced curated-doc gap-analysis tools |
+| `analysis/capabilities/gitnexus-capability-registry.yaml` | Re-harvested on 2026-05-14; active slice now matches live bounded proof, and broken scoped calls are marked BLOCKED |
+| `analysis/capabilities/graphify-capability-registry.yaml` | Re-harvested on 2026-05-14; registry now matches the live `0.7.18` CLI and distinguishes the repo-local MCP wrapper from upstream CLI surface |
 | `analysis/capabilities/graphify-safishamsi-capability-registry.yaml` | Mentions tutorial ingestion paths that need a deterministic proof fixture |
 
 Do not change these rows to proven until each has a verifier-backed artifact.

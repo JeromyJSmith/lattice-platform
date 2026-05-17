@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-material-substitution",
+  "version": "2.0.0",
+  "description": "Find substitute materials using CWICR data. Identify equivalent alternatives based on function, cost, and availability.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "predictive-analytics-construction",
+  "version": "2.0.0",
+  "description": "Forecast project outcomes using historical data: cost overruns, schedule delays, risk probabilities. Machine learning models for construction prediction.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "data-processing"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

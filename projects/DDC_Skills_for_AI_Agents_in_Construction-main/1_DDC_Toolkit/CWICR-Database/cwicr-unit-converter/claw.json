@@ -1,0 +1,21 @@
+{
+  "name": "cwicr-unit-converter",
+  "version": "2.0.0",
+  "description": "Convert between construction measurement units. Handle metric/imperial conversion, area/volume calculations, and unit normalization for CWICR data.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

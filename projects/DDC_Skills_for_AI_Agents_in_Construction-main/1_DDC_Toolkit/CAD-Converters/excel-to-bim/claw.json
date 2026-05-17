@@ -1,0 +1,23 @@
+{
+  "name": "excel-to-bim",
+  "version": "2.0.0",
+  "description": "Push Excel data back to BIM models. Update parameters, properties, and attributes from structured spreadsheets.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM",
+    "data-processing",
+    "machine-learning",
+    "CAD"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

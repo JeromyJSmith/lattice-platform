@@ -1,0 +1,47 @@
+{
+  "_purpose": "Capture authoritative drawing-to-world point pairs for solving the Farber-Haines document georeference.",
+  "project_id": "farber-haines-2521",
+  "source_vwx": "/Volumes/PixelTable/VW_iTwin_Bridge/VW_iTwin_Bridge/projects/vectorworks project files/_Farber-Haines [2521]__ESTIMATION_WORKING_COPY__2026-05-16.vwx",
+  "target_crs": {
+    "epsg_code": 2876,
+    "name": "NAD83 / Colorado North"
+  },
+  "points": [
+    {
+      "point_id": "parcel_corner_nw",
+      "description": "Northwest parcel corner or equivalent stable surveyed point",
+      "vw_x": null,
+      "vw_y": null,
+      "lat_wgs84": null,
+      "lon_wgs84": null,
+      "source_note": ""
+    },
+    {
+      "point_id": "parcel_corner_ne",
+      "description": "Northeast parcel corner or equivalent stable surveyed point",
+      "vw_x": null,
+      "vw_y": null,
+      "lat_wgs84": null,
+      "lon_wgs84": null,
+      "source_note": ""
+    },
+    {
+      "point_id": "parcel_corner_se",
+      "description": "Southeast parcel corner or equivalent stable surveyed point",
+      "vw_x": null,
+      "vw_y": null,
+      "lat_wgs84": null,
+      "lon_wgs84": null,
+      "source_note": ""
+    },
+    {
+      "point_id": "parcel_corner_sw",
+      "description": "Southwest parcel corner or equivalent stable surveyed point",
+      "vw_x": null,
+      "vw_y": null,
+      "lat_wgs84": null,
+      "lon_wgs84": null,
+      "source_note": ""
+    }
+  ]
+}

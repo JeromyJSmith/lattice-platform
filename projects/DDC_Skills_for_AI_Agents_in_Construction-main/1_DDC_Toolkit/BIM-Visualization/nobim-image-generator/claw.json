@@ -1,0 +1,20 @@
+{
+  "name": "nobim-image-generator",
+  "version": "2.0.0",
+  "description": "Generate images and visualizations from Revit/IFC files without BIM software. Python-based noBIM tool for batch processing.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "BIM"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

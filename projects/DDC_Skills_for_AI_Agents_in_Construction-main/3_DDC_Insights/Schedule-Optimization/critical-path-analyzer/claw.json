@@ -1,0 +1,20 @@
+{
+  "name": "critical-path-analyzer",
+  "version": "2.0.0",
+  "description": "Analyze construction schedule critical path. Identify critical activities, calculate float, simulate schedule impacts, and optimize project duration.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "scheduling"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

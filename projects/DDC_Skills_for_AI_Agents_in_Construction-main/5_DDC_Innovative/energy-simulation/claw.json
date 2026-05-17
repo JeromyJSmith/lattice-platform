@@ -1,0 +1,21 @@
+{
+  "name": "energy-simulation",
+  "version": "2.0.0",
+  "description": "Building energy simulation and analysis for construction. Calculate heating/cooling loads, evaluate envelope performance, optimize HVAC sizing, and ensure energy code compliance.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "sustainability"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

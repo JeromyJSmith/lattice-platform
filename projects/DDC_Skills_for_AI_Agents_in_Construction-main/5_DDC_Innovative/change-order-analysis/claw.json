@@ -1,0 +1,23 @@
+{
+  "name": "change-order-analysis",
+  "version": "2.0.0",
+  "description": "Analyze and predict construction change orders using ML. Classify change order types, predict costs and schedule impacts, identify patterns, and optimize approval workflows.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "uberization-readiness",
+  "version": "2.0.0",
+  "description": "Assess company readiness for construction industry uberization. Analyze data transparency, process automation, and competitive positioning against open data platforms.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "capacity-planning",
+  "version": "2.0.0",
+  "description": "Plan organizational capacity for construction projects. Forecast resource needs, identify capacity gaps, and support strategic planning for project pursuit and staffing.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "machine-learning"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

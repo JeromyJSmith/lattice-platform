@@ -1,0 +1,20 @@
+{
+  "name": "contract-clause-extractor",
+  "version": "2.0.0",
+  "description": "Extract and analyze key clauses from construction contracts. Identify payment terms, change order procedures, dispute resolution, warranties, and risk allocation provisions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "cost-management"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

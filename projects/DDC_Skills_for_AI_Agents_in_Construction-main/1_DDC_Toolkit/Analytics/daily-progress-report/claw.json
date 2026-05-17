@@ -1,0 +1,22 @@
+{
+  "name": "daily-progress-report",
+  "version": "2.0.0",
+  "description": "Generate automated daily progress reports from site data. Track work completed, labor hours, equipment usage, and weather conditions.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

@@ -2,7 +2,7 @@
 
 The one authoritative architecture document. When other docs and this one disagree, this one is right and the others are stale.
 
-Currently **40 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0014** landed on `feature/meta-harness`. Post-Phase-2 total: 48 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **54 FastAPI endpoints** across 14 routers (Wave 1 harness foundation + capability/benchmark surface + project-scoped ingest router + ERP/DDC router wired). Last verified against live state: 2026-05-13 (migration **0014** applied, runtime console green, Meta-Harness foundation landed + harness router wired + /v1/projects router added + /v1/erp router added).
+Currently **41 tables** applied across 5 namespaces (`lattice/{execution,bridge,genai,reality,harness}`) after migration **0017** added `lattice/genai/trellis_jobs`. Post-Phase-2 total: 49 tables across 6 namespaces (migrations **0015** + **0016** are committed planning artifacts adding `lattice/knowledge/*`, applied in Phase 2). **58 FastAPI endpoints** across 15 routers (Wave 1 harness foundation + capability/benchmark surface + project-scoped ingest router + ERP/DDC router + TRELLIS image-to-3D router). Last verified against live state: 2026-05-16 (migration **0017** applied, TRELLIS /v1/trellis router wired).
 
 > See [`meta/SCHEMA.md`](SCHEMA.md) for the canonical schema table reference and [`meta/API.md`](API.md) for the canonical endpoint reference.
 > See [`meta/capability-research/ARCHITECTURE.md`](capability-research/ARCHITECTURE.md) for the capability research, repo-census, proof-gate, and runtime-adoption architecture.
@@ -244,7 +244,7 @@ The active runtime today is the worker in `pixeltable/service/worker.py` — it 
 
 ## 6. Pixeltable schema overview
 
-**40 tables** across **5 owned namespaces** (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`), post migration **0014**.
+**41 tables** across **5 owned namespaces** (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`), post migration **0017**.
 
 See [`meta/SCHEMA.md`](SCHEMA.md) for the full canonical schema table reference.
 

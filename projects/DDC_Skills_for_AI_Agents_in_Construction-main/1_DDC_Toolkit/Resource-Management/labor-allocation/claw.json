@@ -1,0 +1,19 @@
+{
+  "name": "labor-allocation",
+  "version": "2.0.0",
+  "description": "Allocate and track labor resources across project activities. Balance workload, track attendance, and optimize crew assignments.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

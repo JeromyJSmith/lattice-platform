@@ -1,0 +1,23 @@
+{
+  "name": "cwicr-crew-optimizer",
+  "version": "2.0.0",
+  "description": "Optimize crew composition using CWICR labor norms. Balance productivity, cost, and skill requirements for construction crews.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "data-processing",
+    "CWICR"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

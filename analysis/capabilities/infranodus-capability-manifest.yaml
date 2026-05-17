@@ -1,0 +1,52 @@
+# spec-verified: live InfraNodus MCP tool catalog 2026-05-14
+tool: infranodus
+tool_version: npx infranodus-mcp-server
+manifest_version: 1
+generated_from:
+  harvest: analysis/capabilities/infranodus-capability-harvest.md
+  matrix: analysis/capabilities/infranodus-capability-matrix.md
+harnesses:
+  - harness: capability-research
+    capabilities:
+      - id: mcp-optimize-text-structure
+        registry_state: ACTIVE
+        purpose: Diagnose the current structure of the curated capability-research corpus.
+        proof:
+          command: optimize_text_structure over curated docs summary
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+          verified_at: 2026-05-13
+          outcome: Produced the structural diagnosis used in the first gap-analysis artifact.
+        verification:
+          command: rerun optimize_text_structure on the curated docs input set
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md
+      - id: mcp-generate-content-gaps
+        registry_state: ACTIVE
+        purpose: Surface missing conceptual bridges in capability research and harness planning docs.
+        proof:
+          command: generate_content_gaps over curated docs summary
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+          verified_at: 2026-05-13
+          outcome: Produced the highest-value gap list in the first gap-analysis artifact.
+        verification:
+          command: rerun generate_content_gaps on the curated docs input set
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md
+      - id: mcp-difference-between-texts
+        registry_state: ACTIVE
+        purpose: Compare current repo organization with the desired operator and execution flow.
+        proof:
+          command: difference_between_texts over current organization versus desired workflow summaries
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+          verified_at: 2026-05-13
+          outcome: Produced the doc-versus-workflow comparison used in the gap-analysis artifact.
+        verification:
+          command: rerun difference_between_texts on the same two bounded summaries
+          evidence: meta/capability-research/tools/infranodus-gap-analysis-2026-05-13.md
+        docs_coverage:
+          required: true
+          source: meta/capability-research/tools/READINESS.md

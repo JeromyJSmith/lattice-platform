@@ -1,0 +1,23 @@
+{
+  "name": "pdf-report-generator",
+  "version": "2.0.0",
+  "description": "Automatically generate PDF reports from construction data. Create formatted project reports with charts and tables.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "data-processing",
+    "reporting",
+    "document-management",
+    "automation"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

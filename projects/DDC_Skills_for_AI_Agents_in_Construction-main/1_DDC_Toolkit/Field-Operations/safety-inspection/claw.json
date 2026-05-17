@@ -1,0 +1,23 @@
+{
+  "name": "safety-inspection",
+  "version": "2.0.0",
+  "description": "Digital safety inspection system for construction sites. Checklists, hazard tracking, incident reporting, and compliance documentation.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "safety",
+    "reporting",
+    "document-management",
+    "quality"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

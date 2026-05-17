@@ -54,7 +54,8 @@ async function main(): Promise<void> {
       if (!trimmed) continue;
       try {
         const evt = JSON.parse(trimmed) as Record<string, unknown>;
-        events.push(evt);
+        const mapped = toSidecarEvent(evt, harnessRunId);
+        if (mapped) events.push(mapped);
       } catch (err) {
         console.warn(
           `skipping malformed event line: ${(err as Error).message}`,
@@ -124,6 +125,140 @@ async function main(): Promise<void> {
   console.error(`sidecar rejected: status=${res.status}`);
   console.error(JSON.stringify(res.body, null, 2));
   process.exit(4);
+}
+
+function toSidecarEvent(
+  evt: Record<string, unknown>,
+  fallbackRunId: string,
+): Record<string, unknown> | null {
+  const existingPayload = asRecord(evt.payload);
+  const existingKind = asString(evt.kind) ?? asString(evt.event_kind);
+  if (existingKind && existingPayload?.run_id) {
+    return evt;
+  }
+
+  const kind = asString(evt.type) ?? existingKind;
+  if (!kind) return null;
+
+  if (kind === "run.started") {
+    return {
+      kind,
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        thread_id: asString(evt.threadId) ?? fallbackRunId,
+        agent_kind: asString(evt.agentId) ?? "router",
+        status: "running",
+        started_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "run.completed") {
+    return {
+      kind,
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        thread_id: asString(evt.threadId) ?? fallbackRunId,
+        status: "completed",
+        ended_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "run.failed") {
+    return {
+      kind,
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        thread_id: asString(evt.threadId) ?? fallbackRunId,
+        status: "failed",
+        outcome_md: asString(evt.error) ?? "run.failed",
+        closed_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "stream.delta") {
+    return {
+      kind,
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        event_id: asString(evt.eventId) ?? "",
+        seq: asNumber(evt.seq) ?? 0,
+        delta_text: asString(evt.text) ?? asString(evt.delta_text) ?? "",
+        created_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "tool.started" || kind === "tool.completed") {
+    return {
+      kind,
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        event_id: asString(evt.eventId) ?? "",
+        seq: asNumber(evt.seq) ?? 0,
+        tool_name: asString(evt.toolName) ?? "",
+        tool_input: evt.toolInput ?? null,
+        tool_output: evt.toolOutput ?? null,
+        created_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "artifact.created" || kind === "artifact.added") {
+    return {
+      kind: "artifact.added",
+      payload: {
+        run_id: asString(evt.runId) ?? fallbackRunId,
+        artifact_path: asString(evt.path) ?? asString(evt.artifact_path) ?? "",
+        artifact_kind:
+          asString(evt.mimeType) ??
+          detectArtifactKind(asString(evt.path) ?? ""),
+        byte_size: asNumber(evt.byte_size) ?? 0,
+        sha256: asString(evt.sha256) ?? "",
+        created_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "thread.created") {
+    return {
+      kind,
+      payload: {
+        thread_id: asString(evt.threadId) ?? fallbackRunId,
+        created_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  if (kind === "message.created" || kind === "message.added") {
+    return {
+      kind: "message.added",
+      payload: {
+        thread_id: asString(evt.threadId) ?? fallbackRunId,
+        message_id: asString(evt.messageId) ?? asString(evt.eventId) ?? "",
+        role: asString(evt.sourceAgent) ?? "agent",
+        content_md: asString(evt.content) ?? "",
+        created_at: asString(evt.createdAt) ?? new Date().toISOString(),
+      },
+    };
+  }
+
+  return null;
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (typeof value !== "object" || value === null) return null;
+  return value as Record<string, unknown>;
+}
+
+function asString(value: unknown): string | null {
+  return typeof value === "string" ? value : null;
+}
+
+function asNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
 function tryRead(path: string): string | null {

@@ -1,0 +1,23 @@
+{
+  "name": "material-delivery-tracker",
+  "version": "2.0.0",
+  "description": "Track material deliveries, manage inventory, and coordinate logistics. Monitor delivery schedules and site storage.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "scheduling",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

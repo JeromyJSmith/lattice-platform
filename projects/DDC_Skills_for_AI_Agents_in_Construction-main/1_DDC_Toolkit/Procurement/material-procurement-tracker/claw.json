@@ -1,0 +1,22 @@
+{
+  "name": "material-procurement-tracker",
+  "version": "2.0.0",
+  "description": "Track material procurement from requisition to delivery. Monitor lead times, vendors, and costs.",
+  "author": "datadrivenconstruction",
+  "license": "MIT",
+  "permissions": [
+    "filesystem"
+  ],
+  "entry": "instructions.md",
+  "tags": [
+    "construction",
+    "estimation",
+    "cost-management",
+    "procurement"
+  ],
+  "models": [
+    "claude-*",
+    "gpt-*"
+  ],
+  "minOpenClawVersion": "0.8.0"
+}

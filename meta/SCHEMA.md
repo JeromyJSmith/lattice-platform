@@ -4,8 +4,8 @@ Canonical human-readable reference for the LATTICE Pixeltable schema.
 
 ## Overview
 
-- **40 tables** applied across 5 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`). Post-Phase-2: **48 tables** across 6 namespaces (adds `lattice/knowledge` from planning migrations 0015 + 0016).
-- **Migration trail: 0001-0016** (write-once; never edit a landed migration). 0001-0014 applied; 0015 + 0016 are committed planning artifacts not yet executed against live Pixeltable; Phase 2 of the Meta-Harness build runs `make migrate-dryrun` then `make migrate` to land them. `_0014_harness_schema.py` is parked (underscore prefix excludes it from the runner) as an alternate analytics-flavor schema.
+- **41 tables** applied across 5 owned namespaces (`lattice/execution`, `lattice/bridge`, `lattice/genai`, `lattice/reality`, `lattice/harness`). Post-Phase-2: **49 tables** across 6 namespaces (adds `lattice/knowledge` from planning migrations 0015 + 0016).
+- **Migration trail: 0001-0017** (write-once; never edit a landed migration). 0001-0014 applied; 0015 + 0016 are committed planning artifacts not yet executed against live Pixeltable; 0017 (`lattice/genai/trellis_jobs`) applied 2026-05-16. `_0014_harness_schema.py` is parked (underscore prefix excludes it from the runner) as an alternate analytics-flavor schema.
 - **Pixeltable version: 0.6.0** (pinned via `pixeltable/pyproject.toml`)
 - **Geometry type: `pxt.String`** storing WKT or GeoJSON. Pixeltable 0.6.x has no native Geometry type. PostGIS spatial queries layer on at the DuckDB WASM query layer downstream.
 - **Migration path: `pixeltable/migrations/`** (NOT `pixeltable/service/migrations/`)
@@ -48,10 +48,11 @@ lattice/
 │   ├── plant_assets               # 3D asset registry (0012)
 │   ├── site_zones                 # 0012
 │   └── reference_images           # 0012
-├── genai/               # GenAI pipeline (0012)
+├── genai/               # GenAI pipeline (0012, 0017)
 │   ├── comfyui_jobs
 │   ├── model_registry
-│   └── training_runs
+│   ├── training_runs
+│   └── trellis_jobs               # image-to-3D job tracking (0017)
 ├── reality/             # Reality capture (0013)
 │   ├── drone_flights
 │   ├── drone_frames               # pxt.Image column
@@ -83,6 +84,9 @@ lattice/
 | 0012 | Extended schema: 26 cols on `ifc_elements`, `plant_assets`, `marpa_projects`, `site_zones`, `reference_images`, full `lattice/genai/*` namespace |
 | 0013 | Georef + reality + mirror: `project_georef` (67 cols), `lattice/reality/*` namespace (5 tables) |
 | 0014 | Meta-Harness: `lattice/harness/*` namespace (4 tables: health_snapshots, harness_proposals, section_events, global_decisions) |
+| 0015 | Knowledge substrate: `lattice/knowledge/*` — planning artifact, Phase 2 |
+| 0016 | Docs substrate: `lattice/knowledge/doc_chunks` etc. — planning artifact, Phase 2 |
+| 0017 | TRELLIS image-to-3D: `lattice/genai/trellis_jobs` |
 
 ## Table Reference
 
@@ -162,6 +166,7 @@ lattice/
 | `comfyui_jobs` | 0012 | ComfyUI 2D→3D / image-gen job records |
 | `model_registry` | 0012 | Local model registry (Ollama, ComfyUI checkpoints, embedding models) |
 | `training_runs` | 0012 | Fine-tune / LoRA training run records |
+| `trellis_jobs` | 0017 | TRELLIS image-to-3D jobs: Replicate prediction tracking, GLB + Gaussian splat output URLs |
 
 ### lattice/reality
 
