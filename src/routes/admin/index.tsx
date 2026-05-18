@@ -1,25 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ddcCapabilities,
-  ddcCapabilityArtifactPath,
-  ddcExclusions,
-  ddcPipelineStages,
-  ddcSummary,
-  ddcSurfaces,
-} from "#/data/ddc-capability-matrix";
+  type CapabilityMatrixPayload,
+  type CapabilityRegistry,
+  type CapabilityRow,
+  listCapabilityMatrix,
+} from "#/server/harness/list-capability-matrix";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminPage,
 });
 
-const priorityClassName: Record<string, string> = {
-  high: "border-rose-300/60 bg-rose-500/10 text-rose-700 dark:text-rose-200",
-  medium:
-    "border-amber-300/60 bg-amber-500/10 text-amber-700 dark:text-amber-200",
-  low: "border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
-};
-
-const statusClassName: Record<string, string> = {
+const statusClassName: Record<"green" | "amber" | "red", string> = {
   green:
     "border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
   amber:
@@ -28,6 +20,37 @@ const statusClassName: Record<string, string> = {
 };
 
 function AdminPage() {
+  const [payload, setPayload] = useState<CapabilityMatrixPayload | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    listCapabilityMatrix()
+      .then((result) => {
+        if (cancelled) return;
+        setPayload(result);
+      })
+      .catch((caught: unknown) => {
+        if (cancelled) return;
+        setError(
+          caught instanceof Error
+            ? caught.message
+            : "Failed to load DDC capability registry.",
+        );
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const registry = useMemo<CapabilityRegistry | null>(
+    () => payload?.registries.find((entry) => entry.tool === "ddc") ?? null,
+    [payload],
+  );
+  const capabilities = registry?.capabilities ?? [];
+  const summary = useMemo(() => summarizeCapabilities(capabilities), [capabilities]);
+  const surfaces = useMemo(() => collectSurfaces(capabilities), [capabilities]);
+
   return (
     <main className="page-wrap space-y-6 px-4 pb-8 pt-14">
       <section className="island-shell rounded-[2rem] px-6 py-8 sm:px-8">
@@ -38,205 +61,272 @@ function AdminPage() {
               Full DDC capability matrix
             </h1>
             <p className="text-sm leading-7 text-[var(--sea-ink-soft)] sm:text-base">
-              This page maps every planned DataDrivenConstruction capability to
-              its local LATTICE home, runtime target, current implementation
-              state, delivery wave, and validation signal.
+              This page renders the live DDC registry contract directly from the
+              backend capability matrix so operator status, dependencies, and
+              proof links stay aligned with the source of truth.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
               label="Capabilities"
-              value={String(ddcSummary.capabilityCount)}
+              value={String(summary.capabilityCount)}
             />
             <SummaryCard
-              label="Integration surfaces"
-              value={String(ddcSummary.surfaceCount)}
+              label="Registry surfaces"
+              value={String(summary.surfaceCount)}
             />
             <SummaryCard
-              label="Green now"
-              value={String(ddcSummary.greenCount)}
+              label="Registry green"
+              value={String(summary.greenCount)}
             />
             <SummaryCard
               label="Amber / red"
-              value={`${ddcSummary.amberCount} / ${ddcSummary.redCount}`}
+              value={`${summary.amberCount} / ${summary.redCount}`}
             />
           </div>
         </div>
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {ddcSurfaces.map((surface) => (
-          <article key={surface.id} className="island-shell rounded-2xl p-5">
-            <p className="island-kicker mb-2">{surface.classification}</p>
-            <h2 className="text-lg font-semibold text-[var(--sea-ink)]">
-              {surface.name}
-            </h2>
-            <p className="mt-3 text-sm text-[var(--sea-ink-soft)]">
-              Adoption mode:{" "}
-              <span className="font-semibold text-[var(--sea-ink)]">
-                {surface.adoptionMode}
-              </span>
-            </p>
-            <code className="mt-4 block whitespace-normal break-all text-xs">
-              {surface.localHome}
-            </code>
-          </article>
-        ))}
-      </section>
+      {error ? (
+        <section className="rounded-lg border border-[var(--destructive)] bg-[rgba(148,27,27,0.12)] p-4 text-sm">
+          {error}
+        </section>
+      ) : null}
 
-      <section className="island-shell overflow-hidden rounded-[2rem]">
-        <div className="border-b border-[var(--line)] px-6 py-4">
-          <p className="island-kicker mb-1">Capability matrix</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
-            Mapped scope and delivery order
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse text-left text-sm">
-            <thead className="bg-white/40">
-              <tr>
-                {[
-                  "Capability",
-                  "Status",
-                  "Priority",
-                  "Wave",
-                  "Current state",
-                  "Gap",
-                  "Validation",
-                  "Local home",
-                ].map((heading) => (
-                  <th
-                    key={heading}
-                    className="px-4 py-3 font-semibold text-[var(--sea-ink)]"
-                  >
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ddcCapabilities.map((capability) => (
-                <tr
-                  key={capability.id}
-                  className="border-t border-[var(--line)] align-top"
-                >
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-[var(--sea-ink)]">
-                      {capability.capability}
-                    </div>
-                    <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
-                      {capability.targetSurface}
-                    </div>
-                    {capability.projectTarget ? (
-                      <div className="mt-2 text-xs text-[var(--sea-ink-soft)]">
-                        Target: {capability.projectTarget}
-                      </div>
-                    ) : null}
-                    {capability.proofLineage ? (
-                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
-                        Lineage: {capability.proofLineage}
-                      </div>
-                    ) : null}
-                    {capability.supportedBy?.length ? (
-                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
-                        Helping now: {capability.supportedBy.join(", ")}
-                      </div>
-                    ) : null}
-                    {capability.blockedBy?.length ? (
-                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
-                        Blocking now: {capability.blockedBy.join(", ")}
-                      </div>
-                    ) : null}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase ${statusClassName[capability.status]}`}
-                    >
-                      {capability.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase ${priorityClassName[capability.priority]}`}
-                    >
-                      {capability.priority}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 font-medium text-[var(--sea-ink)]">
-                    {capability.wave}
-                  </td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
-                    {capability.currentState}
-                  </td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
-                    {capability.gap}
-                  </td>
-                  <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
-                    {capability.validation}
-                  </td>
-                  <td className="px-4 py-3">
-                    <code className="whitespace-normal break-all text-xs">
-                      {capability.localHome}
-                    </code>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {!registry && !error ? (
+        <section className="island-shell rounded-lg p-4 text-sm text-[var(--sea-ink-soft)]">
+          Loading DDC capability registry...
+        </section>
+      ) : null}
 
-      <section className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
-        <article className="island-shell rounded-[2rem] p-6">
-          <p className="island-kicker mb-2">Execution pipeline</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
-            Wave-by-wave integration path
-          </h2>
-          <div className="mt-5 grid gap-4 lg:grid-cols-2">
-            {ddcPipelineStages.map((stage) => (
-              <div
-                key={stage.id}
-                className="rounded-2xl border border-[var(--line)] bg-white/30 p-4"
-              >
-                <h3 className="text-lg font-semibold text-[var(--sea-ink)]">
-                  {stage.id}: {stage.name}
-                </h3>
-                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[var(--sea-ink-soft)]">
-                  {stage.capabilityIds.map((capabilityId) => {
-                    const capability = ddcCapabilities.find(
-                      (entry) => entry.id === capabilityId,
+      {registry ? (
+        <>
+          <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+            <article className="island-shell rounded-2xl p-5 xl:col-span-2">
+              <p className="island-kicker mb-2">Registry source</p>
+              <h2 className="text-lg font-semibold text-[var(--sea-ink)]">
+                {registry.tool}
+              </h2>
+              <p className="mt-3 text-sm text-[var(--sea-ink-soft)]">
+                Canonical docs and source paths are rendered from the live
+                registry payload instead of a separate frontend shadow file.
+              </p>
+              <code className="mt-4 block whitespace-normal break-all text-xs">
+                {registry.registry_path}
+              </code>
+              {registry.canonical_docs ? (
+                <code className="mt-2 block whitespace-normal break-all text-xs">
+                  {registry.canonical_docs}
+                </code>
+              ) : null}
+            </article>
+
+            {surfaces.map((surface) => (
+              <article key={surface.id} className="island-shell rounded-2xl p-5">
+                <p className="island-kicker mb-2">surface</p>
+                <h2 className="text-lg font-semibold text-[var(--sea-ink)]">
+                  {surface.label}
+                </h2>
+                <p className="mt-3 text-sm text-[var(--sea-ink-soft)]">
+                  {surface.count} {surface.count === 1 ? "capability" : "capabilities"}
+                </p>
+              </article>
+            ))}
+          </section>
+
+          <section className="island-shell overflow-hidden rounded-[2rem]">
+            <div className="border-b border-[var(--line)] px-6 py-4">
+              <p className="island-kicker mb-1">Capability matrix</p>
+              <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
+                Registry-backed operator view
+              </h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead className="bg-white/40">
+                  <tr>
+                    {[
+                      "Capability",
+                      "Registry status",
+                      "Surface",
+                      "Description",
+                      "Dependencies",
+                      "Proof",
+                      "Wired at",
+                    ].map((heading) => (
+                      <th
+                        key={heading}
+                        className="px-4 py-3 font-semibold text-[var(--sea-ink)]"
+                      >
+                        {heading}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {capabilities.map((capability) => {
+                    const declaredColor = capability.declared_status_color ?? capability.status.color;
+                    return (
+                      <tr
+                        key={capability.id}
+                        className="border-t border-[var(--line)] align-top"
+                      >
+                        <td className="px-4 py-3">
+                          <div className="font-semibold text-[var(--sea-ink)]">
+                            {capability.name ?? capability.id}
+                          </div>
+                          <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                            {capability.id}
+                          </div>
+                          {capability.project_target ? (
+                            <div className="mt-2 text-xs text-[var(--sea-ink-soft)]">
+                              Target: {capability.project_target}
+                            </div>
+                          ) : null}
+                          {capability.proof_lineage?.length ? (
+                            <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                              Lineage: {capability.proof_lineage.join(" | ")}
+                            </div>
+                          ) : null}
+                          {capability.follow_on ? (
+                            <div className="mt-2 text-xs text-[var(--sea-ink-soft)]">
+                              Follow on: {capability.follow_on}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase ${statusClassName[declaredColor]}`}
+                          >
+                            {declaredColor}
+                          </span>
+                          <div className="mt-2 text-xs text-[var(--sea-ink-soft)]">
+                            Diagnostic: {capability.status.label}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                          {formatSurface(capability.surface)}
+                        </td>
+                        <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                          {capability.description}
+                        </td>
+                        <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                          <DependencyList
+                            label="Supported by"
+                            values={capability.supported_by}
+                          />
+                          <DependencyList
+                            label="Blocked by"
+                            values={capability.blocking_capabilities}
+                          />
+                        </td>
+                        <td className="px-4 py-3 text-[var(--sea-ink-soft)]">
+                          {capability.proof_evidence.length ? (
+                            <div className="space-y-1">
+                              {capability.proof_evidence.map((path) => (
+                                <code
+                                  key={path}
+                                  className="block whitespace-normal break-all text-xs"
+                                >
+                                  {path}
+                                </code>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-xs">No proof artifact recorded.</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="space-y-1">
+                            {capability.wired_at.map((path) => (
+                              <code
+                                key={path}
+                                className="block whitespace-normal break-all text-xs text-[var(--sea-ink-soft)]"
+                              >
+                                {path}
+                              </code>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
                     );
-                    if (!capability) return null;
-                    return <li key={capability.id}>{capability.capability}</li>;
                   })}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="island-shell rounded-[2rem] p-6">
-          <p className="island-kicker mb-2">Guardrails</p>
-          <h2 className="text-2xl font-semibold text-[var(--sea-ink)]">
-            Explicit exclusions
-          </h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-7 text-[var(--sea-ink-soft)]">
-            {ddcExclusions.map((exclusion) => (
-              <li key={exclusion}>{exclusion}</li>
-            ))}
-          </ul>
-          <p className="mt-5 text-xs text-[var(--sea-ink-soft)]">
-            Canonical structured artifact:{" "}
-            <code>{ddcCapabilityArtifactPath}</code>
-          </p>
-          <p className="mt-2 text-xs text-[var(--sea-ink-soft)]">
-            Green = verifier-backed or operational now. Amber = partially wired
-            and useful but still blocking the end-to-end path. Red = planned or
-            dependency-missing.
-          </p>
-        </article>
-      </section>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
+      ) : null}
     </main>
+  );
+}
+
+function collectSurfaces(capabilities: CapabilityRow[]) {
+  return Array.from(
+    capabilities.reduce(
+      (map, capability) =>
+        map.set(capability.surface ?? "unspecified", {
+          id: capability.surface ?? "unspecified",
+          label: formatSurface(capability.surface),
+          count: (map.get(capability.surface ?? "unspecified")?.count ?? 0) + 1,
+        }),
+      new Map<string, { id: string; label: string; count: number }>(),
+    ).values(),
+  ).sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+}
+
+function summarizeCapabilities(capabilities: CapabilityRow[]) {
+  return capabilities.reduce(
+    (summary, capability) => {
+      const color = capability.declared_status_color ?? capability.status.color;
+      summary.capabilityCount += 1;
+      if (color === "green") summary.greenCount += 1;
+      if (color === "amber") summary.amberCount += 1;
+      if (color === "red") summary.redCount += 1;
+      summary.surfaceIds.add(capability.surface ?? "unspecified");
+      summary.surfaceCount = summary.surfaceIds.size;
+      return summary;
+    },
+    {
+      capabilityCount: 0,
+      surfaceCount: 0,
+      greenCount: 0,
+      amberCount: 0,
+      redCount: 0,
+      surfaceIds: new Set<string>(),
+    },
+  );
+}
+
+function formatSurface(surface?: string) {
+  if (!surface) return "Unspecified";
+  return surface.replace(/[_-]/g, " ");
+}
+
+function DependencyList({
+  label,
+  values,
+}: {
+  label: string;
+  values?: string[];
+}) {
+  if (!values?.length) return null;
+  return (
+    <div className="mb-2">
+      <div className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--sea-ink-soft)]">
+        {label}
+      </div>
+      <div className="mt-1 flex flex-wrap gap-1">
+        {values.map((value) => (
+          <code
+            key={`${label}-${value}`}
+            className="rounded-full border border-[var(--line)] bg-white/35 px-2 py-1 text-xs"
+          >
+            {value}
+          </code>
+        ))}
+      </div>
+    </div>
   );
 }
 
