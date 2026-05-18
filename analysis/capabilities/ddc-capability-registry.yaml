@@ -48,6 +48,30 @@ capabilities:
       - admin dashboard
     proof_evidence: []
 
+  - id: boq-sync
+    surface: route
+    name: OpenConstructionERP BOQ sync
+    state: BLOCKED
+    description: Serve POST /v1/erp/boq through the sidecar with a concrete blocker contract until project-scoped Pixeltable reads, bridge writeback, and the upstream ERP create endpoint are all ready.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/erp/boq-adapter.py
+      - pixeltable/service/routes/erp.py
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-erp-boq-sync.py
+    invoked_by:
+      - POST /v1/erp/boq
+      - POST /v1/harness/capabilities/runs
+      - future /admin DDC dashboard
+    serves:
+      - OpenConstructionERP integration
+      - BOQ creation and sync
+      - verifier-backed blocker evidence
+    blocker: Live proof fails because project-scoped IFC rows are not yet available to the sync path, bridge writeback is not implemented, and localhost:8080 returns 404 for POST /api/boq/create.
+    blocker_resolution_path: Add a project_id-addressable Pixeltable read surface, implement bridge writeback for erp_item_id/unit_cost, and re-run the verifier once OpenConstructionERP serves POST /api/boq/create.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json
+
   - id: boq-read
     surface: route
     name: OpenConstructionERP BOQ read

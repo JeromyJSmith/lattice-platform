@@ -161,13 +161,8 @@ def test_cost_search_rejects_boolean_scores_as_numeric_proof(tmp_path: Path, mon
     assert body["verification"]["status"] == "failed"
 
 
-def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):
-    """Expose BOQ sync stubs as 501 responses."""
-    monkeypatch.setattr(
-        erp._BOQ_ADAPTER,
-        "sync_boq",
-        lambda project_id, pxt=None: (_ for _ in ()).throw(NotImplementedError("boq sync pending")),
-    )
+def test_boq_sync_surfaces_precise_pixeltable_blocker(tmp_path: Path):
+    """Expose the concrete BOQ sync blocker instead of a generic stub message."""
     client = TestClient(_app(tmp_path))
     response = client.post(
         "/v1/erp/boq",
@@ -175,7 +170,10 @@ def test_boq_sync_returns_stub_501(tmp_path: Path, monkeypatch):
         headers={"Idempotency-Key": "ddc-boq-sync-0001"},
     )
     assert response.status_code == 501
-    assert response.json()["detail"] == "boq sync pending"
+    assert (
+        response.json()["detail"]
+        == "boq sync blocked: Pixeltable handle is not ready; expected get_table() for project IFC row access and BOQ writeback."
+    )
 
 
 def test_boq_read_strips_project_id_before_adapter_call(tmp_path: Path, monkeypatch):

@@ -19,13 +19,57 @@ import httpx
 
 
 ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080")
+PROJECT_IFC_TABLE_TEMPLATE = "lattice/projects/{project_id}/ifc_elements"
+BRIDGE_IFC_TABLE = "lattice/bridge/ifc/ifc_elements"
+
+
+def _normalize_project_id(project_id: str) -> str:
+    normalized_project_id = project_id.strip()
+    if not normalized_project_id:
+        raise ValueError("project_id required")
+    return normalized_project_id
+
+
+def _require_pxt_handle(pxt: Any) -> Any:
+    if pxt is None or not callable(getattr(pxt, "get_table", None)):
+        raise NotImplementedError(
+            "boq sync blocked: Pixeltable handle is not ready; expected get_table() for "
+            "project IFC row access and BOQ writeback."
+        )
+    return pxt
+
+
+def _require_table(pxt: Any, path: str, *, blocker: str) -> Any:
+    try:
+        return pxt.get_table(path)
+    except Exception as exc:
+        raise NotImplementedError(blocker) from exc
 
 
 def sync_boq(project_id: str, pxt: Any | None = None) -> dict:
-    """Walk ifc_elements for the project, upsert into ERP, write IDs back."""
+    """Validate the current BOQ sync prerequisites and fail closed with a concrete blocker."""
+    normalized_project_id = _normalize_project_id(project_id)
+    pxt_handle = _require_pxt_handle(pxt)
+    project_ifc_table = PROJECT_IFC_TABLE_TEMPLATE.format(project_id=normalized_project_id)
+    _require_table(
+        pxt_handle,
+        project_ifc_table,
+        blocker=(
+            "boq sync blocked: project IFC rows are not ready at "
+            f"{project_ifc_table}; the route cannot map project_id to a local BOQ input set yet."
+        ),
+    )
+    _require_table(
+        pxt_handle,
+        BRIDGE_IFC_TABLE,
+        blocker=(
+            "boq sync blocked: BOQ writeback target "
+            f"{BRIDGE_IFC_TABLE} is not available."
+        ),
+    )
     raise NotImplementedError(
-        "boq-adapter stub. See ddc/erp/README.md for the endpoint contract and "
-        "meta/DDC_MAPPING.md § Repo 2 for the OpenConstructionERP endpoints used."
+        "boq sync blocked: the project-to-bridge writeback contract for "
+        "erp_item_id/unit_cost persistence is not implemented yet."
     )
 
     # Sketch (uncomment when implementing):
@@ -57,7 +101,7 @@ def _normalize_boq_payload(payload: Any) -> dict[str, Any] | list[Any]:
 
 def fetch_boq(project_id: str) -> dict:
     """Return one project's current BOQ document from OpenConstructionERP."""
-    normalized_project_id = project_id.strip()
+    normalized_project_id = _normalize_project_id(project_id)
     with httpx.Client(base_url=ERP_BASE, timeout=30.0) as client:
         response = client.get(f"/api/boq/{normalized_project_id}")
         response.raise_for_status()

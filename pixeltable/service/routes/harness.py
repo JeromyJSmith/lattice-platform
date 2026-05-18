@@ -106,6 +106,16 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "command": ["uv", "run", "python", "scripts/verify-erp-boq-export.py"],
         "expected_returncode": 0,
         "timeout_seconds": 120,
+    },
+    "boq-sync": {
+        "kind": "script_exit_code",
+        "action_id": "run-boq-sync",
+        "job_id": "boq-sync",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-boq-sync.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
     }
 }
 

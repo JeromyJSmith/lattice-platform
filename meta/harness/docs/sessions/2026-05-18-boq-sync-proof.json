@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "capability_id": "boq-sync",
+  "job_id": "boq-sync",
+  "run_id": "boq-sync-2026-05-18T00-08-51.260Z",
+  "started_at": "2026-05-18T00:08:50Z",
+  "completed_at": "2026-05-18T00:08:51Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "--project",
+    "pixeltable",
+    "python",
+    "scripts/verify-erp-boq-sync.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"http://localhost:8080\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ create probe returned 404 for http://localhost:8080/api/boq/create; live ERP create contract is not ready.\",\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/ddc-boq-proof-project/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"http://localhost:8080\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ create probe returned 404 for http://localhost:8080/api/boq/create; live ERP create contract is not ready.\",\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/ddc-boq-proof-project/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}\n"
+  },
+  "metrics": {
+    "latency_ms": 314,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

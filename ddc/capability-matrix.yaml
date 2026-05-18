@@ -95,8 +95,8 @@ capabilities:
     capability: BOQ creation and sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: POST /v1/erp/boq
-    current_state: adapter stub
-    gap: Project IFC rows into ERP payloads and persist returned ERP identifiers
+    current_state: verifier-backed route; live proof currently failing
+    gap: Project-scoped Pixeltable IFC rows are not exposed to the sync path yet, bridge writeback is still unimplemented, and localhost:8080 returns 404 for POST /api/boq/create during proof runs
     priority: high
     wave: wave-2
     validation: Every BOQ-attached element has erp_item_id and unit_cost

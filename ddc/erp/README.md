@@ -12,7 +12,7 @@ LATTICE talks to OpenConstructionERP (https://github.com/datadrivenconstruction/
 
 ## LATTICE endpoints these adapters power
 
-These FastAPI routes live in `pixeltable/service/routes/erp.py` (not yet created — tracked as backlog item "OpenConstructionERP BOQ").
+These FastAPI routes live in `pixeltable/service/routes/erp.py`.
 
 | Sidecar endpoint | Adapter called | Purpose |
 |---|---|---|
