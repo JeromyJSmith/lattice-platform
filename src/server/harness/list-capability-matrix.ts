@@ -29,11 +29,17 @@ export type CapabilityRow = {
   name?: string;
   surface?: string;
   state?: string;
+  declared_status_color?: "green" | "amber" | "red";
   description?: string;
   wired_at: string[];
   invoked_by: string[];
   serves: string[];
   proof_evidence: string[];
+  project_target?: string;
+  proof_lineage?: string[];
+  supported_by?: string[];
+  blocking_capabilities?: string[];
+  follow_on?: string;
   run_action?: CapabilityRunAction | null;
   status: CapabilityStatus;
 };
