@@ -23,6 +23,41 @@ def require_table(pxt: Any, path: str, *, blocker: str) -> Any:
         raise NotImplementedError(blocker) from exc
 
 
+def _as_row_dict(row: Any) -> dict[str, Any]:
+    if isinstance(row, dict):
+        return row
+    try:
+        return dict(row)
+    except Exception:
+        return {}
+
+
+def _row_value(row: dict[str, Any], key: str) -> Any:
+    value = row.get(key)
+    if value is not None:
+        return value
+    raw_event = row.get("raw_event")
+    if isinstance(raw_event, dict):
+        return raw_event.get(key)
+    return None
+
+
+def _bridge_supports_project_scope(table: Any, project_id: str) -> bool:
+    collect = getattr(table, "collect", None)
+    if not callable(collect):
+        return False
+    try:
+        rows = [_as_row_dict(row) for row in collect()]
+    except Exception:
+        return False
+    if not rows:
+        return False
+    row_keys = {key for row in rows for key in row.keys()}
+    if "project_id" in row_keys:
+        return True
+    return any(_row_value(row, "project_id") == project_id for row in rows)
+
+
 def resolve_project_ifc_surface(project_id: str, pxt: Any, *, capability: str) -> dict[str, Any]:
     """Resolve the smallest project-addressable IFC surface, preferring the bridge catalog."""
     bridge_table = None
@@ -30,7 +65,7 @@ def resolve_project_ifc_surface(project_id: str, pxt: Any, *, capability: str) -
         bridge_table = pxt.get_table(BRIDGE_IFC_TABLE)
     except Exception:
         bridge_table = None
-    if bridge_table is not None:
+    if bridge_table is not None and _bridge_supports_project_scope(bridge_table, project_id):
         return {
             "table": bridge_table,
             "path": BRIDGE_IFC_TABLE,
@@ -52,6 +87,15 @@ def resolve_project_ifc_surface(project_id: str, pxt: Any, *, capability: str) -
             "scope": "project-shadow",
             "project_filter": None,
             "documented_source_of_truth": False,
+        }
+
+    if bridge_table is not None:
+        return {
+            "table": bridge_table,
+            "path": BRIDGE_IFC_TABLE,
+            "scope": "bridge",
+            "project_filter": "project_id",
+            "documented_source_of_truth": True,
         }
 
     raise NotImplementedError(

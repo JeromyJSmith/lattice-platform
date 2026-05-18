@@ -208,7 +208,11 @@ def _probe_adjacent_project_surfaces(project_id: str) -> dict[str, Any]:
 
 def _build_app(*, pxt_handle: Any | None = None) -> FastAPI:
     app = FastAPI()
-    app.state.idem = IdempotencyStore(REPO_ROOT / ".tmp" / ".verify-erp-phases-sync.idem.json")
+    idem_path = REPO_ROOT / ".tmp" / ".verify-erp-phases-sync.idem.json"
+    idem_path.parent.mkdir(parents=True, exist_ok=True)
+    if idem_path.exists():
+        idem_path.unlink()
+    app.state.idem = IdempotencyStore(idem_path)
     app.state.pxt = _resolve_phase_sync_pxt() if pxt_handle is None else pxt_handle
     app.include_router(erp.router, prefix="/v1/erp")
     return app
@@ -289,6 +293,7 @@ def main() -> int:
         print(json.dumps(report, indent=2), file=sys.stderr)
         return 1
 
+    report["local_seam_probe"] = _probe_local_phase_sync_seam(args.project_id)
     report["status"] = "passed"
     print(json.dumps(report, indent=2))
     return 0

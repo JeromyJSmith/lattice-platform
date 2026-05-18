@@ -606,34 +606,64 @@ def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
     )
 
 
-def test_phases_sync_surfaces_missing_schedule_identifiers(tmp_path: Path):
-    """Fail closed when local project rows exist but do not carry ERP schedule/task identifiers."""
+def test_phases_sync_surfaces_missing_schedule_identifiers(tmp_path: Path, monkeypatch):
+    """Bootstrap schedule/task ids through the bounded ERP write path."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
 
     class _RowsTable:
+        project_id = _Column("project_id")
+        phase = _Column("phase")
+        id = _Column("id")
+
         def __init__(self, rows):
-            self._rows = rows
+            self.rows = rows
 
         def collect(self):
             """Return the synthetic table rows."""
-            return list(self._rows)
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply updates to matching rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
 
     class _PhaseSyncPxt:
         def __init__(self):
+            self.projects = _RowsTable(
+                [
+                    {
+                        "id": "phase-row-1",
+                        "project_id": "proj-1",
+                        "phase": "A",
+                        "start_date": "2026-05-01T00:00:00Z",
+                        "end_date": "2026-05-31T00:00:00Z",
+                        "erp_project_id": "erp-proj-1",
+                        "raw_event": {},
+                    }
+                ]
+            )
             self._tables = {
                 "lattice/bridge/ifc/ifc_elements": _RowsTable(
                     [{"project_id": "proj-1", "source_element_id": "ifc-1", "boq_phase": "A"}]
                 ),
-                "lattice/bridge/marpa_projects": _RowsTable(
-                    [
-                        {
-                            "project_id": "proj-1",
-                            "phase": "A",
-                            "start_date": "2026-05-01T00:00:00Z",
-                            "end_date": "2026-05-31T00:00:00Z",
-                            "erp_project_id": "erp-proj-1",
-                        }
-                    ]
-                ),
+                "lattice/bridge/marpa_projects": self.projects,
             }
 
         def get_table(self, path: str):
@@ -642,54 +672,120 @@ def test_phases_sync_surfaces_missing_schedule_identifiers(tmp_path: Path):
                 raise RuntimeError(f"table not found: {path}")
             return self._tables[path]
 
-    client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
+    class _Response:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def json(self):
+            """Return the synthetic JSON payload."""
+            return self._payload
+
+        def raise_for_status(self):
+            """Model a successful upstream response."""
+            return None
+
+    class _Client:
+        def __init__(self):
+            self.activities: list[dict] = []
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def get(self, path: str, params: dict | None = None):
+            """Return the schedule list or activity list."""
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULES_PATH:
+                return _Response([])
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULE_ACTIVITIES_PATH_TEMPLATE.format(schedule_id="sched-1"):
+                return _Response(list(self.activities))
+            raise AssertionError(path)
+
+        def post(self, path: str, json: dict | None = None, files: dict | None = None):
+            """Return canned schedule create/import/progress responses."""
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULES_PATH:
+                return _Response({"id": "sched-1"})
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULE_IMPORT_PATH_TEMPLATE.format(schedule_id="sched-1"):
+                self.activities = [{"id": "task-1", "wbs_code": "A", "name": "A"}]
+                return _Response({"activities_created": 1, "activities_failed": 0, "warnings": []})
+            if path == erp._PHASE_ADAPTER.ERP_TASK_PROGRESS_PATH_TEMPLATE.format(task_id="task-1"):
+                return _Response({"id": "progress-1"})
+            raise AssertionError(path)
+
+    pxt = _PhaseSyncPxt()
+    monkeypatch.setattr(erp._PHASE_ADAPTER, "require_erp_runtime", lambda: SimpleNamespace(base_url="https://erp.test"))
+    monkeypatch.setattr(erp._PHASE_ADAPTER, "erp_client", lambda base_url, timeout: _Client())
+    client = TestClient(_app(tmp_path, pxt=pxt))
     response = client.post(
         "/v1/erp/phases",
         json={"project_id": "proj-1"},
         headers={"Idempotency-Key": "ddc-phases-sync-0003"},
     )
-    assert response.status_code == 501
-    assert (
-        response.json()["detail"]
-        == "phase sync blocked: schedule source lattice/bridge/marpa_projects has 1 row(s) for "
-        "project_id=proj-1, but only exposes phase/start_date/end_date/erp_project_id and does not "
-        "provide schedule_id/task_id. The bounded live OpenConstructionERP schedule surface is "
-        "/api/v2/schedules/{schedule_id}/import (CSV upload) plus "
-        "/api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so local verifier "
-        "data must provide per-phase schedule_id/task_id before phases-sync can pass."
-    )
+    assert response.status_code == 200
+    assert response.json()["ok"] is True
+    assert pxt.projects.rows[0]["raw_event"]["schedule_id"] == "sched-1"
+    assert pxt.projects.rows[0]["raw_event"]["task_id"] == "task-1"
 
 
-def test_phases_sync_surfaces_unimplemented_write_path_when_local_seam_is_ready(tmp_path: Path):
-    """Fail closed with the bounded write-path blocker after the local seam is ready."""
+def test_phases_sync_uses_existing_identifiers_to_record_progress(tmp_path: Path, monkeypatch):
+    """Reuse stored schedule/task ids and only record progress."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
 
     class _RowsTable:
+        project_id = _Column("project_id")
+        phase = _Column("phase")
+        id = _Column("id")
+
         def __init__(self, rows):
-            self._rows = rows
+            self.rows = rows
 
         def collect(self):
             """Return the synthetic table rows."""
-            return list(self._rows)
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply updates to matching rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
 
     class _PhaseSyncPxt:
         def __init__(self):
+            self.projects = _RowsTable(
+                [
+                    {
+                        "id": "phase-row-1",
+                        "project_id": "proj-1",
+                        "phase": "A",
+                        "start_date": "2026-05-01T00:00:00Z",
+                        "end_date": "2026-05-31T00:00:00Z",
+                        "erp_project_id": "erp-proj-1",
+                        "raw_event": {"schedule_id": "sched-1", "task_id": "task-1"},
+                    }
+                ]
+            )
             self._tables = {
                 "lattice/bridge/ifc/ifc_elements": _RowsTable(
                     [{"project_id": "proj-1", "source_element_id": "ifc-1", "boq_phase": "A"}]
                 ),
-                "lattice/bridge/marpa_projects": _RowsTable(
-                    [
-                        {
-                            "project_id": "proj-1",
-                            "phase": "A",
-                            "start_date": "2026-05-01T00:00:00Z",
-                            "end_date": "2026-05-31T00:00:00Z",
-                            "erp_project_id": "erp-proj-1",
-                            "schedule_id": "sched-1",
-                            "task_id": "task-1",
-                        }
-                    ]
-                ),
+                "lattice/bridge/marpa_projects": self.projects,
             }
 
         def get_table(self, path: str):
@@ -698,18 +794,55 @@ def test_phases_sync_surfaces_unimplemented_write_path_when_local_seam_is_ready(
                 raise RuntimeError(f"table not found: {path}")
             return self._tables[path]
 
+    class _Response:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def json(self):
+            """Return the synthetic JSON payload."""
+            return self._payload
+
+        def raise_for_status(self):
+            """Model a successful upstream response."""
+            return None
+
+    class _Client:
+        def __init__(self):
+            self.import_called = False
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def get(self, path: str, params: dict | None = None):
+            """Return the synthetic activity list."""
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULE_ACTIVITIES_PATH_TEMPLATE.format(schedule_id="sched-1"):
+                return _Response([{"id": "task-1", "wbs_code": "A", "name": "A"}])
+            raise AssertionError(path)
+
+        def post(self, path: str, json: dict | None = None, files: dict | None = None):
+            """Capture unexpected import calls and return progress responses."""
+            if path == erp._PHASE_ADAPTER.ERP_TASK_PROGRESS_PATH_TEMPLATE.format(task_id="task-1"):
+                return _Response({"id": "progress-1"})
+            if path == erp._PHASE_ADAPTER.ERP_SCHEDULE_IMPORT_PATH_TEMPLATE.format(schedule_id="sched-1"):
+                self.import_called = True
+                return _Response({"activities_created": 0})
+            raise AssertionError(path)
+
+    seen = _Client()
+    monkeypatch.setattr(erp._PHASE_ADAPTER, "require_erp_runtime", lambda: SimpleNamespace(base_url="https://erp.test"))
+    monkeypatch.setattr(erp._PHASE_ADAPTER, "erp_client", lambda base_url, timeout: seen)
     client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
     response = client.post(
         "/v1/erp/phases",
         json={"project_id": "proj-1"},
         headers={"Idempotency-Key": "ddc-phases-sync-0004"},
     )
-    assert response.status_code == 501
-    assert (
-        response.json()["detail"]
-        == "phase sync blocked: local project and schedule seam is ready, but the bounded "
-        "OpenConstructionERP schedule write path is not yet implemented in this adapter."
-    )
+    assert response.status_code == 200
+    assert response.json()["ok"] is True
+    assert seen.import_called is False
 
 
 def test_phases_sync_normalizes_project_id_before_adapter_call(tmp_path: Path, monkeypatch):

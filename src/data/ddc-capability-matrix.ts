@@ -201,8 +201,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py",
     targetSurface: "POST /v1/erp/phases",
-    currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Live proof still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, lattice/bridge/marpa_projects has no verifier-project rows, and even a ready seam would still stop at the adapter's unimplemented bounded write path for /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress.",
+    currentState: "Verifier-backed route; latest live Portless proof passed",
+    gap: "No current proof gap; the bounded implementation now seeds a proof-project IFC shadow seam when bridge rows are not project-addressable, stores schedule_id/task_id in lattice/bridge/marpa_projects.raw_event, and exercises /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress against a real ERP verifier project.",
     priority: "high",
     wave: "wave-2",
     validation:
