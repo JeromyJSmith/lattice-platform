@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/gate-result.schema.json",
+  "title": "Lifecycle gate result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gate_id",
+    "status",
+    "blocking",
+    "reason",
+    "evidence"
+  ],
+  "properties": {
+    "gate_id": {
+      "type": "string",
+      "enum": [
+        "harvest",
+        "registry",
+        "manifest",
+        "verification",
+        "state",
+        "health",
+        "promotion"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "pending"
+      ]
+    },
+    "blocking": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "comparison_engine": {
+      "type": "string",
+      "enum": [
+        "infranodus"
+      ]
+    },
+    "comparison_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "gate_id": {
+            "enum": [
+              "verification",
+              "health",
+              "promotion"
+            ]
+          }
+        },
+        "required": [
+          "gate_id"
+        ]
+      },
+      "then": {
+        "required": [
+          "comparison_engine",
+          "comparison_artifacts"
+        ]
+      }
+    }
+  ]
+}

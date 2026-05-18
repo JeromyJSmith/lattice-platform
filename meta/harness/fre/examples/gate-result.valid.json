@@ -1,0 +1,14 @@
+{
+  "gate_id": "verification",
+  "status": "pass",
+  "blocking": true,
+  "reason": "Schemas and examples validate cleanly under Draft 2020-12 with comparison evidence attached.",
+  "evidence": [
+    "meta/harness/fre/evaluation/schema-validation.json",
+    "meta/harness/fre/evaluation/example-validation.json"
+  ],
+  "comparison_engine": "infranodus",
+  "comparison_artifacts": [
+    "analysis/infranodus/goal-vs-implementation.diff.json"
+  ]
+}

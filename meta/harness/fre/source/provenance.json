@@ -212,7 +212,11 @@
       "meta/harness/fre/schemas/front-matter.schema.json",
       "meta/harness/fre/schemas/gate-progress.schema.json",
       "meta/harness/fre/schemas/bottom-matter.schema.json",
-      "meta/harness/fre/schemas/bridge-record.schema.json"
+      "meta/harness/fre/schemas/bridge-record.schema.json",
+      "meta/harness/fre/schemas/fre-loop.schema.json",
+      "meta/harness/fre/schemas/gate-result.schema.json",
+      "meta/harness/fre/schemas/repair-task.schema.json",
+      "meta/harness/fre/schemas/promotion-decision.schema.json"
     ],
     "examples": [
       "meta/harness/fre/examples/front-matter.valid.json",
@@ -225,7 +229,15 @@
       "meta/harness/fre/examples/bottom-matter.invalid.missing-status-summary.json",
       "meta/harness/fre/examples/bridge-record.valid.json",
       "meta/harness/fre/examples/bridge-record.invalid.missing-proof-artifacts.json",
-      "meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json"
+      "meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json",
+      "meta/harness/fre/examples/fre-loop.valid.json",
+      "meta/harness/fre/examples/fre-loop.invalid.missing-promotion-in-authority.json",
+      "meta/harness/fre/examples/gate-result.valid.json",
+      "meta/harness/fre/examples/gate-result.invalid.missing-comparison-engine.json",
+      "meta/harness/fre/examples/repair-task.valid.json",
+      "meta/harness/fre/examples/repair-task.invalid.bad-blocking-gate-id.json",
+      "meta/harness/fre/examples/promotion-decision.valid.json",
+      "meta/harness/fre/examples/promotion-decision.invalid.missing-comparison-engine.json"
     ],
     "expected_failures": [
       "meta/harness/fre/examples/expected-failures.yaml"
@@ -233,7 +245,15 @@
     "tests": [
       "meta/harness/fre/tests/test_document_contract.py",
       "meta/harness/fre/tests/test_failure_examples_fail.py",
-      "meta/harness/fre/tests/test_lattice_mapping.py"
+      "meta/harness/fre/tests/test_lattice_mapping.py",
+      "meta/harness/fre/tests/test_schema_validity.py",
+      "meta/harness/fre/tests/test_examples_validate.py",
+      "meta/harness/fre/tests/test_no_green_terminology.py",
+      "meta/harness/fre/tests/test_required_metrics.py",
+      "meta/harness/fre/tests/test_repair_tasks.py",
+      "meta/harness/fre/tests/test_research_grounding.py",
+      "meta/harness/fre/tests/test_determinism_check.py",
+      "meta/harness/fre/tests/test_current_run_fixture_pressure.py"
     ],
     "evaluation": [
       "meta/harness/fre/evaluation/artifacts-inventory.json",

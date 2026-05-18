@@ -110,6 +110,68 @@
       ],
       "schema": "bridge-record.schema.json",
       "status": "pass"
+    },
+    {
+      "example": "examples/fre-loop.invalid.missing-promotion-in-authority.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "ARRAY_CONTAINS_VIOLATION",
+          "field": "authority_chain",
+          "message": "['research', 'source', 'schema', 'examples', 'validation', 'metrics', 'repair_task'] does not contain items matching the given schema"
+        }
+      ],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/gate-result.invalid.missing-comparison-engine.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_artifacts",
+          "message": "'comparison_artifacts' is a required property"
+        },
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_engine",
+          "message": "'comparison_engine' is a required property"
+        }
+      ],
+      "schema": "gate-result.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/repair-task.invalid.bad-blocking-gate-id.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "ENUM_VIOLATION",
+          "field": "blocking_gate_ids.0",
+          "message": "'real_fixture_pressure_test' is not one of ['harvest', 'registry', 'manifest', 'verification', 'state', 'health', 'promotion']"
+        }
+      ],
+      "schema": "repair-task.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/promotion-decision.invalid.missing-comparison-engine.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_artifacts",
+          "message": "'comparison_artifacts' is a required property"
+        },
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_engine",
+          "message": "'comparison_engine' is a required property"
+        }
+      ],
+      "schema": "promotion-decision.schema.json",
+      "status": "pass"
     }
   ],
   "valid_examples": [
@@ -135,6 +197,30 @@
       "example": "bridge-record.valid.json",
       "failures": [],
       "schema": "bridge-record.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fre-loop.valid.json",
+      "failures": [],
+      "schema": "fre-loop.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "gate-result.valid.json",
+      "failures": [],
+      "schema": "gate-result.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "repair-task.valid.json",
+      "failures": [],
+      "schema": "repair-task.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "promotion-decision.valid.json",
+      "failures": [],
+      "schema": "promotion-decision.schema.json",
       "status": "pass"
     }
   ]

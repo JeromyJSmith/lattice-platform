@@ -1,7 +1,7 @@
 ---
-id: PROMOTION-FRE-MAIN-SLICE-0001
+id: PROMOTION-FRE-MAIN-SLICE-0002
 slug: fre-main-slice-promotion-decision
-title: FRE main slice promotion decision
+title: FRE main slice promotion decision (second slice)
 doctype: promotion_decision
 status: draft
 version: 0.1.0
@@ -25,11 +25,18 @@ related_docs:
   - meta/harness/fre/promotion/readiness-summary.json
 ---
 
-# FRE main slice promotion decision
+# FRE main slice promotion decision (second slice)
 
 ## Decision
 
-Promotable as an honest bounded improvement.
+Promotable as an honest bounded improvement. Second slice extends the schema
+family from four to eight by porting `fre-loop`, `gate-result`, `repair-task`,
+and `promotion-decision` from the sibling worktree. The comparison-engine
+pattern is applied only where the data flow requires it: `gate-result`
+conditionally on the three lifecycle comparison gates (verification, health,
+promotion) and `promotion-decision` unconditionally. `fre-loop` and
+`repair-task` remain non-comparison-bearing because their data flow records
+orchestration and remediation respectively, not cross-corpus comparison.
 
 ## Required comparison mapping
 

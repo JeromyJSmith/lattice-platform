@@ -1,0 +1,15 @@
+{
+  "status": "ADOPT WITH AMENDMENTS",
+  "total_score": 12,
+  "scores": {
+    "deterministic_execution": 2,
+    "schema_clarity": 2,
+    "repair_task_usefulness": 1,
+    "lattice_vocabulary_compatibility": 2,
+    "real_artifact_usefulness": 1,
+    "integration_restraint": 2,
+    "evidence_quality": 1,
+    "restart_readiness": 1
+  },
+  "summary": "Promotion decision without InfraNodus references must fail validation because promotion is always comparison-bearing."
+}

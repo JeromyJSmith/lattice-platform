@@ -1,10 +1,16 @@
 {
-  "inventory_id": "EVALUATION-FRE-MAIN-SLICE-0001",
+  "inventory_id": "EVALUATION-FRE-MAIN-SLICE-0002",
   "part": "evaluation",
   "gate_id": "verification",
   "comparison_engine": "infranodus",
-  "purpose": "Explicit evaluation artifact inventory for the first proof-package slice on main.",
+  "purpose": "Explicit evaluation artifact inventory after the second proof-package slice on main (eight schemas, eight valid examples, eleven invalid examples, sixteen contract tests).",
   "distinct_from_tests": true,
+  "slice_counts": {
+    "schemas": 8,
+    "valid_examples": 8,
+    "invalid_examples": 11,
+    "tests": 16
+  },
   "comparison_dependencies": {
     "scope_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope/comparison_core",
     "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",

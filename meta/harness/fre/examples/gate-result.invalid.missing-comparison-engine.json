@@ -1,0 +1,9 @@
+{
+  "gate_id": "verification",
+  "status": "pass",
+  "blocking": true,
+  "reason": "Schemas validate but the verification gate omits required comparison evidence.",
+  "evidence": [
+    "meta/harness/fre/evaluation/schema-validation.json"
+  ]
+}

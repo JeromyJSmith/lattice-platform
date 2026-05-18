@@ -1,0 +1,20 @@
+{
+  "status": "ADOPT WITH AMENDMENTS",
+  "total_score": 12,
+  "scores": {
+    "deterministic_execution": 2,
+    "schema_clarity": 2,
+    "repair_task_usefulness": 1,
+    "lattice_vocabulary_compatibility": 2,
+    "real_artifact_usefulness": 1,
+    "integration_restraint": 2,
+    "evidence_quality": 1,
+    "restart_readiness": 1
+  },
+  "summary": "Second proof-package slice ports the four remaining schema families with honest comparison-engine placement.",
+  "comparison_engine": "infranodus",
+  "comparison_artifacts": [
+    "analysis/infranodus/goal-vs-implementation.diff.json",
+    "analysis/infranodus/infranodus-schema-map.md"
+  ]
+}

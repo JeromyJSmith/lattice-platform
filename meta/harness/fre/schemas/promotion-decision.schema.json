@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/promotion-decision.schema.json",
+  "title": "Promotion Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "total_score",
+    "scores",
+    "summary",
+    "comparison_engine",
+    "comparison_artifacts"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "ADOPT",
+        "ADOPT WITH AMENDMENTS",
+        "REJECT"
+      ]
+    },
+    "total_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 16
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_execution",
+        "schema_clarity",
+        "repair_task_usefulness",
+        "lattice_vocabulary_compatibility",
+        "real_artifact_usefulness",
+        "integration_restraint",
+        "evidence_quality",
+        "restart_readiness"
+      ],
+      "properties": {
+        "deterministic_execution": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "schema_clarity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "repair_task_usefulness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "lattice_vocabulary_compatibility": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "real_artifact_usefulness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "integration_restraint": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "evidence_quality": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "restart_readiness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "comparison_engine": {
+      "type": "string",
+      "enum": [
+        "infranodus"
+      ]
+    },
+    "comparison_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

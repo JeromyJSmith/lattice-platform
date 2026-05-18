@@ -1,0 +1,12 @@
+{
+  "id": "REPAIR-0002",
+  "title": "Reference an unknown gate identifier",
+  "reason": "Blocking gate identifier does not come from the lifecycle gate enum.",
+  "blocking_gate_ids": [
+    "real_fixture_pressure_test"
+  ],
+  "acceptance_criteria": [
+    "Use only enum-bound lifecycle gate values."
+  ],
+  "owner": "meta-wrapper-agent"
+}

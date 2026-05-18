@@ -1,0 +1,19 @@
+"""Schema-validity test for the FRE main contract slice."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[1] / "harness"))
+
+from lib import check_all_schemas
+
+
+def test_schema_validity() -> None:
+    """All FRE schemas should parse cleanly under Draft 2020-12."""
+
+    result = check_all_schemas()
+    assert result["all_valid"] is True
+    assert len(result["schemas"]) == 8
+    assert all(item["issues"] == [] for item in result["schemas"])

@@ -1,0 +1,54 @@
+{
+  "id": "FRE-LOOP-MAIN-SLICE-0001",
+  "version": "0.1.0",
+  "source_record": {
+    "source_packet": "meta/harness/docs/specs/fre-fractal-contract-package.plan.md",
+    "normalized_at": "2026-05-18"
+  },
+  "authority_chain": [
+    "research",
+    "source",
+    "schema",
+    "examples",
+    "validation",
+    "metrics",
+    "repair_task",
+    "promotion_decision"
+  ],
+  "validation_pass_criteria": [
+    "schema parses",
+    "valid example passes",
+    "invalid examples fail for expected reasons",
+    "repair tasks are emitted for blocking failures"
+  ],
+  "metrics": [
+    "research_grounding",
+    "document_contract",
+    "schema_validity",
+    "example_validation",
+    "repair_task_count",
+    "promotion_readiness"
+  ],
+  "stages": [
+    {
+      "name": "research",
+      "kind": "input"
+    },
+    {
+      "name": "source",
+      "kind": "input"
+    },
+    {
+      "name": "schema",
+      "kind": "contract"
+    },
+    {
+      "name": "validation",
+      "kind": "artifact"
+    },
+    {
+      "name": "promotion_decision",
+      "kind": "decision"
+    }
+  ]
+}

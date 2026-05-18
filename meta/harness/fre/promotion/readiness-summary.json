@@ -1,8 +1,14 @@
 {
-  "promotion_id": "PROMOTION-FRE-MAIN-SLICE-0001",
+  "promotion_id": "PROMOTION-FRE-MAIN-SLICE-0002",
   "status": "promotable",
   "promotion_class": "honest_bounded_improvement",
   "comparison_engine": "infranodus",
+  "slice_counts": {
+    "schemas": 8,
+    "valid_examples": 8,
+    "invalid_examples": 11,
+    "tests": 16
+  },
   "comparison_mapping": {
     "scope_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope",
     "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",

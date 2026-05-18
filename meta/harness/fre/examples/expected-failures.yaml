@@ -41,3 +41,29 @@ expected_failures:
       - REQUIRED_FIELD_MISSING
     expected_fields:
       - comparison_artifacts
+  - example: examples/fre-loop.invalid.missing-promotion-in-authority.json
+    schema: fre-loop.schema.json
+    expected_failure_classes:
+      - ARRAY_CONTAINS_VIOLATION
+    expected_fields:
+      - authority_chain
+  - example: examples/gate-result.invalid.missing-comparison-engine.json
+    schema: gate-result.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - comparison_engine
+      - comparison_artifacts
+  - example: examples/repair-task.invalid.bad-blocking-gate-id.json
+    schema: repair-task.schema.json
+    expected_failure_classes:
+      - ENUM_VIOLATION
+    expected_fields:
+      - blocking_gate_ids.0
+  - example: examples/promotion-decision.invalid.missing-comparison-engine.json
+    schema: promotion-decision.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - comparison_engine
+      - comparison_artifacts

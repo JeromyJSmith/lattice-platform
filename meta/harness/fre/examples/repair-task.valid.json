@@ -1,0 +1,13 @@
+{
+  "id": "REPAIR-0001",
+  "title": "Expand verification gate coverage",
+  "reason": "Verification gate is amber: schema coverage is partial pending the second proof-package slice.",
+  "blocking_gate_ids": [
+    "verification"
+  ],
+  "acceptance_criteria": [
+    "All eight schemas pass Draft 2020-12 validation.",
+    "Comparison-bearing schemas carry InfraNodus references."
+  ],
+  "owner": "meta-wrapper-agent"
+}
