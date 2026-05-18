@@ -114,6 +114,30 @@ capabilities:
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-17-boq-export-proof.json
 
+  - id: phases-sync
+    surface: route
+    name: OpenConstructionERP phases sync
+    state: BLOCKED
+    description: Serve POST /v1/erp/phases through the sidecar with a verifier-backed blocker until project IFC rows, phase-granular local schedule metadata, and the upstream ERP phase endpoint are all ready.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/erp/phase-adapter.py
+      - pixeltable/service/routes/erp.py
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-erp-phases-sync.py
+    invoked_by:
+      - POST /v1/erp/phases
+      - POST /v1/harness/capabilities/runs
+      - future /admin DDC dashboard
+    serves:
+      - OpenConstructionERP integration
+      - 4D/5D phase sync
+      - verifier-backed blocker evidence
+    blocker: Live proof fails because the local schedule source is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date), which cannot express per-phase assignments, and localhost:8080 returns 404 for the configured phase probe path.
+    blocker_resolution_path: Add a real phase-granular schedule surface keyed by project_id, join it to project IFC rows for assignment generation, confirm the upstream ERP phase endpoint contract, and rerun the verifier.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-phases-sync-proof.json
+
   - id: cwicr-seed
     surface: service_adapter
     name: CWICR dataset seed contract

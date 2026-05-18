@@ -201,12 +201,12 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py",
     targetSurface: "POST /v1/erp/phases",
-    currentState: "Adapter stub",
-    gap: "Join schedule phases to IFC rows and push ERP phase assignments.",
+    currentState: "Verifier-backed route; live proof currently failing",
+    gap: "Local schedule metadata is only project-level in lattice/bridge/marpa_projects, and the configured upstream ERP phase probe returns 404.",
     priority: "high",
     wave: "wave-2",
     validation:
-      "Project phase records in the ERP align with local schedule metadata.",
+      "Project phase records in the ERP align with local phase-granular schedule metadata.",
   },
   {
     id: "admin-sql",

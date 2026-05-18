@@ -126,6 +126,16 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-boq-sync.py"],
         "expected_returncode": 0,
         "timeout_seconds": 120,
+    },
+    "phases-sync": {
+        "kind": "script_exit_code",
+        "action_id": "run-phases-sync",
+        "job_id": "phases-sync",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-phases-sync.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
     }
 }
 

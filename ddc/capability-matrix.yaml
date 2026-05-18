@@ -122,11 +122,11 @@ capabilities:
     capability: 4D/5D phase sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py
     target_surface: POST /v1/erp/phases
-    current_state: adapter stub
-    gap: Join schedule phases to IFC rows and push ERP phase assignments
+    current_state: verifier-backed route; live proof currently failing
+    gap: local schedule metadata is only project-level in lattice/bridge/marpa_projects, and the configured upstream ERP phase probe returns 404
     priority: high
     wave: wave-2
-    validation: Project phase records in the ERP align with local schedule metadata
+    validation: Project phase records in the ERP align with local phase-granular schedule metadata
   - id: admin-sql
     capability: DDC admin SQL layer
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/

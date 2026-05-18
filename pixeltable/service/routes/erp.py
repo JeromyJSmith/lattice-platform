@@ -359,18 +359,17 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
 @router.post("/phases")
 def post_phases(
     body: dict[str, Any] = Body(...),
+    pxt: Any = Depends(get_pxt),
     store: IdempotencyStore = Depends(get_idem_store),
     idem_key: str = Depends(require_idempotency_key),
 ):
     """Sync ERP phase data for one project."""
-    project_id = (body.get("project_id") or "").strip()
-    if not project_id:
-        raise HTTPException(status_code=400, detail="project_id required")
+    project_id = _normalize_project_id(body.get("project_id"))
 
     def do():
         """Execute the idempotent phase sync."""
         try:
-            result = _PHASE_ADAPTER.sync_phases(project_id)
+            result = _PHASE_ADAPTER.sync_phases(project_id, pxt=pxt)
         except Exception as exc:
             raise _as_http_error(exc, "phase sync failed") from exc
         return {"ok": True, "project_id": project_id, "result": result}

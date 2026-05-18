@@ -12,10 +12,10 @@ from service.idempotency import IdempotencyStore
 from service.routes import erp
 
 
-def _app(tmp_path: Path) -> FastAPI:
+def _app(tmp_path: Path, *, pxt: object | None = None) -> FastAPI:
     app = FastAPI()
     app.state.idem = IdempotencyStore(tmp_path / ".idem.json")
-    app.state.pxt = object()
+    app.state.pxt = object() if pxt is None else pxt
     app.include_router(erp.router, prefix="/v1/erp")
     return app
 
@@ -258,3 +258,61 @@ def test_export_surfaces_upstream_404(tmp_path: Path, monkeypatch):
         route_response.json()["detail"]
         == "upstream ERP returned 404 for /api/boq/export (project_id=proj-404, fmt=csv)"
     )
+
+
+def test_phases_sync_requires_project_id(tmp_path: Path):
+    """Reject phase-sync requests that omit the project id."""
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/phases",
+        json={},
+        headers={"Idempotency-Key": "ddc-phases-sync-0001"},
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "project_id required"
+
+
+def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
+    """Expose the concrete local schedule blocker instead of a generic stub message."""
+
+    class _PhaseSyncPxt:
+        def get_table(self, path: str):
+            """Return the minimum table set needed to reach the schedule blocker."""
+            if path in {"lattice/projects/proj-1/ifc_elements", "lattice/bridge/marpa_projects"}:
+                return {"path": path}
+            raise RuntimeError(f"table not found: {path}")
+
+    client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
+    response = client.post(
+        "/v1/erp/phases",
+        json={"project_id": "proj-1"},
+        headers={"Idempotency-Key": "ddc-phases-sync-0001"},
+    )
+    assert response.status_code == 501
+    assert (
+        response.json()["detail"]
+        == "phase sync blocked: local schedule metadata is only project-level in "
+        "lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express "
+        "per-phase assignments for proj-1."
+    )
+
+
+def test_phases_sync_normalizes_project_id_before_adapter_call(tmp_path: Path, monkeypatch):
+    """Normalize the project id before calling the phase adapter."""
+    seen: list[tuple[str, object]] = []
+    pxt = object()
+
+    def _sync(project_id: str, *, pxt=None):
+        seen.append((project_id, pxt))
+        return {"updated": 0}
+
+    monkeypatch.setattr(erp._PHASE_ADAPTER, "sync_phases", _sync)
+    client = TestClient(_app(tmp_path, pxt=pxt))
+    response = client.post(
+        "/v1/erp/phases",
+        json={"project_id": "  proj-1  "},
+        headers={"Idempotency-Key": "ddc-phases-sync-0002"},
+    )
+    assert response.status_code == 200
+    assert response.json()["project_id"] == "proj-1"
+    assert seen == [("proj-1", pxt)]
