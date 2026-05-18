@@ -2,6 +2,9 @@
 
 This directory holds the **DDC estimation planning slice** for LATTICE. Estimation is **not** a standalone worksheet app and it is **not** green just because one cost lookup or one BOQ export works. It is a governed, project-agnostic capability that depends on multiple DDC surfaces turning usable together.
 
+- Goal surface: [`GOAL.md`](GOAL.md)
+- Execution contract: [`GOLDENPATH.md`](GOLDENPATH.md)
+
 ## Operational framing
 
 - **Operational target project:** `MARPA — 918 Juniper Avenue`
