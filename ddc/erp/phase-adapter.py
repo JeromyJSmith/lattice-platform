@@ -86,6 +86,13 @@ def _format_contract_suffix() -> str:
     )
 
 
+def _format_write_path_blocker() -> str:
+    return (
+        "phase sync blocked: local project and schedule seam is ready, but the bounded "
+        "OpenConstructionERP schedule write path is not yet implemented in this adapter."
+    )
+
+
 def _format_phase_sync_blocker(diagnostics: dict[str, Any]) -> str:
     return "phase sync blocked: " + " ".join(diagnostics["blockers"]) + _format_contract_suffix()
 
@@ -113,6 +120,8 @@ def inspect_phase_sync_seam(project_id: str, pxt: Any | None = None) -> dict[str
         "ifc_surface_documented_source_of_truth": ifc_surface["documented_source_of_truth"],
         "ifc_project_filter": ifc_surface.get("project_filter"),
         "schedule_surface_path": BRIDGE_PROJECTS_TABLE,
+        "bounded_write_path_implemented": False,
+        "next_ready_blocker": _format_write_path_blocker(),
     }
     blockers: list[str] = []
 
@@ -183,10 +192,7 @@ def sync_phases(project_id: str, pxt: Any | None = None) -> dict:
     diagnostics = inspect_phase_sync_seam(project_id, pxt=pxt)
     if diagnostics["blockers"]:
         raise NotImplementedError(_format_phase_sync_blocker(diagnostics))
-    raise NotImplementedError(
-        "phase sync blocked: local project and schedule seam is ready, but the bounded "
-        "OpenConstructionERP schedule write path is not yet implemented in this adapter."
-    )
+    raise NotImplementedError(_format_write_path_blocker())
 
 
 if __name__ == "__main__":

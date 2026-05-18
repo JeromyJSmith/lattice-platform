@@ -118,7 +118,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP phases sync
     state: BLOCKED
-    description: Serve POST /v1/erp/phases through the sidecar with a verifier-backed blocker until project IFC rows, phase-granular local schedule metadata, and the upstream ERP phase endpoint are all ready.
+    description: Serve POST /v1/erp/phases through the sidecar with verifier-backed blocker evidence until project-addressable IFC rows, phase-granular local schedule metadata with schedule_id/task_id, and the bounded ERP write path are all ready.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/phase-adapter.py
@@ -133,8 +133,8 @@ capabilities:
       - OpenConstructionERP integration
       - 4D/5D phase sync
       - verifier-backed blocker evidence
-    blocker: Latest live Portless proof confirms the bounded ERP schedule contract at /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress, but local proof data still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements and lattice/bridge/marpa_projects has no rows for the verifier project.
-    blocker_resolution_path: Expose project_id-addressable IFC rows plus project-backed phase metadata that includes schedule_id/task_id assignments, then rerun the verifier against the same bounded Portless phase endpoints.
+    blocker: Latest live Portless proof confirms the bounded ERP schedule contract at /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress, but local proof data still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, lattice/bridge/marpa_projects has no rows for the verifier project, and the adapter still fails closed even after seam readiness because the bounded write step is not yet implemented.
+    blocker_resolution_path: Expose project_id-addressable IFC rows plus project-backed phase metadata that includes schedule_id/task_id assignments, implement the bounded schedule import/task-progress write path in the adapter, then rerun the verifier against the same Portless phase endpoints.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-phases-sync-proof.json
 

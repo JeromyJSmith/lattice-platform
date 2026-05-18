@@ -36,7 +36,7 @@ When BOQ verifier scripts are authenticated but no explicit verifier project UUI
 |---|---|
 | [`boq-adapter.py`](boq-adapter.py) | For each `ifc_elements` row → `POST /api/v1/boq/boqs/` → write `erp_item_id` + `unit_cost` back to Pixeltable |
 | [`cost-export.py`](cost-export.py) | Resolve a project BOQ via `GET /api/v1/boq/boqs/?project_id=...` and export it through the ERP export API |
-| [`phase-adapter.py`](phase-adapter.py) | Join `ifc_elements` with the project's Linear schedule, emit 4D/5D phase data into the ERP |
+| [`phase-adapter.py`](phase-adapter.py) | Verify the smallest honest 4D/5D seam (project-addressable IFC + per-phase schedule_id/task_id) and fail closed until the bounded ERP write path lands |
 
 ## LATTICE endpoints these adapters power
 
@@ -48,7 +48,7 @@ These FastAPI routes live in `pixeltable/service/routes/erp.py`.
 | `POST /v1/erp/cost-search` | `../cwicr/cost-search.py` | Semantic cost lookup (CWICR, not ERP) |
 | `GET  /v1/erp/boq/{project_id}` | `boq-adapter.py` | Return current BOQ for a project |
 | `GET  /v1/erp/export/{project_id}` | `cost-export.py` | Download Excel/CSV BOQ |
-| `POST /v1/erp/phases` | `phase-adapter.py` | Update 4D/5D phase assignments |
+| `POST /v1/erp/phases` | `phase-adapter.py` | Verify the local 4D/5D seam and return the exact bounded blocker until the schedule write path is implemented |
 
 ## Pixeltable schema additions
 

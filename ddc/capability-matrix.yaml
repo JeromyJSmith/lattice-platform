@@ -123,7 +123,7 @@ capabilities:
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py
     target_surface: POST /v1/erp/phases
     current_state: verifier-backed route; live Portless proof blocked
-    gap: Local proof data still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, and lattice/bridge/marpa_projects has no rows for the verifier project even though the bounded ERP schedule contract is now /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress
+    gap: Live proof still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, lattice/bridge/marpa_projects has no verifier-project rows, and even a ready seam would still stop at the adapter's unimplemented bounded write path for /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress
     priority: high
     wave: wave-2
     validation: Project phase records in the ERP align with local phase-granular schedule metadata

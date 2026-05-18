@@ -202,7 +202,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py",
     targetSurface: "POST /v1/erp/phases",
     currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Local schedule metadata is only project-level in lattice/bridge/marpa_projects; the bounded Portless phase probe now shows GET /api/v2/schedules -> 404 and GET /api/v2/eac/schedule-links -> 405.",
+    gap: "Live proof still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, lattice/bridge/marpa_projects has no verifier-project rows, and even a ready seam would still stop at the adapter's unimplemented bounded write path for /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress.",
     priority: "high",
     wave: "wave-2",
     validation:

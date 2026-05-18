@@ -660,6 +660,58 @@ def test_phases_sync_surfaces_missing_schedule_identifiers(tmp_path: Path):
     )
 
 
+def test_phases_sync_surfaces_unimplemented_write_path_when_local_seam_is_ready(tmp_path: Path):
+    """Fail closed with the bounded write-path blocker after the local seam is ready."""
+
+    class _RowsTable:
+        def __init__(self, rows):
+            self._rows = rows
+
+        def collect(self):
+            """Return the synthetic table rows."""
+            return list(self._rows)
+
+    class _PhaseSyncPxt:
+        def __init__(self):
+            self._tables = {
+                "lattice/bridge/ifc/ifc_elements": _RowsTable(
+                    [{"project_id": "proj-1", "source_element_id": "ifc-1", "boq_phase": "A"}]
+                ),
+                "lattice/bridge/marpa_projects": _RowsTable(
+                    [
+                        {
+                            "project_id": "proj-1",
+                            "phase": "A",
+                            "start_date": "2026-05-01T00:00:00Z",
+                            "end_date": "2026-05-31T00:00:00Z",
+                            "erp_project_id": "erp-proj-1",
+                            "schedule_id": "sched-1",
+                            "task_id": "task-1",
+                        }
+                    ]
+                ),
+            }
+
+        def get_table(self, path: str):
+            """Return one synthetic table handle."""
+            if path not in self._tables:
+                raise RuntimeError(f"table not found: {path}")
+            return self._tables[path]
+
+    client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
+    response = client.post(
+        "/v1/erp/phases",
+        json={"project_id": "proj-1"},
+        headers={"Idempotency-Key": "ddc-phases-sync-0004"},
+    )
+    assert response.status_code == 501
+    assert (
+        response.json()["detail"]
+        == "phase sync blocked: local project and schedule seam is ready, but the bounded "
+        "OpenConstructionERP schedule write path is not yet implemented in this adapter."
+    )
+
+
 def test_phases_sync_normalizes_project_id_before_adapter_call(tmp_path: Path, monkeypatch):
     """Normalize the project id before calling the phase adapter."""
     seen: list[tuple[str, object]] = []

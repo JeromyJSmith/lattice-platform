@@ -57,6 +57,8 @@ DEFAULT_IDEMPOTENCY_KEY = os.environ.get(
     "ddc-phases-sync-proof-0001",
 )
 REQUEST_TIMEOUT_SECONDS = 10.0
+PROJECT_GEOREF_TABLE = "lattice/bridge/project_georef"
+MAINTENANCE_TASKS_TABLE = "marpa/maintenance/tasks"
 
 
 def _resolve_phase_sync_pxt() -> Any:
@@ -138,6 +140,72 @@ def _probe_local_phase_sync_seam(project_id: str) -> dict[str, Any]:
     return PHASE_ADAPTER.inspect_phase_sync_seam(project_id, pxt=_resolve_phase_sync_pxt())
 
 
+def _safe_collect_rows(pxt_handle: Any, table_path: str) -> list[dict[str, Any]]:
+    table = pxt_handle.get_table(table_path)
+    collect = getattr(table, "collect", None)
+    if not callable(collect):
+        raise RuntimeError(f"{table_path} does not expose collect()")
+    return [dict(row) for row in collect()]
+
+
+def _project_id_aliases(project_id: str) -> dict[str, str]:
+    return {
+        "exact": project_id,
+        "hyphen_to_underscore": project_id.replace("-", "_"),
+        "underscore_to_hyphen": project_id.replace("_", "-"),
+    }
+
+
+def _probe_adjacent_project_surfaces(project_id: str) -> dict[str, Any]:
+    pxt_handle = _resolve_phase_sync_pxt()
+    aliases = _project_id_aliases(project_id)
+    report: dict[str, Any] = {
+        "project_id": project_id,
+        "project_id_aliases": aliases,
+    }
+
+    try:
+        georef_rows = _safe_collect_rows(pxt_handle, PROJECT_GEOREF_TABLE)
+        georef_project_ids = sorted({row.get("project_id") for row in georef_rows if row.get("project_id")})
+        report["project_georef"] = {
+            "path": PROJECT_GEOREF_TABLE,
+            "row_count": len(georef_rows),
+            "project_ids": georef_project_ids,
+            "exact_project_row_count": sum(1 for row in georef_rows if row.get("project_id") == project_id),
+            "hyphen_alias_row_count": sum(
+                1 for row in georef_rows if row.get("project_id") == aliases["underscore_to_hyphen"]
+            ),
+        }
+    except Exception as exc:
+        report["project_georef"] = {"path": PROJECT_GEOREF_TABLE, "error": str(exc)}
+
+    try:
+        task_rows = _safe_collect_rows(pxt_handle, MAINTENANCE_TASKS_TABLE)
+        task_columns = sorted({key for row in task_rows for key in row.keys()})
+        task_project_ids = sorted({row.get("project_id") for row in task_rows if row.get("project_id")})
+        report["maintenance_tasks"] = {
+            "path": MAINTENANCE_TASKS_TABLE,
+            "row_count": len(task_rows),
+            "project_ids": task_project_ids[:10],
+            "exact_project_row_count": sum(1 for row in task_rows if row.get("project_id") == project_id),
+            "hyphen_alias_row_count": sum(
+                1 for row in task_rows if row.get("project_id") == aliases["underscore_to_hyphen"]
+            ),
+            "underscore_alias_row_count": sum(
+                1 for row in task_rows if row.get("project_id") == aliases["hyphen_to_underscore"]
+            ),
+            "has_task_id": "task_id" in task_columns,
+            "has_schedule_id": "schedule_id" in task_columns,
+            "sample_task_ids": [
+                row.get("task_id") for row in task_rows if row.get("task_id")
+            ][:5],
+        }
+    except Exception as exc:
+        report["maintenance_tasks"] = {"path": MAINTENANCE_TASKS_TABLE, "error": str(exc)}
+
+    return report
+
+
 def _build_app(*, pxt_handle: Any | None = None) -> FastAPI:
     app = FastAPI()
     app.state.idem = IdempotencyStore(REPO_ROOT / ".tmp" / ".verify-erp-phases-sync.idem.json")
@@ -207,6 +275,8 @@ def main() -> int:
         report["local_seam_probe"] = _probe_local_phase_sync_seam(args.project_id)
     except Exception as exc:
         blockers.append(str(exc))
+
+    report["adjacent_surface_probe"] = _probe_adjacent_project_surfaces(args.project_id)
 
     try:
         report["route_probe"] = _verify_route(args.project_id, idempotency_key=args.idempotency_key)

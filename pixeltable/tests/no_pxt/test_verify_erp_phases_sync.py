@@ -88,6 +88,47 @@ def test_probe_upstream_phase_endpoint_accepts_live_404_405_mix(monkeypatch):
     assert result["links_status_code"] == 405
 
 
+def test_probe_adjacent_project_surfaces_reports_alias_and_schedule_facts():
+    """Capture adjacent local surfaces without pretending they satisfy the bounded schedule contract."""
+
+    verifier = _load_verifier()
+
+    class _RowsTable:
+        def __init__(self, rows):
+            self._rows = rows
+
+        def collect(self):
+            """Return the synthetic rows."""
+            return list(self._rows)
+
+    class _PhaseSyncPxt:
+        def __init__(self):
+            self._tables = {
+                "lattice/bridge/project_georef": _RowsTable(
+                    [{"project_id": "farber-haines-2521"}]
+                ),
+                "marpa/maintenance/tasks": _RowsTable(
+                    [{"project_id": "farber_haines_2521", "task_id": "task-1"}]
+                ),
+            }
+
+        def get_table(self, path: str):
+            """Return one synthetic table handle."""
+            if path not in self._tables:
+                raise RuntimeError(f"table not found: {path}")
+            return self._tables[path]
+
+    verifier._resolve_phase_sync_pxt = lambda: _PhaseSyncPxt()
+
+    result = verifier._probe_adjacent_project_surfaces("farber-haines-2521")
+
+    assert result["project_georef"]["exact_project_row_count"] == 1
+    assert result["maintenance_tasks"]["exact_project_row_count"] == 0
+    assert result["maintenance_tasks"]["underscore_alias_row_count"] == 1
+    assert result["maintenance_tasks"]["has_task_id"] is True
+    assert result["maintenance_tasks"]["has_schedule_id"] is False
+
+
 def test_main_reports_combined_blockers(monkeypatch, capsys):
     """Emit structured blocker output when either upstream or route proof is not ready."""
     verifier = _load_verifier()
@@ -115,6 +156,11 @@ def test_main_reports_combined_blockers(monkeypatch, capsys):
     )
     monkeypatch.setattr(
         verifier,
+        "_probe_adjacent_project_surfaces",
+        lambda project_id: {"project_id": project_id, "maintenance_tasks": {"has_schedule_id": False}},
+    )
+    monkeypatch.setattr(
+        verifier,
         "_verify_route",
         lambda project_id, idempotency_key: (_ for _ in ()).throw(RuntimeError("route blocked")),
     )
@@ -125,3 +171,4 @@ def test_main_reports_combined_blockers(monkeypatch, capsys):
     assert payload["status"] == "blocked"
     assert payload["blockers"] == ["upstream 404", "route blocked"]
     assert payload["local_seam_probe"]["blockers"] == ["missing schedule_id/task_id"]
+    assert payload["adjacent_surface_probe"]["maintenance_tasks"]["has_schedule_id"] is False
