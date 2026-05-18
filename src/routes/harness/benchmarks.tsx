@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText, Play, RefreshCw, Upload, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
+import { MetaHarnessProofPanel } from "#/components/harness/MetaHarnessProofPanel";
 import { runCodebaseContextProof } from "#/server/harness/run-codebase-context-proof";
 import { validateBenchmarkReport } from "#/server/harness/validate-benchmark-report";
 
@@ -29,11 +30,7 @@ type BenchmarkReport = {
   base_prompt?: string;
   prompt_iterations?: Array<Record<string, string>>;
   provenance: {
-    source:
-      | "sample"
-      | "uploaded"
-      | "sidecar_live_run"
-      | "sidecar_import";
+    source: "sample" | "uploaded" | "sidecar_live_run" | "sidecar_import";
     trust:
       | "synthetic"
       | "uploaded_unverified"
@@ -224,7 +221,8 @@ function HarnessBenchmarksPage() {
               try {
                 const result =
                   (await runCodebaseContextProof()) as CodebaseContextProofResult;
-                const proofPassed = result.report.verification.status === "passed";
+                const proofPassed =
+                  result.report.verification.status === "passed";
                 setReport(result.report);
                 setPlaybackStep(null);
                 setRunStatus({
@@ -346,6 +344,8 @@ function HarnessBenchmarksPage() {
           ))}
         </div>
       </section>
+
+      <MetaHarnessProofPanel />
 
       <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="island-shell rounded-lg p-4">

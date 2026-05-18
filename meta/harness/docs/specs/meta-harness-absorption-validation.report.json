@@ -1,0 +1,337 @@
+{
+  "report_id": "META-HARNESS-ABSORPTION-VALIDATION-0001",
+  "created_at": "2026-05-18",
+  "scope": "portable_parent_wrapper_repo",
+  "checks": [
+    {
+      "name": "json_parse",
+      "status": "pass",
+      "details": {
+        "files": [
+          "meta-harness-absorption-harvest.inventory.json",
+          "meta-harness-absorption.manifest.json",
+          "infranodus-phase-tool-map.json"
+        ]
+      }
+    },
+    {
+      "name": "harvest_source_roots",
+      "status": "pass",
+      "details": [
+        {
+          "body_id": "parent_meta_scaffold",
+          "root": "/Volumes/PixelTable/VW_iTwin_Bridge/meta",
+          "exists": true
+        },
+        {
+          "body_id": "fre_bounded_lineage",
+          "root": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre",
+          "exists": true
+        },
+        {
+          "body_id": "lattice_child_reference",
+          "root": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "name": "required_hooks_exist",
+      "status": "pass",
+      "details": [
+        {
+          "group": "prompt_contract",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+          "exists": true
+        },
+        {
+          "group": "prompt_contract",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+          "exists": true
+        },
+        {
+          "group": "prompt_contract",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+          "exists": true
+        },
+        {
+          "group": "prompt_contract",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
+          "exists": true
+        },
+        {
+          "group": "prompt_contract",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/copilot-prompting-playbook.md",
+          "exists": true
+        },
+        {
+          "group": "comparison_engine",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis/infranodus/infranodus-capability-manifest.yaml",
+          "exists": true
+        },
+        {
+          "group": "comparison_engine",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis/infranodus/infranodus-schema-map.md",
+          "exists": true
+        },
+        {
+          "group": "comparison_engine",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/infranodus-phase-tool-map.json",
+          "exists": true
+        },
+        {
+          "group": "substrate",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/pixeltable-operational-substrate.md",
+          "exists": true
+        },
+        {
+          "group": "substrate",
+          "path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/projects/template/library.yaml",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "name": "manifest_sources_and_enums",
+      "status": "pass",
+      "details": [
+        {
+          "surface_id": "parent_meta_fractal_scaffold",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/AGENTS.md",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/CLAUDE.md",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/GOAL.md",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/GOLDENPATH.md",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/MEMORY.md"
+          ]
+        },
+        {
+          "surface_id": "parent_meta_portable_folders",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/contracts",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/docs",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/evidence",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/graph",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/memory",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/relationships",
+            "/Volumes/PixelTable/VW_iTwin_Bridge/meta/runs"
+          ]
+        },
+        {
+          "surface_id": "fre_schemas_examples_tests",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/schemas",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/examples",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/tests",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/harness"
+          ]
+        },
+        {
+          "surface_id": "fre_runs_and_sessions",
+          "decision": "leave_historical",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/runs",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/docs/sessions"
+          ]
+        },
+        {
+          "surface_id": "child_live_fre_lane",
+          "decision": "mirror_to_child",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/fre"
+          ]
+        },
+        {
+          "surface_id": "child_wrapper_scaffold",
+          "decision": "mirror_to_child",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/GOAL.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/GOLDENPATH.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/MEMORY.md"
+          ]
+        },
+        {
+          "surface_id": "prompt_contract_authority",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml"
+          ]
+        },
+        {
+          "surface_id": "copilot_playbook_authority",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/copilot-prompting-playbook.md"
+          ]
+        },
+        {
+          "surface_id": "library_spine_authority",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/library.yaml",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/agentics-library.md"
+          ]
+        },
+        {
+          "surface_id": "infranodus_and_pixeltable_hooks",
+          "decision": "adopt_to_parent",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/fre-infranodus-hook.plan.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/fre-pixeltable-hook.plan.md",
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/infranodus-phase-tool-map.json"
+          ]
+        },
+        {
+          "surface_id": "repo_specific_analysis_payloads",
+          "decision": "mirror_to_child",
+          "exists": true,
+          "expanded": [
+            "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "manifest_unique_surface_ids",
+      "status": "pass",
+      "details": {
+        "count": 11,
+        "unique_count": 11
+      }
+    },
+    {
+      "name": "required_parent_families",
+      "status": "pass",
+      "details": {
+        "missing": [],
+        "declared": [
+          "scaffold",
+          "source",
+          "schemas",
+          "examples",
+          "expected-failures",
+          "tests",
+          "evaluation",
+          "promotion",
+          "runs",
+          "docs",
+          "library",
+          "prompts"
+        ]
+      }
+    },
+    {
+      "name": "required_parent_markdown_contract_declaration",
+      "status": "pass",
+      "details": {
+        "required": [
+          "README.md",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "GOAL.md",
+          "GOLDENPATH.md",
+          "MEMORY.md"
+        ],
+        "declared": [
+          "README.md",
+          "AGENTS.md",
+          "CLAUDE.md",
+          "GOAL.md",
+          "GOLDENPATH.md",
+          "MEMORY.md"
+        ],
+        "missing": [],
+        "note": "Existence plus front matter and bottom matter remain promotion blockers until the standalone parent repo is created."
+      }
+    },
+    {
+      "name": "required_prompt_contract_declaration",
+      "status": "pass",
+      "details": {
+        "required": [
+          "agent-heavy-run-prompt-index.md",
+          "agent-heavy-run-prompt-schema.md",
+          "agent-heavy-run-prompt.schema.json",
+          "agent-heavy-run-prompt.template.yaml",
+          "copilot-prompting-playbook.md"
+        ],
+        "declared": [
+          "agent-heavy-run-prompt-index.md",
+          "agent-heavy-run-prompt-schema.md",
+          "agent-heavy-run-prompt.schema.json",
+          "agent-heavy-run-prompt.template.yaml",
+          "copilot-prompting-playbook.md"
+        ],
+        "missing": [],
+        "note": "The standalone parent repo must carry the same governed prompt contract as the Copilot playbook."
+      }
+    },
+    {
+      "name": "infranodus_phase_tool_map",
+      "status": "pass",
+      "details": {
+        "phases": [
+          "harvest_gate",
+          "registry_gate",
+          "manifest_gate",
+          "verification_gate",
+          "state_gate",
+          "health_gate",
+          "promotion_gate"
+        ],
+        "declared_phases": [
+          "harvest_gate",
+          "registry_gate",
+          "manifest_gate",
+          "verification_gate",
+          "state_gate",
+          "health_gate",
+          "promotion_gate"
+        ],
+        "required_tool_counts": {
+          "harvest_gate": 3,
+          "registry_gate": 3,
+          "manifest_gate": 3,
+          "verification_gate": 3,
+          "state_gate": 3,
+          "health_gate": 3,
+          "promotion_gate": 3
+        },
+        "map_path": "meta/harness/docs/specs/infranodus-phase-tool-map.json"
+      }
+    },
+    {
+      "name": "document_contract_markers",
+      "status": "pass",
+      "details": [
+        {
+          "path": "meta/harness/docs/specs/meta-harness-absorption-seven-phase.plan.md",
+          "has_front_matter": true,
+          "has_bottom_matter": true
+        },
+        {
+          "path": "meta/harness/docs/specs/meta-harness-absorption-validation.plan.md",
+          "has_front_matter": true,
+          "has_bottom_matter": true
+        }
+      ]
+    }
+  ],
+  "overall_status": "pass"
+}

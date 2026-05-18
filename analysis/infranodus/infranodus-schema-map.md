@@ -44,13 +44,66 @@ The schema families then grow from that mapped truth.
 
 | Gate | InfraNodus role | Primary rows | Required artifact |
 |---|---|---|---|
-| harvest_gate | corpus intake and graph creation | `analyze_text`, `create_knowledge_graph` | `analysis/infranodus/infranodus-capability-harvest.md` |
-| registry_gate | naming and relationship review | `analyze_existing_graph_by_name`, `generate_topical_clusters` | `analysis/capabilities/infranodus-capability-registry.yaml` |
-| manifest_gate | placement and cross-surface comparison | `difference_between_texts`, `generate_topical_clusters` | `analysis/infranodus/infranodus-capability-manifest.yaml` |
-| verification_gate | durable comparison evidence | `difference_between_texts`, `generate_contextual_hint` | `analysis/infranodus/goal-vs-implementation.diff.json` |
-| state_gate | honest blocker and gap justification | `generate_content_gaps`, `difference_between_texts` | `analysis/infranodus/goal-vs-implementation.diff.json` |
-| health_gate | drift and bridge detection | `difference_between_texts`, `develop_latent_topics`, `develop_conceptual_bridges` | `analysis/infranodus/goal-vs-implementation.diff.json` |
-| promotion_gate | graph-backed promotion challenge | `generate_content_gaps`, `retrieve_from_knowledge_base` | promotion record must cite InfraNodus outputs |
+| harvest_gate | corpus intake, domain research, and graph creation | `analyze_text`, `generate_knowledge_graph`, `create_knowledge_graph`, `analyze_google_search_results`, `analyze_related_search_queries`, `search_queries_vs_search_results`, `generate_seo_report` | `analysis/infranodus/infranodus-capability-harvest.md` |
+| registry_gate | naming, relationship review, and query-vocabulary pressure | `analyze_existing_graph_by_name`, `generate_topical_clusters`, `search` | `analysis/capabilities/infranodus-capability-registry.yaml` |
+| manifest_gate | placement and cross-surface comparison | `difference_between_texts`, `generate_topical_clusters`, `merged_graph_from_texts` | `analysis/infranodus/infranodus-capability-manifest.yaml` |
+| verification_gate | durable comparison evidence | `difference_between_texts`, `generate_contextual_hint`, `retrieve_from_knowledge_base` | `analysis/infranodus/goal-vs-implementation.diff.json` |
+| state_gate | honest blocker and gap justification | `generate_content_gaps`, `difference_between_texts`, `generate_contextual_hint` | `analysis/infranodus/goal-vs-implementation.diff.json` |
+| health_gate | drift, bridge detection, and domain/query mismatch | `difference_between_texts`, `generate_content_gaps`, `merged_graph_from_texts` | `analysis/infranodus/goal-vs-implementation.diff.json` |
+| promotion_gate | graph-backed and domain-backed promotion challenge | `generate_content_gaps`, `retrieve_from_knowledge_base`, `difference_between_texts` | promotion record must cite InfraNodus outputs |
+
+## Full MCP tool coverage by lifecycle phase
+
+The authoritative machine-readable map is:
+
+- `meta/harness/docs/specs/infranodus-phase-tool-map.json`
+
+The bounded wrapper rule is:
+
+- every lifecycle gate must name all eligible InfraNodus tools that fit that
+  phase
+- every gate must still distinguish:
+  - required tools
+  - supporting tools
+  - out-of-scope visible tools
+
+### Required and supporting tools by phase
+
+| Gate | Required tools | Supporting tools |
+|---|---|---|
+| `harvest_gate` | `analyze_text`, `generate_knowledge_graph`, `create_knowledge_graph`, `analyze_google_search_results`, `analyze_related_search_queries`, `search_queries_vs_search_results`, `generate_seo_report` | `generate_topical_clusters`, `analyze_existing_graph_by_name`, `list_graphs`, `search`, `fetch` |
+| `registry_gate` | `analyze_existing_graph_by_name`, `generate_topical_clusters`, `search` | `fetch`, `list_graphs`, `create_knowledge_graph`, `analyze_google_search_results`, `analyze_related_search_queries`, `search_queries_vs_search_results` |
+| `manifest_gate` | `difference_between_texts`, `generate_topical_clusters`, `merged_graph_from_texts` | `overlap_between_texts`, `analyze_existing_graph_by_name`, `search`, `fetch` |
+| `verification_gate` | `difference_between_texts`, `generate_contextual_hint`, `retrieve_from_knowledge_base` | `overlap_between_texts`, `merged_graph_from_texts`, `analyze_existing_graph_by_name` |
+| `state_gate` | `generate_content_gaps`, `difference_between_texts`, `generate_contextual_hint` | `retrieve_from_knowledge_base`, `analyze_existing_graph_by_name`, `generate_responses_from_graph`, `search_queries_vs_search_results`, `analyze_related_search_queries` |
+| `health_gate` | `difference_between_texts`, `generate_content_gaps`, `merged_graph_from_texts` | `overlap_between_texts`, `generate_topical_clusters`, `generate_contextual_hint`, `retrieve_from_knowledge_base`, `analyze_google_search_results`, `search_queries_vs_search_results`, `generate_seo_report` |
+| `promotion_gate` | `generate_content_gaps`, `retrieve_from_knowledge_base`, `difference_between_texts` | `generate_contextual_hint`, `generate_responses_from_graph`, `merged_graph_from_texts`, `memory_get_relations`, `generate_seo_report` |
+
+## Research-first rule
+
+The very first step of the lifecycle is research harvest.
+
+That means the domain-search and search-query tools are not optional sidecars.
+They are valid first-pass harvest tools when the slice needs outside pressure
+testing, documentation coverage, query vocabulary discovery, or known-failure
+research.
+
+In practice this includes:
+
+- official docs and product docs
+- GitHub docs, issues, and discussions
+- Reddit and message-board vocabulary
+- Hacker News and public discourse
+- skill and playbook documentation
+- query-versus-result mismatch analysis
+
+For that reason, the following tools are now in-scope for the wrapper
+lifecycle:
+
+- `analyze_google_search_results`
+- `analyze_related_search_queries`
+- `search_queries_vs_search_results`
+- `generate_seo_report`
 
 ## Proof-package mapping
 

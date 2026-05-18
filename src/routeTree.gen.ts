@@ -42,6 +42,7 @@ import { Route as ApiRuntimeRunAgentRouteImport } from './routes/api/runtime/run
 import { Route as ApiRuntimeOpenrouterRouteImport } from './routes/api/runtime/openrouter'
 import { Route as ApiRuntimeListRunsRouteImport } from './routes/api/runtime/list-runs'
 import { Route as ApiRuntimeCreateThreadRouteImport } from './routes/api/runtime/create-thread'
+import { Route as ApiHarnessMetaProofDashboardRouteImport } from './routes/api/harness/meta-proof-dashboard'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as DemoApiAiTtsRouteImport } from './routes/demo/api.ai.tts'
 import { Route as DemoApiAiTranscriptionRouteImport } from './routes/demo/api.ai.transcription'
@@ -214,6 +215,12 @@ const ApiRuntimeCreateThreadRoute = ApiRuntimeCreateThreadRouteImport.update({
   path: '/api/runtime/create-thread',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHarnessMetaProofDashboardRoute =
+  ApiHarnessMetaProofDashboardRouteImport.update({
+    id: '/api/harness/meta-proof-dashboard',
+    path: '/api/harness/meta-proof-dashboard',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -273,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof SettingsIndexRoute
   '/threads/': typeof ThreadsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/harness/meta-proof-dashboard': typeof ApiHarnessMetaProofDashboardRoute
   '/api/runtime/create-thread': typeof ApiRuntimeCreateThreadRoute
   '/api/runtime/list-runs': typeof ApiRuntimeListRunsRoute
   '/api/runtime/openrouter': typeof ApiRuntimeOpenrouterRoute
@@ -314,6 +322,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsIndexRoute
   '/threads': typeof ThreadsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/harness/meta-proof-dashboard': typeof ApiHarnessMetaProofDashboardRoute
   '/api/runtime/create-thread': typeof ApiRuntimeCreateThreadRoute
   '/api/runtime/list-runs': typeof ApiRuntimeListRunsRoute
   '/api/runtime/openrouter': typeof ApiRuntimeOpenrouterRoute
@@ -356,6 +365,7 @@ export interface FileRoutesById {
   '/settings/': typeof SettingsIndexRoute
   '/threads/': typeof ThreadsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/harness/meta-proof-dashboard': typeof ApiHarnessMetaProofDashboardRoute
   '/api/runtime/create-thread': typeof ApiRuntimeCreateThreadRoute
   '/api/runtime/list-runs': typeof ApiRuntimeListRunsRoute
   '/api/runtime/openrouter': typeof ApiRuntimeOpenrouterRoute
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/threads/'
     | '/api/auth/$'
+    | '/api/harness/meta-proof-dashboard'
     | '/api/runtime/create-thread'
     | '/api/runtime/list-runs'
     | '/api/runtime/openrouter'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/threads'
     | '/api/auth/$'
+    | '/api/harness/meta-proof-dashboard'
     | '/api/runtime/create-thread'
     | '/api/runtime/list-runs'
     | '/api/runtime/openrouter'
@@ -481,6 +493,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/threads/'
     | '/api/auth/$'
+    | '/api/harness/meta-proof-dashboard'
     | '/api/runtime/create-thread'
     | '/api/runtime/list-runs'
     | '/api/runtime/openrouter'
@@ -523,6 +536,7 @@ export interface RootRouteChildren {
   SettingsIndexRoute: typeof SettingsIndexRoute
   ThreadsIndexRoute: typeof ThreadsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiHarnessMetaProofDashboardRoute: typeof ApiHarnessMetaProofDashboardRoute
   ApiRuntimeCreateThreadRoute: typeof ApiRuntimeCreateThreadRoute
   ApiRuntimeListRunsRoute: typeof ApiRuntimeListRunsRoute
   ApiRuntimeOpenrouterRoute: typeof ApiRuntimeOpenrouterRoute
@@ -770,6 +784,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRuntimeCreateThreadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/harness/meta-proof-dashboard': {
+      id: '/api/harness/meta-proof-dashboard'
+      path: '/api/harness/meta-proof-dashboard'
+      fullPath: '/api/harness/meta-proof-dashboard'
+      preLoaderRoute: typeof ApiHarnessMetaProofDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -843,6 +864,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsIndexRoute: SettingsIndexRoute,
   ThreadsIndexRoute: ThreadsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiHarnessMetaProofDashboardRoute: ApiHarnessMetaProofDashboardRoute,
   ApiRuntimeCreateThreadRoute: ApiRuntimeCreateThreadRoute,
   ApiRuntimeListRunsRoute: ApiRuntimeListRunsRoute,
   ApiRuntimeOpenrouterRoute: ApiRuntimeOpenrouterRoute,

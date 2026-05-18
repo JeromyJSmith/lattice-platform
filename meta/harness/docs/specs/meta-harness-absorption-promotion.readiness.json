@@ -1,0 +1,39 @@
+{
+  "readiness_id": "META-HARNESS-ABSORPTION-PROMOTION-0001",
+  "created_at": "2026-05-18",
+  "scope": "portable_parent_wrapper_repo",
+  "status": "blocked",
+  "validated_pre_repo_creation_contract": true,
+  "required_parent_markdown_contracts": [
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GOAL.md",
+    "GOLDENPATH.md",
+    "MEMORY.md"
+  ],
+  "required_prompt_contract_artifacts": [
+    "agent-heavy-run-prompt-index.md",
+    "agent-heavy-run-prompt-schema.md",
+    "agent-heavy-run-prompt.schema.json",
+    "agent-heavy-run-prompt.template.yaml",
+    "copilot-prompting-playbook.md"
+  ],
+  "required_infranodus_phase_map": "infranodus-phase-tool-map.json",
+  "blockers": [
+    "Standalone meta-harness repository has not yet been initialized.",
+    "Required parent Markdown scaffold files do not yet exist inside the standalone repo with front matter and bottom matter.",
+    "Required prompt-contract artifacts do not yet exist inside the standalone parent repo as carried authority surfaces.",
+    "The standalone parent repo has not yet carried and validated the full InfraNodus phase-tool map artifact in its own proof package.",
+    "No parent-repo-native proof package has been created yet.",
+    "No parent-repo validator/test surfaces have been executed inside the standalone repo itself."
+  ],
+  "evidence": [
+    "meta/harness/docs/specs/meta-harness-absorption-validation.report.json",
+    "meta/harness/docs/specs/meta-harness-absorption-harvest.inventory.json",
+    "meta/harness/docs/specs/meta-harness-absorption.manifest.json",
+    "meta/harness/docs/specs/meta-harness-absorption-seven-phase.plan.md",
+    "meta/harness/docs/specs/meta-harness-absorption-validation.plan.md",
+    "meta/harness/docs/specs/infranodus-phase-tool-map.json"
+  ]
+}

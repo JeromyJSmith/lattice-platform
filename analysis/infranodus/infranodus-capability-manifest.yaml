@@ -4,6 +4,7 @@ manifest_version: 0.1.0
 harvest_surface: analysis/infranodus/infranodus-capability-harvest.md
 registry_surface: analysis/capabilities/infranodus-capability-registry.yaml
 schema_map_surface: analysis/infranodus/infranodus-schema-map.md
+phase_tool_map_surface: meta/harness/docs/specs/infranodus-phase-tool-map.json
 goal_surface: meta/harness/docs/specs/fre-meta-wrapper-seven.gates.md
 golden_path_surface: meta/harness/docs/specs/fre-fractal-contract-package.plan.md
 capability_groups:
@@ -29,21 +30,26 @@ capability_groups:
   explicit_non_scope:
     description: Harvested rows that remain visible but are not part of the current wrapper slice.
     rows:
-      - generate_seo_report
-      - analyze_google_search_results
       - generate_research_questions
       - generate_research_ideas
       - develop_text_tool
       - optimize_text_structure
-      - overlap_between_texts
-      - merged_graph_from_texts
-      - memory_add_relations
-      - memory_get_relations
 lifecycle_hooks:
   harvest_gate:
     required_rows:
       - analyze_text
       - create_knowledge_graph
+      - generate_knowledge_graph
+      - analyze_google_search_results
+      - analyze_related_search_queries
+      - search_queries_vs_search_results
+      - generate_seo_report
+    supporting_rows:
+      - generate_topical_clusters
+      - analyze_existing_graph_by_name
+      - list_graphs
+      - search
+      - fetch
     required_artifacts:
       - analysis/infranodus/infranodus-capability-harvest.md
     purpose: Normalize and package source corpora before graph analysis.
@@ -51,6 +57,14 @@ lifecycle_hooks:
     required_rows:
       - analyze_existing_graph_by_name
       - generate_topical_clusters
+      - search
+    supporting_rows:
+      - fetch
+      - list_graphs
+      - create_knowledge_graph
+      - analyze_google_search_results
+      - analyze_related_search_queries
+      - search_queries_vs_search_results
     required_artifacts:
       - analysis/capabilities/infranodus-capability-registry.yaml
     purpose: Keep canonical naming and relation vocabulary coherent.
@@ -58,6 +72,12 @@ lifecycle_hooks:
     required_rows:
       - difference_between_texts
       - generate_topical_clusters
+      - merged_graph_from_texts
+    supporting_rows:
+      - overlap_between_texts
+      - analyze_existing_graph_by_name
+      - search
+      - fetch
     required_artifacts:
       - analysis/infranodus/infranodus-capability-manifest.yaml
       - analysis/infranodus/infranodus-schema-map.md
@@ -66,6 +86,11 @@ lifecycle_hooks:
     required_rows:
       - difference_between_texts
       - generate_contextual_hint
+      - retrieve_from_knowledge_base
+    supporting_rows:
+      - overlap_between_texts
+      - merged_graph_from_texts
+      - analyze_existing_graph_by_name
     required_artifacts:
       - analysis/infranodus/goal-vs-implementation.diff.json
     purpose: Emit durable comparison evidence for bounded slices.
@@ -73,22 +98,43 @@ lifecycle_hooks:
     required_rows:
       - generate_content_gaps
       - difference_between_texts
+      - generate_contextual_hint
+    supporting_rows:
+      - retrieve_from_knowledge_base
+      - analyze_existing_graph_by_name
+      - generate_responses_from_graph
+      - search_queries_vs_search_results
+      - analyze_related_search_queries
     required_artifacts:
       - analysis/infranodus/goal-vs-implementation.diff.json
     purpose: Challenge unsupported green claims and justify exact blockers.
   health_gate:
     required_rows:
       - difference_between_texts
-      - develop_latent_topics
-      - develop_conceptual_bridges
+      - generate_content_gaps
+      - merged_graph_from_texts
+    supporting_rows:
+      - overlap_between_texts
+      - generate_topical_clusters
+      - generate_contextual_hint
+      - retrieve_from_knowledge_base
+      - analyze_google_search_results
+      - search_queries_vs_search_results
+      - generate_seo_report
     required_artifacts:
       - analysis/infranodus/goal-vs-implementation.diff.json
     purpose: Detect drift, bottlenecks, and missing bridges across repo truth surfaces.
   promotion_gate:
     required_rows:
       - generate_content_gaps
-      - generate_contextual_hint
       - retrieve_from_knowledge_base
+      - difference_between_texts
+    supporting_rows:
+      - generate_contextual_hint
+      - generate_responses_from_graph
+      - merged_graph_from_texts
+      - memory_get_relations
+      - generate_seo_report
     required_artifacts:
       - analysis/infranodus/goal-vs-implementation.diff.json
     purpose: Feed promotion decisions with graph-backed evidence rather than prose-only judgment.

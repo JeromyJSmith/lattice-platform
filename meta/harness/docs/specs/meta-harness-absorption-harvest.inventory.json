@@ -1,0 +1,125 @@
+{
+  "inventory_id": "META-HARNESS-ABSORPTION-HARVEST-0001",
+  "created_at": "2026-05-18",
+  "scope": "portable_parent_wrapper_repo",
+  "source_bodies": [
+    {
+      "body_id": "parent_meta_scaffold",
+      "root": "/Volumes/PixelTable/VW_iTwin_Bridge/meta",
+      "kind": "parent_wrapper_scaffold",
+      "surface_groups": {
+        "fractal_scaffold": [
+          "AGENTS.md",
+          "CLAUDE.md",
+          "GOAL.md",
+          "GOLDENPATH.md",
+          "MEMORY.md"
+        ],
+        "config_and_registry": [
+          "body-registry.yaml",
+          "config.yaml",
+          "metaharness.lock.yaml",
+          "bootstrap.md"
+        ],
+        "portable_folders": [
+          "contracts/",
+          "docs/",
+          "evidence/",
+          "graph/",
+          "memory/",
+          "relationships/",
+          "runs/"
+        ]
+      }
+    },
+    {
+      "body_id": "fre_bounded_lineage",
+      "root": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre",
+      "kind": "bounded_evaluation_lane",
+      "surface_groups": {
+        "fractal_scaffold": [
+          "README.md",
+          "CLAUDE.md",
+          "GOAL.md",
+          "GoldenPath.md"
+        ],
+        "proof_package": [
+          "docs/",
+          "examples/",
+          "fixtures/",
+          "harness/",
+          "runs/",
+          "schemas/",
+          "tests/"
+        ],
+        "contract_highlights": [
+          "examples/expected-failures.yaml",
+          "schemas/fre-loop.schema.json",
+          "schemas/gate-result.schema.json",
+          "schemas/repair-task.schema.json",
+          "schemas/promotion-decision.schema.json"
+        ]
+      }
+    },
+    {
+      "body_id": "lattice_child_reference",
+      "root": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+      "kind": "child_implementation_body",
+      "surface_groups": {
+        "child_wrapper": [
+          "meta/GOAL.md",
+          "meta/GOLDENPATH.md",
+          "meta/MEMORY.md",
+          "meta/harness/AGENTS.md",
+          "meta/harness/GOLDENPATH.md"
+        ],
+        "live_fre_lane": [
+          "meta/harness/fre/source/",
+          "meta/harness/fre/schemas/",
+          "meta/harness/fre/examples/",
+          "meta/harness/fre/tests/",
+          "meta/harness/fre/evaluation/",
+          "meta/harness/fre/promotion/"
+        ],
+        "shared_authorities": [
+          "meta/harness/library.yaml",
+          "meta/harness/agentics-library.md",
+          "analysis/infranodus/",
+          "analysis/capabilities/"
+        ]
+      }
+    }
+  ],
+  "duplicate_authority_risks": [
+    {
+      "surface": "fractal scaffold files",
+      "risk": "parent and child both contain wrapper scaffold files and need explicit parent versus mirror ownership"
+    },
+    {
+      "surface": "FRE contract lane",
+      "risk": "FRE exists as bounded worktree lineage and as partially absorbed live lane in LATTICE"
+    },
+    {
+      "surface": "library/config doctrine",
+      "risk": "library spine is portable parent doctrine but currently still anchored in child repo paths"
+    }
+  ],
+  "required_hooks": {
+    "prompt_contract": [
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/copilot-prompting-playbook.md"
+    ],
+    "comparison_engine": [
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis/infranodus/infranodus-capability-manifest.yaml",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis/infranodus/infranodus-schema-map.md",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/infranodus-phase-tool-map.json"
+    ],
+    "substrate": [
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/pixeltable-operational-substrate.md",
+      "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/projects/template/library.yaml"
+    ]
+  }
+}

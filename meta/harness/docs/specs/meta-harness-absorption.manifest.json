@@ -1,0 +1,108 @@
+{
+  "manifest_id": "META-HARNESS-ABSORPTION-MANIFEST-0001",
+  "created_at": "2026-05-18",
+  "target_repo": "meta-harness",
+  "decision_classes": [
+    "adopt_to_parent",
+    "mirror_to_child",
+    "leave_historical",
+    "delete_after_absorption"
+  ],
+  "decisions": [
+    {
+      "surface_id": "parent_meta_fractal_scaffold",
+      "source": "/Volumes/PixelTable/VW_iTwin_Bridge/meta/{AGENTS.md,CLAUDE.md,GOAL.md,GOLDENPATH.md,MEMORY.md}",
+      "decision": "adopt_to_parent",
+      "reason": "These are the canonical parent wrapper scaffold surfaces."
+    },
+    {
+      "surface_id": "parent_meta_portable_folders",
+      "source": "/Volumes/PixelTable/VW_iTwin_Bridge/meta/{contracts,docs,evidence,graph,memory,relationships,runs}",
+      "decision": "adopt_to_parent",
+      "reason": "These folders are already shaped like reusable parent wrapper families."
+    },
+    {
+      "surface_id": "fre_schemas_examples_tests",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/{schemas,examples,tests,harness}",
+      "decision": "adopt_to_parent",
+      "reason": "These are the reusable contract, validator, and proof-package surfaces that FRE contributes."
+    },
+    {
+      "surface_id": "fre_runs_and_sessions",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre/{runs,docs/sessions}",
+      "decision": "leave_historical",
+      "reason": "These are lineage artifacts that should remain evidence, not become the initial live parent baseline."
+    },
+    {
+      "surface_id": "child_live_fre_lane",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/fre",
+      "decision": "mirror_to_child",
+      "reason": "LATTICE retains a child-local mirror/execution lane after the parent repo becomes canonical."
+    },
+    {
+      "surface_id": "child_wrapper_scaffold",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/{GOAL.md,GOLDENPATH.md,MEMORY.md}",
+      "decision": "mirror_to_child",
+      "reason": "These remain project-local wrapper surfaces and should not replace the parent scaffold."
+    },
+    {
+      "surface_id": "prompt_contract_authority",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/{agent-heavy-run-prompt-index.md,agent-heavy-run-prompt-schema.md,agent-heavy-run-prompt.schema.json,agent-heavy-run-prompt.template.yaml}",
+      "decision": "adopt_to_parent",
+      "reason": "The standalone parent repo must carry the same governed prompt schema contract as the Copilot playbook."
+    },
+    {
+      "surface_id": "copilot_playbook_authority",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/copilot-prompting-playbook.md",
+      "decision": "adopt_to_parent",
+      "reason": "The playbook is part of the canonical prompt contract and must live with the parent wrapper."
+    },
+    {
+      "surface_id": "library_spine_authority",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/{library.yaml,agentics-library.md}",
+      "decision": "adopt_to_parent",
+      "reason": "The harness catalog/config spine is reusable parent doctrine and should move upward."
+    },
+    {
+      "surface_id": "infranodus_and_pixeltable_hooks",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/meta/harness/docs/specs/{fre-infranodus-hook.plan.md,fre-pixeltable-hook.plan.md,infranodus-phase-tool-map.json}",
+      "decision": "adopt_to_parent",
+      "reason": "These are portable hook plans and the full phase-tool map that define reusable parent wrapper integrations."
+    },
+    {
+      "surface_id": "repo_specific_analysis_payloads",
+      "source": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/analysis",
+      "decision": "mirror_to_child",
+      "reason": "Capability registries and repo-local analyses remain child data, even when the parent defines the contract shape."
+    }
+  ],
+  "required_parent_families": [
+    "scaffold",
+    "source",
+    "schemas",
+    "examples",
+    "expected-failures",
+    "tests",
+    "evaluation",
+    "promotion",
+    "runs",
+    "docs",
+    "library",
+    "prompts"
+  ],
+  "required_parent_markdown_contracts": [
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GOAL.md",
+    "GOLDENPATH.md",
+    "MEMORY.md"
+  ],
+  "required_prompt_contract_artifacts": [
+    "agent-heavy-run-prompt-index.md",
+    "agent-heavy-run-prompt-schema.md",
+    "agent-heavy-run-prompt.schema.json",
+    "agent-heavy-run-prompt.template.yaml",
+    "copilot-prompting-playbook.md"
+  ]
+}

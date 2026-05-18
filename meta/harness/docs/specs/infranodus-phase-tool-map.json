@@ -1,0 +1,198 @@
+{
+  "map_id": "INFRANODUS-PHASE-TOOL-MAP-0001",
+  "created_at": "2026-05-18",
+  "engine": "infranodus",
+  "scope": "meta_harness_full_lifecycle",
+  "phase_to_tools": {
+    "harvest_gate": {
+      "required_tools": [
+        "analyze_text",
+        "generate_knowledge_graph",
+        "create_knowledge_graph",
+        "analyze_google_search_results",
+        "analyze_related_search_queries",
+        "search_queries_vs_search_results",
+        "generate_seo_report"
+      ],
+      "supporting_tools": [
+        "generate_topical_clusters",
+        "analyze_existing_graph_by_name",
+        "list_graphs",
+        "search",
+        "fetch"
+      ],
+      "purpose": "Normalize source corpora, discover existing graphs, and create durable graph surfaces for later phases."
+    },
+    "registry_gate": {
+      "required_tools": [
+        "analyze_existing_graph_by_name",
+        "generate_topical_clusters",
+        "search"
+      ],
+      "supporting_tools": [
+        "fetch",
+        "list_graphs",
+        "generate_knowledge_graph",
+        "create_knowledge_graph",
+        "analyze_google_search_results",
+        "analyze_related_search_queries",
+        "search_queries_vs_search_results"
+      ],
+      "purpose": "Stabilize names, aliases, clusters, and relation vocabulary across reusable contract surfaces."
+    },
+    "manifest_gate": {
+      "required_tools": [
+        "difference_between_texts",
+        "generate_topical_clusters",
+        "merged_graph_from_texts"
+      ],
+      "supporting_tools": [
+        "overlap_between_texts",
+        "analyze_existing_graph_by_name",
+        "search",
+        "fetch"
+      ],
+      "purpose": "Place contract surfaces consistently by comparing what exists, what overlaps, and what is missing between bodies."
+    },
+    "verification_gate": {
+      "required_tools": [
+        "difference_between_texts",
+        "generate_contextual_hint",
+        "retrieve_from_knowledge_base"
+      ],
+      "supporting_tools": [
+        "overlap_between_texts",
+        "merged_graph_from_texts",
+        "analyze_existing_graph_by_name"
+      ],
+      "purpose": "Emit durable graph-backed proof that the promoted slice matches the intended contract surfaces."
+    },
+    "state_gate": {
+      "required_tools": [
+        "generate_content_gaps",
+        "difference_between_texts",
+        "generate_contextual_hint"
+      ],
+      "supporting_tools": [
+        "retrieve_from_knowledge_base",
+        "analyze_existing_graph_by_name",
+        "generate_responses_from_graph",
+        "search_queries_vs_search_results",
+        "analyze_related_search_queries"
+      ],
+      "purpose": "Challenge unsupported green claims and derive exact red or amber blockers from evidence."
+    },
+    "health_gate": {
+      "required_tools": [
+        "difference_between_texts",
+        "generate_content_gaps",
+        "merged_graph_from_texts"
+      ],
+      "supporting_tools": [
+        "overlap_between_texts",
+        "generate_topical_clusters",
+        "generate_contextual_hint",
+        "retrieve_from_knowledge_base",
+        "analyze_google_search_results",
+        "search_queries_vs_search_results",
+        "generate_seo_report"
+      ],
+      "purpose": "Detect drift, disconnected surfaces, missing bridges, and stale doctrine across parent and child bodies."
+    },
+    "promotion_gate": {
+      "required_tools": [
+        "generate_content_gaps",
+        "retrieve_from_knowledge_base",
+        "difference_between_texts"
+      ],
+      "supporting_tools": [
+        "generate_contextual_hint",
+        "generate_responses_from_graph",
+        "merged_graph_from_texts",
+        "memory_get_relations",
+        "generate_seo_report"
+      ],
+      "purpose": "Interrogate promotion readiness with graph-backed evidence instead of prose-only judgment."
+    }
+  },
+  "proof_package_to_tools": {
+    "source": [
+      "analyze_text",
+      "generate_knowledge_graph",
+      "create_knowledge_graph",
+      "list_graphs",
+      "search",
+      "analyze_google_search_results",
+      "analyze_related_search_queries",
+      "search_queries_vs_search_results",
+      "generate_seo_report"
+    ],
+    "schema": [
+      "difference_between_texts",
+      "generate_topical_clusters",
+      "analyze_existing_graph_by_name",
+      "fetch"
+    ],
+    "examples": [
+      "analyze_existing_graph_by_name",
+      "generate_contextual_hint",
+      "overlap_between_texts",
+      "merged_graph_from_texts"
+    ],
+    "expected_failures": [
+      "generate_content_gaps",
+      "difference_between_texts",
+      "generate_topical_clusters",
+      "search_queries_vs_search_results"
+    ],
+    "tests": [
+      "difference_between_texts",
+      "generate_topical_clusters",
+      "generate_contextual_hint",
+      "retrieve_from_knowledge_base"
+    ],
+    "evaluation": [
+      "difference_between_texts",
+      "generate_content_gaps",
+      "generate_contextual_hint",
+      "merged_graph_from_texts",
+      "overlap_between_texts",
+      "analyze_google_search_results",
+      "analyze_related_search_queries",
+      "search_queries_vs_search_results",
+      "generate_seo_report"
+    ],
+    "promotion": [
+      "generate_content_gaps",
+      "retrieve_from_knowledge_base",
+      "difference_between_texts",
+      "generate_responses_from_graph",
+      "memory_get_relations",
+      "generate_seo_report"
+    ]
+  },
+  "tool_to_phases": {
+    "list_graphs": ["harvest_gate", "registry_gate"],
+    "search": ["harvest_gate", "registry_gate", "manifest_gate"],
+    "fetch": ["harvest_gate", "registry_gate", "manifest_gate", "schema"],
+    "analyze_text": ["harvest_gate", "source"],
+    "generate_knowledge_graph": ["harvest_gate", "source"],
+    "create_knowledge_graph": ["harvest_gate", "registry_gate", "source"],
+    "analyze_existing_graph_by_name": ["harvest_gate", "registry_gate", "manifest_gate", "state_gate", "schema", "examples"],
+    "generate_topical_clusters": ["harvest_gate", "registry_gate", "manifest_gate", "health_gate", "schema", "expected_failures", "tests"],
+    "generate_content_gaps": ["state_gate", "health_gate", "promotion_gate", "expected_failures", "evaluation", "promotion"],
+    "difference_between_texts": ["manifest_gate", "verification_gate", "state_gate", "health_gate", "promotion_gate", "schema", "expected_failures", "tests", "evaluation", "promotion"],
+    "overlap_between_texts": ["manifest_gate", "verification_gate", "examples", "evaluation"],
+    "merged_graph_from_texts": ["manifest_gate", "verification_gate", "health_gate", "examples", "evaluation", "promotion"],
+    "generate_contextual_hint": ["verification_gate", "state_gate", "health_gate", "promotion_gate", "examples", "tests", "evaluation"],
+    "retrieve_from_knowledge_base": ["verification_gate", "state_gate", "health_gate", "promotion_gate", "tests", "promotion"],
+    "generate_responses_from_graph": ["state_gate", "promotion_gate", "promotion"],
+    "memory_get_relations": ["promotion_gate", "promotion"],
+    "memory_add_relations": ["harvest_gate", "source"],
+    "analyze_google_search_results": ["harvest_gate", "registry_gate", "health_gate", "source", "evaluation"],
+    "analyze_related_search_queries": ["harvest_gate", "registry_gate", "state_gate", "source", "evaluation"],
+    "search_queries_vs_search_results": ["harvest_gate", "registry_gate", "state_gate", "health_gate", "source", "expected_failures", "evaluation"],
+    "generate_seo_report": ["harvest_gate", "health_gate", "promotion_gate", "source", "evaluation", "promotion"]
+  },
+  "currently_out_of_scope_but_visible": []
+}
