@@ -22,6 +22,7 @@ if PIXELTABLE_ROOT.as_posix() not in sys.path:
 from service.routes import erp  # noqa: E402
 
 ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
 REQUEST_TIMEOUT_SECONDS = 10.0
 
@@ -33,14 +34,19 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _fetch_upstream_json(project_id: str) -> tuple[str, dict[str, Any] | list[Any]]:
-    url = f"{ERP_BASE}/api/boq/{project_id}"
+    url = f"{ERP_BASE}{ERP_BOQ_LIST_PATH}"
     try:
-        response = httpx.get(url, timeout=REQUEST_TIMEOUT_SECONDS, follow_redirects=True)
+        response = httpx.get(
+            url,
+            params={"project_id": project_id},
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            follow_redirects=True,
+        )
     except Exception as exc:
         raise RuntimeError(f"OpenConstructionERP BOQ probe failed for {url}: {exc!s}") from exc
     if response.status_code == 404:
         raise RuntimeError(
-            f"OpenConstructionERP BOQ probe returned 404 for {url}; live dependency or verifier project data is not ready."
+            f"OpenConstructionERP BOQ probe returned 404 for {url}?project_id={project_id}; live dependency or verifier project data is not ready."
         )
     try:
         response.raise_for_status()
@@ -52,7 +58,12 @@ def _fetch_upstream_json(project_id: str) -> tuple[str, dict[str, Any] | list[An
         raise RuntimeError(f"OpenConstructionERP BOQ probe returned non-JSON payload for {url}.") from exc
     if not isinstance(payload, dict | list):
         raise RuntimeError(f"OpenConstructionERP BOQ probe returned unsupported JSON payload for {url}.")
-    return url, payload
+    if isinstance(payload, list) and not payload:
+        raise RuntimeError(
+            "OpenConstructionERP BOQ probe returned an empty BOQ list for "
+            f"{url}?project_id={project_id}; verifier project data must point at a real ERP project with BOQs."
+        )
+    return f"{url}?project_id={project_id}", payload
 
 
 def _build_app() -> FastAPI:
@@ -89,26 +100,28 @@ def _verify_route(project_id: str) -> dict[str, Any]:
 def main() -> int:
     """Execute the live BOQ read verifier and exit non-zero when proof fails."""
     args = _parse_args()
+    report: dict[str, Any] = {
+        "project_id": args.project_id,
+        "erp_base": ERP_BASE,
+        "route": f"/v1/erp/boq/{args.project_id}",
+        "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={args.project_id}",
+    }
     try:
         upstream_url, upstream_payload = _fetch_upstream_json(args.project_id)
-        route = _verify_route(args.project_id)
+        report["erp_probe"] = {
+            "url": upstream_url,
+            "payload_kind": "object" if isinstance(upstream_payload, dict) else "array",
+            "document_size": len(upstream_payload),
+        }
+        report["route_proof"] = _verify_route(args.project_id)
     except Exception as exc:
-        print(str(exc), file=sys.stderr)
+        report["status"] = "blocked"
+        report["blockers"] = [str(exc)]
+        print(json.dumps(report, indent=2), file=sys.stderr)
         return 1
 
-    print(
-        json.dumps(
-            {
-                "erp_probe": {
-                    "url": upstream_url,
-                    "payload_kind": "object" if isinstance(upstream_payload, dict) else "array",
-                    "document_size": len(upstream_payload),
-                },
-                "route_proof": route,
-            },
-            indent=2,
-        )
-    )
+    report["status"] = "passed"
+    print(json.dumps(report, indent=2))
     return 0
 
 

@@ -23,7 +23,16 @@ from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
 ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
-ERP_PHASES_PATH = os.environ.get("OPENCONSTRUCTIONERP_PHASES_PATH", "/api/phases")
+ERP_SCHEDULES_PREFIX = os.environ.get("OPENCONSTRUCTIONERP_SCHEDULES_PREFIX", "/api/v2/schedules")
+ERP_SCHEDULE_LINKS_PREFIX = os.environ.get("OPENCONSTRUCTIONERP_SCHEDULE_LINKS_PREFIX", "/api/v2/eac/schedule-links")
+ERP_SCHEDULE_IMPORT_PATH_TEMPLATE = os.environ.get(
+    "OPENCONSTRUCTIONERP_SCHEDULE_IMPORT_PATH_TEMPLATE",
+    "/api/v2/schedules/{schedule_id}/import",
+)
+ERP_TASK_PROGRESS_PATH_TEMPLATE = os.environ.get(
+    "OPENCONSTRUCTIONERP_TASK_PROGRESS_PATH_TEMPLATE",
+    "/api/v2/schedules/tasks/{task_id}/progress",
+)
 DEFAULT_PROJECT_ID = os.environ.get("ERP_PHASES_SYNC_VERIFY_PROJECT_ID", "ddc-phases-proof-project")
 DEFAULT_IDEMPOTENCY_KEY = os.environ.get(
     "ERP_PHASES_SYNC_VERIFY_IDEMPOTENCY_KEY",
@@ -50,37 +59,56 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _normalize_phases_path(path: str) -> str:
-    normalized = path.strip() or "/api/phases"
+def _normalize_path(path: str, default: str) -> str:
+    normalized = path.strip() or default
     return normalized if normalized.startswith("/") else f"/{normalized}"
 
 
 def _probe_upstream_phase_endpoint(project_id: str) -> dict[str, Any]:
-    phases_path = _normalize_phases_path(ERP_PHASES_PATH)
-    url = f"{ERP_BASE}{phases_path}"
-    payload = {"project_id": project_id, "phase_assignments": []}
+    schedules_url = f"{ERP_BASE}{_normalize_path(ERP_SCHEDULES_PREFIX, '/api/v2/schedules')}"
+    links_url = f"{ERP_BASE}{_normalize_path(ERP_SCHEDULE_LINKS_PREFIX, '/api/v2/eac/schedule-links')}"
     try:
-        response = httpx.post(
-            url,
-            json=payload,
+        schedules_response = httpx.get(
+            schedules_url,
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            follow_redirects=True,
+        )
+        links_response = httpx.get(
+            links_url,
             timeout=REQUEST_TIMEOUT_SECONDS,
             follow_redirects=True,
         )
     except Exception as exc:
-        raise RuntimeError(f"OpenConstructionERP phase probe failed for {url}: {exc!s}") from exc
-    if response.status_code == 404:
         raise RuntimeError(
-            f"OpenConstructionERP phase probe returned 404 for {url}; live ERP phase endpoint "
-            "contract is not ready at the configured path."
+            f"OpenConstructionERP phase probe failed for {schedules_url} or {links_url}: {exc!s}"
+        ) from exc
+    if schedules_response.status_code == 404 and links_response.status_code == 404:
+        raise RuntimeError(
+            "OpenConstructionERP phase probe returned 404 for "
+            f"{schedules_url} and {links_url}; live ERP phase endpoint contract is not ready "
+            "at the bounded schedule surface."
         )
-    if response.status_code >= 500:
+    if schedules_response.status_code >= 500 or links_response.status_code >= 500:
         raise RuntimeError(
-            f"OpenConstructionERP phase probe returned {response.status_code} for {url}."
+            "OpenConstructionERP phase probe returned server errors for "
+            f"{schedules_url} ({schedules_response.status_code}) or {links_url} ({links_response.status_code})."
         )
     return {
-        "url": url,
-        "status_code": response.status_code,
-        "response_kind": response.headers.get("content-type", "unknown"),
+        "project_id": project_id,
+        "schedules_url": schedules_url,
+        "schedules_status_code": schedules_response.status_code,
+        "schedules_response_kind": schedules_response.headers.get("content-type", "unknown"),
+        "schedule_import_contract": _normalize_path(
+            ERP_SCHEDULE_IMPORT_PATH_TEMPLATE,
+            "/api/v2/schedules/{schedule_id}/import",
+        ),
+        "links_url": links_url,
+        "links_status_code": links_response.status_code,
+        "links_response_kind": links_response.headers.get("content-type", "unknown"),
+        "task_progress_contract": _normalize_path(
+            ERP_TASK_PROGRESS_PATH_TEMPLATE,
+            "/api/v2/schedules/tasks/{task_id}/progress",
+        ),
     }
 
 
@@ -125,7 +153,21 @@ def main() -> int:
         "project_id": args.project_id,
         "erp_base": ERP_BASE,
         "route": "POST /v1/erp/phases",
-        "phase_probe_path": _normalize_phases_path(ERP_PHASES_PATH),
+        "phase_probe_surface": {
+            "schedules_prefix": _normalize_path(ERP_SCHEDULES_PREFIX, "/api/v2/schedules"),
+            "schedule_links_prefix": _normalize_path(
+                ERP_SCHEDULE_LINKS_PREFIX,
+                "/api/v2/eac/schedule-links",
+            ),
+            "schedule_import_contract": _normalize_path(
+                ERP_SCHEDULE_IMPORT_PATH_TEMPLATE,
+                "/api/v2/schedules/{schedule_id}/import",
+            ),
+            "task_progress_contract": _normalize_path(
+                ERP_TASK_PROGRESS_PATH_TEMPLATE,
+                "/api/v2/schedules/tasks/{task_id}/progress",
+            ),
+        },
     }
     blockers: list[str] = []
 

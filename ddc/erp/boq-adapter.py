@@ -18,7 +18,8 @@ from typing import Any
 import httpx
 
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080")
+ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 PROJECT_IFC_TABLE_TEMPLATE = "lattice/projects/{project_id}/ifc_elements"
 BRIDGE_IFC_TABLE = "lattice/bridge/ifc/ifc_elements"
 
@@ -99,16 +100,23 @@ def _normalize_boq_payload(payload: Any) -> dict[str, Any] | list[Any]:
     raise RuntimeError("OpenConstructionERP BOQ response must be a JSON object or array")
 
 
+def _fetch_project_boqs(client: httpx.Client, project_id: str) -> list[dict[str, Any]]:
+    response = client.get(ERP_BOQ_LIST_PATH, params={"project_id": project_id})
+    response.raise_for_status()
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise RuntimeError("OpenConstructionERP BOQ list response was not valid JSON") from exc
+    if not isinstance(payload, list) or not all(isinstance(row, dict) for row in payload):
+        raise RuntimeError("OpenConstructionERP BOQ list response must be a JSON array of objects")
+    return payload
+
+
 def fetch_boq(project_id: str) -> dict:
     """Return one project's current BOQ document from OpenConstructionERP."""
     normalized_project_id = _normalize_project_id(project_id)
     with httpx.Client(base_url=ERP_BASE, timeout=30.0) as client:
-        response = client.get(f"/api/boq/{normalized_project_id}")
-        response.raise_for_status()
-        try:
-            payload = response.json()
-        except ValueError as exc:
-            raise RuntimeError("OpenConstructionERP BOQ response was not valid JSON") from exc
+        payload = _fetch_project_boqs(client, normalized_project_id)
     return {
         "ok": True,
         "project_id": normalized_project_id,

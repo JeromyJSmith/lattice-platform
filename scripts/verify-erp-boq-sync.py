@@ -23,8 +23,10 @@ from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
 ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_BOQ_CREATE_PATH = "/api/v1/boq/boqs/"
 DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_SYNC_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
 DEFAULT_IDEMPOTENCY_KEY = os.environ.get("ERP_BOQ_SYNC_VERIFY_IDEMPOTENCY_KEY", "ddc-boq-sync-proof-0001")
+DEFAULT_BOQ_NAME = os.environ.get("ERP_BOQ_SYNC_VERIFY_NAME", "LATTICE verifier BOQ")
 REQUEST_TIMEOUT_SECONDS = 10.0
 
 
@@ -42,14 +44,11 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _probe_upstream_create(project_id: str) -> dict[str, Any]:
-    url = f"{ERP_BASE}/api/boq/create"
+    url = f"{ERP_BASE}{ERP_BOQ_CREATE_PATH}"
     payload = {
         "project_id": project_id,
-        "element_id": "verify-element-1",
-        "name": "Verifier item",
-        "bis_class": "IfcBuildingElementProxy",
-        "quantity": 1.0,
-        "unit": "ea",
+        "name": DEFAULT_BOQ_NAME,
+        "description": "LATTICE verifier BOQ sync probe",
     }
     try:
         response = httpx.post(
@@ -76,6 +75,11 @@ def _probe_upstream_create(project_id: str) -> dict[str, Any]:
     return {
         "url": url,
         "status_code": response.status_code,
+        "request_contract": {
+            "project_id": project_id,
+            "name": DEFAULT_BOQ_NAME,
+            "description": "LATTICE verifier BOQ sync probe",
+        },
         "response_kind": (
             "object"
             if isinstance(response_payload, dict)

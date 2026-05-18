@@ -13,11 +13,17 @@ import os
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 import httpx
 
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080")
+ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
+ERP_BOQ_EXPORT_PATHS = {
+    "xlsx": "/api/v1/boq/boqs/{boq_id}/export/excel",
+    "csv": "/api/v1/boq/boqs/{boq_id}/export/csv",
+}
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPORT_DIR = REPO_ROOT / "public" / "exports"
 
@@ -33,6 +39,31 @@ def _filename_project_id_fragment(project_id: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "-", project_id).strip("-") or "project"
 
 
+def _normalize_boq_list_payload(payload: Any) -> list[dict[str, Any]]:
+    if not isinstance(payload, list) or not all(isinstance(row, dict) for row in payload):
+        raise RuntimeError("OpenConstructionERP BOQ list response must be a JSON array of objects")
+    return payload
+
+
+def _resolve_boq_id(client: httpx.Client, project_id: str) -> str:
+    response = client.get(ERP_BOQ_LIST_PATH, params={"project_id": project_id}, follow_redirects=True)
+    response.raise_for_status()
+    try:
+        payload = response.json()
+    except ValueError as exc:
+        raise RuntimeError("OpenConstructionERP BOQ list response was not valid JSON") from exc
+    rows = _normalize_boq_list_payload(payload)
+    if not rows:
+        raise RuntimeError(
+            "OpenConstructionERP export requires an existing BOQ at "
+            f"{ERP_BOQ_LIST_PATH}?project_id={project_id}"
+        )
+    boq_id = rows[0].get("id")
+    if not isinstance(boq_id, str) or not boq_id.strip():
+        raise RuntimeError("OpenConstructionERP BOQ list response did not expose a usable BOQ id")
+    return boq_id.strip()
+
+
 def export_boq(project_id: str, fmt: str = "xlsx") -> str:
     """Returns the output path on success."""
     normalized_project_id = _normalize_project_id(project_id)
@@ -43,9 +74,9 @@ def export_boq(project_id: str, fmt: str = "xlsx") -> str:
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     output_path = EXPORT_DIR / f"boq-{_filename_project_id_fragment(normalized_project_id)}.{normalized_fmt}"
     with httpx.Client(base_url=ERP_BASE, timeout=60.0) as client:
+        boq_id = _resolve_boq_id(client, normalized_project_id)
         response = client.get(
-            "/api/boq/export",
-            params={"project_id": normalized_project_id, "format": normalized_fmt},
+            ERP_BOQ_EXPORT_PATHS[normalized_fmt].format(boq_id=boq_id),
             follow_redirects=True,
         )
         response.raise_for_status()

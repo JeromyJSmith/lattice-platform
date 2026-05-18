@@ -13,6 +13,8 @@ import sys
 
 PROJECT_IFC_TABLE_TEMPLATE = "lattice/projects/{project_id}/ifc_elements"
 BRIDGE_PROJECTS_TABLE = "lattice/bridge/marpa_projects"
+ERP_SCHEDULE_IMPORT_PATH_TEMPLATE = "/api/v2/schedules/{schedule_id}/import"
+ERP_TASK_PROGRESS_PATH_TEMPLATE = "/api/v2/schedules/tasks/{task_id}/progress"
 
 
 def _normalize_project_id(project_id: str) -> str:
@@ -63,7 +65,11 @@ def sync_phases(project_id: str, pxt: Any | None = None) -> dict:
     raise NotImplementedError(
         "phase sync blocked: local schedule metadata is only project-level in "
         "lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express "
-        f"per-phase assignments for {normalized_project_id}."
+        f"per-phase assignments for {normalized_project_id}. The bounded live "
+        "OpenConstructionERP schedule surface is "
+        f"{ERP_SCHEDULE_IMPORT_PATH_TEMPLATE} (CSV upload) plus "
+        f"{ERP_TASK_PROGRESS_PATH_TEMPLATE} (task progress JSON), so verifier data "
+        "must include schedule_id/task_id rather than only project_id."
     )
 
 
