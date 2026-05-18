@@ -1,0 +1,67 @@
+{
+  "gate_progress": [
+    {
+      "gate_id": "harvest",
+      "status": "green",
+      "notes": "Authorities are named.",
+      "comparison_required": false
+    },
+    {
+      "gate_id": "registry",
+      "status": "green",
+      "notes": "Inventory exists.",
+      "comparison_required": false
+    },
+    {
+      "gate_id": "manifest",
+      "status": "amber",
+      "notes": "The first schema family is present.",
+      "comparison_required": false
+    },
+    {
+      "gate_id": "verification",
+      "status": "amber",
+      "notes": "Checks still need to pass.",
+      "comparison_required": true,
+      "comparison_engine": "infranodus",
+      "comparison_artifacts": [
+        "analysis/infranodus/goal-vs-implementation.diff.json"
+      ]
+    },
+    {
+      "gate_id": "state",
+      "status": "green",
+      "notes": "State is explicitly recorded.",
+      "comparison_required": false
+    },
+    {
+      "gate_id": "health",
+      "status": "amber",
+      "notes": "Drift review is still pending.",
+      "comparison_required": true,
+      "comparison_engine": "infranodus",
+      "comparison_artifacts": [
+        "analysis/infranodus/goal-vs-implementation.diff.json"
+      ]
+    },
+    {
+      "gate_id": "promotion",
+      "status": "red",
+      "notes": "Promotion remains blocked.",
+      "comparison_required": true,
+      "comparison_engine": "infranodus",
+      "comparison_artifacts": [
+        "analysis/infranodus/goal-vs-implementation.diff.json",
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
+    }
+  ],
+  "open_questions": [],
+  "pending_validations": [],
+  "promotion_criteria": [],
+  "blocked_by": [],
+  "next_iteration": {
+    "owner": "meta-wrapper-agent",
+    "objective": "Expand the first slice without changing the governed contracts."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "promotion_id": "PROMOTION-FRE-MAIN-SLICE-0001",
+  "status": "promotable",
+  "promotion_class": "honest_bounded_improvement",
+  "comparison_engine": "infranodus",
+  "comparison_mapping": {
+    "scope_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope",
+    "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "schema_map_surface": "analysis/infranodus/infranodus-schema-map.md"
+  },
+  "required_evidence": [
+    "analysis/infranodus/goal-vs-implementation.diff.json",
+    "analysis/infranodus/infranodus-schema-map.md",
+    "meta/harness/fre/evaluation/artifacts-inventory.json",
+    "meta/harness/fre/evaluation/schema-validation.json",
+    "meta/harness/fre/evaluation/example-validation.json",
+    "meta/harness/fre/evaluation/contract-tests.txt"
+  ],
+  "validation_results": {
+    "schema_validation": "pass",
+    "example_validation": "pass",
+    "pytest": "pass",
+    "git_diff_check": "pass",
+    "docs_sync_check": "pass"
+  },
+  "remaining_blockers": [],
+  "evaluation_dependency": "meta/harness/fre/evaluation/artifacts-inventory.json",
+  "decision_surface": "meta/harness/fre/promotion/promotion-decision.md",
+  "blocker_surface": "meta/harness/fre/promotion/blocker-carry-forward.md"
+}

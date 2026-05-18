@@ -1,0 +1,141 @@
+{
+  "invalid_examples": [
+    {
+      "example": "examples/front-matter.invalid.missing-id.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "id",
+          "message": "'id' is a required property"
+        }
+      ],
+      "schema": "front-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/front-matter.invalid.missing-comparison-engine-refs.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_engine_refs",
+          "message": "'comparison_engine_refs' is a required property"
+        }
+      ],
+      "schema": "front-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/gate-progress.invalid.unknown-gate-id.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "ENUM_VIOLATION",
+          "field": "gate_id",
+          "message": "'score' is not one of ['harvest', 'registry', 'manifest', 'verification', 'state', 'health', 'promotion']"
+        }
+      ],
+      "schema": "gate-progress.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/gate-progress.invalid.verification-comparison-disabled.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_artifacts",
+          "message": "'comparison_artifacts' is a required property"
+        },
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_engine",
+          "message": "'comparison_engine' is a required property"
+        },
+        {
+          "failure_class": "CONST",
+          "field": "comparison_required",
+          "message": "True was expected"
+        }
+      ],
+      "schema": "gate-progress.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/bottom-matter.invalid.missing-status-summary.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "status_summary",
+          "message": "'status_summary' is a required property"
+        }
+      ],
+      "schema": "bottom-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/bridge-record.invalid.missing-proof-artifacts.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_artifacts",
+          "message": "'comparison_artifacts' is a required property"
+        },
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_engine",
+          "message": "'comparison_engine' is a required property"
+        },
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "proof_artifacts",
+          "message": "'proof_artifacts' is a required property"
+        }
+      ],
+      "schema": "bridge-record.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "examples/bridge-record.invalid.missing-comparison-artifacts.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "comparison_artifacts",
+          "message": "'comparison_artifacts' is a required property"
+        }
+      ],
+      "schema": "bridge-record.schema.json",
+      "status": "pass"
+    }
+  ],
+  "valid_examples": [
+    {
+      "example": "front-matter.valid.json",
+      "failures": [],
+      "schema": "front-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "gate-progress.valid.json",
+      "failures": [],
+      "schema": "gate-progress.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "bottom-matter.valid.json",
+      "failures": [],
+      "schema": "bottom-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "bridge-record.valid.json",
+      "failures": [],
+      "schema": "bridge-record.schema.json",
+      "status": "pass"
+    }
+  ]
+}

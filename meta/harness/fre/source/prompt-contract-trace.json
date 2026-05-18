@@ -1,0 +1,128 @@
+{
+  "trace_id": "PROMPT-TRACE-20260518-INFRANODUS-LIFECYCLE",
+  "execution_style": "heavy_bounded_run",
+  "authoritative_contracts": {
+    "lifecycle_gates": "https://www.notion.so/066fdc0d3cd74af18bb0d6d9c662c23a",
+    "proof_package": "https://www.notion.so/c24a9090ffc44ef8bcada415c4542e7d",
+    "prompt_contract": [
+      "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+      "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+      "meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+      "meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
+      "meta/harness/docs/copilot-prompting-playbook.md"
+    ]
+  },
+  "prompt_contract_refs": [
+    "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+    "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+    "meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+    "meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
+    "meta/harness/docs/copilot-prompting-playbook.md"
+  ],
+  "comparison_hook": {
+    "engine": "infranodus",
+    "engine_refs": [
+      "analysis/infranodus/README.md",
+      "analysis/capabilities/infranodus-capability-registry.yaml",
+      ".claude/rules/infranodus-corpus.md"
+    ],
+    "scoped_rows_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope",
+    "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "corpus_scope": [
+      "goal-versus-implementation comparison across FRE proof surfaces",
+      "cross-surface drift detection across the seven lifecycle gates",
+      "promotion evidence challenge for comparison-bearing claims"
+    ],
+    "required_artifacts": [
+      "analysis/infranodus/goal-vs-implementation.diff.json",
+      "analysis/infranodus/infranodus-schema-map.md"
+    ]
+  },
+  "lifecycle_phases": [
+    {
+      "phase": "harvest",
+      "objective": "Identify the exact comparison-bearing FRE surfaces and insertion points that must reference InfraNodus."
+    },
+    {
+      "phase": "registry",
+      "objective": "Scope InfraNodus rows to comparison core, supporting skills, and explicit non-scope without inventing new rows."
+    },
+    {
+      "phase": "manifest",
+      "objective": "Place InfraNodus dependencies coherently across source, schema, examples, expected failures, tests, evaluation, and promotion."
+    },
+    {
+      "phase": "schema",
+      "objective": "Enforce InfraNodus hook fields only where comparison-bearing artifacts require them."
+    },
+    {
+      "phase": "tests",
+      "objective": "Make validators and expected-failure fixtures fail when required InfraNodus hooks are missing."
+    },
+    {
+      "phase": "evaluation",
+      "objective": "Run the bounded Draft 2020-12 schema, example, pytest, and diff checks without claiming broader substrate truth."
+    },
+    {
+      "phase": "promotion",
+      "objective": "Keep promotion distinct from evaluation and require comparison mapping plus evidence in the promotion records."
+    }
+  ],
+  "mapped_blocks": {
+    "mode": [
+      "Treat this as one continuous autonomous heavy run.",
+      "This is a surgical InfraNodus injection run with minimal rewriting."
+    ],
+    "mission": [
+      "Add only the smallest required InfraNodus hook points so it is first class across the full seven phase lifecycle."
+    ],
+    "current_verified_state": [
+      "Treat these as three distinct, authoritative contracts.",
+      "Read the FRE lane as the fresh proof surface.",
+      "Use the worktree-to-main consolidation docs as authority."
+    ],
+    "hard_rules": [
+      "Use uv only if Python is needed.",
+      "Keep schemas valid JSON Schema Draft 2020-12.",
+      "No fake green. Fail closed on drift.",
+      "Do not collapse evaluation or promotion into tests.",
+      "Use gate_id only from the lifecycle gates schema for governance joins.",
+      "Use proof package parts inventory only from the proof package schema for evidence completeness.",
+      "Re-read touched surfaces after each patch pass and compare cross-surface truth."
+    ],
+    "allowed_paths": [
+      "Patch only the InfraNodus hook points and required enforcement surfaces inside the FRE lane."
+    ],
+    "disallowed_paths": [
+      "Do not invent.",
+      "Do not switch environment managers.",
+      "Do not merge the three authoritative contracts."
+    ],
+    "tasks": [
+      "Harvest the exact comparison-bearing surfaces and insertion points.",
+      "Record the scoped InfraNodus selection durably under meta/harness/fre.",
+      "Wire manifest placement across the seven proof-package parts.",
+      "Patch schema, tests, and prompt trace enforcement only where required.",
+      "Keep promotion as a distinct artifact layer with comparison mapping and evidence."
+    ],
+    "validation_loop": [
+      "Run schema validation, example validation, pytest, and git diff checks.",
+      "Iterate until the bounded slice is clean or the remaining blocker is proven real."
+    ],
+    "comparison": [
+      "Require InfraNodus comparison artifacts for verification, health, and promotion-bearing claims."
+    ],
+    "success_criteria": [
+      "Comparison-bearing artifacts carry explicit InfraNodus hooks.",
+      "Scoped InfraNodus dependencies are declared across all seven proof-package parts.",
+      "Promotion remains explicit and evidence-backed rather than implied by evaluation."
+    ],
+    "report_contract": [
+      "Files changed.",
+      "Per-phase additions and insertion points.",
+      "Schema validation, example validation, pytest, and git diff results.",
+      "Remaining blockers with exact evidence pointers.",
+      "Commit hash only if the bounded slice validates cleanly."
+    ]
+  }
+}

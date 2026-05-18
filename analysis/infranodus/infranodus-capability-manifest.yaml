@@ -1,0 +1,138 @@
+# spec-verified: local fractal lifecycle pilot 2026-05-18
+tool: infranodus
+manifest_version: 0.1.0
+harvest_surface: analysis/infranodus/infranodus-capability-harvest.md
+registry_surface: analysis/capabilities/infranodus-capability-registry.yaml
+schema_map_surface: analysis/infranodus/infranodus-schema-map.md
+goal_surface: meta/harness/docs/specs/fre-meta-wrapper-seven.gates.md
+golden_path_surface: meta/harness/docs/specs/fre-fractal-contract-package.plan.md
+capability_groups:
+  comparison_core:
+    description: Core comparison and gap-analysis surfaces required by the wrapper.
+    rows:
+      - analyze_text
+      - create_knowledge_graph
+      - analyze_existing_graph_by_name
+      - generate_content_gaps
+      - develop_latent_topics
+      - develop_conceptual_bridges
+      - generate_topical_clusters
+      - difference_between_texts
+      - generate_contextual_hint
+      - retrieve_from_knowledge_base
+  supporting_skills:
+    description: Skills that help interpret or operationalize the comparison outputs.
+    rows:
+      - ontology-creator-skill
+      - graph-rag-skill
+      - content-gap-skill
+  explicit_non_scope:
+    description: Harvested rows that remain visible but are not part of the current wrapper slice.
+    rows:
+      - generate_seo_report
+      - analyze_google_search_results
+      - generate_research_questions
+      - generate_research_ideas
+      - develop_text_tool
+      - optimize_text_structure
+      - overlap_between_texts
+      - merged_graph_from_texts
+      - memory_add_relations
+      - memory_get_relations
+lifecycle_hooks:
+  harvest_gate:
+    required_rows:
+      - analyze_text
+      - create_knowledge_graph
+    required_artifacts:
+      - analysis/infranodus/infranodus-capability-harvest.md
+    purpose: Normalize and package source corpora before graph analysis.
+  registry_gate:
+    required_rows:
+      - analyze_existing_graph_by_name
+      - generate_topical_clusters
+    required_artifacts:
+      - analysis/capabilities/infranodus-capability-registry.yaml
+    purpose: Keep canonical naming and relation vocabulary coherent.
+  manifest_gate:
+    required_rows:
+      - difference_between_texts
+      - generate_topical_clusters
+    required_artifacts:
+      - analysis/infranodus/infranodus-capability-manifest.yaml
+      - analysis/infranodus/infranodus-schema-map.md
+    purpose: Place InfraNodus capabilities consistently across wrapper and proof surfaces.
+  verification_gate:
+    required_rows:
+      - difference_between_texts
+      - generate_contextual_hint
+    required_artifacts:
+      - analysis/infranodus/goal-vs-implementation.diff.json
+    purpose: Emit durable comparison evidence for bounded slices.
+  state_gate:
+    required_rows:
+      - generate_content_gaps
+      - difference_between_texts
+    required_artifacts:
+      - analysis/infranodus/goal-vs-implementation.diff.json
+    purpose: Challenge unsupported green claims and justify exact blockers.
+  health_gate:
+    required_rows:
+      - difference_between_texts
+      - develop_latent_topics
+      - develop_conceptual_bridges
+    required_artifacts:
+      - analysis/infranodus/goal-vs-implementation.diff.json
+    purpose: Detect drift, bottlenecks, and missing bridges across repo truth surfaces.
+  promotion_gate:
+    required_rows:
+      - generate_content_gaps
+      - generate_contextual_hint
+      - retrieve_from_knowledge_base
+    required_artifacts:
+      - analysis/infranodus/goal-vs-implementation.diff.json
+    purpose: Feed promotion decisions with graph-backed evidence rather than prose-only judgment.
+proof_package_hooks:
+  source:
+    rows:
+      - analyze_text
+      - create_knowledge_graph
+    artifacts:
+      - analysis/infranodus/infranodus-capability-harvest.md
+  schema:
+    rows:
+      - difference_between_texts
+      - generate_topical_clusters
+    artifacts:
+      - analysis/infranodus/infranodus-schema-map.md
+  examples:
+    rows:
+      - analyze_existing_graph_by_name
+      - generate_contextual_hint
+    artifacts:
+      - analysis/infranodus/README.md
+  expected_failures:
+    rows:
+      - generate_content_gaps
+      - develop_latent_topics
+    artifacts:
+      - .claude/rules/infranodus-corpus.md
+  tests:
+    rows:
+      - difference_between_texts
+      - generate_topical_clusters
+    artifacts:
+      - analysis/infranodus/infranodus-schema-map.md
+  evaluation:
+    rows:
+      - difference_between_texts
+      - generate_content_gaps
+      - generate_contextual_hint
+    artifacts:
+      - analysis/infranodus/goal-vs-implementation.diff.json
+  promotion:
+    rows:
+      - generate_content_gaps
+      - retrieve_from_knowledge_base
+    artifacts:
+      - analysis/infranodus/infranodus-schema-map.md

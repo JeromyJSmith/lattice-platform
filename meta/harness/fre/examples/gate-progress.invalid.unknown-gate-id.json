@@ -1,0 +1,6 @@
+{
+  "gate_id": "score",
+  "status": "amber",
+  "notes": "This uses an unguided gate identifier.",
+  "comparison_required": false
+}

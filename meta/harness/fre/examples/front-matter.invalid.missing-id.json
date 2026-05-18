@@ -1,0 +1,13 @@
+{
+  "slug": "fre-main-contract-slice",
+  "title": "FRE main contract slice",
+  "doctype": "plan",
+  "status": "draft",
+  "version": "0.1.0",
+  "owner": "meta-wrapper-agent",
+  "created_at": "2026-05-18",
+  "updated_at": "2026-05-18",
+  "comparison_engine_refs": [
+    "analysis/infranodus/README.md"
+  ]
+}

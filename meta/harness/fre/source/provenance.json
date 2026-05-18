@@ -1,0 +1,253 @@
+{
+  "proof_package_id": "FRE-MAIN-SLICE-0001",
+  "created_at": "2026-05-18",
+  "stable_join_key": "gate_id",
+  "authority_contracts": {
+    "lifecycle_gates": "https://www.notion.so/066fdc0d3cd74af18bb0d6d9c662c23a",
+    "proof_package": "https://www.notion.so/c24a9090ffc44ef8bcada415c4542e7d",
+    "comparison_engine": [
+      "analysis/infranodus/README.md",
+      "analysis/capabilities/infranodus-capability-registry.yaml",
+      ".claude/rules/infranodus-corpus.md",
+      "analysis/infranodus/infranodus-capability-manifest.yaml",
+      "analysis/infranodus/infranodus-schema-map.md"
+    ],
+    "prompt_contract": [
+      "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+      "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
+      "meta/harness/docs/specs/agent-heavy-run-prompt.schema.json",
+      "meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
+      "meta/harness/docs/copilot-prompting-playbook.md"
+    ]
+  },
+  "local_authorities": [
+    "meta/harness/docs/specs/fre-worktree-consolidation.map.md",
+    "meta/harness/docs/specs/fre-worktree-consolidation.plan.md",
+    "meta/harness/docs/specs/fre-fractal-contract-package.plan.md"
+  ],
+  "harvested_hook_points": [
+    {
+      "phase": "harvest",
+      "file": "meta/harness/fre/source/provenance.json",
+      "insertion_point": "harvested_hook_points",
+      "reason": "Durable list of comparison-bearing FRE surfaces and hook locations."
+    },
+    {
+      "phase": "registry",
+      "file": "meta/harness/fre/source/provenance.json",
+      "insertion_point": "infranodus_scope",
+      "reason": "Scoped InfraNodus rows copied from the harvested registry without inventing new names."
+    },
+    {
+      "phase": "manifest",
+      "file": "meta/harness/fre/source/provenance.json",
+      "insertion_point": "part_dependencies",
+      "reason": "Explicit InfraNodus placement across all seven proof-package parts."
+    },
+    {
+      "phase": "prompt_contract",
+      "file": "meta/harness/fre/source/prompt-contract-trace.json",
+      "insertion_point": "lifecycle_phases",
+      "reason": "Heavy-run prompt trace mapped back to the governed prompt schema set."
+    },
+    {
+      "phase": "schema",
+      "file": "meta/harness/fre/schemas/front-matter.schema.json",
+      "insertion_point": "comparison_engine_refs",
+      "reason": "Front matter must declare comparison engine references."
+    },
+    {
+      "phase": "schema",
+      "file": "meta/harness/fre/schemas/gate-progress.schema.json",
+      "insertion_point": "comparison_required gate-specific enforcement",
+      "reason": "Verification, health, and promotion gates must carry InfraNodus hook fields."
+    },
+    {
+      "phase": "schema",
+      "file": "meta/harness/fre/schemas/bridge-record.schema.json",
+      "insertion_point": "comparison_engine and comparison_artifacts",
+      "reason": "Bridge records for verification, health, and promotion must carry comparison evidence pointers."
+    },
+    {
+      "phase": "evaluation",
+      "file": "meta/harness/fre/evaluation/artifacts-inventory.json",
+      "insertion_point": "comparison_dependencies",
+      "reason": "Evaluation inventory must declare InfraNodus dependencies explicitly."
+    },
+    {
+      "phase": "promotion",
+      "file": "meta/harness/fre/promotion/artifacts-inventory.json",
+      "insertion_point": "comparison_dependencies",
+      "reason": "Promotion inventory and decision records must require comparison mapping and evidence."
+    }
+  ],
+  "infranodus_scope": {
+    "authority_surfaces": [
+      "analysis/capabilities/infranodus-capability-registry.yaml",
+      "analysis/infranodus/infranodus-capability-manifest.yaml",
+      "analysis/infranodus/infranodus-schema-map.md"
+    ],
+    "comparison_core": [
+      "analyze_text",
+      "create_knowledge_graph",
+      "analyze_existing_graph_by_name",
+      "generate_content_gaps",
+      "develop_latent_topics",
+      "develop_conceptual_bridges",
+      "generate_topical_clusters",
+      "difference_between_texts",
+      "generate_contextual_hint",
+      "retrieve_from_knowledge_base"
+    ],
+    "supporting_skills": [
+      "ontology-creator-skill",
+      "graph-rag-skill",
+      "content-gap-skill"
+    ],
+    "explicit_non_scope": [
+      "generate_seo_report",
+      "analyze_google_search_results",
+      "generate_research_questions",
+      "generate_research_ideas",
+      "develop_text_tool",
+      "optimize_text_structure",
+      "overlap_between_texts",
+      "merged_graph_from_texts",
+      "memory_add_relations",
+      "memory_get_relations"
+    ]
+  },
+  "part_dependencies": {
+    "source": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "analyze_text",
+        "create_knowledge_graph"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/infranodus-capability-harvest.md",
+        "analysis/infranodus/infranodus-capability-manifest.yaml",
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
+    },
+    "schema": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "difference_between_texts",
+        "generate_topical_clusters"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
+    },
+    "examples": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "analyze_existing_graph_by_name",
+        "generate_contextual_hint"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/README.md"
+      ]
+    },
+    "expected_failures": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "generate_content_gaps",
+        "develop_latent_topics"
+      ],
+      "required_artifacts": [
+        ".claude/rules/infranodus-corpus.md"
+      ]
+    },
+    "tests": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "difference_between_texts",
+        "generate_topical_clusters"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
+    },
+    "evaluation": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "difference_between_texts",
+        "generate_content_gaps",
+        "generate_contextual_hint"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/goal-vs-implementation.diff.json"
+      ]
+    },
+    "promotion": {
+      "comparison_engine": "infranodus",
+      "scope_group": "comparison_core",
+      "required_rows": [
+        "generate_content_gaps",
+        "retrieve_from_knowledge_base"
+      ],
+      "required_artifacts": [
+        "analysis/infranodus/goal-vs-implementation.diff.json",
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
+    }
+  },
+  "source_worktree": "/Volumes/PixelTable/VW_iTWIN_Bridge/lattice-worktrees/feat-fre-meta-harness-eval/meta/harness/fre",
+  "parts": {
+    "source": [
+      "meta/harness/fre/source/README.md",
+      "meta/harness/fre/source/normalization.md",
+      "meta/harness/fre/source/provenance.json",
+      "meta/harness/fre/source/prompt-contract-trace.json"
+    ],
+    "schema": [
+      "meta/harness/fre/schemas/front-matter.schema.json",
+      "meta/harness/fre/schemas/gate-progress.schema.json",
+      "meta/harness/fre/schemas/bottom-matter.schema.json",
+      "meta/harness/fre/schemas/bridge-record.schema.json"
+    ],
+    "examples": [
+      "meta/harness/fre/examples/front-matter.valid.json",
+      "meta/harness/fre/examples/front-matter.invalid.missing-id.json",
+      "meta/harness/fre/examples/front-matter.invalid.missing-comparison-engine-refs.json",
+      "meta/harness/fre/examples/gate-progress.valid.json",
+      "meta/harness/fre/examples/gate-progress.invalid.unknown-gate-id.json",
+      "meta/harness/fre/examples/gate-progress.invalid.verification-comparison-disabled.json",
+      "meta/harness/fre/examples/bottom-matter.valid.json",
+      "meta/harness/fre/examples/bottom-matter.invalid.missing-status-summary.json",
+      "meta/harness/fre/examples/bridge-record.valid.json",
+      "meta/harness/fre/examples/bridge-record.invalid.missing-proof-artifacts.json",
+      "meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json"
+    ],
+    "expected_failures": [
+      "meta/harness/fre/examples/expected-failures.yaml"
+    ],
+    "tests": [
+      "meta/harness/fre/tests/test_document_contract.py",
+      "meta/harness/fre/tests/test_failure_examples_fail.py",
+      "meta/harness/fre/tests/test_lattice_mapping.py"
+    ],
+    "evaluation": [
+      "meta/harness/fre/evaluation/artifacts-inventory.json",
+      "meta/harness/fre/evaluation/schema-validation.json",
+      "meta/harness/fre/evaluation/example-validation.json",
+      "meta/harness/fre/evaluation/contract-tests.txt",
+      "analysis/infranodus/goal-vs-implementation.diff.json"
+    ],
+    "promotion": [
+      "meta/harness/fre/promotion/artifacts-inventory.json",
+      "meta/harness/fre/promotion/promotion-decision.md",
+      "meta/harness/fre/promotion/readiness-summary.json",
+      "meta/harness/fre/promotion/blocker-carry-forward.md",
+      "analysis/infranodus/infranodus-schema-map.md"
+    ]
+  }
+}

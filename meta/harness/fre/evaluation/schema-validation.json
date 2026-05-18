@@ -1,0 +1,25 @@
+{
+  "all_valid": true,
+  "schemas": [
+    {
+      "issues": [],
+      "schema": "bottom-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "bridge-record.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "front-matter.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "gate-progress.schema.json",
+      "status": "pass"
+    }
+  ]
+}

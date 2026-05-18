@@ -1,0 +1,43 @@
+expected_failures:
+  - example: examples/front-matter.invalid.missing-id.json
+    schema: front-matter.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - id
+  - example: examples/front-matter.invalid.missing-comparison-engine-refs.json
+    schema: front-matter.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - comparison_engine_refs
+  - example: examples/gate-progress.invalid.unknown-gate-id.json
+    schema: gate-progress.schema.json
+    expected_failure_classes:
+      - ENUM_VIOLATION
+    expected_fields:
+      - gate_id
+  - example: examples/gate-progress.invalid.verification-comparison-disabled.json
+    schema: gate-progress.schema.json
+    expected_failure_classes:
+      - CONST
+    expected_fields:
+      - comparison_required
+  - example: examples/bottom-matter.invalid.missing-status-summary.json
+    schema: bottom-matter.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - status_summary
+  - example: examples/bridge-record.invalid.missing-proof-artifacts.json
+    schema: bridge-record.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - proof_artifacts
+  - example: examples/bridge-record.invalid.missing-comparison-artifacts.json
+    schema: bridge-record.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - comparison_artifacts

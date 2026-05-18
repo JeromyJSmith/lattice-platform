@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/bottom-matter.schema.json",
+  "title": "FRE bottom matter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status_summary",
+    "gate_progress",
+    "open_questions",
+    "pending_validations",
+    "promotion_criteria",
+    "blocked_by",
+    "next_iteration"
+  ],
+  "properties": {
+    "status_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completeness",
+        "confidence",
+        "doc_state"
+      ],
+      "properties": {
+        "completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "doc_state": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "gate_progress": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "$ref": "gate-progress.schema.json"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "harvest"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "registry"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "manifest"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "verification"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "state"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "health"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate_id": {
+                "const": "promotion"
+              }
+            },
+            "required": [
+              "gate_id"
+            ]
+          }
+        }
+      ]
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pending_validations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "promotion_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blocked_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "next_iteration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "objective"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

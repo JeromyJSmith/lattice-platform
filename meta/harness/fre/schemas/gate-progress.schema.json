@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/meta/harness/fre/schemas/gate-progress.schema.json",
+  "title": "Lifecycle gate progress",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gate_id",
+    "status",
+    "notes",
+    "comparison_required"
+  ],
+  "properties": {
+    "gate_id": {
+      "type": "string",
+      "enum": [
+        "harvest",
+        "registry",
+        "manifest",
+        "verification",
+        "state",
+        "health",
+        "promotion"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "red",
+        "amber",
+        "green"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "comparison_required": {
+      "type": "boolean"
+    },
+    "comparison_engine": {
+      "type": "string",
+      "enum": [
+        "infranodus"
+      ]
+    },
+    "comparison_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "comparison_required": {
+            "const": true
+          }
+        },
+        "required": [
+          "comparison_required"
+        ]
+      },
+      "then": {
+        "required": [
+          "comparison_engine",
+          "comparison_artifacts"
+        ]
+      }
+    },
+    {
+      "if": {
+      "properties": {
+        "gate_id": {
+          "enum": [
+            "verification",
+            "health",
+            "promotion"
+          ]
+        }
+      },
+      "required": [
+        "gate_id"
+      ]
+      },
+      "then": {
+      "properties": {
+        "comparison_required": {
+          "const": true
+        },
+        "comparison_engine": {
+          "const": "infranodus"
+        }
+      },
+      "required": [
+        "comparison_required",
+        "comparison_engine",
+        "comparison_artifacts"
+      ]
+      }
+    }
+  ]
+}

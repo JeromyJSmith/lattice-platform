@@ -1,0 +1,18 @@
+{
+  "id": "PLAN-FRE-MAIN-SLICE-0001",
+  "slug": "fre-main-contract-slice",
+  "title": "FRE main contract slice",
+  "doctype": "plan",
+  "status": "draft",
+  "version": "0.1.0",
+  "owner": "meta-wrapper-agent",
+  "created_at": "2026-05-18",
+  "updated_at": "2026-05-18",
+  "prompt_contract_refs": [
+    "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
+    "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md"
+  ],
+  "related_docs": [
+    "meta/harness/docs/specs/fre-worktree-consolidation.map.md"
+  ]
+}

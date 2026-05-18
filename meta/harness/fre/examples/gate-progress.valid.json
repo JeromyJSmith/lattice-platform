@@ -1,0 +1,10 @@
+{
+  "gate_id": "verification",
+  "status": "amber",
+  "notes": "Schema and example validation are present but not yet fully expanded.",
+  "comparison_required": true,
+  "comparison_engine": "infranodus",
+  "comparison_artifacts": [
+    "analysis/infranodus/goal-vs-implementation.diff.json"
+  ]
+}

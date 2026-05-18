@@ -1,0 +1,6 @@
+{
+  "gate_id": "verification",
+  "status": "amber",
+  "notes": "Comparison was incorrectly disabled for a comparison-bearing gate.",
+  "comparison_required": false
+}

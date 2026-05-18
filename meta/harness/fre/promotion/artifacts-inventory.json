@@ -1,0 +1,52 @@
+{
+  "inventory_id": "PROMOTION-FRE-MAIN-SLICE-0001",
+  "part": "promotion",
+  "gate_id": "promotion",
+  "comparison_engine": "infranodus",
+  "purpose": "Explicit promotion artifact inventory for the first proof-package slice on main.",
+  "distinct_from_evaluation": true,
+  "comparison_dependencies": {
+    "scope_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope/comparison_core",
+    "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "required_rows": [
+      "generate_content_gaps",
+      "retrieve_from_knowledge_base"
+    ],
+    "required_artifacts": [
+      "analysis/infranodus/goal-vs-implementation.diff.json",
+      "analysis/infranodus/infranodus-schema-map.md"
+    ]
+  },
+  "artifacts": [
+    {
+      "artifact_id": "promotion-inventory",
+      "path": "meta/harness/fre/promotion/artifacts-inventory.json",
+      "kind": "inventory",
+      "status": "present"
+    },
+    {
+      "artifact_id": "promotion-decision",
+      "path": "meta/harness/fre/promotion/promotion-decision.md",
+      "kind": "decision_record",
+      "status": "present"
+    },
+    {
+      "artifact_id": "readiness-summary",
+      "path": "meta/harness/fre/promotion/readiness-summary.json",
+      "kind": "summary",
+      "status": "present"
+    },
+    {
+      "artifact_id": "blocker-carry-forward",
+      "path": "meta/harness/fre/promotion/blocker-carry-forward.md",
+      "kind": "carry_forward",
+      "status": "present"
+    },
+    {
+      "artifact_id": "infranodus-schema-map",
+      "path": "analysis/infranodus/infranodus-schema-map.md",
+      "kind": "comparison_mapping",
+      "status": "present"
+    }
+  ]
+}

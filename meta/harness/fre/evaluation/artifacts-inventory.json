@@ -1,0 +1,52 @@
+{
+  "inventory_id": "EVALUATION-FRE-MAIN-SLICE-0001",
+  "part": "evaluation",
+  "gate_id": "verification",
+  "comparison_engine": "infranodus",
+  "purpose": "Explicit evaluation artifact inventory for the first proof-package slice on main.",
+  "distinct_from_tests": true,
+  "comparison_dependencies": {
+    "scope_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope/comparison_core",
+    "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "required_rows": [
+      "difference_between_texts",
+      "generate_content_gaps",
+      "generate_contextual_hint"
+    ],
+    "required_artifacts": [
+      "analysis/infranodus/goal-vs-implementation.diff.json"
+    ]
+  },
+  "artifacts": [
+    {
+      "artifact_id": "evaluation-inventory",
+      "path": "meta/harness/fre/evaluation/artifacts-inventory.json",
+      "kind": "inventory",
+      "status": "present"
+    },
+    {
+      "artifact_id": "schema-validation",
+      "path": "meta/harness/fre/evaluation/schema-validation.json",
+      "kind": "validation_output",
+      "status": "present"
+    },
+    {
+      "artifact_id": "example-validation",
+      "path": "meta/harness/fre/evaluation/example-validation.json",
+      "kind": "validation_output",
+      "status": "present"
+    },
+    {
+      "artifact_id": "contract-test-report",
+      "path": "meta/harness/fre/evaluation/contract-tests.txt",
+      "kind": "test_output",
+      "status": "present"
+    },
+    {
+      "artifact_id": "infranodus-goal-vs-implementation-diff",
+      "path": "analysis/infranodus/goal-vs-implementation.diff.json",
+      "kind": "comparison_output",
+      "status": "present"
+    }
+  ]
+}

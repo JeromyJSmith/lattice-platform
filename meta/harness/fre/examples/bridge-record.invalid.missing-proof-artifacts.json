@@ -1,0 +1,17 @@
+{
+  "body_cell_id": "BODY-LATTICE-001",
+  "repo_root": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "gate_id": "verification",
+  "gate_version": "0.1.0",
+  "score": 62,
+  "status": "amber",
+  "goal_path": "meta/harness/fre/GOAL.md",
+  "golden_path": "meta/harness/fre/GOLDENPATH.md",
+  "verifier_paths": [
+    "meta/harness/fre/harness/validate_schema.py"
+  ],
+  "blockers": [
+    "Proof artifacts were omitted."
+  ],
+  "timestamp": "2026-05-18T04:47:41Z"
+}
