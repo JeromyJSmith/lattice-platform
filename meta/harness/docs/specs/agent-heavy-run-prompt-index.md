@@ -100,3 +100,4 @@ The current canonical prompt-contract artifact set is:
 - `agent-heavy-run-prompt-schema.md`
 - `agent-heavy-run-prompt.schema.json`
 - `agent-heavy-run-prompt.template.yaml`
+- `copilot-shell-safe-heavy-run-template.md`
