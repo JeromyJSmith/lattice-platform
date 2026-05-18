@@ -20,7 +20,7 @@ A Cloudflare Worker is an excellent fit for **edge-side** work in this repo. It 
 |-------------------------------------------|----------------------------------------------------------------------------------|
 | Pixeltable writes                         | Pixeltable runs on the local Mac (embedded PG 16 + PostGIS + pgvector). No remote driver exists. |
 | Running `claude -p`                        | The CLI uses local Claude Max auth via keychain — no edge access.                |
-| Running `claude -p` (alternative reading)  | Even with `ANTHROPIC_API_KEY`, the worker.py asyncio subprocess model expects a local process. |
+| Running Claude Code via `.claude/bin/claude-cli` | Even with a paid-API key set, the worker.py asyncio subprocess model expects a local process. |
 | Running IfcOpenShell                       | Native binary + WASM model that depends on a local Python runtime.               |
 | Running the FastAPI sidecar                | Sidecar holds the only open Pixeltable session — single-process invariant.       |
 | Vectorworks bridge (vwx-mcp / C++ plugin)  | VW is a desktop application; no remote API.                                      |

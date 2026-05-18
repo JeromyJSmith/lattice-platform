@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# .claude/bin/env-strip
+#
+# Wrap any command with `env -u` of every paid-API key listed in the policy's
+# denylist. Use this when you need to invoke a third-party tool (graphify,
+# benchy, an SDK script) that internally spawns Claude or another LLM and
+# must not pick up a denylisted env var.
+#
+# Reads .claude/hooks/api-key-policy.json to enumerate which env vars to strip.
+# Zero literal env-var names in this script.
+#
+# Usage:
+#   .claude/bin/env-strip graphify extract ... --backend claude-cli
+#   .claude/bin/env-strip uv run python somescript.py
+#
+# Authority: ~/.claude-code-docs/docs/authentication.md (Authentication
+# precedence — paid-API keys outrank subscription OAuth in -p mode).
+
+set -euo pipefail
+
+POLICY="${POLICY:-.claude/hooks/api-key-policy.json}"
+
+if [ ! -f "$POLICY" ]; then
+  echo "env-strip: policy file not found at $POLICY" >&2
+  exit 2
+fi
+
+# Build a flag array of `-u <id>` for each denylist entry.
+flags=()
+while IFS= read -r id; do
+  [ -z "$id" ] && continue
+  flags+=("-u" "$id")
+done < <(jq -r '.denylist[].id // empty' "$POLICY")
+
+if [ ${#flags[@]} -eq 0 ]; then
+  exec "$@"
+fi
+
+exec env "${flags[@]}" "$@"

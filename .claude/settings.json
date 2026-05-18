@@ -6,7 +6,20 @@
         "hooks": [
           {
             "type": "command",
+            "command": ".claude/hooks/no-paid-api-key.sh"
+          },
+          {
+            "type": "command",
             "command": "node node_modules/.bin/gitnexus detect-changes --scope unstaged -r lattice-platform-scoped 2>/dev/null || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/no-paid-api-key.sh"
           }
         ]
       }

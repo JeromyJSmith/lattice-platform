@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Allow/deny policy for API-key wiring. Consumed by .claude/hooks/no-paid-api-key.sh. Default is DENY for any *_API_KEY pattern not explicitly allowlisted. Edit this file to add new keys; do not silently bypass.",
+  "default": "deny",
+  "denylist": [
+    {
+      "id": "ANTHROPIC_API_KEY",
+      "reason": "Claude Code subscription is the only billing path. Setting or propagating this routes through the metered Anthropic API instead of the subscription. Spec authority: meta/harness/docs/specs/agent-heavy-run-prompt-schema.md (hard_rules.environment), agent-heavy-run-prompt-index.md (Policy Summary).",
+      "enforce_on": ["bash_set", "bash_propagate", "file_persist"],
+      "must_strip_when_invoking": ["claude"]
+    },
+    {
+      "id": "OPENAI_API_KEY",
+      "reason": "Not allowlisted for this repo. CWICR Qdrant cost search and adjacent embedding workflows explicitly disallow OPENAI_API_KEY wiring (see meta/harness/docs/specs/* disallowed_paths).",
+      "enforce_on": ["bash_set", "file_persist"]
+    }
+  ],
+  "allowlist": [
+    {
+      "id": "INFRANODUS_API_KEY",
+      "reason": "InfraNodus is the registered comparison engine for the FRE wrapper. Authority: analysis/capabilities/infranodus-capability-registry.yaml, analysis/infranodus/infranodus-capability-manifest.yaml, .claude/rules/infranodus-corpus.md.",
+      "used_by": ["npx -y infranodus-mcp-server", "analysis/infranodus/* tooling"],
+      "enforce_on": ["bash_set", "bash_propagate"]
+    },
+    {
+      "id": "BROWSER_USE_API_KEY",
+      "reason": "browser-harness uses Browser Use cloud API for remote daemon sessions. Authority: ~/browser-harness/SKILL.md.",
+      "enforce_on": ["bash_set", "bash_propagate"]
+    }
+  ],
+  "file_write_safe_paths": [
+    ".claude/hooks/no-paid-api-key.sh",
+    ".claude/hooks/_test-no-paid-api-key.sh",
+    ".claude/hooks/api-key-policy.json",
+    ".env.example",
+    "**/.env.example",
+    "**/.env.template",
+    "meta/harness/docs/prompts/**",
+    "meta/harness/docs/specs/**",
+    "meta/harness/docs/**",
+    ".claude/rules/**"
+  ],
+  "_notes": [
+    "enforce_on values:",
+    "  bash_set       — block Bash commands that set/export/inline-assign this var",
+    "  bash_propagate — when invoking a tool listed in must_strip_when_invoking, require env -u of this var",
+    "  file_persist   — block Write/Edit/MultiEdit that would persist KEY=<real-value> to a tracked file outside file_write_safe_paths",
+    "",
+    "Adding a new key:",
+    "  1. Decide allow or deny.",
+    "  2. Add an entry with id, reason, enforce_on.",
+    "  3. Run bash .claude/hooks/_test-no-paid-api-key.sh — add at least one positive and one negative fixture for the new key.",
+    "  4. Commit policy + test changes together."
+  ]
+}

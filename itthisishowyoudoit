@@ -49,13 +49,15 @@ graphify update /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge
 
 ## 4) Run full LLM semantic extraction with Claude Code CLI (not API backend)
 
-Important: unset external Anthropic env values for this run so Graphify uses `claude -p` session auth.
+Important: strip the paid-API env vars listed in `.claude/hooks/api-key-policy.json#denylist` so Graphify uses subscription session auth. The `.claude/bin/env-strip` helper reads the policy data and does this automatically.
 
 ```bash
 rm -f /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/graphify-out/manifest.json
-env -u ANTHROPIC_API_KEY -u CLAUDE_CODE_OAUTH_TOKEN \
-  graphify extract /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge --backend claude-cli
+.claude/bin/env-strip graphify extract \
+  /Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge --backend claude-cli
 ```
+
+Authority: `~/.claude-code-docs/docs/authentication.md` (Authentication precedence).
 
 ## 5) Quick verification
 

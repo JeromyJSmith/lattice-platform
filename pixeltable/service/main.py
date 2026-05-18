@@ -60,8 +60,8 @@ def _autoload_dotenv() -> None:
     """Load `.env.local` from the harness root, then `pixeltable/.env`.
 
     Both are best-effort; missing files are not errors. Existing env vars
-    win (so an explicit `ANTHROPIC_API_KEY=...` from the shell isn't
-    overwritten).
+    win (an explicit shell-set value for a paid-API env var is not
+    overwritten by the dotenv load).
     """
     try:
         from dotenv import load_dotenv

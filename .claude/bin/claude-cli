@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# .claude/bin/claude-cli
+#
+# Canonical Claude Code CLI wrapper for this repo. Always uses the Claude Code
+# subscription billing path (never the metered API).
+#
+# Why this wrapper exists:
+#   Claude Code's non-interactive mode (`claude -p`) auth precedence prefers the
+#   ANTHROPIC_API_KEY env var over the Claude.ai subscription OAuth. This wrapper
+#   strips that variable before launching `claude`, so subscription auth is the
+#   only available path.
+#
+#   Authority: ~/.claude-code-docs/docs/authentication.md (Authentication
+#   precedence section).
+#
+# Usage:
+#   .claude/bin/claude-cli -p "prompt text"
+#   cat prompt.md | .claude/bin/claude-cli -p --permission-mode acceptEdits
+#   .claude/bin/claude-cli --version
+#
+# The hook .claude/hooks/no-paid-api-key.sh recognizes this wrapper as the
+# canonical safe invocation. Bare `claude -p` calls are blocked.
+#
+# Add .claude/bin to PATH (optional) so this can be invoked as `claude-cli`:
+#   export PATH="$PWD/.claude/bin:$PATH"
+
+set -euo pipefail
+
+# Resolve the real `claude` binary (avoid PATH self-reference if this script is
+# named `claude` or if someone aliases claude to this wrapper).
+real_claude="$(command -v claude 2>/dev/null || true)"
+if [ -z "$real_claude" ] || [ "$real_claude" = "$(command -v claude-cli 2>/dev/null || true)" ]; then
+  # Try the typical install location for Claude Code.
+  if [ -x "$HOME/.local/bin/claude" ]; then
+    real_claude="$HOME/.local/bin/claude"
+  else
+    echo "claude-cli: cannot locate the real 'claude' binary on PATH" >&2
+    exit 127
+  fi
+fi
+
+# Strip the API-key env var, then exec the real claude with all original args.
+# This is the documented `unset ANTHROPIC_API_KEY` fallback to subscription auth.
+exec env -u ANTHROPIC_API_KEY "$real_claude" "$@"
