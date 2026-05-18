@@ -94,6 +94,57 @@
         "minLength": 1
       }
     },
+    "library_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "substrate_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "substrate_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "table_families",
+        "artifact_namespaces",
+        "udf_refs"
+      ],
+      "properties": {
+        "table_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "artifact_namespaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "udf_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
     "blockers": {
       "type": "array",
       "items": {
@@ -124,6 +175,9 @@
       },
       "then": {
         "required": [
+          "library_refs",
+          "substrate_refs",
+          "substrate_bindings",
           "comparison_engine",
           "comparison_artifacts"
         ]

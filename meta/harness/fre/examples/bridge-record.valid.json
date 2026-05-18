@@ -21,6 +21,28 @@
     "analysis/infranodus/goal-vs-implementation.diff.json",
     "analysis/infranodus/infranodus-schema-map.md"
   ],
+  "library_refs": [
+    "meta/harness/library.yaml",
+    "meta/harness/agentics-library.md"
+  ],
+  "substrate_refs": [
+    "meta/harness/pixeltable-operational-substrate.md",
+    "meta/ARCHITECTURE.md"
+  ],
+  "substrate_bindings": {
+    "table_families": [
+      "lattice/execution/runs",
+      "lattice/execution/evidence"
+    ],
+    "artifact_namespaces": [
+      "meta/harness/fre/evaluation",
+      "meta/harness/fre/promotion"
+    ],
+    "udf_refs": [
+      "@pxt.udf",
+      "computed_columns"
+    ]
+  },
   "blockers": [
     "Broader worktree parity is still pending."
   ],

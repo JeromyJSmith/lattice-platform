@@ -1,0 +1,66 @@
+{
+  "summary_id": "EVAL-COMPARISON-SUMMARY-FRE-20260518",
+  "generated_at": "2026-05-18",
+  "comparison_engine": "infranodus",
+  "fre_lane": "meta/harness/fre",
+  "contracts_computed": {
+    "lifecycle_gates_ref": "meta/harness/fre/source/prompt-contract-trace.json#/lifecycle_phases",
+    "proof_package_ref": "meta/harness/fre/source/prompt-contract-trace.json#/proof_package_phases"
+  },
+  "purpose": "Evaluation-phase InfraNodus-backed comparison summary for the 2026-05-18 seven-phase FRE run. Reflects actual InfraNodus artifact outputs — no invented results.",
+  "infranodus_artifact_refs": {
+    "goal_vs_implementation_diff": {
+      "path": "analysis/infranodus/goal-vs-implementation.diff.json",
+      "generated_at": "2026-05-13T23:12:45.793778Z",
+      "corpus_a": "meta/harness/GOAL.md",
+      "corpus_b": "meta/harness/CURRENT-STATE.md",
+      "content_gaps": [
+        "Gap 1: Proposal Sandbox -> Global Score",
+        "Gap 2: Proposal Sandbox -> Cycle Phase",
+        "Gap 3: Section Drift -> Proposal Sandbox"
+      ],
+      "modularity": 0.5765749007936507,
+      "diversity_score": "diversified",
+      "top_influential_nodes": ["section", "harness", "score"]
+    },
+    "goal_vs_actual_repo_diff": {
+      "path": "analysis/infranodus/goal-vs-actual-repo.diff.json",
+      "generated_at": "2026-05-13",
+      "corpus_a_intended": "GOAL.md + CURRENT-STATE.md",
+      "corpus_b_actual": "git log -50 + active capabilities + SCHEMA.md + API.md",
+      "content_gaps": [
+        "Gap 1: Proposal Cycle -> Capability Registry",
+        "Gap 2: Bridge Integration -> Proposal Cycle",
+        "Gap 3: Script Audit -> Capability Registry"
+      ],
+      "modularity": 0.5111254930966469,
+      "diversity_score": "biased",
+      "top_influential_nodes": ["harness", "meta", "lattice"]
+    }
+  },
+  "fre_evaluation_state": {
+    "schema_validation": "pass",
+    "example_validation": "pass",
+    "contract_tests": "pass",
+    "docs_sync_check": "pass",
+    "git_diff_check": "pass",
+    "test_counts": {
+      "schemas": 8,
+      "valid_examples": 8,
+      "invalid_examples": 11,
+      "tests_passed": 16,
+      "tests_failed": 0
+    }
+  },
+  "comparison_gap_interpretation": {
+    "fre_relevance": "The existing InfraNodus diffs cover the meta-harness autoresearch loop and LATTICE repo state, not the FRE proof package slice specifically. The FRE comparison-bearing artifacts (front-matter, bridge-record, gate-progress schemas) are not yet subjects of a dedicated InfraNodus comparison run.",
+    "gap_state": "honest_absence",
+    "honest_absence_reason": "No live InfraNodus comparison run has been performed against FRE-specific corpora in this session. The existing diff artifacts (goal-vs-implementation.diff.json, goal-vs-actual-repo.diff.json) were generated on 2026-05-13 against the meta-harness section corpora.",
+    "what_infranodus_would_require_for_fre_corpus": [
+      "A corpus of FRE GOAL.md text passed to difference_between_texts or analyze_text",
+      "A corpus of current FRE implementation artifacts (schemas, examples, evaluation outputs)",
+      "The diff result stored back as a new artifact under analysis/infranodus/"
+    ]
+  },
+  "evaluation_conclusion": "PASS — FRE schema, examples, and contract tests are clean. InfraNodus comparison artifacts from 2026-05-13 are referenced as evidence. No FRE-specific InfraNodus run was performed in this session; the comparison gap is documented honestly rather than invented."
+}

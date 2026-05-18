@@ -20,7 +20,46 @@
       "generate_contextual_hint"
     ],
     "required_artifacts": [
-      "analysis/infranodus/goal-vs-implementation.diff.json"
+      "analysis/infranodus/goal-vs-implementation.diff.json",
+      "meta/harness/fre/evaluation/evaluation-comparison-summary.json"
+    ]
+  },
+  "library_dependencies": {
+    "library_surface": "meta/harness/library.yaml",
+    "doctrine_surface": "meta/harness/agentics-library.md",
+    "required_capabilities": [
+      "infranodus",
+      "pixeltable",
+      "the-library"
+    ],
+    "required_jobs": [
+      "lattice-verify",
+      "audit-dead-dna"
+    ]
+  },
+  "substrate_dependencies": {
+    "authority_surfaces": [
+      "meta/harness/pixeltable-operational-substrate.md",
+      "meta/ARCHITECTURE.md",
+      "analysis/capabilities/pixeltable-capability-registry.yaml",
+      "projects/template/library.yaml"
+    ],
+    "table_families": [
+      "lattice/execution/runs",
+      "lattice/execution/evidence"
+    ],
+    "artifact_namespaces": [
+      "meta/harness/fre/evaluation",
+      "lattice/execution/evidence"
+    ],
+    "udf_refs": [
+      "@pxt.udf",
+      "computed_columns"
+    ],
+    "downstream_consumers": [
+      "DuckDB",
+      "Arrow",
+      "Parquet"
     ]
   },
   "artifacts": [
@@ -53,6 +92,19 @@
       "path": "analysis/infranodus/goal-vs-implementation.diff.json",
       "kind": "comparison_output",
       "status": "present"
+    },
+    {
+      "artifact_id": "evaluation-comparison-summary",
+      "path": "meta/harness/fre/evaluation/evaluation-comparison-summary.json",
+      "kind": "infranodus_comparison_summary",
+      "status": "present",
+      "infranodus_backed": true,
+      "infranodus_artifact_refs": [
+        "analysis/infranodus/goal-vs-implementation.diff.json",
+        "analysis/infranodus/goal-vs-actual-repo.diff.json",
+        "analysis/infranodus/infranodus-capability-manifest.yaml",
+        "analysis/infranodus/infranodus-schema-map.md"
+      ]
     }
   ]
 }

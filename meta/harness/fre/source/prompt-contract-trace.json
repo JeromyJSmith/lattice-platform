@@ -1,5 +1,5 @@
 {
-  "trace_id": "PROMPT-TRACE-20260518-INFRANODUS-LIFECYCLE",
+  "trace_id": "PROMPT-TRACE-20260518-INFRANODUS-SEVEN-PHASES",
   "execution_style": "heavy_bounded_run",
   "authoritative_contracts": {
     "lifecycle_gates": "https://www.notion.so/066fdc0d3cd74af18bb0d6d9c662c23a",
@@ -12,6 +12,20 @@
       "meta/harness/docs/copilot-prompting-playbook.md"
     ]
   },
+  "parallel_contracts": {
+    "lifecycle_gates": {
+      "semantics": "governance checkpoints keyed by gate_id",
+      "join_key": "gate_id",
+      "phases_ref": "lifecycle_phases",
+      "authority": "https://www.notion.so/066fdc0d3cd74af18bb0d6d9c662c23a"
+    },
+    "proof_package": {
+      "semantics": "artifact bundle completeness keyed by parts.*",
+      "join_key": "parts.*",
+      "phases_ref": "proof_package_phases",
+      "authority": "https://www.notion.so/c24a9090ffc44ef8bcada415c4542e7d"
+    }
+  },
   "prompt_contract_refs": [
     "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
     "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
@@ -19,23 +33,54 @@
     "meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml",
     "meta/harness/docs/copilot-prompting-playbook.md"
   ],
+  "library_refs": [
+    "meta/harness/library.yaml",
+    "meta/harness/agentics-library.md",
+    "analysis/capabilities/the-library-capability-registry.yaml"
+  ],
+  "substrate_refs": [
+    "meta/harness/pixeltable-operational-substrate.md",
+    "meta/ARCHITECTURE.md",
+    "analysis/capabilities/pixeltable-capability-registry.yaml",
+    "projects/template/library.yaml"
+  ],
   "comparison_hook": {
     "engine": "infranodus",
     "engine_refs": [
       "analysis/infranodus/README.md",
       "analysis/capabilities/infranodus-capability-registry.yaml",
-      ".claude/rules/infranodus-corpus.md"
+    "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "analysis/infranodus/infranodus-schema-map.md",
+    ".claude/rules/infranodus-corpus.md"
+  ],
+  "scoped_rows_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope",
+  "harvested_hook_points_ref": "meta/harness/fre/source/provenance.json#/harvested_hook_points",
+  "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
+  "corpus_scope": [
+    "source, schema, example, expected-failure, test, evaluation, and promotion FRE surfaces",
+    "goal-versus-implementation comparison across the governed proof package",
+    "per-phase comparison evidence challenge for verification, health, and promotion claims"
+  ],
+  "required_artifacts": [
+    "analysis/infranodus/infranodus-capability-harvest.md",
+    "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "analysis/infranodus/infranodus-schema-map.md",
+    "analysis/infranodus/goal-vs-implementation.diff.json"
+  ]
+  },
+  "configuration_spine": {
+    "library_surface": "meta/harness/library.yaml",
+    "library_doctrine": "meta/harness/agentics-library.md",
+    "substrate_surface": "meta/harness/pixeltable-operational-substrate.md",
+    "project_template_surface": "projects/template/library.yaml",
+    "required_capability_bindings": [
+      "capability:infranodus",
+      "capability:pixeltable",
+      "capability:the-library"
     ],
-    "scoped_rows_ref": "meta/harness/fre/source/provenance.json#/infranodus_scope",
-    "manifest_surface": "analysis/infranodus/infranodus-capability-manifest.yaml",
-    "corpus_scope": [
-      "goal-versus-implementation comparison across FRE proof surfaces",
-      "cross-surface drift detection across the seven lifecycle gates",
-      "promotion evidence challenge for comparison-bearing claims"
-    ],
-    "required_artifacts": [
-      "analysis/infranodus/goal-vs-implementation.diff.json",
-      "analysis/infranodus/infranodus-schema-map.md"
+    "required_job_bindings": [
+      "job:lattice-verify",
+      "job:audit-dead-dna"
     ]
   },
   "lifecycle_phases": [
@@ -68,61 +113,92 @@
       "objective": "Keep promotion distinct from evaluation and require comparison mapping plus evidence in the promotion records."
     }
   ],
+  "proof_package_phases": [
+    {
+      "phase": "source",
+      "objective": "Validate and update source surfaces, including provenance, prompt-contract traceability, and InfraNodus scope selection."
+    },
+    {
+      "phase": "schema",
+      "objective": "Validate governed schemas and keep InfraNodus schema hooks current for the comparison-bearing surfaces."
+    },
+    {
+      "phase": "examples",
+      "objective": "Validate fixtures and preserve invalid examples for missing comparison fields."
+    },
+    {
+      "phase": "expected_failures",
+      "objective": "Keep the expected-failures registry aligned to exact missing-comparison-hook reasons."
+    },
+    {
+      "phase": "tests",
+      "objective": "Run contract tests and enforce InfraNodus hook requirements explicitly."
+    },
+    {
+      "phase": "evaluation",
+      "objective": "Refresh evaluation artifacts, checks, and InfraNodus-backed comparison evidence without collapsing promotion into evaluation."
+    },
+    {
+      "phase": "promotion",
+      "objective": "Refresh promotion artifacts from exact evaluation outputs and keep promotion as a distinct evidence layer."
+    }
+  ],
   "mapped_blocks": {
-    "mode": [
-      "Treat this as one continuous autonomous heavy run.",
-      "This is a surgical InfraNodus injection run with minimal rewriting."
+  "mode": [
+    "Treat this as one continuous autonomous run.",
+    "Do not proceed to the next phase until the InfraNodus step for the current phase is complete and its artifacts are written."
+  ],
+  "mission": [
+  "Execute the seven proof-package phases in order while computing lifecycle gate governance in parallel, and make the associated InfraNodus comparison action the last step of each phase."
     ],
-    "mission": [
-      "Add only the smallest required InfraNodus hook points so it is first class across the full seven phase lifecycle."
+  "current_verified_state": [
+    "The governed prompt schema set lives under meta/harness/docs/specs and meta/harness/docs/copilot-prompting-playbook.md.",
+    "The active FRE lane lives under meta/harness/fre on the nested VW_iTwin_Bridge/VW_iTwin_Bridge surface.",
+    "The InfraNodus authority set lives under analysis/infranodus and analysis/capabilities."
+  ],
+  "hard_rules": [
+    "Use uv only.",
+    "No fake green. Fail closed on drift.",
+    "Do not collapse evaluation or promotion into tests.",
+    "Keep evaluation and promotion as explicit artifact layers under meta/harness/fre/evaluation and meta/harness/fre/promotion.",
+    "Treat the lifecycle gates schema and proof package schema as distinct authorities and do not merge them."
     ],
-    "current_verified_state": [
-      "Treat these as three distinct, authoritative contracts.",
-      "Read the FRE lane as the fresh proof surface.",
-      "Use the worktree-to-main consolidation docs as authority."
-    ],
-    "hard_rules": [
-      "Use uv only if Python is needed.",
-      "Keep schemas valid JSON Schema Draft 2020-12.",
-      "No fake green. Fail closed on drift.",
-      "Do not collapse evaluation or promotion into tests.",
-      "Use gate_id only from the lifecycle gates schema for governance joins.",
-      "Use proof package parts inventory only from the proof package schema for evidence completeness.",
-      "Re-read touched surfaces after each patch pass and compare cross-surface truth."
-    ],
-    "allowed_paths": [
-      "Patch only the InfraNodus hook points and required enforcement surfaces inside the FRE lane."
-    ],
-    "disallowed_paths": [
-      "Do not invent.",
-      "Do not switch environment managers.",
-      "Do not merge the three authoritative contracts."
-    ],
-    "tasks": [
-      "Harvest the exact comparison-bearing surfaces and insertion points.",
-      "Record the scoped InfraNodus selection durably under meta/harness/fre.",
-      "Wire manifest placement across the seven proof-package parts.",
-      "Patch schema, tests, and prompt trace enforcement only where required.",
-      "Keep promotion as a distinct artifact layer with comparison mapping and evidence."
-    ],
-    "validation_loop": [
-      "Run schema validation, example validation, pytest, and git diff checks.",
-      "Iterate until the bounded slice is clean or the remaining blocker is proven real."
-    ],
-    "comparison": [
-      "Require InfraNodus comparison artifacts for verification, health, and promotion-bearing claims."
-    ],
-    "success_criteria": [
-      "Comparison-bearing artifacts carry explicit InfraNodus hooks.",
-      "Scoped InfraNodus dependencies are declared across all seven proof-package parts.",
-      "Promotion remains explicit and evidence-backed rather than implied by evaluation."
-    ],
-    "report_contract": [
-      "Files changed.",
-      "Per-phase additions and insertion points.",
-      "Schema validation, example validation, pytest, and git diff results.",
-      "Remaining blockers with exact evidence pointers.",
-      "Commit hash only if the bounded slice validates cleanly."
-    ]
+  "allowed_paths": [
+    "Patch only the required FRE lane and InfraNodus authority artifacts for this seven-phase bounded run."
+  ],
+  "disallowed_paths": [
+    "Do not switch environment managers.",
+    "Do not merge the authoritative contracts.",
+    "Do not make unrelated edits."
+  ],
+  "tasks": [
+    "Verify source surfaces and fix prompt trace alignment first if needed.",
+  "For each proof-package phase, also compute the impacted lifecycle gate progress keyed by gate_id.",
+  "Run schema, example, and contract validations in sequence and stop on the first real failure.",
+  "Refresh expected-failure, evaluation, and promotion artifacts only from exact live outputs.",
+  "Perform the required InfraNodus artifact update as the final step of each phase."
+  ],
+  "validation_loop": [
+    "Run the named validation command for the current phase and capture its output in the governed artifact path.",
+    "Stop immediately on failure and propose the smallest bounded fix."
+  ],
+  "comparison": [
+    "InfraNodus is mandatory and authoritative for the comparison-bearing surfaces in every phase."
+  ],
+  "configuration": [
+    "The library spine is mandatory for capability, prompt, reference, and job bindings.",
+    "Pixeltable substrate refs must be carried wherever a bounded artifact claims durable execution or promotion truth."
+  ],
+  "success_criteria": [
+    "Each phase completes with its own InfraNodus artifact update written last.",
+    "Evaluation and promotion stay explicit, separate, and evidence-backed.",
+    "The final report can cite exact per-phase artifact updates and bounded validation outputs."
+  ],
+  "report_contract": [
+    "Pass or fail per phase.",
+    "InfraNodus artifact updates per phase.",
+    "Written artifacts under meta/harness/fre/evaluation and meta/harness/fre/promotion.",
+    "git status --short for meta/harness/fre and analysis/infranodus and analysis/capabilities."
+  ]
   }
 }

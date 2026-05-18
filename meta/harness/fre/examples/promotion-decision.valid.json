@@ -12,6 +12,14 @@
     "restart_readiness": 1
   },
   "summary": "Second proof-package slice ports the four remaining schema families with honest comparison-engine placement.",
+  "library_refs": [
+    "meta/harness/library.yaml",
+    "meta/harness/agentics-library.md"
+  ],
+  "substrate_refs": [
+    "meta/harness/pixeltable-operational-substrate.md",
+    "meta/ARCHITECTURE.md"
+  ],
   "comparison_engine": "infranodus",
   "comparison_artifacts": [
     "analysis/infranodus/goal-vs-implementation.diff.json",

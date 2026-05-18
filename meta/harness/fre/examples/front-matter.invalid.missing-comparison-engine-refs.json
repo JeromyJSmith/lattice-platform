@@ -8,6 +8,12 @@
   "owner": "meta-wrapper-agent",
   "created_at": "2026-05-18",
   "updated_at": "2026-05-18",
+  "library_refs": [
+    "meta/harness/library.yaml"
+  ],
+  "substrate_refs": [
+    "meta/harness/pixeltable-operational-substrate.md"
+  ],
   "prompt_contract_refs": [
     "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
     "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md"

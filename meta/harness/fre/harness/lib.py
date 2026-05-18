@@ -35,6 +35,17 @@ REQUIRED_MAPPING_ROWS = {
 }
 REQUIRED_COMPARISON_ENGINE = "infranodus"
 REQUIRED_COMPARISON_GATES = {"verification", "health", "promotion"}
+REQUIRED_LIBRARY_REFS = [
+    "meta/harness/library.yaml",
+    "meta/harness/agentics-library.md",
+    "analysis/capabilities/the-library-capability-registry.yaml",
+]
+REQUIRED_SUBSTRATE_REFS = [
+    "meta/harness/pixeltable-operational-substrate.md",
+    "meta/ARCHITECTURE.md",
+    "analysis/capabilities/pixeltable-capability-registry.yaml",
+    "projects/template/library.yaml",
+]
 REQUIRED_PROMPT_CONTRACT_REFS = [
     "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
     "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
@@ -76,6 +87,8 @@ REQUIRED_HOOK_POINT_FILES = {
     "meta/harness/fre/evaluation/artifacts-inventory.json",
     "meta/harness/fre/promotion/artifacts-inventory.json",
 }
+REQUIRED_LIBRARY_CAPABILITIES = {"infranodus", "pixeltable", "the-library"}
+REQUIRED_LIBRARY_JOBS = {"lattice-verify", "audit-dead-dna"}
 REQUIRED_METRICS = {
     "research_grounding",
     "document_contract",
@@ -284,8 +297,16 @@ def comparison_contract_status() -> dict[str, Any]:
 
     if REQUIRED_COMPARISON_ENGINE not in str(provenance.get("authority_contracts", {}).get("comparison_engine", [])):
         errors.append("provenance:missing_infranodus_authority_refs")
+    if provenance.get("authority_contracts", {}).get("library_contract") != REQUIRED_LIBRARY_REFS:
+        errors.append("provenance:wrong_library_contract_refs")
+    if provenance.get("authority_contracts", {}).get("substrate_contract") != REQUIRED_SUBSTRATE_REFS:
+        errors.append("provenance:wrong_substrate_contract_refs")
     if prompt_trace.get("prompt_contract_refs") != REQUIRED_PROMPT_CONTRACT_REFS:
         errors.append("prompt_trace:wrong_prompt_contract_refs")
+    if prompt_trace.get("library_refs") != REQUIRED_LIBRARY_REFS:
+        errors.append("prompt_trace:wrong_library_refs")
+    if prompt_trace.get("substrate_refs") != REQUIRED_SUBSTRATE_REFS:
+        errors.append("prompt_trace:wrong_substrate_refs")
     if prompt_trace.get("comparison_hook", {}).get("engine") != REQUIRED_COMPARISON_ENGINE:
         errors.append("prompt_trace:wrong_comparison_engine")
     phase_names = {item.get("phase") for item in prompt_trace.get("lifecycle_phases", [])}
@@ -295,6 +316,24 @@ def comparison_contract_status() -> dict[str, Any]:
         errors.append("evaluation:wrong_comparison_engine")
     if promotion.get("comparison_engine") != REQUIRED_COMPARISON_ENGINE:
         errors.append("promotion:wrong_comparison_engine")
+    if set(evaluation.get("library_dependencies", {}).get("required_capabilities", [])) != REQUIRED_LIBRARY_CAPABILITIES:
+        errors.append("evaluation:wrong_library_capabilities")
+    if set(promotion.get("library_dependencies", {}).get("required_capabilities", [])) != REQUIRED_LIBRARY_CAPABILITIES:
+        errors.append("promotion:wrong_library_capabilities")
+    if set(evaluation.get("library_dependencies", {}).get("required_jobs", [])) != REQUIRED_LIBRARY_JOBS:
+        errors.append("evaluation:wrong_library_jobs")
+    if set(promotion.get("library_dependencies", {}).get("required_jobs", [])) != REQUIRED_LIBRARY_JOBS:
+        errors.append("promotion:wrong_library_jobs")
+    for label, payload in (("evaluation", evaluation), ("promotion", promotion)):
+        substrate = payload.get("substrate_dependencies", {})
+        if substrate.get("authority_surfaces") != REQUIRED_SUBSTRATE_REFS:
+            errors.append(f"{label}:wrong_substrate_refs")
+        if not substrate.get("table_families"):
+            errors.append(f"{label}:missing_table_families")
+        if not substrate.get("artifact_namespaces"):
+            errors.append(f"{label}:missing_artifact_namespaces")
+        if not substrate.get("udf_refs"):
+            errors.append(f"{label}:missing_udf_refs")
     for label, payload, required_rows in (
         (
             "evaluation",
@@ -320,6 +359,29 @@ def comparison_contract_status() -> dict[str, Any]:
     if not REQUIRED_HOOK_POINT_FILES.issubset(hook_files):
         errors.append("provenance:missing_harvested_hook_points")
 
+    library_scope = provenance.get("library_scope", {})
+    if library_scope.get("authority_surfaces") != REQUIRED_LIBRARY_REFS:
+        errors.append("provenance:wrong_library_scope")
+    required_entries = library_scope.get("required_entries", {})
+    if not REQUIRED_LIBRARY_CAPABILITIES.issubset(set(required_entries.get("capabilities", []))):
+        errors.append("provenance:missing_library_capabilities")
+    if not {"governed-prompt-contract-index", "governed-prompt-contract-spec", "copilot-prompting-playbook"}.issubset(
+        set(required_entries.get("prompts", []))
+    ):
+        errors.append("provenance:missing_library_prompts")
+    if not REQUIRED_LIBRARY_JOBS.issubset(set(required_entries.get("jobs", []))):
+        errors.append("provenance:missing_library_jobs")
+
+    substrate_scope = provenance.get("substrate_scope", {})
+    if substrate_scope.get("authority_surfaces") != REQUIRED_SUBSTRATE_REFS:
+        errors.append("provenance:wrong_substrate_scope")
+    if not substrate_scope.get("table_families"):
+        errors.append("provenance:missing_substrate_table_families")
+    if not substrate_scope.get("artifact_namespaces"):
+        errors.append("provenance:missing_substrate_artifact_namespaces")
+    if not substrate_scope.get("udf_refs"):
+        errors.append("provenance:missing_substrate_udf_refs")
+
     infranodus_scope = provenance.get("infranodus_scope", {})
     for scope_name, required_rows in REQUIRED_SCOPE_ROWS.items():
         if not required_rows.issubset(set(infranodus_scope.get(scope_name, []))):
@@ -332,6 +394,10 @@ def comparison_contract_status() -> dict[str, Any]:
         dependency = part_dependencies.get(part, {})
         if dependency.get("comparison_engine") != REQUIRED_COMPARISON_ENGINE:
             errors.append(f"provenance:{part}:wrong_comparison_engine")
+        if not dependency.get("library_entry_refs"):
+            errors.append(f"provenance:{part}:missing_library_entry_refs")
+        if not dependency.get("substrate_bindings"):
+            errors.append(f"provenance:{part}:missing_substrate_bindings")
         if not dependency.get("required_rows"):
             errors.append(f"provenance:{part}:missing_required_rows")
         if not dependency.get("required_artifacts"):

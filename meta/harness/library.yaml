@@ -92,7 +92,16 @@ library:
     - name: benchmarking
       description: Task-specific model benchmarking and report evidence doctrine.
       source: meta/harness/benchmarking.md
+    - name: fre-main-slice-goal
+      description: Governed FRE lane goal contract for the bounded proof-package slice on main.
+      source: meta/harness/fre/GOAL.md
+    - name: fre-main-slice-golden-path
+      description: Governed FRE lane golden path for the bounded proof-package slice on main.
+      source: meta/harness/fre/GOLDENPATH.md
   capabilities:
+    - name: infranodus
+      description: Graph comparison and gap-analysis engine for bounded wrapper evaluation and promotion challenge.
+      source: analysis/capabilities/infranodus-capability-registry.yaml
     - name: agent-sandbox-skill
       description: E2B sandbox skill workflow for isolated plan-build-host-test agent jobs.
       source: analysis/capabilities/agent-sandbox-skill-capability-registry.yaml
@@ -145,6 +154,9 @@ library:
       description: Private-first agentics catalog incorporated as LATTICE library pattern.
       source: analysis/capabilities/the-library-capability-registry.yaml
       references: ["reference:repo-the-library"]
+    - name: pixeltable
+      description: Foundational multimodal substrate with durable tables, UDFs, computed columns, and evidence surfaces.
+      source: analysis/capabilities/pixeltable-capability-registry.yaml
     - name: the-verifier-agent
       description: Pi top-down observer verifier pattern incorporated as LATTICE verifier surface.
       source: analysis/capabilities/the-verifier-agent-capability-registry.yaml

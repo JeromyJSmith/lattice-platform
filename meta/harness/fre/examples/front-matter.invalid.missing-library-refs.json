@@ -1,4 +1,5 @@
 {
+  "id": "PLAN-FRE-MAIN-SLICE-0001",
   "slug": "fre-main-contract-slice",
   "title": "FRE main contract slice",
   "doctype": "plan",
@@ -9,9 +10,6 @@
   "updated_at": "2026-05-18",
   "comparison_engine_refs": [
     "analysis/infranodus/README.md"
-  ],
-  "library_refs": [
-    "meta/harness/library.yaml"
   ],
   "substrate_refs": [
     "meta/harness/pixeltable-operational-substrate.md"

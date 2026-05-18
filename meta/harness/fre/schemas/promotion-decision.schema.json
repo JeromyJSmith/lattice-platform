@@ -9,6 +9,8 @@
     "total_score",
     "scores",
     "summary",
+    "library_refs",
+    "substrate_refs",
     "comparison_engine",
     "comparison_artifacts"
   ],
@@ -85,6 +87,22 @@
     "summary": {
       "type": "string",
       "minLength": 1
+    },
+    "library_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "substrate_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "comparison_engine": {
       "type": "string",

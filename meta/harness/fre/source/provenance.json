@@ -12,6 +12,17 @@
       "analysis/infranodus/infranodus-capability-manifest.yaml",
       "analysis/infranodus/infranodus-schema-map.md"
     ],
+    "library_contract": [
+      "meta/harness/library.yaml",
+      "meta/harness/agentics-library.md",
+      "analysis/capabilities/the-library-capability-registry.yaml"
+    ],
+    "substrate_contract": [
+      "meta/harness/pixeltable-operational-substrate.md",
+      "meta/ARCHITECTURE.md",
+      "analysis/capabilities/pixeltable-capability-registry.yaml",
+      "projects/template/library.yaml"
+    ],
     "prompt_contract": [
       "meta/harness/docs/specs/agent-heavy-run-prompt-index.md",
       "meta/harness/docs/specs/agent-heavy-run-prompt-schema.md",
@@ -53,8 +64,8 @@
     {
       "phase": "schema",
       "file": "meta/harness/fre/schemas/front-matter.schema.json",
-      "insertion_point": "comparison_engine_refs",
-      "reason": "Front matter must declare comparison engine references."
+      "insertion_point": "comparison_engine_refs, library_refs, substrate_refs",
+      "reason": "Front matter must declare comparison engine, library spine, and substrate references."
     },
     {
       "phase": "schema",
@@ -71,16 +82,67 @@
     {
       "phase": "evaluation",
       "file": "meta/harness/fre/evaluation/artifacts-inventory.json",
-      "insertion_point": "comparison_dependencies",
-      "reason": "Evaluation inventory must declare InfraNodus dependencies explicitly."
+      "insertion_point": "comparison_dependencies, library_dependencies, substrate_dependencies",
+      "reason": "Evaluation inventory must declare comparison, library, and substrate dependencies explicitly."
     },
     {
       "phase": "promotion",
       "file": "meta/harness/fre/promotion/artifacts-inventory.json",
-      "insertion_point": "comparison_dependencies",
-      "reason": "Promotion inventory and decision records must require comparison mapping and evidence."
+      "insertion_point": "comparison_dependencies, library_dependencies, substrate_dependencies",
+      "reason": "Promotion inventory and decision records must require comparison mapping, library spine, and substrate evidence."
     }
   ],
+  "library_scope": {
+    "authority_surfaces": [
+      "meta/harness/library.yaml",
+      "meta/harness/agentics-library.md",
+      "analysis/capabilities/the-library-capability-registry.yaml"
+    ],
+    "required_entries": {
+      "capabilities": [
+        "infranodus",
+        "pixeltable",
+        "the-library"
+      ],
+      "prompts": [
+        "governed-prompt-contract-index",
+        "governed-prompt-contract-spec",
+        "copilot-prompting-playbook"
+      ],
+      "jobs": [
+        "lattice-verify",
+        "audit-dead-dna"
+      ]
+    }
+  },
+  "substrate_scope": {
+    "authority_surfaces": [
+      "meta/harness/pixeltable-operational-substrate.md",
+      "meta/ARCHITECTURE.md",
+      "analysis/capabilities/pixeltable-capability-registry.yaml",
+      "projects/template/library.yaml"
+    ],
+    "table_families": [
+      "lattice/bridge/*",
+      "lattice/execution/*"
+    ],
+    "artifact_namespaces": [
+      "lattice/execution/evidence",
+      "meta/harness/fre/evaluation",
+      "meta/harness/fre/promotion"
+    ],
+    "udf_refs": [
+      "@pxt.udf",
+      "computed_columns"
+    ],
+    "downstream_consumers": [
+      "DuckDB",
+      "Qdrant",
+      "SQLite-derived readers",
+      "Arrow",
+      "Parquet"
+    ]
+  },
   "infranodus_scope": {
     "authority_surfaces": [
       "analysis/capabilities/infranodus-capability-registry.yaml",
@@ -120,6 +182,25 @@
   "part_dependencies": {
     "source": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/bridge/*",
+          "lattice/execution/*"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/source",
+          "lattice/execution/evidence"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "analyze_text",
@@ -133,6 +214,25 @@
     },
     "schema": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/bridge/*",
+          "lattice/execution/*"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/schemas",
+          "meta/harness/fre/evaluation"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "difference_between_texts",
@@ -144,6 +244,23 @@
     },
     "examples": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/execution/*"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/examples"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "analyze_existing_graph_by_name",
@@ -155,6 +272,23 @@
     },
     "expected_failures": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/execution/*"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/examples"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "generate_content_gaps",
@@ -166,6 +300,24 @@
     },
     "tests": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/execution/*"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/tests",
+          "meta/harness/fre/evaluation"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "difference_between_texts",
@@ -177,6 +329,26 @@
     },
     "evaluation": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library",
+        "job:lattice-verify"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/execution/runs",
+          "lattice/execution/evidence"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/evaluation",
+          "lattice/execution/evidence"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "difference_between_texts",
@@ -189,6 +361,26 @@
     },
     "promotion": {
       "comparison_engine": "infranodus",
+      "library_entry_refs": [
+        "capability:infranodus",
+        "capability:pixeltable",
+        "capability:the-library",
+        "job:lattice-verify"
+      ],
+      "substrate_bindings": {
+        "table_families": [
+          "lattice/execution/runs",
+          "lattice/execution/evidence"
+        ],
+        "artifact_namespaces": [
+          "meta/harness/fre/promotion",
+          "lattice/execution/evidence"
+        ],
+        "udf_refs": [
+          "@pxt.udf",
+          "computed_columns"
+        ]
+      },
       "scope_group": "comparison_core",
       "required_rows": [
         "generate_content_gaps",
@@ -260,6 +452,7 @@
       "meta/harness/fre/evaluation/schema-validation.json",
       "meta/harness/fre/evaluation/example-validation.json",
       "meta/harness/fre/evaluation/contract-tests.txt",
+      "meta/harness/fre/evaluation/evaluation-comparison-summary.json",
       "analysis/infranodus/goal-vs-implementation.diff.json"
     ],
     "promotion": [

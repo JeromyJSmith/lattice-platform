@@ -176,27 +176,34 @@ status_summary:
   confidence: high
   doc_state: draft
 gate_progress:
-  harvest:
+  - gate_id: harvest
     status: green
     notes: The existing local InfraNodus surfaces are identified and grounded.
-  registry:
+    comparison_required: false
+  - gate_id: registry
     status: green
     notes: The mandatory hook fields and authoritative local surfaces are explicit.
-  manifest:
+    comparison_required: false
+  - gate_id: manifest
     status: green
     notes: The hook is mapped across lifecycle gates and proof-package parts.
-  verification:
+    comparison_required: false
+  - gate_id: verification
     status: amber
     notes: The wrapper hook is defined, but artifact schemas and tests are not yet ported.
-  state:
+    comparison_required: false
+  - gate_id: state
     status: green
     notes: InfraNodus is now treated as required comparison infrastructure rather than optional tooling.
-  health:
+    comparison_required: false
+  - gate_id: health
     status: green
     notes: The repo-level drift and gap-analysis role is explicitly anchored to existing local surfaces.
-  promotion:
+    comparison_required: false
+  - gate_id: promotion
     status: amber
     notes: The hook is defined, but future prompts and ports still need to enforce it in practice.
+    comparison_required: false
 open_questions:
   - Which InfraNodus artifact outputs should get their own schema family on main first?
 pending_validations:

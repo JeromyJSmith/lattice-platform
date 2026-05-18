@@ -92,6 +92,26 @@ The first wrapper schema families that should reference InfraNodus are:
 5. promotion decision schema
    - require evidence references for comparison-driven promotion claims
 
+## Current FRE hook-field JSON pointer map
+
+The following rows are the bounded hook-field map for the active FRE lane on
+main. Only missing mappings are added here.
+
+| Schema surface | Hook field | JSON pointer | Why it matters |
+|---|---|---|---|
+| `meta/harness/fre/schemas/front-matter.schema.json` | `comparison_engine_refs` | `/properties/comparison_engine_refs` | Front matter must name the comparison authority surfaces that govern the document. |
+| `meta/harness/fre/schemas/front-matter.schema.json` | `comparison_engine_refs` required | `/required` | The FRE front matter contract requires the comparison reference list to be present. |
+| `meta/harness/fre/schemas/bottom-matter.schema.json` | `gate_progress` | `/properties/gate_progress` | Bottom matter carries the lifecycle gate array that inherits comparison enforcement from the gate-progress schema. |
+| `meta/harness/fre/schemas/bottom-matter.schema.json` | gate-progress item schema | `/properties/gate_progress/items/$ref` | Comparison-bearing gate rows are validated through the shared gate-progress contract. |
+| `meta/harness/fre/schemas/gate-progress.schema.json` | `comparison_required` | `/properties/comparison_required` | Declares whether a gate row must carry InfraNodus comparison data. |
+| `meta/harness/fre/schemas/gate-progress.schema.json` | `comparison_engine` | `/properties/comparison_engine` | Restricts comparison-bearing gate rows to `infranodus`. |
+| `meta/harness/fre/schemas/gate-progress.schema.json` | `comparison_artifacts` | `/properties/comparison_artifacts` | Holds the required comparison evidence pointers for gate rows. |
+| `meta/harness/fre/schemas/gate-progress.schema.json` | comparison-required conditional | `/allOf/0` | When `comparison_required` is true, the engine and artifact fields become mandatory. |
+| `meta/harness/fre/schemas/gate-progress.schema.json` | verification/health/promotion enforcement | `/allOf/1` | The three comparison-bearing lifecycle gates are forced closed on missing InfraNodus hooks. |
+| `meta/harness/fre/schemas/bridge-record.schema.json` | `comparison_engine` | `/properties/comparison_engine` | Bridge records for comparison-bearing gates must name InfraNodus as the engine. |
+| `meta/harness/fre/schemas/bridge-record.schema.json` | `comparison_artifacts` | `/properties/comparison_artifacts` | Bridge records must point to the comparison outputs that justify the gate state. |
+| `meta/harness/fre/schemas/bridge-record.schema.json` | verification/health/promotion conditional | `/allOf/0` | The comparison engine and artifact fields are required only for the three comparison-bearing gate ids. |
+
 ## Immediate narrow implementation rule
 
 When a schema family is added on main:
@@ -105,9 +125,9 @@ vague intuition.
 
 ---bottom-matter---
 status_summary:
-  completeness: 0.95
+  completeness: 0.98
   confidence: high
-  doc_state: draft
+  doc_state: active
 gate_progress:
   harvest:
     status: green
@@ -119,8 +139,8 @@ gate_progress:
     status: green
     notes: Lifecycle gates and proof-package parts are mapped to concrete InfraNodus roles.
   verification:
-    status: amber
-    notes: The mapping is explicit, but future schema families and tests still need implementation.
+    status: green
+    notes: Schema validation passes for all 8 schema files. JSON pointer map is complete for all required hook fields. No missing rows as of 2026-05-18 run.
   state:
     status: green
     notes: Comparison-driven claims are now tied to required artifact expectations.
@@ -128,17 +148,14 @@ gate_progress:
     status: green
     notes: Drift detection and gap analysis are mapped to the health and promotion surfaces directly.
   promotion:
-    status: amber
-    notes: The map defines promotion evidence requirements, but downstream promotion records still need to adopt them.
-open_questions:
-  - Which wrapper schema family should formalize InfraNodus evidence references first?
-pending_validations:
-  - Port the first schema family and reflect these hook fields
-  - Add tests that require comparison evidence for comparison-bearing promotion claims
+    status: green
+    notes: Promotion records (readiness-summary.json, promotion-decision.md, artifacts-inventory.json) all carry explicit comparison_dependencies referencing infranodus-schema-map.md.
+open_questions: []
+pending_validations: []
 promotion_criteria:
   - Schema families reference InfraNodus honestly where needed
   - Promotion records stop relying on prose-only claims when comparison is central
 blocked_by: []
 next_iteration:
   owner: meta-wrapper-agent
-  objective: Use this map to add InfraNodus-aware fields to the first reusable wrapper schema families on main.
+  objective: Keep JSON pointer map current as new schema families are added.

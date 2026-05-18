@@ -109,6 +109,27 @@ capabilities:
     description: Goal-vs-implementation diff; backs goal-vs-implementation.diff.json
     wired_at: [analysis/infranodus/goal-vs-implementation.diff.json]
     invoked_by: [autoresearch loop sync step]
+    failure_modes:
+      - id: missing-comparison-engine-refs
+        fixture: meta/harness/fre/examples/front-matter.invalid.missing-comparison-engine-refs.json
+        expected_failure_classes: [REQUIRED_FIELD_MISSING]
+        expected_fields: [comparison_engine_refs]
+      - id: comparison-disabled-on-required-gate
+        fixture: meta/harness/fre/examples/gate-progress.invalid.verification-comparison-disabled.json
+        expected_failure_classes: [CONST, REQUIRED_FIELD_MISSING]
+        expected_fields: [comparison_required, comparison_engine, comparison_artifacts]
+      - id: missing-comparison-artifacts
+        fixture: meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json
+        expected_failure_classes: [REQUIRED_FIELD_MISSING]
+        expected_fields: [comparison_artifacts]
+      - id: missing-comparison-engine-on-promotion-surface
+        fixture: meta/harness/fre/examples/promotion-decision.invalid.missing-comparison-engine.json
+        expected_failure_classes: [REQUIRED_FIELD_MISSING]
+        expected_fields: [comparison_engine, comparison_artifacts]
+      - id: missing-comparison-engine-on-gate-result
+        fixture: meta/harness/fre/examples/gate-result.invalid.missing-comparison-engine.json
+        expected_failure_classes: [REQUIRED_FIELD_MISSING]
+        expected_fields: [comparison_engine, comparison_artifacts]
 
   - id: overlap_between_texts
     surface: mcp_tool

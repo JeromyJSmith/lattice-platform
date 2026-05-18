@@ -12,6 +12,15 @@ comparison_engine_refs:
   - analysis/infranodus/README.md
   - analysis/capabilities/infranodus-capability-registry.yaml
   - .claude/rules/infranodus-corpus.md
+library_refs:
+  - meta/harness/library.yaml
+  - meta/harness/agentics-library.md
+  - analysis/capabilities/the-library-capability-registry.yaml
+substrate_refs:
+  - meta/harness/pixeltable-operational-substrate.md
+  - meta/ARCHITECTURE.md
+  - analysis/capabilities/pixeltable-capability-registry.yaml
+  - projects/template/library.yaml
 prompt_contract_refs:
   - meta/harness/docs/specs/agent-heavy-run-prompt-index.md
   - meta/harness/docs/specs/agent-heavy-run-prompt-schema.md

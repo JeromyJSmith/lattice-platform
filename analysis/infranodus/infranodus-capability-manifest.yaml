@@ -111,6 +111,25 @@ proof_package_hooks:
       - generate_contextual_hint
     artifacts:
       - analysis/infranodus/README.md
+      - meta/harness/fre/examples/front-matter.valid.json
+      - meta/harness/fre/examples/front-matter.invalid.missing-id.json
+      - meta/harness/fre/examples/front-matter.invalid.missing-comparison-engine-refs.json
+      - meta/harness/fre/examples/gate-progress.valid.json
+      - meta/harness/fre/examples/gate-progress.invalid.unknown-gate-id.json
+      - meta/harness/fre/examples/gate-progress.invalid.verification-comparison-disabled.json
+      - meta/harness/fre/examples/bottom-matter.valid.json
+      - meta/harness/fre/examples/bottom-matter.invalid.missing-status-summary.json
+      - meta/harness/fre/examples/bridge-record.valid.json
+      - meta/harness/fre/examples/bridge-record.invalid.missing-proof-artifacts.json
+      - meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json
+      - meta/harness/fre/examples/fre-loop.valid.json
+      - meta/harness/fre/examples/fre-loop.invalid.missing-promotion-in-authority.json
+      - meta/harness/fre/examples/gate-result.valid.json
+      - meta/harness/fre/examples/gate-result.invalid.missing-comparison-engine.json
+      - meta/harness/fre/examples/repair-task.valid.json
+      - meta/harness/fre/examples/repair-task.invalid.bad-blocking-gate-id.json
+      - meta/harness/fre/examples/promotion-decision.valid.json
+      - meta/harness/fre/examples/promotion-decision.invalid.missing-comparison-engine.json
   expected_failures:
     rows:
       - generate_content_gaps
@@ -123,6 +142,20 @@ proof_package_hooks:
       - generate_topical_clusters
     artifacts:
       - analysis/infranodus/infranodus-schema-map.md
+    verifiers:
+      - path: meta/harness/fre/tests/test_document_contract.py
+        description: Contains test_comparison_contract_status_reports_clean_slice — verifies that all comparison-bearing FRE surfaces declare InfraNodus hooks. This is the primary InfraNodus comparison enforcement verifier.
+      - path: meta/harness/fre/tests/test_examples_validate.py
+        description: Verifies that the canonical valid fixtures for comparison-bearing FRE surfaces still satisfy the governed schemas after the InfraNodus hook fields are enforced.
+      - path: meta/harness/fre/tests/test_failure_examples_fail.py
+        description: Verifies that invalid fixtures (including missing comparison_engine_refs, comparison_artifacts, and comparison_engine on gate-result and promotion-decision surfaces) fail schema validation as expected.
+      - path: meta/harness/fre/tests/test_schema_validity.py
+        description: Validates all 8 FRE schemas as valid Draft 2020-12 schemas, including those with InfraNodus hook enforcement via allOf conditionals.
+    proof_surfaces:
+      - path: meta/harness/fre/evaluation/contract-tests.txt
+        description: Captured test output. Pass state is the proof that comparison enforcement is live.
+      - path: meta/harness/fre/evaluation/example-validation.json
+        description: Example validation output proving that comparison-hook invalid fixtures are correctly rejected.
   evaluation:
     rows:
       - difference_between_texts

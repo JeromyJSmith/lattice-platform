@@ -10,5 +10,12 @@
   "comparison_engine": "infranodus",
   "comparison_artifacts": [
     "analysis/infranodus/goal-vs-implementation.diff.json"
+  ],
+  "library_refs": [
+    "meta/harness/library.yaml"
+  ],
+  "substrate_refs": [
+    "meta/harness/pixeltable-operational-substrate.md",
+    "meta/ARCHITECTURE.md"
   ]
 }

@@ -14,7 +14,9 @@
     "owner",
     "created_at",
     "updated_at",
-    "comparison_engine_refs"
+    "comparison_engine_refs",
+    "library_refs",
+    "substrate_refs"
   ],
   "properties": {
     "id": {
@@ -54,6 +56,22 @@
       "format": "date"
     },
     "comparison_engine_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "library_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "substrate_refs": {
       "type": "array",
       "minItems": 1,
       "items": {

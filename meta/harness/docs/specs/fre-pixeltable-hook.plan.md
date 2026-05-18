@@ -143,27 +143,34 @@ status_summary:
   confidence: high
   doc_state: draft
 gate_progress:
-  harvest:
+  - gate_id: harvest
     status: green
     notes: The foundational Pixeltable role is identified explicitly.
-  registry:
+    comparison_required: false
+  - gate_id: registry
     status: green
     notes: The required hook fields are explicit for future durable capability rows.
-  manifest:
+    comparison_required: false
+  - gate_id: manifest
     status: green
     notes: Pixeltable is mapped across lifecycle and proof-package surfaces.
-  verification:
+    comparison_required: false
+  - gate_id: verification
     status: amber
     notes: Existing schema families still need explicit substrate fields where applicable.
-  state:
+    comparison_required: false
+  - gate_id: state
     status: green
     notes: The hierarchy between Pixeltable and Notion is now explicit.
-  health:
+    comparison_required: false
+  - gate_id: health
     status: green
     notes: Substrate coherence and comparison coherence are separated clearly.
-  promotion:
+    comparison_required: false
+  - gate_id: promotion
     status: amber
     notes: Future promotion records still need to adopt substrate pointers in practice.
+    comparison_required: false
 open_questions:
   - Which first FRE schema family should carry explicit Pixeltable substrate fields beyond inventories?
 pending_validations:

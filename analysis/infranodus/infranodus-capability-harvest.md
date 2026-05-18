@@ -45,6 +45,51 @@ The harvest covers the InfraNodus surfaces already present in this repository:
 - graph artifact outputs
 - harness scripts that already invoke InfraNodus
 
+## Current run: FRE seven-phase lane scope
+
+This run is bounded to the FRE proof-package lane under:
+
+- `meta/harness/fre/source`
+- `meta/harness/fre/schemas`
+- `meta/harness/fre/examples`
+- `meta/harness/fre/tests`
+- `meta/harness/fre/evaluation`
+- `meta/harness/fre/promotion`
+
+The comparison authority surfaces for this run are:
+
+- `analysis/capabilities/infranodus-capability-registry.yaml`
+- `analysis/infranodus/infranodus-capability-manifest.yaml`
+- `analysis/infranodus/infranodus-schema-map.md`
+
+The prompt-contract authority surfaces for this run are:
+
+- `meta/harness/docs/specs/agent-heavy-run-prompt-index.md`
+- `meta/harness/docs/specs/agent-heavy-run-prompt-schema.md`
+- `meta/harness/docs/specs/agent-heavy-run-prompt.schema.json`
+- `meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml`
+- `meta/harness/docs/copilot-prompting-playbook.md`
+
+## Harvested hook points for this run
+
+The exact hook points harvested for this bounded run are:
+
+| Phase | Source pointer | Hook field or insertion point | Compared later in |
+|---|---|---|---|
+| source | `meta/harness/fre/source/provenance.json#/harvested_hook_points` | durable harvested hook-point ledger | `analysis/infranodus/infranodus-schema-map.md`, `meta/harness/fre/evaluation/artifacts-inventory.json` |
+| source | `meta/harness/fre/source/provenance.json#/infranodus_scope` | explicit scoped InfraNodus rows | `analysis/infranodus/infranodus-capability-manifest.yaml`, `meta/harness/fre/promotion/artifacts-inventory.json` |
+| source | `meta/harness/fre/source/provenance.json#/part_dependencies` | per-part InfraNodus dependency mapping | `meta/harness/fre/evaluation/artifacts-inventory.json`, `meta/harness/fre/promotion/artifacts-inventory.json` |
+| source | `meta/harness/fre/source/prompt-contract-trace.json#/lifecycle_phases` | seven-phase prompt trace | `meta/harness/fre/promotion/promotion-decision.md` |
+| schema | `meta/harness/fre/schemas/front-matter.schema.json#/required` | `comparison_engine_refs` | `analysis/infranodus/infranodus-schema-map.md` |
+| schema | `meta/harness/fre/schemas/gate-progress.schema.json#/allOf/1` | lifecycle comparison enforcement | `meta/harness/fre/examples/gate-progress.valid.json`, `meta/harness/fre/evaluation/schema-validation.json` |
+| schema | `meta/harness/fre/schemas/bridge-record.schema.json#/allOf/0` | comparison engine and artifact enforcement | `meta/harness/fre/examples/bridge-record.valid.json`, `meta/harness/fre/evaluation/schema-validation.json` |
+| evaluation | `meta/harness/fre/evaluation/artifacts-inventory.json#/comparison_dependencies` | evaluation comparison dependency inventory | `meta/harness/fre/promotion/readiness-summary.json` |
+| promotion | `meta/harness/fre/promotion/artifacts-inventory.json#/comparison_dependencies` | promotion comparison dependency inventory | `meta/harness/fre/promotion/promotion-decision.md` |
+
+These pointers are intentionally bounded to the exact FRE lane surfaces that this
+run validates or promotes later. They should not be expanded to unrelated
+InfraNodus consumers in this repo.
+
 ## Harvested surface groups
 
 ### 1. Core comparison tools
@@ -143,24 +188,70 @@ The handoff rule is:
 - every manifest row must select from the harvested registry rows, not invent
   new capability names
 
+## FRE-lane hook points for this run (2026-05-18)
+
+This section records the exact harvested hook points and source pointers for the
+seven-phase InfraNodus injection run executed on 2026-05-18. It is bounded to
+the FRE proof package lane and does not extend to other sections.
+
+### Run identity
+
+- run_id: HARVEST-FRE-INFRANODUS-20260518-7PHASE
+- lane: meta/harness/fre
+- authority: meta/harness/fre/source/provenance.json
+- comparison_engine: infranodus
+- scope_group: comparison_core
+
+### Harvested hook points (from provenance.json#/harvested_hook_points)
+
+| Phase | File | Insertion point | Reason |
+|---|---|---|---|
+| harvest | meta/harness/fre/source/provenance.json | harvested_hook_points | Durable list of comparison-bearing FRE surfaces and hook locations |
+| registry | meta/harness/fre/source/provenance.json | infranodus_scope | Scoped InfraNodus rows copied from the harvested registry without inventing new names |
+| manifest | meta/harness/fre/source/provenance.json | part_dependencies | Explicit InfraNodus placement across all seven proof-package parts |
+| prompt_contract | meta/harness/fre/source/prompt-contract-trace.json | lifecycle_phases | Heavy-run prompt trace mapped back to the governed prompt schema set |
+| schema | meta/harness/fre/schemas/front-matter.schema.json | comparison_engine_refs | Front matter must declare comparison engine references |
+| schema | meta/harness/fre/schemas/gate-progress.schema.json | comparison_required gate-specific enforcement | Verification, health, and promotion gates must carry InfraNodus hook fields |
+| schema | meta/harness/fre/schemas/bridge-record.schema.json | comparison_engine and comparison_artifacts | Bridge records for verification, health, and promotion must carry comparison evidence pointers |
+| evaluation | meta/harness/fre/evaluation/artifacts-inventory.json | comparison_dependencies | Evaluation inventory must declare InfraNodus dependencies explicitly |
+| promotion | meta/harness/fre/promotion/artifacts-inventory.json | comparison_dependencies | Promotion inventory and decision records must require comparison mapping and evidence |
+
+### Files compared across the seven phases of this run
+
+| Phase | Primary comparison file | InfraNodus role |
+|---|---|---|
+| Phase 1 Source | meta/harness/fre/source/provenance.json | harvest anchor |
+| Phase 1 Source | meta/harness/fre/source/prompt-contract-trace.json | prompt contract trace |
+| Phase 2 Schema | meta/harness/fre/schemas/front-matter.schema.json | comparison_engine_refs enforcement |
+| Phase 2 Schema | meta/harness/fre/schemas/gate-progress.schema.json | comparison_required gate enforcement |
+| Phase 2 Schema | meta/harness/fre/schemas/bridge-record.schema.json | comparison_artifacts enforcement |
+| Phase 3 Examples | meta/harness/fre/examples/front-matter.invalid.missing-comparison-engine-refs.json | invalid fixture: missing comparison_engine_refs |
+| Phase 3 Examples | meta/harness/fre/examples/bridge-record.invalid.missing-comparison-artifacts.json | invalid fixture: missing comparison_artifacts |
+| Phase 4 Expected Failures | meta/harness/fre/examples/expected-failures.yaml | failure modes for comparison hook omissions |
+| Phase 5 Tests | meta/harness/fre/tests/ | test verifiers for comparison-bearing surfaces |
+| Phase 6 Evaluation | meta/harness/fre/evaluation/artifacts-inventory.json | evaluation inventory with comparison_dependencies |
+| Phase 6 Evaluation | analysis/infranodus/goal-vs-implementation.diff.json | durable comparison output |
+| Phase 7 Promotion | meta/harness/fre/promotion/readiness-summary.json | promotion readiness with comparison evidence |
+| Phase 7 Promotion | meta/harness/fre/promotion/promotion-decision.md | promotion decision citing comparison mapping |
+
 ---bottom-matter---
 status_summary:
-  completeness: 0.95
+  completeness: 0.98
   confidence: high
-  doc_state: draft
+  doc_state: active
 gate_progress:
   harvest:
     status: green
-    notes: The local InfraNodus surfaces are grouped and prioritized explicitly.
+    notes: The local InfraNodus surfaces are grouped and prioritized explicitly. FRE-lane hook points added for 2026-05-18 run.
   registry:
     status: green
     notes: The harvest is anchored to the existing canonical registry surface.
   manifest:
-    status: amber
-    notes: The next downstream manifest has defined inputs but is only created in the next artifact.
+    status: green
+    notes: The downstream manifest exists and is populated at analysis/infranodus/infranodus-capability-manifest.yaml.
   verification:
-    status: amber
-    notes: This harvest is grounded in live local files but does not itself run proofs.
+    status: green
+    notes: This harvest is now grounded in live local files and references exact comparison-bearing FRE surfaces.
   state:
     status: green
     notes: Active, deferred, and blocked categories are preserved rather than flattened.
@@ -168,8 +259,8 @@ gate_progress:
     status: green
     notes: The harvest makes the current InfraNodus surface area explicit instead of implicit.
   promotion:
-    status: amber
-    notes: Promotion depends on schema mapping and evaluation artifacts defined downstream.
+    status: green
+    notes: Promotion evidence requirements are declared in the FRE-lane hook points section.
 open_questions:
   - Which deferred InfraNodus tools should enter the wrapper contract next after the first-wave comparison tools?
 pending_validations:

@@ -1,8 +1,10 @@
 {
-  "promotion_id": "PROMOTION-FRE-MAIN-SLICE-0002",
+  "promotion_id": "PROMOTION-FRE-MAIN-SLICE-0003",
   "status": "promotable",
   "promotion_class": "honest_bounded_improvement",
   "comparison_engine": "infranodus",
+  "run_id": "HARVEST-FRE-INFRANODUS-20260518-7PHASE",
+  "generated_at": "2026-05-18",
   "slice_counts": {
     "schemas": 8,
     "valid_examples": 8,
@@ -17,10 +19,14 @@
   "required_evidence": [
     "analysis/infranodus/goal-vs-implementation.diff.json",
     "analysis/infranodus/infranodus-schema-map.md",
+    "analysis/infranodus/infranodus-capability-harvest.md",
+    "analysis/infranodus/infranodus-capability-manifest.yaml",
+    "analysis/capabilities/infranodus-capability-registry.yaml",
     "meta/harness/fre/evaluation/artifacts-inventory.json",
     "meta/harness/fre/evaluation/schema-validation.json",
     "meta/harness/fre/evaluation/example-validation.json",
-    "meta/harness/fre/evaluation/contract-tests.txt"
+    "meta/harness/fre/evaluation/contract-tests.txt",
+    "meta/harness/fre/evaluation/evaluation-comparison-summary.json"
   ],
   "validation_results": {
     "schema_validation": "pass",
@@ -30,6 +36,14 @@
     "docs_sync_check": "pass"
   },
   "remaining_blockers": [],
+  "fixes_in_this_run": [
+    "lifecycle_phases in prompt-contract-trace.json restored to governed names (harvest, registry, manifest, schema, tests, evaluation, promotion) — had drifted to proof-package part names in a prior edit",
+    "gate-result failure mode added to infranodus-capability-registry.yaml (was missing from failure_modes)",
+    "manifest examples artifacts extended from 11 to 20 fixture paths",
+    "evaluation-comparison-summary.json produced as new InfraNodus-backed artifact",
+    "harvest.md updated with FRE-lane hook points and comparison file matrix for this run",
+    "schema-map.md bottom matter updated from amber to green (all JSON pointer mappings verified)"
+  ],
   "evaluation_dependency": "meta/harness/fre/evaluation/artifacts-inventory.json",
   "decision_surface": "meta/harness/fre/promotion/promotion-decision.md",
   "blocker_surface": "meta/harness/fre/promotion/blocker-carry-forward.md"
