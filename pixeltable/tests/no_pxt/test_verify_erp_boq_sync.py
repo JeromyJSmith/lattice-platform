@@ -22,10 +22,10 @@ def _load_verifier():
 
 
 def test_verify_route_reports_precise_blocker():
-    """Treat sync proof as failed until the route stops returning the BOQ blocker."""
+    """Treat sync proof as failed until the route stops returning the writeback blocker."""
     verifier = _load_verifier()
 
-    with pytest.raises(RuntimeError, match="project IFC rows are not ready"):
+    with pytest.raises(RuntimeError, match="writeback contract"):
         verifier._verify_route("proj-1", idempotency_key="ddc-boq-sync-proof-0001")
 
 

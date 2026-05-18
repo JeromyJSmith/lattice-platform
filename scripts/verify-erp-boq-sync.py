@@ -42,7 +42,9 @@ REQUEST_TIMEOUT_SECONDS = 10.0
 
 class _MissingProjectIfcPxt:
     def get_table(self, path: str):
-        """Mirror the current missing project-table blocker seen by BOQ sync."""
+        """Provide the minimum bridge surface needed to reach the writeback blocker."""
+        if path == "lattice/bridge/ifc/ifc_elements":
+            return {"path": path}
         raise RuntimeError(f"table not found: {path}")
 
 

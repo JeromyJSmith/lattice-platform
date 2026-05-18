@@ -176,6 +176,31 @@ def test_boq_sync_surfaces_precise_pixeltable_blocker(tmp_path: Path):
     )
 
 
+def test_boq_sync_advances_to_writeback_blocker_via_bridge_source_of_truth(tmp_path: Path):
+    """Prefer the bridge IFC catalog over the per-project shadow before failing on writeback."""
+
+    class _BoqSyncPxt:
+        def get_table(self, path: str):
+            """Provide the bridge IFC catalog and nothing else."""
+            if path == "lattice/bridge/ifc/ifc_elements":
+                return {"path": path}
+            raise RuntimeError(f"table not found: {path}")
+
+    client = TestClient(_app(tmp_path, pxt=_BoqSyncPxt()))
+    response = client.post(
+        "/v1/erp/boq",
+        json={"project_id": "proj-1"},
+        headers={"Idempotency-Key": "ddc-boq-sync-0002"},
+    )
+    assert response.status_code == 501
+    assert (
+        response.json()["detail"]
+        == "boq sync blocked: project IFC access resolves via lattice/bridge/ifc/ifc_elements "
+        "(bridge source-of-truth) for project_id=proj-1, but the project-to-bridge writeback "
+        "contract for erp_item_id/unit_cost persistence is not implemented yet."
+    )
+
+
 def test_boq_read_strips_project_id_before_adapter_call(tmp_path: Path, monkeypatch):
     """Normalize the project id before calling the BOQ read adapter."""
     seen: list[str] = []
@@ -314,7 +339,7 @@ def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
     class _PhaseSyncPxt:
         def get_table(self, path: str):
             """Return the minimum table set needed to reach the schedule blocker."""
-            if path in {"lattice/projects/proj-1/ifc_elements", "lattice/bridge/marpa_projects"}:
+            if path in {"lattice/bridge/ifc/ifc_elements", "lattice/bridge/marpa_projects"}:
                 return {"path": path}
             raise RuntimeError(f"table not found: {path}")
 
@@ -327,7 +352,8 @@ def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
     assert response.status_code == 501
     assert (
         response.json()["detail"]
-        == "phase sync blocked: local schedule metadata is only project-level in "
+        == "phase sync blocked: project IFC access resolves via lattice/bridge/ifc/ifc_elements "
+        "(bridge source-of-truth), but local schedule metadata is only project-level in "
         "lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express "
         "per-phase assignments for proj-1. The bounded live OpenConstructionERP schedule "
         "surface is /api/v2/schedules/{schedule_id}/import (CSV upload) plus "

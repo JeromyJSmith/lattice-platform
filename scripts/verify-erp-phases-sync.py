@@ -49,7 +49,7 @@ class _PhaseSyncPrereqPxt:
     def get_table(self, path: str):
         """Return the minimum table set needed to reach the current blocker path."""
         if path in {
-            "lattice/projects/ddc-phases-proof-project/ifc_elements",
+            "lattice/bridge/ifc/ifc_elements",
             "lattice/bridge/marpa_projects",
         }:
             return {"path": path}

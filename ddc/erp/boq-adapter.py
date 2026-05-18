@@ -21,12 +21,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if REPO_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, REPO_ROOT.as_posix())
 
+from ddc.erp.project_seams import BRIDGE_IFC_TABLE, require_pxt_handle, require_table, resolve_project_ifc_surface
 from ddc.erp.runtime import erp_client, require_erp_runtime, resolve_erp_runtime
 
 
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
-PROJECT_IFC_TABLE_TEMPLATE = "lattice/projects/{project_id}/ifc_elements"
-BRIDGE_IFC_TABLE = "lattice/bridge/ifc/ifc_elements"
 ERP_RUNTIME = resolve_erp_runtime()
 ERP_BASE = ERP_RUNTIME.base_url
 
@@ -38,46 +37,35 @@ def _normalize_project_id(project_id: str) -> str:
     return normalized_project_id
 
 
-def _require_pxt_handle(pxt: Any) -> Any:
-    if pxt is None or not callable(getattr(pxt, "get_table", None)):
-        raise NotImplementedError(
-            "boq sync blocked: Pixeltable handle is not ready; expected get_table() for "
-            "project IFC row access and BOQ writeback."
-        )
-    return pxt
-
-
-def _require_table(pxt: Any, path: str, *, blocker: str) -> Any:
-    try:
-        return pxt.get_table(path)
-    except Exception as exc:
-        raise NotImplementedError(blocker) from exc
-
-
 def sync_boq(project_id: str, pxt: Any | None = None) -> dict:
     """Validate the current BOQ sync prerequisites and fail closed with a concrete blocker."""
     normalized_project_id = _normalize_project_id(project_id)
-    pxt_handle = _require_pxt_handle(pxt)
-    project_ifc_table = PROJECT_IFC_TABLE_TEMPLATE.format(project_id=normalized_project_id)
-    _require_table(
-        pxt_handle,
-        project_ifc_table,
+    pxt_handle = require_pxt_handle(
+        pxt,
         blocker=(
-            "boq sync blocked: project IFC rows are not ready at "
-            f"{project_ifc_table}; the route cannot map project_id to a local BOQ input set yet."
+            "boq sync blocked: Pixeltable handle is not ready; expected get_table() for "
+            "project IFC row access and BOQ writeback."
         ),
     )
-    _require_table(
+    ifc_surface = resolve_project_ifc_surface(normalized_project_id, pxt_handle, capability="boq sync")
+    require_table(
         pxt_handle,
         BRIDGE_IFC_TABLE,
         blocker=(
-            "boq sync blocked: BOQ writeback target "
-            f"{BRIDGE_IFC_TABLE} is not available."
+            "boq sync blocked: project IFC rows are not ready at "
+            f"{BRIDGE_IFC_TABLE}; the route cannot persist BOQ writeback fields yet."
         ),
     )
     raise NotImplementedError(
-        "boq sync blocked: the project-to-bridge writeback contract for "
-        "erp_item_id/unit_cost persistence is not implemented yet."
+        "boq sync blocked: project IFC access resolves via "
+        f"{ifc_surface['path']}"
+        + (
+            " (bridge source-of-truth)"
+            if ifc_surface["documented_source_of_truth"]
+            else " (project-scoped shadow)"
+        )
+        + f" for project_id={normalized_project_id}, but the project-to-bridge writeback "
+        "contract for erp_item_id/unit_cost persistence is not implemented yet."
     )
 
     # Sketch (uncomment when implementing):

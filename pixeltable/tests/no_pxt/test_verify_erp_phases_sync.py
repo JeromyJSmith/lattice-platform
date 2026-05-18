@@ -25,7 +25,7 @@ def test_verify_route_reports_precise_schedule_blocker():
     """Treat phase sync proof as failed until the route stops returning the schedule blocker."""
     verifier = _load_verifier()
 
-    with pytest.raises(RuntimeError, match="local schedule metadata is only project-level"):
+    with pytest.raises(RuntimeError, match="project IFC access resolves via lattice/bridge/ifc/ifc_elements"):
         verifier._verify_route("ddc-phases-proof-project", idempotency_key="ddc-phases-sync-proof-0001")
 
 
