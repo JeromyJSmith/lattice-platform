@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Deterministic CWICR seed preflight.
+# Deterministic CWICR seed restore + verification.
 #
-# The upstream release currently ships large per-locale Qdrant snapshots rather than a
-# single repo-managed tarball or a validated repo-local import workflow. Until a
-# restore path is proven here, this helper stays honest: it verifies whether the target
-# collection already satisfies the expected CWICR contract and exits non-zero with
-# machine-readable blocker details when it does not.
+# The bounded default path restores the published HI_MUMBAI 3072-d snapshot into the
+# local `cwicr` collection when needed, then verifies the resulting collection contract.
+# Full multi-locale CWICR seeding remains a larger follow-on task.
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-exec uv run python "$REPO_ROOT/scripts/verify-cwicr-seed.py" "$@"
+exec uv run python "$REPO_ROOT/scripts/verify-cwicr-seed.py" --restore-if-needed "$@"

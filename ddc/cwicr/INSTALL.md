@@ -1,6 +1,6 @@
 # CWICR Install — OrbStack Ubuntu VM + Qdrant
 
-Goal: have Qdrant running locally at `localhost:6333` with 55,719 CWICR cost items loaded into `cwicr` as 3072-dimensional snapshot vectors.
+Goal: have Qdrant running locally at `localhost:6333` with the smallest published CWICR snapshot loaded into `cwicr` as 3072-dimensional vectors. The bounded default is `HI_MUMBAI_workitems_costs_resources_EMBEDDINGS_3072_DDC_CWICR.snapshot` at 49,600 points; the broader 55,719-point corpus target remains a follow-on restore.
 
 Time budget: ~15 min on Apple Silicon.
 
@@ -28,19 +28,20 @@ curl -s http://localhost:6333/collections
 
 OrbStack proxies Docker port 6333 to the Mac host with zero config.
 
-## 3. Seed the 55,719 items
+## 3. Seed the bounded local snapshot
 
 ```bash
 ./seed-qdrant.sh
 ```
 
-The seed contract:
+The bounded seed contract:
 
 1. Verifies the latest CWICR GitHub release exposes snapshot assets for the live corpus.
 2. Verifies the target Qdrant collection `cwicr` is reachable on `localhost:6333`.
-3. Fails closed unless the local collection reports 55,719 points at vector size 3072.
+3. Restores the published `HI_MUMBAI_workitems_costs_resources_EMBEDDINGS_3072_DDC_CWICR.snapshot` asset when needed.
+4. Fails closed unless the local collection reports 49,600 points at vector size 3072.
 
-This repository does **not** yet prove an automated snapshot restore path. The upstream release currently ships large per-locale `.snapshot` assets built with `text-embedding-3-large` (3072-d). Until a restore/import path is validated here, `seed-qdrant.sh` remains an honest verifier-backed preflight instead of pretending it can reseed the corpus end-to-end.
+This repository now proves the smallest real restore path against the published release by recovering the bounded HI_MUMBAI snapshot into `cwicr`. It does **not** yet prove a full 55,719-point / multi-locale reseed in-session.
 
 ## 4. Verify
 
@@ -48,7 +49,7 @@ This repository does **not** yet prove an automated snapshot restore path. The u
 ./seed-qdrant.sh
 ```
 
-The command exits `0` only when `cwicr` already matches the live release contract. Otherwise it exits non-zero and prints machine-readable blockers describing the observed point-count/vector-size mismatch.
+The command exits `0` only when `cwicr` matches the bounded local release contract (`49,600 x 3072`). Otherwise it exits non-zero and prints machine-readable blockers describing the observed point-count/vector-size mismatch.
 
 ## 5. Wire into the LATTICE sidecar
 
