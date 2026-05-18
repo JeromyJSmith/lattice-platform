@@ -9,7 +9,6 @@ Tracked in meta/FEATURE_BACKLOG.md § DDC INTEGRATION → "BOQ export".
 
 from __future__ import annotations
 
-import os
 import re
 import sys
 from pathlib import Path
@@ -17,15 +16,21 @@ from typing import Any
 
 import httpx
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime
+
+
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 ERP_BOQ_EXPORT_PATHS = {
     "xlsx": "/api/v1/boq/boqs/{boq_id}/export/excel",
     "csv": "/api/v1/boq/boqs/{boq_id}/export/csv",
 }
-REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPORT_DIR = REPO_ROOT / "public" / "exports"
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 
 
 def _normalize_project_id(project_id: str) -> str:
@@ -73,7 +78,8 @@ def export_boq(project_id: str, fmt: str = "xlsx") -> str:
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     output_path = EXPORT_DIR / f"boq-{_filename_project_id_fragment(normalized_project_id)}.{normalized_fmt}"
-    with httpx.Client(base_url=ERP_BASE, timeout=60.0) as client:
+    erp_runtime = require_erp_runtime()
+    with httpx.Client(base_url=erp_runtime.base_url, timeout=60.0) as client:
         boq_id = _resolve_boq_id(client, normalized_project_id)
         response = client.get(
             ERP_BOQ_EXPORT_PATHS[normalized_fmt].format(boq_id=boq_id),

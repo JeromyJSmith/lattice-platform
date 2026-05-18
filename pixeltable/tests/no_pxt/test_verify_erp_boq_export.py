@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -31,9 +32,12 @@ def test_verify_route_accepts_csv_export(tmp_path: Path, monkeypatch):
         content = upstream_bytes
 
         def raise_for_status(self):
+            """Mirror a successful upstream export response."""
+
             return None
 
     monkeypatch.setattr(verifier.httpx, "get", lambda *args, **kwargs: _Response())
+    monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     def _export(project_id: str, fmt: str = "xlsx") -> str:
         export_path = tmp_path / "boq-proj-1.csv"
@@ -51,12 +55,15 @@ def test_verify_route_accepts_csv_export(tmp_path: Path, monkeypatch):
 def test_fetch_upstream_export_reports_404_blocker(monkeypatch):
     """Fail live proof honestly when the ERP export contract or verifier data is missing."""
     verifier = _load_verifier()
+    monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     class _Response:
         status_code = 404
         content = b"Not Found"
 
         def raise_for_status(self):
+            """This branch should stay on the explicit 404 blocker path."""
+
             raise AssertionError("raise_for_status should not be called for 404 blocker path")
 
     monkeypatch.setattr(verifier.httpx, "get", lambda *args, **kwargs: _Response())

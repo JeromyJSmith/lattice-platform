@@ -16,13 +16,17 @@ from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PIXELTABLE_ROOT = REPO_ROOT / "pixeltable"
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 ERP_BOQ_CREATE_PATH = "/api/v1/boq/boqs/"
 DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_SYNC_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
 DEFAULT_IDEMPOTENCY_KEY = os.environ.get("ERP_BOQ_SYNC_VERIFY_IDEMPOTENCY_KEY", "ddc-boq-sync-proof-0001")
@@ -44,7 +48,8 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _probe_upstream_create(project_id: str) -> dict[str, Any]:
-    url = f"{ERP_BASE}{ERP_BOQ_CREATE_PATH}"
+    erp_runtime = require_erp_runtime()
+    url = f"{erp_runtime.base_url}{ERP_BOQ_CREATE_PATH}"
     payload = {
         "project_id": project_id,
         "name": DEFAULT_BOQ_NAME,
@@ -130,6 +135,7 @@ def main() -> int:
     report: dict[str, Any] = {
         "project_id": args.project_id,
         "erp_base": ERP_BASE,
+        "erp_runtime_source": ERP_RUNTIME.source,
         "route": "POST /v1/erp/boq",
     }
     blockers: list[str] = []

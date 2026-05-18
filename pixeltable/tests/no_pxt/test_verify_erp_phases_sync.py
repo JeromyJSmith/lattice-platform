@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -31,12 +32,13 @@ def test_verify_route_reports_precise_schedule_blocker():
 def test_probe_upstream_phase_endpoint_reports_404_blocker(monkeypatch):
     """Fail live proof honestly when the upstream phase endpoint is missing."""
     verifier = _load_verifier()
+    monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     class _Response:
         status_code = 404
         headers = {"content-type": "application/json"}
 
-    monkeypatch.setattr(verifier.httpx, "post", lambda *args, **kwargs: _Response())
+    monkeypatch.setattr(verifier.httpx, "get", lambda *args, **kwargs: _Response())
 
     with pytest.raises(RuntimeError, match="live ERP phase endpoint contract is not ready"):
         verifier._probe_upstream_phase_endpoint("proj-404")

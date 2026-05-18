@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -44,6 +45,7 @@ def test_verify_route_accepts_boq_document(monkeypatch):
 def test_fetch_upstream_json_reports_404_blocker(monkeypatch):
     """Fail live proof honestly when the ERP BOQ contract or verifier data is missing."""
     verifier = _load_verifier()
+    monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     class _Response:
         status_code = 404

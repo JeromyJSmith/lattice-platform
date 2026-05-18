@@ -2,6 +2,15 @@
 
 LATTICE talks to OpenConstructionERP (https://github.com/datadrivenconstruction/OpenConstructionERP, v2.7.0) over its REST API. We never run a fork — we install the upstream package and point our adapter at it.
 
+## Runtime base URL resolution
+
+The ERP adapters and live verifier scripts now resolve their upstream base in this order:
+
+1. `OPENCONSTRUCTIONERP_URL` when it is explicitly set.
+2. A matching portless alias from `~/.portless/routes.json`, preferring `OPENCONSTRUCTIONERP_PORTLESS_HOST` when provided and otherwise checking the canonical ERP hostnames (`openconstructionerp*.localhost`, `erp*.localhost`).
+
+If neither exists, the ERP stack stays blocked instead of silently falling through to `http://localhost:8080`. On this workstation that raw port is already claimed by `mlx.marpa.localhost`, so `localhost:8080` is not treated as a safe ERP default.
+
 ## What goes where
 
 | Adapter file | What it does |

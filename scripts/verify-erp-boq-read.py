@@ -16,12 +16,16 @@ from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PIXELTABLE_ROOT = REPO_ROOT / "pixeltable"
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.routes import erp  # noqa: E402
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
 REQUEST_TIMEOUT_SECONDS = 10.0
@@ -34,7 +38,8 @@ def _parse_args() -> argparse.Namespace:
 
 
 def _fetch_upstream_json(project_id: str) -> tuple[str, dict[str, Any] | list[Any]]:
-    url = f"{ERP_BASE}{ERP_BOQ_LIST_PATH}"
+    erp_runtime = require_erp_runtime()
+    url = f"{erp_runtime.base_url}{ERP_BOQ_LIST_PATH}"
     try:
         response = httpx.get(
             url,
@@ -76,6 +81,7 @@ def _verify_route(project_id: str) -> dict[str, Any]:
     client = TestClient(_build_app())
     response = client.get(f"/v1/erp/boq/{project_id}")
     body = response.json()
+    expected_erp_base = ERP_BASE if ERP_BASE is not None else body.get("erp_base")
     if response.status_code != 200:
         raise RuntimeError(f"/v1/erp/boq/{project_id} returned {response.status_code}: {body}")
     if not isinstance(body, dict):
@@ -84,7 +90,7 @@ def _verify_route(project_id: str) -> dict[str, Any]:
         raise RuntimeError(f"/v1/erp/boq/{project_id} did not report ok=true: {body}")
     if body.get("project_id") != project_id:
         raise RuntimeError(f"/v1/erp/boq/{project_id} returned mismatched project_id: {body}")
-    if body.get("erp_base") != ERP_BASE:
+    if body.get("erp_base") != expected_erp_base:
         raise RuntimeError(f"/v1/erp/boq/{project_id} returned mismatched erp_base: {body}")
     payload = body.get("boq")
     if not isinstance(payload, dict | list):
@@ -103,6 +109,7 @@ def main() -> int:
     report: dict[str, Any] = {
         "project_id": args.project_id,
         "erp_base": ERP_BASE,
+        "erp_runtime_source": ERP_RUNTIME.source,
         "route": f"/v1/erp/boq/{args.project_id}",
         "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={args.project_id}",
     }

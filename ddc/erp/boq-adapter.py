@@ -11,17 +11,24 @@ Stub — acceptance criteria are on the matching GitHub issue.
 
 from __future__ import annotations
 
-import os
 import sys
+from pathlib import Path
 from typing import Any
 
 import httpx
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime
+
+
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 PROJECT_IFC_TABLE_TEMPLATE = "lattice/projects/{project_id}/ifc_elements"
 BRIDGE_IFC_TABLE = "lattice/bridge/ifc/ifc_elements"
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 
 
 def _normalize_project_id(project_id: str) -> str:
@@ -115,12 +122,13 @@ def _fetch_project_boqs(client: httpx.Client, project_id: str) -> list[dict[str,
 def fetch_boq(project_id: str) -> dict:
     """Return one project's current BOQ document from OpenConstructionERP."""
     normalized_project_id = _normalize_project_id(project_id)
-    with httpx.Client(base_url=ERP_BASE, timeout=30.0) as client:
+    erp_runtime = require_erp_runtime()
+    with httpx.Client(base_url=erp_runtime.base_url, timeout=30.0) as client:
         payload = _fetch_project_boqs(client, normalized_project_id)
     return {
         "ok": True,
         "project_id": normalized_project_id,
-        "erp_base": ERP_BASE,
+        "erp_base": erp_runtime.base_url,
         "boq": _normalize_boq_payload(payload),
     }
 

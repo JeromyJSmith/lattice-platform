@@ -15,12 +15,16 @@ from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PIXELTABLE_ROOT = REPO_ROOT / "pixeltable"
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.routes import erp  # noqa: E402
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 ERP_BOQ_EXPORT_PATH_TEMPLATE = "/api/v1/boq/boqs/{boq_id}/export/{export_kind}"
 DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_EXPORT_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
@@ -38,7 +42,8 @@ def _parse_args() -> argparse.Namespace:
 def _resolve_boq_id(project_id: str, boq_id: str | None) -> tuple[str, str]:
     if boq_id is not None:
         return "env:ERP_BOQ_EXPORT_VERIFY_BOQ_ID", boq_id
-    list_url = f"{ERP_BASE}{ERP_BOQ_LIST_PATH}"
+    erp_runtime = require_erp_runtime()
+    list_url = f"{erp_runtime.base_url}{ERP_BOQ_LIST_PATH}"
     try:
         response = httpx.get(
             list_url,
@@ -75,8 +80,9 @@ def _resolve_boq_id(project_id: str, boq_id: str | None) -> tuple[str, str]:
 
 
 def _fetch_upstream_export(project_id: str, boq_id: str | None = None) -> tuple[str, bytes, str]:
+    erp_runtime = require_erp_runtime()
     resolution_source, resolved_boq_id = _resolve_boq_id(project_id, boq_id)
-    url = f"{ERP_BASE}{ERP_BOQ_EXPORT_PATH_TEMPLATE.format(boq_id=resolved_boq_id, export_kind='csv')}"
+    url = f"{erp_runtime.base_url}{ERP_BOQ_EXPORT_PATH_TEMPLATE.format(boq_id=resolved_boq_id, export_kind='csv')}"
     try:
         response = httpx.get(
             url,
@@ -138,6 +144,7 @@ def main() -> int:
         "project_id": args.project_id,
         "boq_id": args.boq_id,
         "erp_base": ERP_BASE,
+        "erp_runtime_source": ERP_RUNTIME.source,
         "route": f"/v1/erp/export/{args.project_id}?fmt=csv",
         "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={args.project_id}",
     }

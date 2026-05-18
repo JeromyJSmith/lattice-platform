@@ -16,13 +16,17 @@ from fastapi.testclient import TestClient
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PIXELTABLE_ROOT = REPO_ROOT / "pixeltable"
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
+from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
-ERP_BASE = os.environ.get("OPENCONSTRUCTIONERP_URL", "http://localhost:8080").rstrip("/")
+ERP_RUNTIME = resolve_erp_runtime()
+ERP_BASE = ERP_RUNTIME.base_url
 ERP_SCHEDULES_PREFIX = os.environ.get("OPENCONSTRUCTIONERP_SCHEDULES_PREFIX", "/api/v2/schedules")
 ERP_SCHEDULE_LINKS_PREFIX = os.environ.get("OPENCONSTRUCTIONERP_SCHEDULE_LINKS_PREFIX", "/api/v2/eac/schedule-links")
 ERP_SCHEDULE_IMPORT_PATH_TEMPLATE = os.environ.get(
@@ -65,8 +69,9 @@ def _normalize_path(path: str, default: str) -> str:
 
 
 def _probe_upstream_phase_endpoint(project_id: str) -> dict[str, Any]:
-    schedules_url = f"{ERP_BASE}{_normalize_path(ERP_SCHEDULES_PREFIX, '/api/v2/schedules')}"
-    links_url = f"{ERP_BASE}{_normalize_path(ERP_SCHEDULE_LINKS_PREFIX, '/api/v2/eac/schedule-links')}"
+    erp_runtime = require_erp_runtime()
+    schedules_url = f"{erp_runtime.base_url}{_normalize_path(ERP_SCHEDULES_PREFIX, '/api/v2/schedules')}"
+    links_url = f"{erp_runtime.base_url}{_normalize_path(ERP_SCHEDULE_LINKS_PREFIX, '/api/v2/eac/schedule-links')}"
     try:
         schedules_response = httpx.get(
             schedules_url,
@@ -152,6 +157,7 @@ def main() -> int:
     report: dict[str, Any] = {
         "project_id": args.project_id,
         "erp_base": ERP_BASE,
+        "erp_runtime_source": ERP_RUNTIME.source,
         "route": "POST /v1/erp/phases",
         "phase_probe_surface": {
             "schedules_prefix": _normalize_path(ERP_SCHEDULES_PREFIX, "/api/v2/schedules"),
