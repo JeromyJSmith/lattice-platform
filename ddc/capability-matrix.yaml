@@ -77,7 +77,7 @@ capabilities:
     priority: high
     wave: wave-1
     validation: Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072)
-  - id: cwicr-cost-search
+  - id: cwicr-qdrant-cost-search
     status: green
     capability: CWICR cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
@@ -187,7 +187,7 @@ capabilities:
     priority: high
     wave: wave-2
     validation: Agent runs produce BOQ-linked evidence rows end to end
-  - id: estimation-contract
+  - id: ddc-estimation-contract
     status: red
     capability: Governed estimation contract
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md
@@ -201,7 +201,7 @@ capabilities:
     proof_lineage: ROSE Residence workbook pilot proof (external) plus the repo-local Farber-Haines 2521 IFC source lineage attached to the Juniper fixture
     supported_by:
       - cwicr-seed
-      - cwicr-cost-search
+      - cwicr-qdrant-cost-search
       - boq-read
       - boq-export
       - phases-sync
@@ -283,7 +283,7 @@ pipeline:
       - skills-harvest
       - skills-semantic-index
       - cwicr-seed
-      - cwicr-cost-search
+      - cwicr-qdrant-cost-search
       - n8n-harvest
       - ddc-evidence
   - stage: wave-2
@@ -295,7 +295,7 @@ pipeline:
       - boq-export
       - phases-sync
       - quantity-takeoff-agent
-      - estimation-contract
+      - ddc-estimation-contract
       - n8n-translation
   - stage: wave-3
     name: Operator surface

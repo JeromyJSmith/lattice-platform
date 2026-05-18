@@ -29,7 +29,7 @@ If one of those steps is missing, the estimation capability is still blocked.
 ### Already helping now
 
 - `cwicr-seed`
-- `cwicr-cost-search`
+- `cwicr-qdrant-cost-search`
 - `boq-read`
 - `boq-export`
 - `phases-sync`

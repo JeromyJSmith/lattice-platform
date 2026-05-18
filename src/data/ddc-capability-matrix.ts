@@ -144,7 +144,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072).",
   },
   {
-    id: "cwicr-cost-search",
+    id: "cwicr-qdrant-cost-search",
     status: "green",
     capability: "CWICR cost lookup",
     localHome:
@@ -292,7 +292,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
     validation: "Agent runs produce BOQ-linked evidence rows end to end.",
   },
   {
-    id: "estimation-contract",
+    id: "ddc-estimation-contract",
     status: "red",
     capability: "Governed estimation contract",
     localHome:
@@ -311,7 +311,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "ROSE Residence workbook pilot proof (external) plus the repo-local Farber-Haines 2521 IFC source lineage attached to the Juniper fixture",
     supportedBy: [
       "cwicr-seed",
-      "cwicr-cost-search",
+      "cwicr-qdrant-cost-search",
       "boq-read",
       "boq-export",
       "phases-sync",
@@ -415,7 +415,7 @@ export const ddcPipelineStages: Array<DdcPipelineStage> = [
       "skills-harvest",
       "skills-semantic-index",
       "cwicr-seed",
-      "cwicr-cost-search",
+      "cwicr-qdrant-cost-search",
       "n8n-harvest",
       "ddc-evidence",
     ],
@@ -430,7 +430,7 @@ export const ddcPipelineStages: Array<DdcPipelineStage> = [
       "boq-export",
       "phases-sync",
       "quantity-takeoff-agent",
-      "estimation-contract",
+      "ddc-estimation-contract",
       "n8n-translation",
     ],
   },

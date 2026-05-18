@@ -201,7 +201,7 @@ LATTICE treats estimation as a **dependency-governed capability**, not as an iso
 
 The contract depends on:
 
-- already helping now: `cwicr-seed`, `cwicr-cost-search`, `boq-read`, `boq-export`, `phases-sync`
+- already helping now: `cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-read`, `boq-export`, `phases-sync`
 - still blocking promotion: `ifc-cost-enrichment`, `boq-sync`, `quantity-takeoff-agent`
 - useful later but not the first gate: `admin-sql`, `admin-route`, `cost-per-zone`, `cost-overlay`, `skills-search-api`
 
