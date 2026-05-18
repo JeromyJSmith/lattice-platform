@@ -1,0 +1,9 @@
+🔍 LATTICE pre-commit: running docs-sync check...
+audit-dead-dna: OK
+  registries=32
+  active=207
+  deferred=174
+  blocked=13
+  bootstrap_empty=4
+check-python-docstrings: OK (9 changed/new files)
+✅ docs-sync check passed — safe to commit

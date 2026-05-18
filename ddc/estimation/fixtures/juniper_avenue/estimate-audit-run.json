@@ -1,0 +1,22 @@
+{
+  "audit_run_id": "juniper-audit-001",
+  "project_id": "918-juniper",
+  "status": "passed",
+  "verified_capabilities": [
+    "ifc-cost-enrichment",
+    "boq-sync",
+    "quantity-takeoff-agent",
+    "ddc-estimation-contract"
+  ],
+  "source_artifact_ids": [
+    "source-juniper-ifc-lineage",
+    "proof-ifc-cost-enrichment",
+    "proof-quantity-takeoff",
+    "proof-estimation-contract"
+  ],
+  "line_item_ids": ["juniper-line-item-001"],
+  "findings": [
+    "Juniper operational fixture is partial but valid.",
+    "Traceability is present from operational line item back to workbook mapping, formulas, and source artifacts."
+  ]
+}

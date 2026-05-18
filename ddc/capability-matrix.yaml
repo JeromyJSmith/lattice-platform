@@ -182,8 +182,8 @@ capabilities:
     capability: Quantity takeoff agent
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/quantity_takeoff_runtime.py
     target_surface: runtime agent + evidence ledger
-    current_state: governed Juniper orchestrator now extracts quantities, reuses cost-search writeback, drives BOQ sync plus BOQ read/export, and captures structured evidence for the same project scope
-    gap: No current proof gap; follow-on work is promoting the same runtime beyond the bounded Juniper fixture and wiring direct operator dispatch onto the same evidence contract
+    current_state: governed Juniper orchestrator now extracts quantities, reuses cost-search writeback, drives BOQ sync plus BOQ read/export, captures structured evidence for the same project scope, and is backed by a bounded estimation contract package with traceability-aware fixtures
+    gap: No current runtime proof gap; follow-on work is broadening the same contract-backed runtime beyond the bounded Juniper fixture and wiring direct operator dispatch onto the same evidence contract
     priority: high
     wave: wave-2
     validation: Agent runs produce BOQ-linked evidence rows end to end
@@ -199,11 +199,11 @@ capabilities:
     capability: Governed estimation contract
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md
     target_surface: project-scoped estimation run + evidence ledger + /admin planning surface
-    current_state: verifier-backed Juniper end-to-end governed estimation proof now passes with dependency reuse, writeback, BOQ linkage, read/export round-trip, and explicit evidence
-    gap: No current proof gap; follow-on work is broadening the same governed estimation contract beyond Juniper and wiring the promoted evidence trail into the admin planning surface
+    current_state: verifier-backed Juniper end-to-end governed estimation proof now passes with dependency reuse, writeback, BOQ linkage, read/export round-trip, explicit evidence, and a dual contract package covering workbook evidence, operational entities, fixtures, expected failures, and traceability
+    gap: No current proof gap; follow-on work is broadening the same governed estimation contract beyond Juniper, extending the partial Juniper fixture set, and wiring the promoted evidence trail into the admin planning surface
     priority: high
     wave: wave-2
-    validation: MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, and explicit blocker capture
+    validation: MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, explicit blocker capture, and passing contract-package validation
     project_target: MARPA — 918 Juniper Avenue
     proof_lineage: ROSE Residence workbook pilot proof (external) plus the repo-local Farber-Haines 2521 IFC source lineage attached to the Juniper fixture
     supported_by:

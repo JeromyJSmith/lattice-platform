@@ -1,0 +1,15 @@
+{
+  "workbook_id": "rose-workbook-v1",
+  "normalized_rows": [
+    {
+      "normalized_id": "rose-normalized-001",
+      "description": "Paver patio",
+      "quantity": 240.0,
+      "unit": "sf",
+      "unit_price": 18.0,
+      "workbook_row_ref": "Estimate!12",
+      "formula_refs": ["ext-price"],
+      "source_artifact_ids": ["rose-workbook-external"]
+    }
+  ]
+}

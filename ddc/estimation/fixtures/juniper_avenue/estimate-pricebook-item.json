@@ -1,0 +1,9 @@
+{
+  "pricebook_item_id": "juniper-pricebook-001",
+  "description": "Juniper planting bed",
+  "unit": "ea",
+  "currency": "USD",
+  "unit_price": 47.5,
+  "source_artifact_ids": ["source-juniper-ifc-lineage", "proof-ifc-cost-enrichment"],
+  "workbook_row_ref": "Estimate!7"
+}

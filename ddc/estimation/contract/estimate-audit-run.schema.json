@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/ddc/estimation/contract/estimate-audit-run.schema.json",
+  "title": "Estimate audit run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_run_id",
+    "project_id",
+    "status",
+    "verified_capabilities",
+    "source_artifact_ids",
+    "line_item_ids",
+    "findings"
+  ],
+  "properties": {
+    "audit_run_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["passed", "blocked"] },
+    "verified_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "source_artifact_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "line_item_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

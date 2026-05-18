@@ -1,0 +1,40 @@
+{
+  "inventory_id": "ddc-estimation-source-inventory-v1",
+  "operational_target": "MARPA — 918 Juniper Avenue",
+  "pilot_lineage_only": [
+    "ROSE Residence",
+    "Luke Spreadsheet Prototype (Notion, external reference supplied by operator)"
+  ],
+  "source_packets": [
+    {
+      "packet_id": "juniper-operational-evidence",
+      "kind": "operational",
+      "artifacts": [
+        "ddc/estimation/quantity_takeoff_runtime.py",
+        "scripts/verify-ddc-estimation-foundation.py",
+        "scripts/verify-ifc-cost-enrichment.py",
+        "scripts/verify-erp-boq-sync.py",
+        "meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json",
+        "meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json",
+        "meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json"
+      ]
+    },
+    {
+      "packet_id": "luke-workbook-lineage",
+      "kind": "external-lineage",
+      "artifacts": [
+        "Luke Spreadsheet Prototype (Notion, external)",
+        "ROSE Residence workbook pilot proof (external to this repo)"
+      ]
+    },
+    {
+      "packet_id": "juniper-repo-lineage",
+      "kind": "repo-lineage",
+      "artifacts": [
+        "Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo",
+        "ddc/estimation/fixtures/juniper_avenue/worksheet.raw.json",
+        "ddc/estimation/fixtures/juniper_avenue/estimate-line-item.json"
+      ]
+    }
+  ]
+}

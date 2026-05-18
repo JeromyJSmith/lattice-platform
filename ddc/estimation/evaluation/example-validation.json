@@ -1,0 +1,130 @@
+{
+  "invalid_examples": [
+    {
+      "example": "ddc/estimation/fixtures/invalid/estimate-line-item.invalid.missing-traceability.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "traceability",
+          "message": "'traceability' is a required property"
+        }
+      ],
+      "schema": "estimate-line-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "ddc/estimation/fixtures/invalid/juniper-estimate-project.invalid.missing-source-artifacts.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "REQUIRED_FIELD_MISSING",
+          "field": "source_artifact_ids",
+          "message": "'source_artifact_ids' is a required property"
+        }
+      ],
+      "schema": "estimate-project.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "ddc/estimation/fixtures/invalid/capability-alignment.invalid.stale-capability-id.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "CAPABILITY_ID_DRIFT",
+          "field": "registry_capability_id",
+          "message": "registry capability id drifted from the canonical matrix capability id"
+        }
+      ],
+      "schema": "stale_capability_ids",
+      "status": "pass"
+    },
+    {
+      "example": "ddc/estimation/fixtures/invalid/status-claim.invalid.missing-verifier-evidence.json",
+      "matched_expected": true,
+      "observed_failures": [
+        {
+          "failure_class": "VERIFIER_EVIDENCE_MISSING",
+          "field": "proof_evidence",
+          "message": "green capability status claim requires verifier evidence"
+        }
+      ],
+      "schema": "verifier_evidence_required",
+      "status": "pass"
+    }
+  ],
+  "valid_examples": [
+    {
+      "example": "fixtures/rose_residence/worksheet.raw.json",
+      "failures": [],
+      "schema": "worksheet.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/rose_residence/worksheet.normalized.json",
+      "failures": [],
+      "schema": "worksheet.normalized.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/rose_residence/estimate-project.json",
+      "failures": [],
+      "schema": "estimate-project.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/rose_residence/estimate-pricebook-item.json",
+      "failures": [],
+      "schema": "estimate-pricebook-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/rose_residence/estimate-line-item.json",
+      "failures": [],
+      "schema": "estimate-line-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/rose_residence/estimate-audit-run.json",
+      "failures": [],
+      "schema": "estimate-audit-run.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/worksheet.raw.json",
+      "failures": [],
+      "schema": "worksheet.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/worksheet.normalized.json",
+      "failures": [],
+      "schema": "worksheet.normalized.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/estimate-project.json",
+      "failures": [],
+      "schema": "estimate-project.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/estimate-pricebook-item.json",
+      "failures": [],
+      "schema": "estimate-pricebook-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/estimate-line-item.json",
+      "failures": [],
+      "schema": "estimate-line-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "example": "fixtures/juniper_avenue/estimate-audit-run.json",
+      "failures": [],
+      "schema": "estimate-audit-run.schema.json",
+      "status": "pass"
+    }
+  ]
+}

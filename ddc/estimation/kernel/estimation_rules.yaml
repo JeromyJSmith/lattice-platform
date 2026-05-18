@@ -1,0 +1,9 @@
+rules:
+  - id: operational-target-must-be-juniper
+    description: Juniper Avenue is the only operational target for green estimation claims in this repo.
+  - id: rose-is-lineage-only
+    description: ROSE Residence may shape rules and vocabulary but never satisfies operational proof.
+  - id: line-item-traceability-required
+    description: Every EstimateLineItem must reference workbook rows, formula refs, and source artifacts.
+  - id: green-status-needs-verifier-evidence
+    description: Capability status claims stay green only when verifier-backed proof artifacts exist and pass.

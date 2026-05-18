@@ -1,0 +1,10 @@
+formulas:
+  - id: ext-price
+    expression: quantity * unit_price
+    purpose: Compute extended price from workbook-evidence quantity and pricebook unit_price.
+  - id: juniper-bed-ext-price
+    expression: 3.0 * 47.5
+    purpose: Juniper planting bed operational line item from governed cost writeback proof.
+  - id: juniper-path-ext-price
+    expression: 12.5 * 18.25
+    purpose: Juniper decomposed granite path operational line item from governed cost writeback proof.

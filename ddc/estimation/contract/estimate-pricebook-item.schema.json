@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/ddc/estimation/contract/estimate-pricebook-item.schema.json",
+  "title": "Estimate pricebook item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pricebook_item_id",
+    "description",
+    "unit",
+    "currency",
+    "unit_price",
+    "source_artifact_ids",
+    "workbook_row_ref"
+  ],
+  "properties": {
+    "pricebook_item_id": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "unit": { "type": "string", "minLength": 1 },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "unit_price": { "type": "number", "minimum": 0 },
+    "source_artifact_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "workbook_row_ref": { "type": "string", "minLength": 1 }
+  }
+}

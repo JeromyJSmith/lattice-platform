@@ -1,0 +1,11 @@
+{
+  "audit_run_id": "rose-audit-001",
+  "project_id": "rose-residence",
+  "status": "passed",
+  "verified_capabilities": ["ddc-estimation-contract"],
+  "source_artifact_ids": ["rose-workbook-external"],
+  "line_item_ids": ["rose-line-item-001"],
+  "findings": [
+    "ROSE remains a gold contract fixture and lineage input only."
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "status": "pass",
+  "project_target": "MARPA — 918 Juniper Avenue",
+  "operational_scope": "bounded estimation foundation slice",
+  "score": {
+    "before": 100,
+    "after": 100,
+    "delta": 0,
+    "capture_note": "The scorer was already at 100 earlier in this run. The persisted score-before artifact was regenerated after an aborted docs-check capture and matches the final live score."
+  },
+  "proof_package": {
+    "source": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/source/README.md",
+        "ddc/estimation/source/source-inventory.json",
+        "ddc/estimation/source/provenance.json"
+      ]
+    },
+    "schema": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/evaluation/schema-validation.json"
+      ]
+    },
+    "examples": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/evaluation/example-validation.json"
+      ]
+    },
+    "expected_failures": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/evaluation/expected-failure-validation.json"
+      ]
+    },
+    "tests": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/evaluation/contract-tests.txt"
+      ]
+    },
+    "evaluation": {
+      "status": "pass",
+      "artifacts": [
+        "ddc/estimation/evaluation/ifc-cost-enrichment-verifier.json",
+        "ddc/estimation/evaluation/boq-sync-verifier.json",
+        "ddc/estimation/evaluation/quantity-takeoff-verifier.json",
+        "ddc/estimation/evaluation/ddc-estimation-contract-verifier.json",
+        "ddc/estimation/evaluation/docs-check.txt",
+        "ddc/estimation/evaluation/git-diff-check.txt",
+        "ddc/estimation/evaluation/score-before.json",
+        "ddc/estimation/evaluation/score-after.json"
+      ]
+    }
+  },
+  "checks": {
+    "schema_validation": "pass",
+    "example_validation": "pass",
+    "expected_failure_validation": "pass",
+    "contract_tests": "pass",
+    "ifc_cost_enrichment_verifier": "pass",
+    "boq_sync_verifier": "pass",
+    "quantity_takeoff_verifier": "pass",
+    "ddc_estimation_contract_verifier": "pass",
+    "docs_check": "pass",
+    "git_diff_check": "pass"
+  },
+  "juniper_operational_path": {
+    "status": "pass",
+    "can_do_today": [
+      "Extract Juniper quantities from the governed IFC slice.",
+      "Reuse CWICR cost-search writeback onto governed IFC rows.",
+      "Sync, read, and export the linked BOQ.",
+      "Validate the dual contract package with bounded ROSE and Juniper fixtures."
+    ],
+    "follow_on_without_blocking_promotion": [
+      "Extend the partial Juniper fixture set beyond the current bounded estimation slice.",
+      "Wire the promoted evidence trail into the admin planning surface."
+    ],
+    "evidence": [
+      "ddc/estimation/evaluation/quantity-takeoff-verifier.json",
+      "ddc/estimation/evaluation/ddc-estimation-contract-verifier.json",
+      "ddc/estimation/reports/juniper_avenue-estimate-capability.json",
+      "ddc/estimation/source/provenance.json"
+    ]
+  }
+}

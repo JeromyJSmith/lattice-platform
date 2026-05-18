@@ -1,0 +1,15 @@
+{
+  "workbook_id": "juniper-workbook-v1",
+  "normalized_rows": [
+    {
+      "normalized_id": "juniper-normalized-001",
+      "description": "Juniper planting bed",
+      "quantity": 3.0,
+      "unit": "ea",
+      "unit_price": 47.5,
+      "workbook_row_ref": "Estimate!7",
+      "formula_refs": ["ext-price", "juniper-bed-ext-price"],
+      "source_artifact_ids": ["source-juniper-ifc-lineage", "luke-spreadsheet-prototype"]
+    }
+  ]
+}

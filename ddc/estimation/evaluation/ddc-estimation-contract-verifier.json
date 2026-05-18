@@ -1,0 +1,164 @@
+{
+  "capability_id": "ddc-estimation-contract",
+  "status": "passed",
+  "matrix_status": "green",
+  "registry_state": "ACTIVE",
+  "dependency_status": {
+    "cwicr-seed": "green",
+    "cwicr-qdrant-cost-search": "green",
+    "ifc-cost-enrichment": "green",
+    "boq-sync": "green",
+    "boq-read": "green",
+    "boq-export": "green",
+    "phases-sync": "green",
+    "quantity-takeoff-agent": "green",
+    "ddc-estimation-contract": "green"
+  },
+  "proof_status": {
+    "cwicr-seed": "passed",
+    "cwicr-qdrant-cost-search": "passed",
+    "ifc-cost-enrichment": "passed",
+    "boq-sync": "passed",
+    "boq-read": "passed",
+    "boq-export": "passed",
+    "phases-sync": "passed"
+  },
+  "project_target": "MARPA \u2014 918 Juniper Avenue",
+  "supported_by": [
+    "cwicr-seed",
+    "cwicr-qdrant-cost-search",
+    "ifc-cost-enrichment",
+    "boq-sync",
+    "boq-read",
+    "boq-export",
+    "phases-sync",
+    "quantity-takeoff-agent"
+  ],
+  "blocked_by": [],
+  "quantity_takeoff_proof": {
+    "capability_id": "quantity-takeoff-agent",
+    "status": "passed",
+    "project_id": "918-juniper",
+    "project_target": "MARPA \u2014 918 Juniper Avenue",
+    "erp_project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+    "erp_project_id_source": "erp:list-projects",
+    "proof_lineage": [
+      "ROSE Residence workbook pilot proof (external to this repo)",
+      "Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo"
+    ],
+    "supported_by": [
+      "cwicr-seed",
+      "cwicr-qdrant-cost-search",
+      "ifc-cost-enrichment",
+      "boq-sync",
+      "boq-read",
+      "boq-export"
+    ],
+    "blockers": [],
+    "steps": {
+      "quantity_extract": {
+        "project_id": "918-juniper",
+        "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+        "row_count": 2,
+        "total_quantity": 15.5,
+        "rows": [
+          {
+            "source_element_id": "ifc-juniper-001",
+            "name": "Juniper planting bed",
+            "quantity": 3.0,
+            "quantity_unit": "ea"
+          },
+          {
+            "source_element_id": "ifc-juniper-002",
+            "name": "Juniper decomposed granite path",
+            "quantity": 12.5,
+            "quantity_unit": "m2"
+          }
+        ]
+      },
+      "cost_search_writeback": [
+        {
+          "source_element_id": "ifc-juniper-001",
+          "item_id": "CWICR-JUNIPER-001",
+          "unit_cost": 47.5,
+          "verification": "passed",
+          "writeback": {
+            "requested": true,
+            "status": "passed",
+            "project_id": "918-juniper",
+            "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+            "rows_updated": 1,
+            "source_element_ids": [
+              "ifc-juniper-001"
+            ],
+            "unit_cost": 47.5,
+            "unit_cost_region": "US",
+            "cost_last_updated": "2026-05-18T20:23:51.423155Z"
+          }
+        },
+        {
+          "source_element_id": "ifc-juniper-002",
+          "item_id": "CWICR-JUNIPER-002",
+          "unit_cost": 18.25,
+          "verification": "passed",
+          "writeback": {
+            "requested": true,
+            "status": "passed",
+            "project_id": "918-juniper",
+            "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+            "rows_updated": 1,
+            "source_element_ids": [
+              "ifc-juniper-002"
+            ],
+            "unit_cost": 18.25,
+            "unit_cost_region": "US",
+            "cost_last_updated": "2026-05-18T20:23:51.424818Z"
+          }
+        }
+      ],
+      "boq_sync": {
+        "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+        "result": {
+          "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+          "erp_base": "https://openconstructionerp.marpa.localhost:1355",
+          "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+          "boq_id": "54ce778d-543a-4f55-a24a-d491be37d71c",
+          "rows_seen": 2,
+          "rows_updated": 2,
+          "rows_skipped": 0
+        }
+      },
+      "boq_read": {
+        "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+        "boq_count": 20,
+        "erp_base": "https://openconstructionerp.marpa.localhost:1355"
+      },
+      "boq_export": {
+        "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+        "content_type": "text/csv; charset=utf-8",
+        "content_length": 883,
+        "filename": "boq-4be4dd90-fd17-4104-bc0a-53fa2ed47e47.csv"
+      }
+    },
+    "evidence": {
+      "ifc_rows": [
+        {
+          "source_element_id": "ifc-juniper-001",
+          "quantity": 3.0,
+          "quantity_unit": "ea",
+          "unit_cost": 47.5,
+          "unit_cost_region": "US",
+          "erp_item_id": "42f694b2-6237-4864-a5e3-d2d84c3a3713"
+        },
+        {
+          "source_element_id": "ifc-juniper-002",
+          "quantity": 12.5,
+          "quantity_unit": "m2",
+          "unit_cost": 18.25,
+          "unit_cost_region": "US",
+          "erp_item_id": "c2269ec7-576c-438e-be95-fa651a9866e1"
+        }
+      ]
+    }
+  }
+}

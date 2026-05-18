@@ -1,0 +1,29 @@
+{
+  "inventory_id": "ddc-estimation-promotion-artifacts-v1",
+  "decision": "promotable",
+  "blockers": [],
+  "artifacts": [
+    {
+      "path": "ddc/estimation/promotion/readiness-summary.json",
+      "kind": "promotion_summary"
+    },
+    {
+      "path": "ddc/estimation/promotion/promotion-decision.md",
+      "kind": "promotion_decision"
+    },
+    {
+      "path": "ddc/estimation/promotion/blocker-carry-forward.md",
+      "kind": "promotion_blockers"
+    }
+  ],
+  "evidence": [
+    "ddc/estimation/evaluation/evaluation-summary.json",
+    "ddc/estimation/evaluation/artifacts-inventory.json",
+    "ddc/estimation/evaluation/score-before.json",
+    "ddc/estimation/evaluation/score-after.json",
+    "ddc/estimation/evaluation/quantity-takeoff-verifier.json",
+    "ddc/estimation/evaluation/ddc-estimation-contract-verifier.json",
+    "ddc/estimation/evaluation/boq-sync-verifier.json",
+    "ddc/estimation/evaluation/ifc-cost-enrichment-verifier.json"
+  ]
+}

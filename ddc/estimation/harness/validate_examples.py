@@ -1,0 +1,22 @@
+#!/usr/bin/env -S uv run --project pixeltable python
+"""Validate the DDC estimation fixtures and expected failures."""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent))
+
+from lib import validate_examples_data
+
+
+def main() -> None:
+    """Print fixture validation results as JSON."""
+
+    print(json.dumps(validate_examples_data(), indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

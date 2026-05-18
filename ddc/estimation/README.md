@@ -4,6 +4,8 @@ This directory holds the **DDC estimation planning slice** for LATTICE. Estimati
 
 - Goal surface: [`GOAL.md`](GOAL.md)
 - Execution contract: [`GOLDENPATH.md`](GOLDENPATH.md)
+- Source packet: [`source/README.md`](source/README.md)
+- Dual contract package: `contract/`, `fixtures/`, `kernel/`, `reports/`
 
 ## Operational framing
 
@@ -12,6 +14,28 @@ This directory holds the **DDC estimation planning slice** for LATTICE. Estimati
 - **Pilot proof lineage only:** `ROSE Residence` workbook contract shaped the estimation rules, but it is not the operational fixture in this repository
 
 Juniper Avenue is the proving ground for future promotion. ROSE Residence stays proof lineage only.
+
+## Dual contract package
+
+This slice now keeps two contract families side by side:
+
+1. **Workbook faithful evidence contract**
+   - `contract/worksheet.schema.json`
+   - `contract/worksheet.normalized.schema.json`
+2. **Estimate capability operational contract**
+   - `contract/estimate-project.schema.json`
+   - `contract/estimate-pricebook-item.schema.json`
+   - `contract/estimate-line-item.schema.json`
+   - `contract/estimate-audit-run.schema.json`
+
+They stay synchronized through:
+
+- `source/provenance.json`
+- `fixtures/rose_residence/`
+- `fixtures/juniper_avenue/`
+- `fixtures/expected-failures.yaml`
+- `kernel/formulas.yaml`
+- `kernel/estimation_rules.yaml`
 
 ## What this capability means in LATTICE
 
@@ -53,6 +77,13 @@ If one of those steps is missing, the estimation capability is still blocked.
 ## Current state
 
 Current state is **governed and verifier-backed**. Juniper Avenue now completes the bounded end-to-end governed run with explicit dependency reuse, writeback, BOQ linkage, BOQ round-trip, and evidence capture.
+
+The green claim is now additionally backed by the contract package:
+
+- schemas validate as Draft 2020-12
+- valid ROSE and Juniper fixtures validate
+- invalid fixtures fail for exact traceability and verifier-evidence reasons
+- line items carry explicit traceability back to workbook rows, formulas, and source artifacts
 
 ## Green-state rule
 

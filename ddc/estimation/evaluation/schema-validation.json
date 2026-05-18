@@ -1,0 +1,35 @@
+{
+  "all_valid": true,
+  "schemas": [
+    {
+      "issues": [],
+      "schema": "estimate-audit-run.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "estimate-line-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "estimate-pricebook-item.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "estimate-project.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "worksheet.normalized.schema.json",
+      "status": "pass"
+    },
+    {
+      "issues": [],
+      "schema": "worksheet.schema.json",
+      "status": "pass"
+    }
+  ]
+}

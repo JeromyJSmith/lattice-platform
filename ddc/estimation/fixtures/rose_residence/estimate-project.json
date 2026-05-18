@@ -1,0 +1,13 @@
+{
+  "project_id": "rose-residence",
+  "project_name": "ROSE Residence",
+  "operational_target": true,
+  "pilot_lineage_only": [
+    "ROSE Residence workbook pilot proof is lineage only for Juniper promotion"
+  ],
+  "workbook_refs": ["rose-workbook-v1"],
+  "source_artifact_ids": ["rose-workbook-external"],
+  "operational_gaps": [
+    "ROSE remains a gold fixture for contract shape only and never upgrades Juniper by analogy."
+  ]
+}

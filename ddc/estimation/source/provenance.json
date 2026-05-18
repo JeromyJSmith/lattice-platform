@@ -1,0 +1,55 @@
+{
+  "source_packet_id": "ddc-estimation-provenance-v1",
+  "operational_target": {
+    "project_id": "918-juniper",
+    "project_name": "MARPA — 918 Juniper Avenue",
+    "project_role": "operational"
+  },
+  "lineage_only": [
+    {
+      "lineage_id": "rose-residence",
+      "name": "ROSE Residence",
+      "role": "pilot_lineage_only",
+      "evidence_type": "external_workbook_contract"
+    },
+    {
+      "lineage_id": "luke-spreadsheet-prototype",
+      "name": "Luke Spreadsheet Prototype",
+      "role": "external_lineage_only",
+      "evidence_type": "notion_workbook_contract",
+      "location": "external"
+    }
+  ],
+  "source_artifacts": [
+    {
+      "artifact_id": "source-juniper-ifc-lineage",
+      "kind": "repo_lineage",
+      "path": "Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo",
+      "project_scope": "918-juniper"
+    },
+    {
+      "artifact_id": "proof-ifc-cost-enrichment",
+      "kind": "proof",
+      "path": "meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json",
+      "project_scope": "918-juniper"
+    },
+    {
+      "artifact_id": "proof-quantity-takeoff",
+      "kind": "proof",
+      "path": "meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json",
+      "project_scope": "918-juniper"
+    },
+    {
+      "artifact_id": "proof-estimation-contract",
+      "kind": "proof",
+      "path": "meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json",
+      "project_scope": "918-juniper"
+    }
+  ],
+  "provenance_pointers": {
+    "source_inventory": "ddc/estimation/source/source-inventory.json",
+    "goal": "ddc/estimation/GOAL.md",
+    "golden_path": "ddc/estimation/GOLDENPATH.md",
+    "readme": "ddc/estimation/README.md"
+  }
+}

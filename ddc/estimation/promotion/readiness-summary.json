@@ -1,0 +1,26 @@
+{
+  "decision": "promotable",
+  "project_target": "MARPA — 918 Juniper Avenue",
+  "score_before": 100,
+  "score_after": 100,
+  "blocker_count": 0,
+  "green_capabilities": [
+    "ifc-cost-enrichment",
+    "boq-sync",
+    "quantity-takeoff-agent",
+    "ddc-estimation-contract"
+  ],
+  "juniper_operational_path": {
+    "status": "promotable",
+    "evidence": [
+      "ddc/estimation/evaluation/quantity-takeoff-verifier.json",
+      "ddc/estimation/evaluation/ddc-estimation-contract-verifier.json",
+      "ddc/estimation/evaluation/boq-sync-verifier.json",
+      "ddc/estimation/evaluation/ifc-cost-enrichment-verifier.json"
+    ]
+  },
+  "follow_on_without_blocking_promotion": [
+    "Extend the partial Juniper fixture set beyond the current bounded estimation slice.",
+    "Wire promoted estimation evidence into the admin planning surface."
+  ]
+}

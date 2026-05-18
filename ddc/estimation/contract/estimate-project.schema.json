@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/ddc/estimation/contract/estimate-project.schema.json",
+  "title": "Estimate project operational contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "project_name",
+    "operational_target",
+    "pilot_lineage_only",
+    "workbook_refs",
+    "source_artifact_ids"
+  ],
+  "properties": {
+    "project_id": { "type": "string", "minLength": 1 },
+    "project_name": { "type": "string", "minLength": 1 },
+    "operational_target": { "type": "boolean", "const": true },
+    "pilot_lineage_only": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "workbook_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "source_artifact_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "operational_gaps": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

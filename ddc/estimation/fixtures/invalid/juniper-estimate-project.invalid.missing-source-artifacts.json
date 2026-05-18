@@ -1,0 +1,10 @@
+{
+  "project_id": "918-juniper",
+  "project_name": "MARPA — 918 Juniper Avenue",
+  "operational_target": true,
+  "pilot_lineage_only": [
+    "ROSE Residence",
+    "Luke Spreadsheet Prototype"
+  ],
+  "workbook_refs": ["juniper-workbook-v1"]
+}

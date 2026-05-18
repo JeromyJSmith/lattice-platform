@@ -1,0 +1,30 @@
+{
+  "workbook_id": "rose-workbook-v1",
+  "workbook_name": "ROSE Residence pilot workbook",
+  "project_name": "ROSE Residence",
+  "lineage_role": "pilot_lineage_only",
+  "source_artifacts": [
+    {
+      "artifact_id": "rose-workbook-external",
+      "kind": "workbook",
+      "location": "external:ROSE Residence workbook pilot proof",
+      "lineage_role": "pilot_lineage_only"
+    }
+  ],
+  "sheets": [
+    {
+      "sheet_name": "Estimate",
+      "rows": [
+        {
+          "row_id": "rose-row-001",
+          "row_number": 12,
+          "description": "Paver patio",
+          "quantity": 240.0,
+          "unit": "sf",
+          "unit_price": 18.0,
+          "formula_refs": ["ext-price"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/ddc/estimation/contract/worksheet.normalized.schema.json",
+  "title": "Normalized workbook evidence contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workbook_id", "normalized_rows"],
+  "properties": {
+    "workbook_id": { "type": "string", "minLength": 1 },
+    "normalized_rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "normalized_id",
+          "description",
+          "quantity",
+          "unit",
+          "unit_price",
+          "workbook_row_ref",
+          "formula_refs",
+          "source_artifact_ids"
+        ],
+        "properties": {
+          "normalized_id": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "quantity": { "type": "number", "minimum": 0 },
+          "unit": { "type": "string", "minLength": 1 },
+          "unit_price": { "type": "number", "minimum": 0 },
+          "workbook_row_ref": { "type": "string", "minLength": 1 },
+          "formula_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "source_artifact_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

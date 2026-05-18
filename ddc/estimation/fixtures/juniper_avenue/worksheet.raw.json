@@ -1,0 +1,36 @@
+{
+  "workbook_id": "juniper-workbook-v1",
+  "workbook_name": "Juniper Avenue governed operational workbook mapping",
+  "project_name": "MARPA — 918 Juniper Avenue",
+  "lineage_role": "operational",
+  "source_artifacts": [
+    {
+      "artifact_id": "source-juniper-ifc-lineage",
+      "kind": "ifc",
+      "location": "repo-lineage:Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo",
+      "lineage_role": "operational"
+    },
+    {
+      "artifact_id": "luke-spreadsheet-prototype",
+      "kind": "notes",
+      "location": "external:Luke Spreadsheet Prototype (Notion)",
+      "lineage_role": "external_lineage_only"
+    }
+  ],
+  "sheets": [
+    {
+      "sheet_name": "Estimate",
+      "rows": [
+        {
+          "row_id": "juniper-row-001",
+          "row_number": 7,
+          "description": "Juniper planting bed",
+          "quantity": 3.0,
+          "unit": "ea",
+          "unit_price": 47.5,
+          "formula_refs": ["ext-price", "juniper-bed-ext-price"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "pricebook_item_id": "rose-pricebook-001",
+  "description": "Paver patio",
+  "unit": "sf",
+  "currency": "USD",
+  "unit_price": 18.0,
+  "source_artifact_ids": ["rose-workbook-external"],
+  "workbook_row_ref": "Estimate!12"
+}

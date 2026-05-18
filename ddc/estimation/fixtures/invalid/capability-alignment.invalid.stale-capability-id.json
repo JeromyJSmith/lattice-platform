@@ -1,0 +1,5 @@
+{
+  "matrix_capability_id": "ddc-estimation-contract",
+  "registry_capability_id": "ddc-estimation-contract-stale",
+  "reason": "Registry ID drifted from the canonical capability ID."
+}

@@ -1,0 +1,15 @@
+{
+  "project_id": "918-juniper",
+  "project_name": "MARPA — 918 Juniper Avenue",
+  "operational_target": true,
+  "pilot_lineage_only": [
+    "ROSE Residence",
+    "Luke Spreadsheet Prototype"
+  ],
+  "workbook_refs": ["juniper-workbook-v1"],
+  "source_artifact_ids": ["source-juniper-ifc-lineage", "proof-estimation-contract"],
+  "operational_gaps": [
+    "Operational fixture is intentionally partial and currently models the bounded planting-bed estimating surface only.",
+    "Juniper workbook extraction is represented through governed mapping rows rather than a committed workbook file."
+  ]
+}

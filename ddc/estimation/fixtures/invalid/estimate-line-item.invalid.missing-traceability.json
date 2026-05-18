@@ -1,0 +1,9 @@
+{
+  "line_item_id": "juniper-line-item-bad",
+  "project_id": "918-juniper",
+  "pricebook_item_id": "juniper-pricebook-001",
+  "description": "Juniper planting bed",
+  "quantity": 3.0,
+  "unit": "ea",
+  "extended_price": 142.5
+}

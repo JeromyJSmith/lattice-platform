@@ -32,14 +32,15 @@ No implementation run may present estimation as standalone.
 
 0. Capture the current foundation score with `bash scripts/score-ddc.sh --json`
 1. Confirm the run target is Juniper, not ROSE
-2. Confirm Juniper-scoped IFC rows exist for the intended estimating surface
-3. Use `quantity-takeoff-agent` to extract governed Juniper quantities and collect the evidence contract for the run
-4. Reuse `cwicr-seed` and `cwicr-qdrant-cost-search` to obtain bounded, verifier-backed unit-cost matches for those Juniper quantities
-5. Route those matches through `ifc-cost-enrichment` so cost attribution is written back to owned Juniper-scoped rows
-6. Route the enriched scope through `boq-sync` so ERP-linked BOQ state is created or refreshed for the same Juniper scope
-7. Reuse `boq-read` and `boq-export` to prove the BOQ state can round-trip without dropping scope or linkage
-8. Reuse `phases-sync` so schedule/phase context remains attached to the same estimating surface
-9. Keep the capability green only while the full chain continues to complete with evidence for the same Juniper scope
+2. Confirm the source packet and dual contract package still validate for Juniper and ROSE lineage
+3. Confirm Juniper-scoped IFC rows exist for the intended estimating surface
+4. Use `quantity-takeoff-agent` to extract governed Juniper quantities and collect the evidence contract for the run
+5. Reuse `cwicr-seed` and `cwicr-qdrant-cost-search` to obtain bounded, verifier-backed unit-cost matches for those Juniper quantities
+6. Route those matches through `ifc-cost-enrichment` so cost attribution is written back to owned Juniper-scoped rows
+7. Route the enriched scope through `boq-sync` so ERP-linked BOQ state is created or refreshed for the same Juniper scope
+8. Reuse `boq-read` and `boq-export` to prove the BOQ state can round-trip without dropping scope or linkage
+9. Reuse `phases-sync` so schedule/phase context remains attached to the same estimating surface
+10. Keep the capability green only while the full chain continues to complete with evidence for the same Juniper scope
 
 ## Loop Rule
 
@@ -69,6 +70,7 @@ The run fails the golden path unless every gate passes:
 Green requires durable evidence for all of the following:
 
 - Juniper project identity and scope
+- validated source packet and dual contract package
 - reused dependency chain
 - CWICR cost-match results tied to Juniper quantities
 - enrichment/writeback on governed rows

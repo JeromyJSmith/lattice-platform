@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lattice.local/ddc/estimation/contract/worksheet.schema.json",
+  "title": "Workbook faithful evidence contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workbook_id",
+    "workbook_name",
+    "project_name",
+    "lineage_role",
+    "source_artifacts",
+    "sheets"
+  ],
+  "properties": {
+    "workbook_id": { "type": "string", "minLength": 1 },
+    "workbook_name": { "type": "string", "minLength": 1 },
+    "project_name": { "type": "string", "minLength": 1 },
+    "lineage_role": {
+      "type": "string",
+      "enum": ["operational", "pilot_lineage_only", "external_lineage_only"]
+    },
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceArtifact" }
+    },
+    "sheets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sheet" }
+    }
+  },
+  "$defs": {
+    "sourceArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "kind", "location", "lineage_role"],
+      "properties": {
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "enum": ["workbook", "ifc", "proof", "notes"] },
+        "location": { "type": "string", "minLength": 1 },
+        "lineage_role": {
+          "type": "string",
+          "enum": ["operational", "pilot_lineage_only", "external_lineage_only"]
+        }
+      }
+    },
+    "sheet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sheet_name", "rows"],
+      "properties": {
+        "sheet_name": { "type": "string", "minLength": 1 },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/row" }
+        }
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row_id", "row_number", "description", "quantity", "unit", "unit_price", "formula_refs"],
+      "properties": {
+        "row_id": { "type": "string", "minLength": 1 },
+        "row_number": { "type": "integer", "minimum": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string", "minLength": 1 },
+        "unit_price": { "type": "number", "minimum": 0 },
+        "formula_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

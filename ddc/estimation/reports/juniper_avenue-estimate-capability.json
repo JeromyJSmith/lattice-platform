@@ -1,0 +1,15 @@
+{
+  "report_id": "juniper-avenue-estimate-capability-v1",
+  "project_id": "918-juniper",
+  "report_kind": "estimate_capability",
+  "status": "operational_partial",
+  "source_fixture": "ddc/estimation/fixtures/juniper_avenue/estimate-audit-run.json",
+  "evidence_refs": [
+    "meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json",
+    "meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json",
+    "meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json"
+  ],
+  "gaps": [
+    "The operational fixture set is valid and traceable, but still partial relative to the full Juniper runtime proof."
+  ]
+}

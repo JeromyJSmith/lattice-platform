@@ -293,9 +293,11 @@ capabilities:
     name: Quantity takeoff agent
     state: ACTIVE
     status_color: GREEN
-    description: Orchestrate quantities, CWICR cost lookup, IFC writeback, BOQ sync/read/export, and evidence capture as one governed Juniper runtime instead of leaving estimation as disconnected manual steps.
+    description: Orchestrate quantities, CWICR cost lookup, IFC writeback, BOQ sync/read/export, and evidence capture as one governed Juniper runtime instead of leaving estimation as disconnected manual steps, with bounded traceability fixtures enforcing the same source lineage.
     wired_at:
       - ddc/estimation/quantity_takeoff_runtime.py
+      - ddc/estimation/source/provenance.json
+      - ddc/estimation/fixtures/juniper_avenue/estimate-line-item.json
       - ddc/capability-matrix.yaml
       - ddc/estimation/README.md
       - src/data/ddc-capability-matrix.ts
@@ -327,9 +329,18 @@ capabilities:
     name: Governed estimation contract
     state: ACTIVE
     status_color: GREEN
-    description: Treat estimation as a first-class DDC capability that is only green when Juniper Avenue completes the governed end-to-end path. ROSE Residence remains workbook-era pilot lineage only.
+    description: Treat estimation as a first-class DDC capability that is only green when Juniper Avenue completes the governed end-to-end path and the dual contract package keeps workbook-faithful evidence synchronized with operational estimate entities. ROSE Residence remains workbook-era pilot lineage only.
     wired_at:
       - ddc/estimation/README.md
+      - ddc/estimation/source/source-inventory.json
+      - ddc/estimation/source/provenance.json
+      - ddc/estimation/contract/worksheet.schema.json
+      - ddc/estimation/contract/worksheet.normalized.schema.json
+      - ddc/estimation/contract/estimate-project.schema.json
+      - ddc/estimation/contract/estimate-pricebook-item.schema.json
+      - ddc/estimation/contract/estimate-line-item.schema.json
+      - ddc/estimation/contract/estimate-audit-run.schema.json
+      - ddc/estimation/fixtures/expected-failures.yaml
       - ddc/estimation/quantity_takeoff_runtime.py
       - ddc/capability-matrix.yaml
       - src/data/ddc-capability-matrix.ts
@@ -360,6 +371,6 @@ capabilities:
       - phases-sync
       - quantity-takeoff-agent
     blocking_capabilities: []
-    follow_on: Broaden the same governed estimation contract beyond Juniper and wire the promoted evidence trail into the admin planning surface without reintroducing worksheet-only framing.
+    follow_on: Broaden the same governed estimation contract beyond Juniper, extend the partial operational fixture set, and wire the promoted evidence trail into the admin planning surface without reintroducing worksheet-only framing.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json

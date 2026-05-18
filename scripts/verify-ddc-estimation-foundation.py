@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import sys
@@ -33,6 +34,10 @@ ESTIMATION_GOAL_PATH = REPO_ROOT / "ddc" / "estimation" / "GOAL.md"
 ESTIMATION_GOLDENPATH_PATH = REPO_ROOT / "ddc" / "estimation" / "GOLDENPATH.md"
 ESTIMATION_README_PATH = REPO_ROOT / "ddc" / "estimation" / "README.md"
 DDC_MAPPING_PATH = REPO_ROOT / "meta" / "DDC_MAPPING.md"
+ESTIMATION_SOURCE_PATH = REPO_ROOT / "ddc" / "estimation" / "source" / "source-inventory.json"
+ESTIMATION_PROVENANCE_PATH = REPO_ROOT / "ddc" / "estimation" / "source" / "provenance.json"
+ESTIMATION_EVALUATION_DIR = REPO_ROOT / "ddc" / "estimation" / "evaluation"
+ESTIMATION_PROMOTION_DIR = REPO_ROOT / "ddc" / "estimation" / "promotion"
 PROOF_PATHS = {
     "cwicr-seed": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-cwicr-seed-proof.json",
     "cwicr-qdrant-cost-search": REPO_ROOT
@@ -56,6 +61,17 @@ CONTRACT_SUPPORTED_IDS = [*QUANTITY_SUPPORTED_BY, "phases-sync", "quantity-takeo
 BLOCKED_IDS: list[str] = []
 ROSE_LINEAGE = "ROSE Residence"
 FARBER_LINEAGE = "Farber-Haines 2521 IFC source lineage"
+
+
+def _load_estimation_contract_lib():
+    harness_path = REPO_ROOT / "ddc" / "estimation" / "harness" / "lib.py"
+    spec = importlib.util.spec_from_file_location("ddc_estimation_contract_lib", harness_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("ddc estimation harness lib could not be loaded")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def _parse_args() -> argparse.Namespace:
@@ -165,6 +181,7 @@ def _collect_goal_helpers(text: str) -> list[str]:
 
 def _verify_alignment() -> list[str]:
     blockers: list[str] = []
+    contract_lib = _load_estimation_contract_lib()
     contract_matrix = _yaml_capability(MATRIX_PATH, "ddc-estimation-contract")
     contract_registry = _yaml_capability(REGISTRY_PATH, "ddc-estimation-contract")
     quantity_matrix = _yaml_capability(MATRIX_PATH, "quantity-takeoff-agent")
@@ -252,6 +269,21 @@ def _verify_alignment() -> list[str]:
         blockers.append("Registry state drifted for quantity-takeoff-agent.")
     if str(contract_registry.get("state")) != "ACTIVE":
         blockers.append("Registry state drifted for ddc-estimation-contract.")
+    if not ESTIMATION_SOURCE_PATH.exists():
+        blockers.append("ddc/estimation/source/source-inventory.json is missing.")
+    if not ESTIMATION_PROVENANCE_PATH.exists():
+        blockers.append("ddc/estimation/source/provenance.json is missing.")
+    if contract_lib.check_all_schemas().get("all_valid") is not True:
+        blockers.append("DDC estimation contract schemas are not all valid Draft 2020-12 schemas.")
+    example_payload = contract_lib.validate_examples_data()
+    if not all(item["status"] == "pass" for item in example_payload["valid_examples"]):
+        blockers.append("DDC estimation valid fixtures do not all pass schema validation.")
+    if not all(item["status"] == "pass" and item["matched_expected"] is True for item in example_payload["invalid_examples"]):
+        blockers.append("DDC estimation invalid fixtures do not all fail for the expected reasons.")
+    if contract_lib.traceability_contract_status().get("status") != "pass":
+        blockers.append("DDC estimation traceability contract is not satisfied.")
+    if contract_lib.source_packet_status().get("status") != "pass":
+        blockers.append("DDC estimation source packet drifted from the Juniper/ROSE/Luke truth contract.")
     return blockers
 
 

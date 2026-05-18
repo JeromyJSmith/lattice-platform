@@ -14,6 +14,7 @@ The capability is healthy only when all of these remain true:
 4. **Reuse is explicit**: `cwicr-seed`, `cwicr-qdrant-cost-search`, `ifc-cost-enrichment`, `boq-sync`, `boq-read`, `boq-export`, `phases-sync`, and `quantity-takeoff-agent` are reused as dependencies, not re-described as independent wins
 5. **Blockers are explicit**: if any promoted dependency regresses, the contract falls out of green immediately instead of narrating around the break
 6. **Evidence is explicit**: green requires recorded proof for dependency reuse, Juniper-scoped cost matching, writeback/enrichment, BOQ linkage, and blocker handling
+7. **Dual-contract traceability is explicit**: workbook-faithful evidence rows and estimate capability entities stay linked through workbook row refs, formula refs, and source artifact refs
 
 The operational scorer for this capability is the DDC foundation-path score in
 `scripts/score-ddc.sh --json`. That score is only useful if it reflects real

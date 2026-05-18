@@ -1,0 +1,10 @@
+{
+  "report_id": "juniper-avenue-normalization-v1",
+  "project_id": "918-juniper",
+  "report_kind": "normalization",
+  "status": "operational_partial",
+  "source_fixture": "ddc/estimation/fixtures/juniper_avenue/worksheet.normalized.json",
+  "gaps": [
+    "The normalized fixture currently captures one operational line item with explicit traceability."
+  ]
+}

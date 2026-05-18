@@ -1,0 +1,77 @@
+{
+  "inventory_id": "ddc-estimation-evaluation-artifacts-v1",
+  "status": "pass",
+  "artifacts": [
+    {
+      "path": "ddc/estimation/evaluation/schema-validation.json",
+      "kind": "schema_validation",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/example-validation.json",
+      "kind": "example_validation",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/expected-failure-validation.json",
+      "kind": "expected_failure_validation",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/contract-tests.txt",
+      "kind": "contract_tests",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/ifc-cost-enrichment-verifier.json",
+      "kind": "verifier",
+      "capability_id": "ifc-cost-enrichment",
+      "status": "passed"
+    },
+    {
+      "path": "ddc/estimation/evaluation/boq-sync-verifier.json",
+      "kind": "verifier",
+      "capability_id": "boq-sync",
+      "status": "passed"
+    },
+    {
+      "path": "ddc/estimation/evaluation/quantity-takeoff-verifier.json",
+      "kind": "verifier",
+      "capability_id": "quantity-takeoff-agent",
+      "status": "passed"
+    },
+    {
+      "path": "ddc/estimation/evaluation/ddc-estimation-contract-verifier.json",
+      "kind": "verifier",
+      "capability_id": "ddc-estimation-contract",
+      "status": "passed"
+    },
+    {
+      "path": "ddc/estimation/evaluation/score-before.json",
+      "kind": "score_snapshot",
+      "label": "before",
+      "status": "captured"
+    },
+    {
+      "path": "ddc/estimation/evaluation/score-after.json",
+      "kind": "score_snapshot",
+      "label": "after",
+      "status": "captured"
+    },
+    {
+      "path": "ddc/estimation/evaluation/docs-check.txt",
+      "kind": "repo_check",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/git-diff-check.txt",
+      "kind": "repo_check",
+      "status": "pass"
+    },
+    {
+      "path": "ddc/estimation/evaluation/evaluation-summary.json",
+      "kind": "evaluation_summary",
+      "status": "pass"
+    }
+  ]
+}

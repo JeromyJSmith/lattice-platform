@@ -1,0 +1,25 @@
+expected_failures:
+  - example: ddc/estimation/fixtures/invalid/estimate-line-item.invalid.missing-traceability.json
+    schema: estimate-line-item.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - traceability
+  - example: ddc/estimation/fixtures/invalid/juniper-estimate-project.invalid.missing-source-artifacts.json
+    schema: estimate-project.schema.json
+    expected_failure_classes:
+      - REQUIRED_FIELD_MISSING
+    expected_fields:
+      - source_artifact_ids
+  - example: ddc/estimation/fixtures/invalid/capability-alignment.invalid.stale-capability-id.json
+    custom_validator: stale_capability_ids
+    expected_failure_classes:
+      - CAPABILITY_ID_DRIFT
+    expected_fields:
+      - registry_capability_id
+  - example: ddc/estimation/fixtures/invalid/status-claim.invalid.missing-verifier-evidence.json
+    custom_validator: verifier_evidence_required
+    expected_failure_classes:
+      - VERIFIER_EVIDENCE_MISSING
+    expected_fields:
+      - proof_evidence

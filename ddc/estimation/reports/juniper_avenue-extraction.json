@@ -1,0 +1,11 @@
+{
+  "report_id": "juniper-avenue-extraction-v1",
+  "project_id": "918-juniper",
+  "report_kind": "extraction",
+  "status": "operational_partial",
+  "source_fixture": "ddc/estimation/fixtures/juniper_avenue/worksheet.raw.json",
+  "gaps": [
+    "The committed operational fixture is intentionally bounded to the planting-bed slice.",
+    "The live runtime also covers a decomposed granite path, but that second row is not yet modeled in this workbook-faithful fixture set."
+  ]
+}

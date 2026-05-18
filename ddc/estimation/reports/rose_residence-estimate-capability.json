@@ -1,0 +1,10 @@
+{
+  "report_id": "rose-residence-estimate-capability-v1",
+  "project_id": "rose-residence",
+  "report_kind": "estimate_capability",
+  "status": "lineage_only",
+  "source_fixture": "ddc/estimation/fixtures/rose_residence/estimate-line-item.json",
+  "notes": [
+    "ROSE shapes capability vocabulary and traceability expectations only."
+  ]
+}
