@@ -99,6 +99,54 @@ def test_phases_sync_exposes_run_contract() -> None:
     assert contract["command"] == ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-phases-sync.py"]
 
 
+def test_quantity_takeoff_agent_exposes_run_contract() -> None:
+    """The quantity-takeoff blocker verifier exposes an allowlisted runnable proof contract."""
+    capability = {"id": "quantity-takeoff-agent"}
+
+    action = harness.run_action(capability)
+    contract = harness.run_contract(capability)
+
+    assert action is not None
+    assert action["kind"] == "script_exit_code"
+    assert action["job_id"] == "quantity-takeoff-agent"
+    assert contract is not None
+    assert contract["request"]["timeout_seconds"] == 120
+    assert contract["command"] == [
+        "uv",
+        "run",
+        "--project",
+        "pixeltable",
+        "python",
+        "scripts/verify-ddc-estimation-foundation.py",
+        "--capability",
+        "quantity-takeoff-agent",
+    ]
+
+
+def test_ddc_estimation_contract_exposes_run_contract() -> None:
+    """The estimation-contract blocker verifier exposes an allowlisted runnable proof contract."""
+    capability = {"id": "ddc-estimation-contract"}
+
+    action = harness.run_action(capability)
+    contract = harness.run_contract(capability)
+
+    assert action is not None
+    assert action["kind"] == "script_exit_code"
+    assert action["job_id"] == "ddc-estimation-contract"
+    assert contract is not None
+    assert contract["request"]["timeout_seconds"] == 120
+    assert contract["command"] == [
+        "uv",
+        "run",
+        "--project",
+        "pixeltable",
+        "python",
+        "scripts/verify-ddc-estimation-foundation.py",
+        "--capability",
+        "ddc-estimation-contract",
+    ]
+
+
 def test_python_docstring_rule_run_writes_evidence(
     tmp_path: Path,
     monkeypatch: Any,
@@ -445,6 +493,73 @@ def test_boq_export_run_writes_evidence(
     assert result["artifact"] == "meta/harness/docs/sessions/test-boq-export.json"
     assert result["verification"]["status"] == "failed"
     assert evidence["capability_id"] == "boq-export"
+    assert evidence["verification"]["returncode"] == 1
+
+
+def test_estimation_foundation_blocker_run_writes_failed_evidence(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """Blocked estimation-foundation proofs still persist structured evidence artifacts."""
+    calls: list[dict[str, Any]] = []
+
+    def fake_run(
+        command: list[str],
+        cwd: Path,
+        capture_output: bool,
+        text: bool,
+        check: bool,
+        timeout: int,
+    ) -> SimpleNamespace:
+        """Record the blocker verifier invocation instead of executing a subprocess."""
+        calls.append(
+            {
+                "command": command,
+                "cwd": cwd,
+                "capture_output": capture_output,
+                "text": text,
+                "check": check,
+                "timeout": timeout,
+            }
+        )
+        return SimpleNamespace(returncode=1, stdout="", stderr='{"status":"blocked"}\n')
+
+    monkeypatch.setattr(harness, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(harness.subprocess, "run", fake_run)
+
+    result = harness.run_capability(
+        {
+            "capability_id": "ddc-estimation-contract",
+            "output": "meta/harness/docs/sessions/test-ddc-estimation-contract.json",
+        }
+    )
+
+    evidence_path = tmp_path / "meta/harness/docs/sessions/test-ddc-estimation-contract.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    assert calls == [
+        {
+            "command": [
+                "uv",
+                "run",
+                "--project",
+                "pixeltable",
+                "python",
+                "scripts/verify-ddc-estimation-foundation.py",
+                "--capability",
+                "ddc-estimation-contract",
+            ],
+            "cwd": tmp_path,
+            "capture_output": True,
+            "text": True,
+            "check": False,
+            "timeout": 120,
+        }
+    ]
+    assert result["ok"] is False
+    assert result["artifact"] == "meta/harness/docs/sessions/test-ddc-estimation-contract.json"
+    assert result["verification"]["status"] == "failed"
+    assert evidence["capability_id"] == "ddc-estimation-contract"
     assert evidence["verification"]["returncode"] == 1
 
 

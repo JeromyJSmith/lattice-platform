@@ -53,9 +53,9 @@ capabilities:
   - id: boq-sync
     surface: route
     name: OpenConstructionERP BOQ sync
-    state: BLOCKED
-    status_color: AMBER
-    description: Serve POST /v1/erp/boq through the sidecar and fail closed while the live ERP BOQ create contract still rejects unauthenticated requests.
+    state: ACTIVE
+    status_color: GREEN
+    description: Serve POST /v1/erp/boq through the sidecar with live verifier-backed proof now passing through ERP BOQ create plus sidecar sync.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/boq-adapter.py
@@ -69,9 +69,8 @@ capabilities:
     serves:
       - OpenConstructionERP integration
       - BOQ creation and sync
-      - verifier-backed blocker evidence
-    blocker: Latest live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 and POST /api/v1/boq/boqs/, but the upstream ERP still returns 401 Not authenticated.
-    blocker_resolution_path: Provide ERP auth for the live Portless runtime and rerun the verifier against the same BOQ create contract.
+      - verifier-backed promotion evidence
+    follow_on: Feed live Juniper IFC rows that already carry governed unit-cost writeback into this green BOQ sync path so estimation can reuse BOQ linkage instead of treating BOQ create as a blocker.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json
 
@@ -267,7 +266,7 @@ capabilities:
     name: IFC cost enrichment writeback
     state: ACTIVE
     status_color: AMBER
-    description: Persist reliable CWICR search results back into owned Pixeltable IFC rows through the existing cost-search route when a project-scoped IFC target set is explicitly supplied.
+    description: Persist reliable CWICR search results back into owned Pixeltable IFC rows through the existing cost-search route when a Juniper-scoped IFC target set is explicitly supplied.
     wired_at:
       - pixeltable/migrations/0012_extended_schema.py
       - ddc/capability-matrix.yaml
@@ -285,7 +284,7 @@ capabilities:
       - unit-cost persistence
       - governed estimation path
       - BOQ sync prerequisites
-    follow_on: Run the new writeback seam against live Juniper project rows and Qdrant-backed CWICR matches, then feed the enriched scope into BOQ sync for the next governed-estimation gate.
+    follow_on: Promote the bounded Juniper writeback seam onto live Juniper project rows and Qdrant-backed CWICR matches, then feed the enriched scope into the now-green BOQ sync path for the next governed-estimation gate.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json
 
@@ -299,7 +298,10 @@ capabilities:
       - meta/FEATURE_BACKLOG.md
       - ddc/capability-matrix.yaml
       - ddc/estimation/README.md
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-ddc-estimation-foundation.py
     invoked_by:
+      - POST /v1/harness/capabilities/runs
       - future operator estimation run
       - future /admin DDC dashboard
       - future Juniper Avenue estimation proof
@@ -307,9 +309,11 @@ capabilities:
       - quantity takeoff orchestration
       - governed estimation path
       - evidence capture
-    blocker: No project-scoped runtime currently chains quantity extraction, cost lookup, BOQ mutation, and evidence logging end to end.
-    blocker_resolution_path: Build the orchestrator after IFC cost enrichment and BOQ sync are promotable, then run it against Juniper Avenue with explicit evidence rows.
-    proof_evidence: []
+      - blocker verification
+    blocker: No project-scoped runtime currently chains quantity extraction, cost lookup, IFC writeback, green BOQ sync, and evidence logging end to end.
+    blocker_resolution_path: Build the orchestrator after IFC cost enrichment is promotable on live Juniper rows, then run it against Juniper Avenue with the already-green BOQ sync path and explicit evidence rows.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json
 
   - id: ddc-estimation-contract
     surface: planning_contract
@@ -323,7 +327,10 @@ capabilities:
       - src/data/ddc-capability-matrix.ts
       - meta/DDC_MAPPING.md
       - meta/ROADMAP.md
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-ddc-estimation-foundation.py
     invoked_by:
+      - POST /v1/harness/capabilities/runs
       - future quantity-takeoff runtime
       - future /admin DDC dashboard
       - future Juniper Avenue estimation proof
@@ -338,13 +345,14 @@ capabilities:
     supported_by:
       - cwicr-seed
       - cwicr-qdrant-cost-search
+      - boq-sync
       - boq-read
       - boq-export
       - phases-sync
     blocking_capabilities:
       - ifc-cost-enrichment
-      - boq-sync
       - quantity-takeoff-agent
-    blocker: The repo now names the governed estimation contract, but Juniper Avenue still cannot run end to end because writeback and orchestration prerequisites remain incomplete.
-    blocker_resolution_path: Promote IFC cost enrichment, BOQ sync, and quantity takeoff orchestration, then prove the full estimation path on Juniper Avenue with evidence and BOQ linkage.
-    proof_evidence: []
+    blocker: The repo now names the governed estimation contract and BOQ sync is green, but Juniper Avenue still cannot run end to end because live IFC enrichment promotion and quantity orchestration remain incomplete.
+    blocker_resolution_path: Promote IFC cost enrichment on live Juniper rows, then land quantity takeoff orchestration and prove the full estimation path on Juniper Avenue with evidence and BOQ linkage.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json

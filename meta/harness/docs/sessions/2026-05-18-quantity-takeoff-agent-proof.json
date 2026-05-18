@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "capability_id": "quantity-takeoff-agent",
+  "job_id": "quantity-takeoff-agent",
+  "run_id": "quantity-takeoff-agent-2026-05-18T06-37-49.876Z",
+  "started_at": "2026-05-18T06:37:49Z",
+  "completed_at": "2026-05-18T06:37:49Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "--project",
+    "pixeltable",
+    "python",
+    "scripts/verify-ddc-estimation-foundation.py",
+    "--capability",
+    "quantity-takeoff-agent"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\n  \"capability_id\": \"quantity-takeoff-agent\",\n  \"status\": \"blocked\",\n  \"matrix_status\": \"red\",\n  \"registry_state\": \"BLOCKED\",\n  \"dependency_status\": {\n    \"ifc-cost-enrichment\": \"amber\",\n    \"boq-sync\": \"green\",\n    \"quantity-takeoff-agent\": \"red\"\n  },\n  \"blockers\": [\n    \"ifc-cost-enrichment is not green yet, so governed quantity orchestration still lacks a promotable live Juniper writeback input.\",\n    \"No project-scoped runtime currently chains quantity extraction, cost lookup, IFC writeback, green BOQ sync, and evidence logging end to end.\"\n  ]\n}\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "{\n  \"capability_id\": \"quantity-takeoff-agent\",\n  \"status\": \"blocked\",\n  \"matrix_status\": \"red\",\n  \"registry_state\": \"BLOCKED\",\n  \"dependency_status\": {\n    \"ifc-cost-enrichment\": \"amber\",\n    \"boq-sync\": \"green\",\n    \"quantity-takeoff-agent\": \"red\"\n  },\n  \"blockers\": [\n    \"ifc-cost-enrichment is not green yet, so governed quantity orchestration still lacks a promotable live Juniper writeback input.\",\n    \"No project-scoped runtime currently chains quantity extraction, cost lookup, IFC writeback, green BOQ sync, and evidence logging end to end.\"\n  ]\n}\n"
+  },
+  "metrics": {
+    "latency_ms": 160,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

@@ -11,9 +11,18 @@ The capability is healthy only when all of these remain true:
 1. **Operational target is explicit**: Juniper Avenue is the run target for promotion
 2. **Lineage is explicit**: ROSE Residence is proof lineage only and never substitutes for Juniper execution
 3. **Dependency governance is explicit**: estimation is framed as a dependent capability, not an isolated worksheet or standalone app
-4. **Reuse is explicit**: `cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-read`, `boq-export`, and `phases-sync` are reused as dependencies, not re-described as independent wins
-5. **Blockers are explicit**: `ifc-cost-enrichment`, `boq-sync`, and `quantity-takeoff-agent` remain blocking prerequisites until they are promoted
+4. **Reuse is explicit**: `cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-sync`, `boq-read`, `boq-export`, and `phases-sync` are reused as dependencies, not re-described as independent wins
+5. **Blockers are explicit**: `ifc-cost-enrichment` and `quantity-takeoff-agent` remain blocking prerequisites until they are promoted
 6. **Evidence is explicit**: green requires recorded proof for dependency reuse, Juniper-scoped cost matching, writeback/enrichment, BOQ linkage, and blocker handling
+
+The operational scorer for this capability is the DDC foundation-path score in
+`scripts/score-ddc.sh --json`. That score is only useful if it reflects real
+state changes in this chain:
+
+- red -> amber -> green for `ifc-cost-enrichment`
+- amber -> green for `boq-sync`
+- red -> green for `quantity-takeoff-agent`
+- and continued green for the already promoted helper capabilities
 
 ## What Counts as Green
 
@@ -25,12 +34,14 @@ Green means:
 4. phase context stays attached to the same estimating surface
 5. no blocking prerequisite is hand-waved, skipped, or silently substituted
 
+The capability score should rise because one of the blocking or partial links
+actually moved forward, not because the repo gained more descriptive text.
+
 ## What Counts as Blocked
 
 Blocked means any of the following is true:
 
 - `ifc-cost-enrichment` is not promotable for Juniper-scoped rows
-- `boq-sync` cannot create or refresh the ERP-linked estimating surface
 - `quantity-takeoff-agent` cannot orchestrate quantities, evidence, and blocker capture
 - any dependency helper is assumed rather than demonstrated
 - the run produces exports or search hits without governed writeback and linkage
@@ -48,6 +59,7 @@ ROSE can justify the shape of the contract, validation rules, and vocabulary. It
 
 - `cwicr-seed`
 - `cwicr-qdrant-cost-search`
+- `boq-sync`
 - `boq-read`
 - `boq-export`
 - `phases-sync`
@@ -55,7 +67,6 @@ ROSE can justify the shape of the contract, validation rules, and vocabulary. It
 ### Blocking prerequisites
 
 - `ifc-cost-enrichment`
-- `boq-sync`
 - `quantity-takeoff-agent`
 
 Green requires the full chain to be either reusable now or honestly blocking. There is no middle state that counts as operational success.

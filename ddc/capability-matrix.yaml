@@ -1,6 +1,6 @@
 matrix:
   id: lattice.ddc.capability-matrix.v1
-  generated_at: 2026-05-18T02:35:10Z
+  generated_at: 2026-05-18T06:45:00Z
   local_repo_root: /home/runner/work/lattice-platform/lattice-platform
   intent: Map every planned DDC capability to its local home, target runtime surface, current implementation state, validation signal, and delivery wave.
 
@@ -92,18 +92,18 @@ capabilities:
     capability: IFC cost enrichment
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
     target_surface: lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}
-    current_state: bounded project-scoped writeback path exists through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied
-    gap: Record live Juniper-scoped proof on actual project rows and hand the enriched rows forward into BOQ sync
+    current_state: bounded Juniper-scoped writeback proof is passing through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied
+    gap: Promote the bounded writeback seam onto live Juniper project rows and hand the enriched scope forward into the now-green BOQ sync path
     priority: high
     wave: wave-2
     validation: ifc_elements rows show unit cost, region, and freshness timestamps
   - id: boq-sync
-    status: amber
+    status: green
     capability: BOQ creation and sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: POST /v1/erp/boq
-    current_state: verifier-backed route; live Portless proof blocked on ERP auth
-    gap: Live Portless proof reaches POST /api/v1/boq/boqs/ but upstream ERP returns 401 Not authenticated
+    current_state: verifier-backed route; latest live Portless proof passed through ERP BOQ create plus sidecar sync
+    gap: No current proof gap; the next governed-estimation step is feeding live Juniper-enriched rows into this green BOQ sync path
     priority: high
     wave: wave-2
     validation: Every BOQ-attached element has erp_item_id and unit_cost
@@ -182,8 +182,8 @@ capabilities:
     capability: Quantity takeoff agent
     local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
     target_surface: runtime agent + evidence ledger
-    current_state: Planned only; no governed runtime path yet
-    gap: Orchestrate quantities, cost search, BOQ writeback, and evidence capture
+    current_state: Planned only; blocker verifier now proves the governed runtime is still missing and Juniper still depends on live IFC enrichment before orchestration can turn green
+    gap: Build the governed orchestrator that chains Juniper quantities, cost search, IFC writeback, green BOQ sync, and evidence capture
     priority: high
     wave: wave-2
     validation: Agent runs produce BOQ-linked evidence rows end to end
@@ -192,8 +192,8 @@ capabilities:
     capability: Governed estimation contract
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md
     target_surface: project-scoped estimation run + evidence ledger + /admin planning surface
-    current_state: planning slice only; Juniper Avenue is the first operational proof target
-    gap: Turn IFC cost enrichment, BOQ sync, and quantity-takeoff orchestration into a governed end-to-end estimation path instead of treating estimation as an isolated worksheet tool
+    current_state: planning slice only; BOQ sync is now proof-backed green, but Juniper still lacks live IFC enrichment promotion and quantity-takeoff orchestration
+    gap: Turn IFC cost enrichment and quantity-takeoff orchestration into a governed Juniper end-to-end estimation path instead of treating estimation as an isolated worksheet tool
     priority: high
     wave: wave-2
     validation: MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, and explicit blocker capture
@@ -202,12 +202,12 @@ capabilities:
     supported_by:
       - cwicr-seed
       - cwicr-qdrant-cost-search
+      - boq-sync
       - boq-read
       - boq-export
       - phases-sync
     blocked_by:
       - ifc-cost-enrichment
-      - boq-sync
       - quantity-takeoff-agent
     future_support:
       - admin-sql

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "capability_id": "ddc-estimation-contract",
+  "job_id": "ddc-estimation-contract",
+  "run_id": "ddc-estimation-contract-2026-05-18T06-37-50.065Z",
+  "started_at": "2026-05-18T06:37:49Z",
+  "completed_at": "2026-05-18T06:37:50Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "--project",
+    "pixeltable",
+    "python",
+    "scripts/verify-ddc-estimation-foundation.py",
+    "--capability",
+    "ddc-estimation-contract"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\n  \"capability_id\": \"ddc-estimation-contract\",\n  \"status\": \"blocked\",\n  \"matrix_status\": \"red\",\n  \"registry_state\": \"BLOCKED\",\n  \"dependency_status\": {\n    \"ifc-cost-enrichment\": \"amber\",\n    \"boq-sync\": \"green\",\n    \"quantity-takeoff-agent\": \"red\"\n  },\n  \"proof_status\": {\n    \"boq-sync\": \"passed\",\n    \"ifc-cost-enrichment\": \"passed\"\n  },\n  \"project_target\": \"MARPA \\u2014 918 Juniper Avenue\",\n  \"supported_by\": [\n    \"cwicr-seed\",\n    \"cwicr-qdrant-cost-search\",\n    \"boq-sync\",\n    \"boq-read\",\n    \"boq-export\",\n    \"phases-sync\"\n  ],\n  \"blocked_by\": [\n    \"ifc-cost-enrichment\",\n    \"quantity-takeoff-agent\"\n  ],\n  \"blockers\": [\n    \"ifc-cost-enrichment is still not green on live Juniper rows.\",\n    \"quantity-takeoff-agent is still not green, so end-to-end governed orchestration is missing.\",\n    \"The repo now names the governed estimation contract and BOQ sync is green, but Juniper Avenue still cannot run end to end because live IFC enrichment promotion and quantity orchestration remain incomplete.\"\n  ]\n}\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "{\n  \"capability_id\": \"ddc-estimation-contract\",\n  \"status\": \"blocked\",\n  \"matrix_status\": \"red\",\n  \"registry_state\": \"BLOCKED\",\n  \"dependency_status\": {\n    \"ifc-cost-enrichment\": \"amber\",\n    \"boq-sync\": \"green\",\n    \"quantity-takeoff-agent\": \"red\"\n  },\n  \"proof_status\": {\n    \"boq-sync\": \"passed\",\n    \"ifc-cost-enrichment\": \"passed\"\n  },\n  \"project_target\": \"MARPA \\u2014 918 Juniper Avenue\",\n  \"supported_by\": [\n    \"cwicr-seed\",\n    \"cwicr-qdrant-cost-search\",\n    \"boq-sync\",\n    \"boq-read\",\n    \"boq-export\",\n    \"phases-sync\"\n  ],\n  \"blocked_by\": [\n    \"ifc-cost-enrichment\",\n    \"quantity-takeoff-agent\"\n  ],\n  \"blockers\": [\n    \"ifc-cost-enrichment is still not green on live Juniper rows.\",\n    \"quantity-takeoff-agent is still not green, so end-to-end governed orchestration is missing.\",\n    \"The repo now names the governed estimation contract and BOQ sync is green, but Juniper Avenue still cannot run end to end because live IFC enrichment promotion and quantity orchestration remain incomplete.\"\n  ]\n}\n"
+  },
+  "metrics": {
+    "latency_ms": 187,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

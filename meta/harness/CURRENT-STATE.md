@@ -48,7 +48,7 @@ Snapshot date: 2026-05-12.
 | DuckDB WASM analytical surface over harness data | Not implemented |
 | Legacy Python uplift | Not implemented beyond changed-file docstring ratchet |
 | Standalone Meta-Harness extraction | Not started |
-| DDC proof promotion | CWICR seed/search plus BOQ read/export and phases sync are proof-backed; IFC cost enrichment, BOQ sync, quantity takeoff, and governed estimation remain blocked |
+| DDC proof promotion | CWICR seed/search, BOQ sync/read/export, and phases sync are proof-backed; IFC cost enrichment remains amber while quantity takeoff and governed estimation remain blocked |
 
 ## Important Directional Decisions
 

@@ -167,8 +167,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     targetSurface:
       "lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}",
     currentState:
-      "Bounded project-scoped writeback path exists through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied",
-    gap: "Record live Juniper-scoped proof on actual project rows and hand the enriched rows forward into BOQ sync.",
+      "Bounded Juniper-scoped writeback proof is passing through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied",
+    gap: "Promote the bounded writeback seam onto live Juniper project rows and hand the enriched scope forward into the now-green BOQ sync path.",
     priority: "high",
     wave: "wave-2",
     validation:
@@ -176,13 +176,14 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "boq-sync",
-    status: "amber",
+    status: "green",
     capability: "BOQ creation and sync",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "POST /v1/erp/boq",
-    currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Live Portless proof now resolves the bridge IFC/writeback path, but POST /api/v1/boq/boqs/ still returns 401 Not authenticated until ERP auth is configured for the verifier/runtime.",
+    currentState:
+      "Verifier-backed route; latest live Portless proof passed through ERP BOQ create plus sidecar sync",
+    gap: "No current proof gap; the next governed-estimation step is feeding live Juniper-enriched rows into this green BOQ sync path.",
     priority: "high",
     wave: "wave-2",
     validation: "Every BOQ-attached element has erp_item_id and unit_cost.",
@@ -286,8 +287,9 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md",
     targetSurface: "runtime agent + evidence ledger",
-    currentState: "Planned only; no governed runtime path yet",
-    gap: "Orchestrate quantities, cost search, BOQ writeback, and evidence capture.",
+    currentState:
+      "Planned only; blocker verifier now proves the governed runtime is still missing and Juniper still depends on live IFC enrichment before orchestration can turn green",
+    gap: "Build the governed orchestrator that chains Juniper quantities, cost search, IFC writeback, green BOQ sync, and evidence capture.",
     priority: "high",
     wave: "wave-2",
     validation: "Agent runs produce BOQ-linked evidence rows end to end.",
@@ -301,8 +303,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     targetSurface:
       "project-scoped estimation run + evidence ledger + /admin planning surface",
     currentState:
-      "Planning slice only; Juniper Avenue is the first operational proof target",
-    gap: "Turn IFC cost enrichment, BOQ sync, and quantity-takeoff orchestration into a governed end-to-end estimation path instead of treating estimation as an isolated worksheet tool.",
+      "Planning slice only; BOQ sync is now proof-backed green, but Juniper still lacks live IFC enrichment promotion and quantity-takeoff orchestration",
+    gap: "Turn IFC cost enrichment and quantity-takeoff orchestration into a governed Juniper end-to-end estimation path instead of treating estimation as an isolated worksheet tool.",
     priority: "high",
     wave: "wave-2",
     validation:
@@ -313,11 +315,12 @@ export const ddcCapabilities: Array<DdcCapability> = [
     supportedBy: [
       "cwicr-seed",
       "cwicr-qdrant-cost-search",
+      "boq-sync",
       "boq-read",
       "boq-export",
       "phases-sync",
     ],
-    blockedBy: ["ifc-cost-enrichment", "boq-sync", "quantity-takeoff-agent"],
+    blockedBy: ["ifc-cost-enrichment", "quantity-takeoff-agent"],
     futureSupport: [
       "admin-sql",
       "admin-route",

@@ -9,7 +9,7 @@ This is the exact repo-local promotion path for turning `ddc-estimation-contract
 - CWICR seed data and Qdrant cost-search readiness
 - BOQ read/export surfaces for the same project scope
 - phase context for the same project scope
-- explicit blocker state for `ifc-cost-enrichment`, `boq-sync`, and `quantity-takeoff-agent`
+- explicit blocker state for `ifc-cost-enrichment` and `quantity-takeoff-agent`
 
 ## Dependency Reuse
 
@@ -17,20 +17,21 @@ The golden path must reuse these capabilities as dependencies:
 
 1. `cwicr-seed`
 2. `cwicr-qdrant-cost-search`
-3. `boq-read`
-4. `boq-export`
-5. `phases-sync`
+3. `boq-sync`
+4. `boq-read`
+5. `boq-export`
+6. `phases-sync`
 
 It must also confront these blocked prerequisites directly:
 
 1. `ifc-cost-enrichment`
-2. `boq-sync`
-3. `quantity-takeoff-agent`
+2. `quantity-takeoff-agent`
 
 No implementation run may present estimation as standalone.
 
 ## Exact Execution Path
 
+0. Capture the current foundation score with `bash scripts/score-ddc.sh --json`
 1. Confirm the run target is Juniper, not ROSE
 2. Confirm Juniper-scoped IFC rows exist for the intended estimating surface
 3. Reuse `cwicr-seed` and `cwicr-qdrant-cost-search` to obtain bounded, verifier-backed unit-cost matches for Juniper quantities
@@ -40,6 +41,17 @@ No implementation run may present estimation as standalone.
 7. Reuse `phases-sync` so schedule/phase context remains attached to the same estimating surface
 8. Use `quantity-takeoff-agent` to orchestrate quantities, evidence collection, and blocker capture across the whole run
 9. Turn green only after the full chain completes with evidence for the same Juniper scope
+
+## Loop Rule
+
+The bounded improvement loop should select the next target by asking:
+
+1. Which red or amber capability on this path is closest to becoming green?
+2. Which one most directly unlocks the Vectorworks plugin MVP chain?
+3. Does the change improve the DDC foundation score honestly?
+
+The loop must not optimize documentation-only wins once the DDC docs substrate is
+already saturated.
 
 ## Validation Gates
 
@@ -70,7 +82,6 @@ Absent evidence is a failed gate, not a warning.
 ## Blocker Capture Rules
 
 - If `ifc-cost-enrichment` is unavailable or incomplete, record it as a blocking prerequisite and stop before green
-- If `boq-sync` cannot establish ERP-linked state, record it as a blocking prerequisite and stop before green
 - If `quantity-takeoff-agent` cannot orchestrate the governed run, record it as a blocking prerequisite and stop before green
 - Never replace a blocked prerequisite with a manual narrative, isolated worksheet, or ROSE-era artifact
 

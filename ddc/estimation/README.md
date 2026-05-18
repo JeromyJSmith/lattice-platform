@@ -33,6 +33,7 @@ If one of those steps is missing, the estimation capability is still blocked.
 
 - `cwicr-seed`
 - `cwicr-qdrant-cost-search`
+- `boq-sync`
 - `boq-read`
 - `boq-export`
 - `phases-sync`
@@ -40,7 +41,6 @@ If one of those steps is missing, the estimation capability is still blocked.
 ### Still blocking promotion
 
 - `ifc-cost-enrichment`
-- `boq-sync`
 - `quantity-takeoff-agent`
 
 ### Useful later, but not the first gate
@@ -53,7 +53,7 @@ If one of those steps is missing, the estimation capability is still blocked.
 
 ## Current state
 
-Current state is **planning slice only**. The contract is now explicit in the repo, but the capability stays red until Juniper Avenue completes an end-to-end governed run.
+Current state is **planning slice only**. The contract is now explicit in the repo and BOQ sync is proof-backed green, but the capability stays red until Juniper Avenue completes an end-to-end governed run.
 
 ## Green-state rule
 

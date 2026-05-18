@@ -201,8 +201,8 @@ LATTICE treats estimation as a **dependency-governed capability**, not as an iso
 
 The contract depends on:
 
-- already helping now: `cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-read`, `boq-export`, `phases-sync`
-- still blocking promotion: `ifc-cost-enrichment`, `boq-sync`, `quantity-takeoff-agent`
+- already helping now: `cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-sync`, `boq-read`, `boq-export`, `phases-sync`
+- still blocking promotion: `ifc-cost-enrichment`, `quantity-takeoff-agent`
 - useful later but not the first gate: `admin-sql`, `admin-route`, `cost-per-zone`, `cost-overlay`, `skills-search-api`
 
 This capability turns green only when Juniper Avenue runs end to end through the governed estimation path with explicit evidence, BOQ linkage, and blocker capture. Until then, estimation remains a planning slice with honest blockers surfaced.
