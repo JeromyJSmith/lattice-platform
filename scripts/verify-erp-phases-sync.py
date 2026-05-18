@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import sys
@@ -25,6 +26,19 @@ from ddc.erp.runtime import erp_request_kwargs, require_erp_runtime, resolve_erp
 from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
+
+def _load_phase_adapter():
+    path = REPO_ROOT / "ddc" / "erp" / "phase-adapter.py"
+    spec = importlib.util.spec_from_file_location("ddc_erp_phase_adapter_verify", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"unable to load phases adapter from {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+PHASE_ADAPTER = _load_phase_adapter()
+
 ERP_RUNTIME = resolve_erp_runtime()
 ERP_BASE = ERP_RUNTIME.base_url
 ERP_SCHEDULES_PREFIX = os.environ.get("OPENCONSTRUCTIONERP_SCHEDULES_PREFIX", "/api/v2/schedules")
@@ -45,15 +59,12 @@ DEFAULT_IDEMPOTENCY_KEY = os.environ.get(
 REQUEST_TIMEOUT_SECONDS = 10.0
 
 
-class _PhaseSyncPrereqPxt:
-    def get_table(self, path: str):
-        """Return the minimum table set needed to reach the current blocker path."""
-        if path in {
-            "lattice/bridge/ifc/ifc_elements",
-            "lattice/bridge/marpa_projects",
-        }:
-            return {"path": path}
-        raise RuntimeError(f"table not found: {path}")
+def _resolve_phase_sync_pxt() -> Any:
+    try:
+        import pixeltable as pxt
+    except Exception as exc:
+        raise RuntimeError("phases-sync verifier could not import the live Pixeltable handle.") from exc
+    return pxt
 
 
 def _parse_args() -> argparse.Namespace:
@@ -123,10 +134,14 @@ def _probe_upstream_phase_endpoint(project_id: str) -> dict[str, Any]:
     }
 
 
-def _build_app() -> FastAPI:
+def _probe_local_phase_sync_seam(project_id: str) -> dict[str, Any]:
+    return PHASE_ADAPTER.inspect_phase_sync_seam(project_id, pxt=_resolve_phase_sync_pxt())
+
+
+def _build_app(*, pxt_handle: Any | None = None) -> FastAPI:
     app = FastAPI()
     app.state.idem = IdempotencyStore(REPO_ROOT / ".tmp" / ".verify-erp-phases-sync.idem.json")
-    app.state.pxt = _PhaseSyncPrereqPxt()
+    app.state.pxt = _resolve_phase_sync_pxt() if pxt_handle is None else pxt_handle
     app.include_router(erp.router, prefix="/v1/erp")
     return app
 
@@ -185,6 +200,11 @@ def main() -> int:
 
     try:
         report["erp_probe"] = _probe_upstream_phase_endpoint(args.project_id)
+    except Exception as exc:
+        blockers.append(str(exc))
+
+    try:
+        report["local_seam_probe"] = _probe_local_phase_sync_seam(args.project_id)
     except Exception as exc:
         blockers.append(str(exc))
 

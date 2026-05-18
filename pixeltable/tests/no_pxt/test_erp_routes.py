@@ -555,31 +555,100 @@ def test_phases_sync_requires_project_id(tmp_path: Path):
 
 
 def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
-    """Expose the concrete local schedule blocker instead of a generic stub message."""
+    """Expose the exact live local seam blocker when the proof project is not joinable."""
+
+    class _RowsTable:
+        def __init__(self, rows):
+            self._rows = rows
+
+        def collect(self):
+            """Return the synthetic table rows."""
+            return list(self._rows)
 
     class _PhaseSyncPxt:
+        def __init__(self):
+            self._tables = {
+                "lattice/bridge/ifc/ifc_elements": _RowsTable([{"source_element_id": "ifc-1", "boq_phase": "A"}]),
+                "lattice/bridge/marpa_projects": _RowsTable([]),
+            }
+
         def get_table(self, path: str):
-            """Return the minimum table set needed to reach the schedule blocker."""
-            if path in {"lattice/bridge/ifc/ifc_elements", "lattice/bridge/marpa_projects"}:
-                return {"path": path}
-            raise RuntimeError(f"table not found: {path}")
+            """Return one synthetic table handle."""
+            if path not in self._tables:
+                raise RuntimeError(f"table not found: {path}")
+            return self._tables[path]
 
     client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
     response = client.post(
         "/v1/erp/phases",
-        json={"project_id": "proj-1"},
+        json={"project_id": "ddc-phases-proof-project"},
         headers={"Idempotency-Key": "ddc-phases-sync-0001"},
     )
     assert response.status_code == 501
     assert (
         response.json()["detail"]
         == "phase sync blocked: project IFC access resolves via lattice/bridge/ifc/ifc_elements "
-        "(bridge source-of-truth), but local schedule metadata is only project-level in "
-        "lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express "
-        "per-phase assignments for proj-1. The bounded live OpenConstructionERP schedule "
-        "surface is /api/v2/schedules/{schedule_id}/import (CSV upload) plus "
-        "/api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so verifier "
-        "data must include schedule_id/task_id rather than only project_id."
+        "(bridge source-of-truth), but rows do not expose project_id, so local IFC rows cannot "
+        "be scoped to project_id=ddc-phases-proof-project. schedule source "
+        "lattice/bridge/marpa_projects has no rows for project_id=ddc-phases-proof-project. "
+        "The bounded live OpenConstructionERP schedule surface is "
+        "/api/v2/schedules/{schedule_id}/import (CSV upload) plus "
+        "/api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so local verifier "
+        "data must provide per-phase schedule_id/task_id before phases-sync can pass."
+    )
+
+
+def test_phases_sync_surfaces_missing_schedule_identifiers(tmp_path: Path):
+    """Fail closed when local project rows exist but do not carry ERP schedule/task identifiers."""
+
+    class _RowsTable:
+        def __init__(self, rows):
+            self._rows = rows
+
+        def collect(self):
+            """Return the synthetic table rows."""
+            return list(self._rows)
+
+    class _PhaseSyncPxt:
+        def __init__(self):
+            self._tables = {
+                "lattice/bridge/ifc/ifc_elements": _RowsTable(
+                    [{"project_id": "proj-1", "source_element_id": "ifc-1", "boq_phase": "A"}]
+                ),
+                "lattice/bridge/marpa_projects": _RowsTable(
+                    [
+                        {
+                            "project_id": "proj-1",
+                            "phase": "A",
+                            "start_date": "2026-05-01T00:00:00Z",
+                            "end_date": "2026-05-31T00:00:00Z",
+                            "erp_project_id": "erp-proj-1",
+                        }
+                    ]
+                ),
+            }
+
+        def get_table(self, path: str):
+            """Return one synthetic table handle."""
+            if path not in self._tables:
+                raise RuntimeError(f"table not found: {path}")
+            return self._tables[path]
+
+    client = TestClient(_app(tmp_path, pxt=_PhaseSyncPxt()))
+    response = client.post(
+        "/v1/erp/phases",
+        json={"project_id": "proj-1"},
+        headers={"Idempotency-Key": "ddc-phases-sync-0003"},
+    )
+    assert response.status_code == 501
+    assert (
+        response.json()["detail"]
+        == "phase sync blocked: schedule source lattice/bridge/marpa_projects has 1 row(s) for "
+        "project_id=proj-1, but only exposes phase/start_date/end_date/erp_project_id and does not "
+        "provide schedule_id/task_id. The bounded live OpenConstructionERP schedule surface is "
+        "/api/v2/schedules/{schedule_id}/import (CSV upload) plus "
+        "/api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so local verifier "
+        "data must provide per-phase schedule_id/task_id before phases-sync can pass."
     )
 
 

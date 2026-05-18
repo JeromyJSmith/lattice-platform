@@ -25,7 +25,30 @@ def test_verify_route_reports_precise_schedule_blocker():
     """Treat phase sync proof as failed until the route stops returning the schedule blocker."""
     verifier = _load_verifier()
 
-    with pytest.raises(RuntimeError, match="project IFC access resolves via lattice/bridge/ifc/ifc_elements"):
+    class _RowsTable:
+        def __init__(self, rows):
+            self._rows = rows
+
+        def collect(self):
+            """Return the synthetic table rows."""
+            return list(self._rows)
+
+    class _PhaseSyncPxt:
+        def __init__(self):
+            self._tables = {
+                "lattice/bridge/ifc/ifc_elements": _RowsTable([{"source_element_id": "ifc-1"}]),
+                "lattice/bridge/marpa_projects": _RowsTable([]),
+            }
+
+        def get_table(self, path: str):
+            """Return one synthetic table handle."""
+            if path not in self._tables:
+                raise RuntimeError(f"table not found: {path}")
+            return self._tables[path]
+
+    verifier._resolve_phase_sync_pxt = lambda: _PhaseSyncPxt()
+
+    with pytest.raises(RuntimeError, match="rows do not expose project_id"):
         verifier._verify_route("ddc-phases-proof-project", idempotency_key="ddc-phases-sync-proof-0001")
 
 
@@ -78,6 +101,15 @@ def test_main_reports_combined_blockers(monkeypatch, capsys):
     )
     monkeypatch.setattr(
         verifier,
+        "_probe_local_phase_sync_seam",
+        lambda project_id: {
+            "project_id": project_id,
+            "ready": False,
+            "blockers": ["missing schedule_id/task_id"],
+        },
+    )
+    monkeypatch.setattr(
+        verifier,
         "_probe_upstream_phase_endpoint",
         lambda project_id: (_ for _ in ()).throw(RuntimeError("upstream 404")),
     )
@@ -92,3 +124,4 @@ def test_main_reports_combined_blockers(monkeypatch, capsys):
     payload = json.loads(stderr)
     assert payload["status"] == "blocked"
     assert payload["blockers"] == ["upstream 404", "route blocked"]
+    assert payload["local_seam_probe"]["blockers"] == ["missing schedule_id/task_id"]
