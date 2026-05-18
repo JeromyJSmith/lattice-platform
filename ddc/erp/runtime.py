@@ -28,6 +28,11 @@ DEFAULT_ERP_PORTLESS_HOSTS = (
     "erp.marpa.localhost",
     "erp.localhost",
 )
+DEFAULT_ERP_DEMO_EMAILS = (
+    "demo@openestimator.io",
+    "estimator@openestimator.io",
+    "manager@openestimator.io",
+)
 
 
 @dataclass(frozen=True)
@@ -174,6 +179,12 @@ def erp_tls_verify(base_url: str | None = None) -> bool:
     return True
 
 
+def _is_local_erp_base_url(base_url: str | None) -> bool:
+    parsed = urlparse(_normalize_url(base_url) or "")
+    host = (parsed.hostname or "").lower()
+    return host == "localhost" or host.endswith(".localhost")
+
+
 def _normalize_uuid(value: str | None) -> str | None:
     normalized = _normalize_url(value)
     if normalized is None:
@@ -207,7 +218,8 @@ def _resolve_access_token(
     explicit_token: str | None,
     auth_email: str | None,
     auth_password: str | None,
-    demo_email: str | None,
+    demo_emails: tuple[str, ...],
+    strict_demo_email: bool,
 ) -> str | None:
     if explicit_token is not None:
         return explicit_token
@@ -216,9 +228,41 @@ def _resolve_access_token(
     if auth_email is not None and auth_password is not None:
         request_path = ERP_LOGIN_PATH
         request_body = {"email": auth_email, "password": auth_password}
-    elif demo_email is not None:
+    elif demo_emails:
         request_path = ERP_DEMO_LOGIN_PATH
-        request_body = {"email": demo_email}
+        for demo_email in demo_emails:
+            request_body = {"email": demo_email}
+            url = f"{base_url}{request_path}"
+            try:
+                response = httpx.post(
+                    url,
+                    json=request_body,
+                    timeout=20.0,
+                    verify=verify,
+                    follow_redirects=True,
+                )
+            except Exception as exc:
+                raise RuntimeError(f"OpenConstructionERP auth bootstrap failed for {url}: {exc!s}") from exc
+            if response.status_code in {401, 404} and not strict_demo_email:
+                continue
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as exc:
+                raise RuntimeError(
+                    "OpenConstructionERP auth bootstrap returned "
+                    f"{response.status_code} {erp_response_detail(response)} for {url}"
+                ) from exc
+            try:
+                payload = response.json()
+            except ValueError as exc:
+                raise RuntimeError(f"OpenConstructionERP auth bootstrap returned non-JSON payload for {url}.") from exc
+            if not isinstance(payload, dict):
+                raise RuntimeError(f"OpenConstructionERP auth bootstrap returned unsupported JSON payload for {url}.")
+            access_token = payload.get("access_token")
+            if not isinstance(access_token, str) or not access_token.strip():
+                raise RuntimeError(f"OpenConstructionERP auth bootstrap did not return an access_token for {url}.")
+            return access_token.strip()
+        return None
     if request_path is None or request_body is None:
         return None
     url = f"{base_url}{request_path}"
@@ -262,14 +306,24 @@ def erp_access_token(base_url: str | None = None) -> str | None:
     explicit_token = _normalize_url(os.environ.get("OPENCONSTRUCTIONERP_ACCESS_TOKEN"))
     auth_email = _normalize_url(os.environ.get("OPENCONSTRUCTIONERP_AUTH_EMAIL"))
     auth_password = _normalize_url(os.environ.get("OPENCONSTRUCTIONERP_AUTH_PASSWORD"))
-    demo_email = _normalize_url(os.environ.get("OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL"))
+    explicit_demo_email = _normalize_url(os.environ.get("OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL"))
+    if explicit_demo_email is not None:
+        demo_emails = (explicit_demo_email,)
+        strict_demo_email = True
+    elif _is_local_erp_base_url(normalized_base_url):
+        demo_emails = DEFAULT_ERP_DEMO_EMAILS
+        strict_demo_email = False
+    else:
+        demo_emails = ()
+        strict_demo_email = False
     return _resolve_access_token(
         normalized_base_url,
         erp_tls_verify(normalized_base_url),
         explicit_token,
         auth_email,
         auth_password,
-        demo_email,
+        demo_emails,
+        strict_demo_email,
     )
 
 

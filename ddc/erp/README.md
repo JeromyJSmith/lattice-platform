@@ -15,11 +15,12 @@ When the resolved ERP URL is `https://*.localhost`, the adapter/verifier HTTP cl
 
 ## Authentication bootstrap
 
-The live BOQ endpoints at `/api/v1/boq/boqs/` are protected by `HTTPBearer`, not by an anonymous session cookie. The ERP adapters and BOQ verifier scripts can now authenticate through one of these env-backed paths:
+The live BOQ endpoints at `/api/v1/boq/boqs/` are protected by `HTTPBearer`, not by an anonymous session cookie. The ERP adapters and BOQ verifier scripts authenticate in this order:
 
 1. `OPENCONSTRUCTIONERP_ACCESS_TOKEN` — use an already-issued bearer token directly.
 2. `OPENCONSTRUCTIONERP_AUTH_EMAIL` + `OPENCONSTRUCTIONERP_AUTH_PASSWORD` — log in through `POST /api/v1/users/auth/login/` and attach the returned JWT automatically.
 3. `OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL` — use `POST /api/v1/users/auth/demo-login/` when the local runtime exposes a seeded demo account.
+4. When the resolved ERP runtime is `localhost` / `*.localhost` and no explicit auth env is set, LATTICE automatically tries the upstream seeded demo accounts (`demo@openestimator.io`, then `estimator@openestimator.io`, then `manager@openestimator.io`) through `POST /api/v1/users/auth/demo-login/`.
 
 For a fresh local runtime with no existing account, the honest bootstrap path is:
 

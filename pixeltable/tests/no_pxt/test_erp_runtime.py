@@ -139,6 +139,70 @@ def test_erp_request_kwargs_logs_in_with_credentials(monkeypatch):
     ]
 
 
+def test_erp_request_kwargs_falls_back_to_local_demo_login(monkeypatch):
+    """Local Portless ERP should auto-bootstrap through the seeded demo account when no auth env is set."""
+
+    runtime = _load_runtime()
+    runtime._resolve_access_token.cache_clear()
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_EMAIL", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_PASSWORD", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL", raising=False)
+
+    class _Response:
+        status_code = 200
+
+        def raise_for_status(self):
+            """Mirror a successful demo auth response."""
+            return None
+
+        def json(self):
+            """Return the mocked demo token payload."""
+            return {
+                "access_token": "demo-jwt-123",
+                "refresh_token": "refresh-123",
+                "expires_in": 3600,
+            }
+
+    seen: list[tuple[str, dict[str, str]]] = []
+
+    def _post(url: str, *, json: dict[str, str], **kwargs):
+        seen.append((url, json))
+        return _Response()
+
+    monkeypatch.setattr(runtime.httpx, "post", _post)
+
+    kwargs = runtime.erp_request_kwargs(base_url="https://openconstructionerp.marpa.localhost:1355")
+
+    assert kwargs["headers"] == {"Authorization": "Bearer demo-jwt-123"}
+    assert seen == [
+        (
+            "https://openconstructionerp.marpa.localhost:1355/api/v1/users/auth/demo-login/",
+            {"email": "demo@openestimator.io"},
+        )
+    ]
+
+
+def test_erp_request_kwargs_does_not_try_demo_login_for_non_local_runtime(monkeypatch):
+    """Automatic demo auth should stay limited to local localhost ERP targets."""
+
+    runtime = _load_runtime()
+    runtime._resolve_access_token.cache_clear()
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_EMAIL", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_PASSWORD", raising=False)
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL", raising=False)
+
+    def _post(*args, **kwargs):
+        raise AssertionError("demo login should not be attempted for non-local ERP targets")
+
+    monkeypatch.setattr(runtime.httpx, "post", _post)
+
+    kwargs = runtime.erp_request_kwargs(base_url="https://erp.example.com")
+
+    assert "headers" not in kwargs
+
+
 def test_ensure_erp_verifier_project_id_creates_project_when_missing(monkeypatch):
     """Verifier project bootstrap should create a UUID-backed project when env config is absent."""
 
