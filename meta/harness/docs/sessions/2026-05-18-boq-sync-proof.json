@@ -2,9 +2,9 @@
   "schema_version": 1,
   "capability_id": "boq-sync",
   "job_id": "boq-sync",
-  "run_id": "boq-sync-2026-05-18T01-40-08-967Z",
-  "started_at": "2026-05-18T01:40:08.967Z",
-  "completed_at": "2026-05-18T01:40:09.239Z",
+  "run_id": "boq-sync-2026-05-18T01:50:44Z",
+  "started_at": "2026-05-18T01:50:44Z",
+  "completed_at": "2026-05-18T01:50:44Z",
   "ok": false,
   "command": [
     "uv",
@@ -18,18 +18,13 @@
   "artifact": "meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json",
   "returncode": 1,
   "stdout": "",
-  "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ create probe returned 401 Not authenticated for https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/; live ERP authentication is required before this capability can pass.\",\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/ddc-boq-proof-project/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}\n",
+  "stderr": "{\n  \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"project_id_source\": \"erp:list-projects\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"portless:openconstructionerp.marpa.localhost\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"erp_probe\": {\n    \"url\": \"https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/\",\n    \"status_code\": 201,\n    \"request_contract\": {\n      \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n      \"name\": \"LATTICE verifier BOQ\",\n      \"description\": \"LATTICE verifier BOQ sync probe\"\n    },\n    \"response_kind\": \"object\"\n  },\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/e7d28c24-c7f9-4a8e-a219-da2d52b82a73/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}",
   "verification": {
     "status": "failed",
-    "message": "Command returned 1, expected 0.",
+    "message": "Command returned non-zero.",
     "returncode": 1,
     "expected_returncode": 0,
     "stdout": "",
-    "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ create probe returned 401 Not authenticated for https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/; live ERP authentication is required before this capability can pass.\",\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/ddc-boq-proof-project/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}\n"
-  },
-  "metrics": {
-    "latency_ms": 272,
-    "cost_usd": 0,
-    "model": "deterministic"
+    "stderr": "{\n  \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"project_id_source\": \"erp:list-projects\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"portless:openconstructionerp.marpa.localhost\",\n  \"route\": \"POST /v1/erp/boq\",\n  \"erp_probe\": {\n    \"url\": \"https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/\",\n    \"status_code\": 201,\n    \"request_contract\": {\n      \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n      \"name\": \"LATTICE verifier BOQ\",\n      \"description\": \"LATTICE verifier BOQ sync probe\"\n    },\n    \"response_kind\": \"object\"\n  },\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"/v1/erp/boq is still blocked: boq sync blocked: project IFC rows are not ready at lattice/projects/e7d28c24-c7f9-4a8e-a219-da2d52b82a73/ifc_elements; the route cannot map project_id to a local BOQ input set yet.\"\n  ]\n}"
   }
 }

@@ -21,13 +21,19 @@ if REPO_ROOT.as_posix() not in sys.path:
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
-from ddc.erp.runtime import erp_request_kwargs, erp_response_detail, require_erp_runtime, resolve_erp_runtime  # noqa: E402
+from ddc.erp.runtime import (  # noqa: E402
+    ensure_erp_verifier_project_id,
+    erp_request_kwargs,
+    erp_response_detail,
+    require_erp_runtime,
+    resolve_erp_runtime,
+)
 from service.routes import erp  # noqa: E402
 
 ERP_RUNTIME = resolve_erp_runtime()
 ERP_BASE = ERP_RUNTIME.base_url
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
-DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
+DEFAULT_PROJECT_ID = (os.environ.get("ERP_BOQ_VERIFY_PROJECT_ID") or "").strip() or None
 REQUEST_TIMEOUT_SECONDS = 10.0
 
 
@@ -35,6 +41,15 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-id", default=DEFAULT_PROJECT_ID)
     return parser.parse_args()
+
+
+def _resolve_project_id(project_id: str | None) -> tuple[str, str]:
+    normalized_project_id = (project_id or "").strip()
+    if normalized_project_id:
+        return normalized_project_id, "arg:project_id"
+    return ensure_erp_verifier_project_id(
+        env_var_names=("ERP_BOQ_VERIFY_PROJECT_ID", "ERP_BOQ_PROJECT_ID"),
+    )
 
 
 def _fetch_upstream_json(project_id: str) -> tuple[str, dict[str, Any] | list[Any]]:
@@ -115,21 +130,23 @@ def _verify_route(project_id: str) -> dict[str, Any]:
 def main() -> int:
     """Execute the live BOQ read verifier and exit non-zero when proof fails."""
     args = _parse_args()
+    project_id, project_id_source = _resolve_project_id(args.project_id)
     report: dict[str, Any] = {
-        "project_id": args.project_id,
+        "project_id": project_id,
+        "project_id_source": project_id_source,
         "erp_base": ERP_BASE,
         "erp_runtime_source": ERP_RUNTIME.source,
-        "route": f"/v1/erp/boq/{args.project_id}",
-        "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={args.project_id}",
+        "route": f"/v1/erp/boq/{project_id}",
+        "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={project_id}",
     }
     try:
-        upstream_url, upstream_payload = _fetch_upstream_json(args.project_id)
+        upstream_url, upstream_payload = _fetch_upstream_json(project_id)
         report["erp_probe"] = {
             "url": upstream_url,
             "payload_kind": "object" if isinstance(upstream_payload, dict) else "array",
             "document_size": len(upstream_payload),
         }
-        report["route_proof"] = _verify_route(args.project_id)
+        report["route_proof"] = _verify_route(project_id)
     except Exception as exc:
         report["status"] = "blocked"
         report["blockers"] = [str(exc)]

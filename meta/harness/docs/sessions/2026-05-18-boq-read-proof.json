@@ -2,10 +2,10 @@
   "schema_version": 1,
   "capability_id": "boq-read",
   "job_id": "boq-read",
-  "run_id": "boq-read-2026-05-18T01-40-08-432Z",
-  "started_at": "2026-05-18T01:40:08.432Z",
-  "completed_at": "2026-05-18T01:40:08.695Z",
-  "ok": false,
+  "run_id": "boq-read-2026-05-18T01:50:42Z",
+  "started_at": "2026-05-18T01:50:42Z",
+  "completed_at": "2026-05-18T01:50:42Z",
+  "ok": true,
   "command": [
     "uv",
     "run",
@@ -16,20 +16,15 @@
   ],
   "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
   "artifact": "meta/harness/docs/sessions/2026-05-18-boq-read-proof.json",
-  "returncode": 1,
-  "stdout": "",
-  "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"/v1/erp/boq/ddc-boq-proof-project\",\n  \"boq_list_contract\": \"/api/v1/boq/boqs/?project_id=ddc-boq-proof-project\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ probe returned 401 Not authenticated for https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/?project_id=ddc-boq-proof-project; live ERP authentication is required before this capability can pass.\"\n  ]\n}\n",
+  "returncode": 0,
+  "stdout": "{\n  \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"project_id_source\": \"erp:list-projects\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"portless:openconstructionerp.marpa.localhost\",\n  \"route\": \"/v1/erp/boq/e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"boq_list_contract\": \"/api/v1/boq/boqs/?project_id=e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"erp_probe\": {\n    \"url\": \"https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/?project_id=e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n    \"payload_kind\": \"array\",\n    \"document_size\": 1\n  },\n  \"route_proof\": {\n    \"route\": \"/v1/erp/boq/e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n    \"payload_kind\": \"array\",\n    \"document_size\": 1,\n    \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\"\n  },\n  \"status\": \"passed\"\n}",
+  "stderr": "",
   "verification": {
-    "status": "failed",
-    "message": "Command returned 1, expected 0.",
-    "returncode": 1,
+    "status": "passed",
+    "message": "Command returned 0 as expected.",
+    "returncode": 0,
     "expected_returncode": 0,
-    "stdout": "",
-    "stderr": "{\n  \"project_id\": \"ddc-boq-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"/v1/erp/boq/ddc-boq-proof-project\",\n  \"boq_list_contract\": \"/api/v1/boq/boqs/?project_id=ddc-boq-proof-project\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP BOQ probe returned 401 Not authenticated for https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/?project_id=ddc-boq-proof-project; live ERP authentication is required before this capability can pass.\"\n  ]\n}\n"
-  },
-  "metrics": {
-    "latency_ms": 262,
-    "cost_usd": 0,
-    "model": "deterministic"
+    "stdout": "{\n  \"project_id\": \"e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"project_id_source\": \"erp:list-projects\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"portless:openconstructionerp.marpa.localhost\",\n  \"route\": \"/v1/erp/boq/e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"boq_list_contract\": \"/api/v1/boq/boqs/?project_id=e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n  \"erp_probe\": {\n    \"url\": \"https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/?project_id=e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n    \"payload_kind\": \"array\",\n    \"document_size\": 1\n  },\n  \"route_proof\": {\n    \"route\": \"/v1/erp/boq/e7d28c24-c7f9-4a8e-a219-da2d52b82a73\",\n    \"payload_kind\": \"array\",\n    \"document_size\": 1,\n    \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\"\n  },\n  \"status\": \"passed\"\n}",
+    "stderr": ""
   }
 }

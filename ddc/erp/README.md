@@ -13,6 +13,22 @@ If neither exists, the ERP stack stays blocked instead of silently falling throu
 
 When the resolved ERP URL is `https://*.localhost`, the adapter/verifier HTTP client disables TLS certificate verification by default so Portless local HTTPS can be reached without a workstation-specific CA install. Set `OPENCONSTRUCTIONERP_VERIFY_TLS=1` to force certificate verification back on.
 
+## Authentication bootstrap
+
+The live BOQ endpoints at `/api/v1/boq/boqs/` are protected by `HTTPBearer`, not by an anonymous session cookie. The ERP adapters and BOQ verifier scripts can now authenticate through one of these env-backed paths:
+
+1. `OPENCONSTRUCTIONERP_ACCESS_TOKEN` — use an already-issued bearer token directly.
+2. `OPENCONSTRUCTIONERP_AUTH_EMAIL` + `OPENCONSTRUCTIONERP_AUTH_PASSWORD` — log in through `POST /api/v1/users/auth/login/` and attach the returned JWT automatically.
+3. `OPENCONSTRUCTIONERP_AUTH_DEMO_EMAIL` — use `POST /api/v1/users/auth/demo-login/` when the local runtime exposes a seeded demo account.
+
+For a fresh local runtime with no existing account, the honest bootstrap path is:
+
+1. `POST /api/v1/users/auth/register/` to create a local user.
+2. `POST /api/v1/users/auth/login/` to obtain the JWT pair.
+3. Reuse the same credentials through the env vars above so read/export/sync verifiers can attach `Authorization: Bearer <access_token>`.
+
+When BOQ verifier scripts are authenticated but no explicit verifier project UUID is configured, they now reuse `ERP_BOQ_*_PROJECT_ID` when present or create/find a dedicated `LATTICE BOQ Verifier Project` through `/api/v1/projects/` so the live ERP sees a valid UUID-backed project context.
+
 ## What goes where
 
 | Adapter file | What it does |

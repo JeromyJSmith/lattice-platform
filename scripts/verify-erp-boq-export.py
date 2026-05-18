@@ -20,14 +20,20 @@ if REPO_ROOT.as_posix() not in sys.path:
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
-from ddc.erp.runtime import erp_request_kwargs, erp_response_detail, require_erp_runtime, resolve_erp_runtime  # noqa: E402
+from ddc.erp.runtime import (  # noqa: E402
+    ensure_erp_verifier_project_id,
+    erp_request_kwargs,
+    erp_response_detail,
+    require_erp_runtime,
+    resolve_erp_runtime,
+)
 from service.routes import erp  # noqa: E402
 
 ERP_RUNTIME = resolve_erp_runtime()
 ERP_BASE = ERP_RUNTIME.base_url
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
 ERP_BOQ_EXPORT_PATH_TEMPLATE = "/api/v1/boq/boqs/{boq_id}/export/{export_kind}"
-DEFAULT_PROJECT_ID = os.environ.get("ERP_BOQ_EXPORT_VERIFY_PROJECT_ID", "ddc-boq-proof-project")
+DEFAULT_PROJECT_ID = (os.environ.get("ERP_BOQ_EXPORT_VERIFY_PROJECT_ID") or "").strip() or None
 DEFAULT_BOQ_ID = (os.environ.get("ERP_BOQ_EXPORT_VERIFY_BOQ_ID") or "").strip() or None
 REQUEST_TIMEOUT_SECONDS = 10.0
 
@@ -37,6 +43,15 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--project-id", default=DEFAULT_PROJECT_ID)
     parser.add_argument("--boq-id", default=DEFAULT_BOQ_ID)
     return parser.parse_args()
+
+
+def _resolve_project_id(project_id: str | None) -> tuple[str, str]:
+    normalized_project_id = (project_id or "").strip()
+    if normalized_project_id:
+        return normalized_project_id, "arg:project_id"
+    return ensure_erp_verifier_project_id(
+        env_var_names=("ERP_BOQ_EXPORT_VERIFY_PROJECT_ID", "ERP_BOQ_PROJECT_ID"),
+    )
 
 
 def _resolve_boq_id(project_id: str, boq_id: str | None) -> tuple[str, str]:
@@ -158,23 +173,25 @@ def _verify_route(project_id: str, *, expected_bytes: bytes) -> dict[str, object
 def main() -> int:
     """Execute the live BOQ export verifier and exit non-zero when proof fails."""
     args = _parse_args()
+    project_id, project_id_source = _resolve_project_id(args.project_id)
     report = {
-        "project_id": args.project_id,
+        "project_id": project_id,
+        "project_id_source": project_id_source,
         "boq_id": args.boq_id,
         "erp_base": ERP_BASE,
         "erp_runtime_source": ERP_RUNTIME.source,
-        "route": f"/v1/erp/export/{args.project_id}?fmt=csv",
-        "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={args.project_id}",
+        "route": f"/v1/erp/export/{project_id}?fmt=csv",
+        "boq_list_contract": f"{ERP_BOQ_LIST_PATH}?project_id={project_id}",
     }
     try:
-        upstream_url, upstream_bytes, boq_resolution = _fetch_upstream_export(args.project_id, args.boq_id)
+        upstream_url, upstream_bytes, boq_resolution = _fetch_upstream_export(project_id, args.boq_id)
         report["erp_probe"] = {
             "url": upstream_url,
             "boq_resolution": boq_resolution,
             "format": "csv",
             "document_size": len(upstream_bytes),
         }
-        report["route_proof"] = _verify_route(args.project_id, expected_bytes=upstream_bytes)
+        report["route_proof"] = _verify_route(project_id, expected_bytes=upstream_bytes)
     except Exception as exc:
         report["status"] = "blocked"
         report["blockers"] = [str(exc)]
