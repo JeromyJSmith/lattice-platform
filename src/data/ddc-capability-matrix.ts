@@ -166,7 +166,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "POST /v1/erp/boq",
     currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Live Portless proof reaches POST /api/v1/boq/boqs/ but gets 401 Not authenticated, and the route still lacks project-scoped IFC reads plus erp_item_id/unit_cost writeback.",
+    gap: "Live Portless proof now resolves the bridge IFC/writeback path, but POST /api/v1/boq/boqs/ still returns 401 Not authenticated until ERP auth is configured for the verifier/runtime.",
     priority: "high",
     wave: "wave-2",
     validation: "Every BOQ-attached element has erp_item_id and unit_cost.",

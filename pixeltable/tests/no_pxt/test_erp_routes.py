@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import httpx
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -176,29 +177,249 @@ def test_boq_sync_surfaces_precise_pixeltable_blocker(tmp_path: Path):
     )
 
 
-def test_boq_sync_advances_to_writeback_blocker_via_bridge_source_of_truth(tmp_path: Path):
-    """Prefer the bridge IFC catalog over the per-project shadow before failing on writeback."""
+def test_boq_sync_advances_to_writeback_blocker_via_bridge_source_of_truth(tmp_path: Path, monkeypatch):
+    """Surface the live upstream auth blocker once the bridge writeback seam is wired."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
+
+    class _Query:
+        def __init__(self, rows: list[dict]):
+            self._rows = rows
+
+        def collect(self) -> list[dict]:
+            """Return the filtered fake table rows."""
+            return list(self._rows)
+
+    class _Table:
+        project_id = _Column("project_id")
+        source_element_id = _Column("source_element_id")
+
+        def __init__(self):
+            self.rows = [
+                {
+                    "project_id": "proj-1",
+                    "source_element_id": "ifc-1",
+                    "name": "Planting Area",
+                    "quantity": 2.0,
+                    "quantity_unit": "m2",
+                }
+            ]
+
+        def where(self, predicate: _Predicate) -> _Query:
+            """Apply the fake predicate to the in-memory rows."""
+            return _Query([row for row in self.rows if predicate(row)])
+
+        def collect(self) -> list[dict]:
+            """Expose the full fake table row set."""
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply writeback updates to matching fake rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
 
     class _BoqSyncPxt:
+        def __init__(self):
+            self.table = _Table()
+
         def get_table(self, path: str):
-            """Provide the bridge IFC catalog and nothing else."""
+            """Provide the bridge IFC catalog with one project row."""
             if path == "lattice/bridge/ifc/ifc_elements":
-                return {"path": path}
+                return self.table
             raise RuntimeError(f"table not found: {path}")
 
+    request = httpx.Request("POST", "https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/")
+    upstream = httpx.Response(401, request=request, json={"detail": "Not authenticated"})
+
+    class _Client:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def post(self, path: str, json=None, follow_redirects: bool = True):
+            """Raise the upstream auth failure at BOQ create time."""
+            raise httpx.HTTPStatusError("Unauthorized", request=request, response=upstream)
+
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "require_erp_runtime", lambda: SimpleNamespace(base_url="https://erp.test"))
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "erp_client", lambda **kwargs: _Client())
     client = TestClient(_app(tmp_path, pxt=_BoqSyncPxt()))
     response = client.post(
         "/v1/erp/boq",
         json={"project_id": "proj-1"},
         headers={"Idempotency-Key": "ddc-boq-sync-0002"},
     )
-    assert response.status_code == 501
+    assert response.status_code == 502
     assert (
         response.json()["detail"]
-        == "boq sync blocked: project IFC access resolves via lattice/bridge/ifc/ifc_elements "
-        "(bridge source-of-truth) for project_id=proj-1, but the project-to-bridge writeback "
-        "contract for erp_item_id/unit_cost persistence is not implemented yet."
+        == "upstream ERP returned 401 for /api/v1/boq/boqs/ (project_id=proj-1); configure ERP authentication"
     )
+
+
+def test_boq_sync_writes_back_erp_item_id_and_unit_cost(tmp_path: Path, monkeypatch):
+    """Persist ERP position ids and returned unit costs onto the bridge IFC row."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
+
+    class _Query:
+        def __init__(self, rows: list[dict]):
+            self._rows = rows
+
+        def collect(self) -> list[dict]:
+            """Return the filtered fake table rows."""
+            return list(self._rows)
+
+    class _Table:
+        project_id = _Column("project_id")
+        source_element_id = _Column("source_element_id")
+
+        def __init__(self):
+            self.rows = [
+                {
+                    "project_id": "proj-1",
+                    "source_element_id": "ifc-1",
+                    "name": "Planting Area",
+                    "quantity": 2.0,
+                    "quantity_unit": "m2",
+                }
+            ]
+
+        def where(self, predicate: _Predicate) -> _Query:
+            """Apply the fake predicate to the in-memory rows."""
+            return _Query([row for row in self.rows if predicate(row)])
+
+        def collect(self) -> list[dict]:
+            """Expose the full fake table row set."""
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply writeback updates to matching fake rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
+
+    class _BoqSyncPxt:
+        def __init__(self):
+            self.table = _Table()
+
+        def get_table(self, path: str):
+            """Return the fake bridge IFC table."""
+            if path == "lattice/bridge/ifc/ifc_elements":
+                return self.table
+            raise RuntimeError(f"table not found: {path}")
+
+    calls: list[tuple[str, dict | None]] = []
+
+    class _Response:
+        def __init__(self, payload: dict):
+            self._payload = payload
+
+        def raise_for_status(self):
+            """Mirror a successful upstream response."""
+            return None
+
+        def json(self):
+            """Return the mocked ERP response payload."""
+            return self._payload
+
+    class _Client:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def post(self, path: str, json=None, follow_redirects: bool = True):
+            """Return BOQ create and position responses for the fake sync run."""
+            calls.append((path, json))
+            if path == "/api/v1/boq/boqs/":
+                return _Response({"id": "boq-1"})
+            if path == "/api/v1/boq/boqs/boq-1/positions/":
+                return _Response({"id": "position-1", "unit_rate": "47.5", "updated_at": "2026-05-18T08:00:00Z"})
+            raise AssertionError(f"unexpected path {path}")
+
+    pxt = _BoqSyncPxt()
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "require_erp_runtime", lambda: SimpleNamespace(base_url="https://erp.test"))
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "erp_client", lambda **kwargs: _Client())
+
+    client = TestClient(_app(tmp_path, pxt=pxt))
+    response = client.post(
+        "/v1/erp/boq",
+        json={"project_id": "proj-1"},
+        headers={"Idempotency-Key": "ddc-boq-sync-0003"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["boq_id"] == "boq-1"
+    assert body["result"]["rows_updated"] == 1
+    assert calls == [
+        (
+            "/api/v1/boq/boqs/",
+            {
+                "project_id": "proj-1",
+                "name": "LATTICE Sync proj-1",
+                "description": "LATTICE BOQ sync from IFC bridge rows",
+            },
+        ),
+        (
+            "/api/v1/boq/boqs/boq-1/positions/",
+            {
+                "boq_id": "boq-1",
+                "ordinal": "ifc-1",
+                "description": "Planting Area",
+                "unit": "m2",
+                "quantity": 2.0,
+                "unit_rate": 0.0,
+                "source": "cad_import",
+                "cad_element_ids": ["ifc-1"],
+                "classification": {
+                    "ifc_class": None,
+                    "bis_class": None,
+                    "bis_subclass": None,
+                },
+                "metadata": {
+                    "lattice_project_id": "proj-1",
+                    "lattice_source_element_id": "ifc-1",
+                },
+            },
+        ),
+    ]
+    assert pxt.table.rows[0]["erp_item_id"] == "position-1"
+    assert pxt.table.rows[0]["unit_cost"] == 47.5
 
 
 def test_boq_read_strips_project_id_before_adapter_call(tmp_path: Path, monkeypatch):

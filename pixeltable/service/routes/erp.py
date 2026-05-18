@@ -121,6 +121,33 @@ def _as_export_http_error(exc: Exception, project_id: str, fmt: str) -> HTTPExce
     return _as_http_error(exc, "boq export failed")
 
 
+def _as_boq_sync_http_error(exc: Exception, project_id: str) -> HTTPException:
+    if isinstance(exc, NotImplementedError):
+        return HTTPException(status_code=501, detail=str(exc))
+    if isinstance(exc, ValueError):
+        return HTTPException(status_code=400, detail=str(exc))
+    if isinstance(exc, httpx.HTTPStatusError):
+        request_path = exc.request.url.path
+        if exc.response.status_code == 401:
+            return HTTPException(
+                status_code=502,
+                detail=(
+                    "upstream ERP returned 401 for "
+                    f"{request_path} (project_id={project_id}); configure ERP authentication"
+                ),
+            )
+        if exc.response.status_code == 404:
+            return HTTPException(
+                status_code=404,
+                detail=f"upstream ERP returned 404 for {request_path} (project_id={project_id})",
+            )
+        return HTTPException(
+            status_code=502,
+            detail=f"boq sync failed: upstream ERP returned {exc.response.status_code} for {request_path}",
+        )
+    return _as_http_error(exc, "boq sync failed")
+
+
 def _coerce_score(row: dict[str, Any]) -> float | None:
     value = row.get("score")
     if isinstance(value, bool):
@@ -307,7 +334,7 @@ def post_boq(
         try:
             result = _BOQ_ADAPTER.sync_boq(project_id, pxt=pxt)
         except Exception as exc:
-            raise _as_http_error(exc, "boq sync failed") from exc
+            raise _as_boq_sync_http_error(exc, project_id) from exc
         return {"ok": True, "project_id": project_id, "result": result}
 
     return with_idempotency(store, idem_key, do)

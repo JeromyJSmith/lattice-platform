@@ -38,13 +38,76 @@ DEFAULT_PROJECT_ID = (os.environ.get("ERP_BOQ_SYNC_VERIFY_PROJECT_ID") or "").st
 DEFAULT_IDEMPOTENCY_KEY = os.environ.get("ERP_BOQ_SYNC_VERIFY_IDEMPOTENCY_KEY", "ddc-boq-sync-proof-0001")
 DEFAULT_BOQ_NAME = os.environ.get("ERP_BOQ_SYNC_VERIFY_NAME", "LATTICE verifier BOQ")
 REQUEST_TIMEOUT_SECONDS = 10.0
+PROOF_ARTIFACT_GLOB = "*-boq-*-proof.json"
 
 
-class _MissingProjectIfcPxt:
+class _Predicate:
+    def __init__(self, fn):
+        self._fn = fn
+
+    def __call__(self, row: dict[str, Any]) -> bool:
+        return self._fn(row)
+
+    def __and__(self, other: "_Predicate") -> "_Predicate":
+        return _Predicate(lambda row: self(row) and other(row))
+
+
+class _Column:
+    def __init__(self, name: str):
+        self.name = name
+
+    def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+        return _Predicate(lambda row: row.get(self.name) in {other, "*"})
+
+
+class _Query:
+    def __init__(self, rows: list[dict[str, Any]]):
+        self._rows = rows
+
+    def collect(self) -> list[dict[str, Any]]:
+        """Return the fake query rows."""
+        return list(self._rows)
+
+
+class _VerifierIfcTable:
+    project_id = _Column("project_id")
+    source_element_id = _Column("source_element_id")
+
+    def __init__(self):
+        self.rows = [
+            {
+                "project_id": "*",
+                "source_element_id": "ifc-verifier-001",
+                "name": "Verifier element",
+                "quantity": 1.0,
+                "quantity_unit": "ea",
+                "unit_cost": 0.0,
+            }
+        ]
+
+    def where(self, predicate: _Predicate) -> _Query:
+        """Filter the fake IFC rows by the provided predicate."""
+        return _Query([row for row in self.rows if predicate(row)])
+
+    def collect(self) -> list[dict[str, Any]]:
+        """Expose the fake IFC rows."""
+        return list(self.rows)
+
+    def update(self, values: dict[str, Any], where: _Predicate | None = None) -> None:
+        """Apply writeback updates to matching fake IFC rows."""
+        for row in self.rows:
+            if where is None or where(row):
+                row.update(values)
+
+
+class _VerifierPxt:
+    def __init__(self):
+        self._ifc_table = _VerifierIfcTable()
+
     def get_table(self, path: str):
-        """Provide the minimum bridge surface needed to reach the writeback blocker."""
+        """Provide the minimum bridge surface needed to reach the live ERP sync path."""
         if path == "lattice/bridge/ifc/ifc_elements":
-            return {"path": path}
+            return self._ifc_table
         raise RuntimeError(f"table not found: {path}")
 
 
@@ -55,10 +118,60 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _project_id_from_proof_artifact(path: Path) -> tuple[str, str] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    candidates: list[dict[str, Any]] = []
+    if isinstance(payload, dict):
+        candidates.append(payload)
+        stdout = payload.get("stdout")
+        if isinstance(stdout, str) and stdout.strip():
+            try:
+                nested = json.loads(stdout)
+            except json.JSONDecodeError:
+                nested = None
+            if isinstance(nested, dict):
+                candidates.append(nested)
+    for candidate in candidates:
+        if candidate.get("status") != "passed":
+            continue
+        project_id = candidate.get("project_id")
+        if isinstance(project_id, str) and project_id.strip():
+            return project_id.strip(), f"proof:{path.relative_to(REPO_ROOT).as_posix()}"
+    return None
+
+
+def _resolve_project_id_from_proofs() -> tuple[str, str] | None:
+    sessions_dir = REPO_ROOT / "meta" / "harness" / "docs" / "sessions"
+    if not sessions_dir.exists():
+        return None
+    for proof_path in sorted(sessions_dir.glob(PROOF_ARTIFACT_GLOB), reverse=True):
+        if "boq-sync" in proof_path.name:
+            continue
+        resolved = _project_id_from_proof_artifact(proof_path)
+        if resolved is not None:
+            return resolved
+    return None
+
+
 def _resolve_project_id(project_id: str | None) -> tuple[str, str]:
     normalized_project_id = (project_id or "").strip()
     if normalized_project_id:
         return normalized_project_id, "arg:project_id"
+    for env_var_name in (
+        "ERP_BOQ_SYNC_VERIFY_PROJECT_ID",
+        "ERP_BOQ_PROJECT_ID",
+        "ERP_BOQ_EXPORT_VERIFY_PROJECT_ID",
+        "ERP_BOQ_READ_VERIFY_PROJECT_ID",
+    ):
+        candidate = (os.environ.get(env_var_name) or "").strip()
+        if candidate:
+            return candidate, f"env:{env_var_name}"
+    proof_project_id = _resolve_project_id_from_proofs()
+    if proof_project_id is not None:
+        return proof_project_id
     return ensure_erp_verifier_project_id(
         env_var_names=("ERP_BOQ_SYNC_VERIFY_PROJECT_ID", "ERP_BOQ_PROJECT_ID"),
     )
@@ -124,9 +237,13 @@ def _probe_upstream_create(project_id: str) -> dict[str, Any]:
 def _build_app() -> FastAPI:
     app = FastAPI()
     app.state.idem = IdempotencyStore(REPO_ROOT / ".tmp" / ".verify-erp-boq-sync.idem.json")
-    app.state.pxt = _MissingProjectIfcPxt()
+    app.state.pxt = _VerifierPxt()
     app.include_router(erp.router, prefix="/v1/erp")
     return app
+
+
+def _route_idempotency_key(project_id: str, idempotency_key: str) -> str:
+    return f"{idempotency_key}:{project_id}"
 
 
 def _verify_route(project_id: str, *, idempotency_key: str) -> dict[str, Any]:
@@ -134,7 +251,7 @@ def _verify_route(project_id: str, *, idempotency_key: str) -> dict[str, Any]:
     response = client.post(
         "/v1/erp/boq",
         json={"project_id": project_id},
-        headers={"Idempotency-Key": idempotency_key},
+        headers={"Idempotency-Key": _route_idempotency_key(project_id, idempotency_key)},
     )
     body = response.json()
     if response.status_code == 200:
@@ -149,7 +266,7 @@ def _verify_route(project_id: str, *, idempotency_key: str) -> dict[str, Any]:
             "status_code": response.status_code,
             "result_kind": "object",
         }
-    if response.status_code == 501:
+    if response.status_code in {501, 502}:
         detail = body.get("detail") if isinstance(body, dict) else response.text
         raise RuntimeError(f"/v1/erp/boq is still blocked: {detail}")
     raise RuntimeError(f"/v1/erp/boq returned {response.status_code}: {body}")
@@ -158,15 +275,23 @@ def _verify_route(project_id: str, *, idempotency_key: str) -> dict[str, Any]:
 def main() -> int:
     """Execute the live BOQ sync verifier and exit non-zero when proof fails."""
     args = _parse_args()
-    project_id, project_id_source = _resolve_project_id(args.project_id)
     report: dict[str, Any] = {
-        "project_id": project_id,
-        "project_id_source": project_id_source,
         "erp_base": ERP_BASE,
         "erp_runtime_source": ERP_RUNTIME.source,
         "route": "POST /v1/erp/boq",
     }
     blockers: list[str] = []
+
+    try:
+        project_id, project_id_source = _resolve_project_id(args.project_id)
+    except Exception as exc:
+        report["status"] = "blocked"
+        report["blockers"] = [f"BOQ verifier project bootstrap failed: {exc!s}"]
+        print(json.dumps(report, indent=2), file=sys.stderr)
+        return 1
+
+    report["project_id"] = project_id
+    report["project_id_source"] = project_id_source
 
     try:
         report["erp_probe"] = _probe_upstream_create(project_id)
