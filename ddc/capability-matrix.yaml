@@ -1,6 +1,6 @@
 matrix:
   id: lattice.ddc.capability-matrix.v1
-  generated_at: 2026-05-12T17:11:47Z
+  generated_at: 2026-05-18T02:35:10Z
   local_repo_root: /home/runner/work/lattice-platform/lattice-platform
   intent: Map every planned DDC capability to its local home, target runtime surface, current implementation state, validation signal, and delivery wave.
 
@@ -77,8 +77,8 @@ capabilities:
     capability: CWICR semantic cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
     target_surface: POST /v1/erp/cost-search
-    current_state: verifier-backed route; live proof currently failing
-    gap: localhost:6333 is not serving the expected Qdrant /health contract for live proof
+    current_state: verifier-backed route; live proof blocked
+    gap: localhost:6333 still returns 404 for the verifier's expected Qdrant /health contract, so ranked search proof cannot complete
     priority: high
     wave: wave-1
     validation: Element descriptions return region-filtered ranked CWICR matches with passed verification
@@ -95,8 +95,8 @@ capabilities:
     capability: BOQ creation and sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: POST /v1/erp/boq
-    current_state: verifier-backed route; live Portless proof blocked
-    gap: Live Portless proof reaches POST /api/v1/boq/boqs/ but gets 401 Not authenticated, and the route still lacks project-scoped IFC reads plus erp_item_id/unit_cost writeback
+    current_state: verifier-backed route; live Portless proof blocked on ERP auth
+    gap: Live Portless proof reaches POST /api/v1/boq/boqs/ but upstream ERP returns 401 Not authenticated
     priority: high
     wave: wave-2
     validation: Every BOQ-attached element has erp_item_id and unit_cost
@@ -104,8 +104,8 @@ capabilities:
     capability: BOQ retrieval
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: GET /v1/erp/boq/{project_id}
-    current_state: verifier-backed route; live Portless proof blocked
-    gap: Live Portless proof reaches GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated
+    current_state: verifier-backed route; latest live Portless proof passed
+    gap: No current proof gap; GET /v1/erp/boq/{project_id} now round-trips against the bounded ERP BOQ list contract
     priority: high
     wave: wave-2
     validation: Project BOQ round-trips cleanly through the sidecar endpoint
@@ -113,8 +113,8 @@ capabilities:
     capability: BOQ export
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py
     target_surface: GET /v1/erp/export/{project_id}
-    current_state: verifier-backed route; live Portless proof blocked
-    gap: Live Portless proof reaches the BOQ list prerequisite at GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated before export can run
+    current_state: verifier-backed route; latest live Portless proof passed
+    gap: No current proof gap; export proof resolves a live BOQ and streams the CSV artifact successfully
     priority: medium
     wave: wave-2
     validation: Export endpoint streams a valid BOQ artifact
@@ -123,7 +123,7 @@ capabilities:
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py
     target_surface: POST /v1/erp/phases
     current_state: verifier-backed route; live Portless proof blocked
-    gap: Local schedule metadata is only project-level in lattice/bridge/marpa_projects; the bounded Portless phase probe now shows GET /api/v2/schedules -> 404 and GET /api/v2/eac/schedule-links -> 405
+    gap: Local proof data still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements, and lattice/bridge/marpa_projects has no rows for the verifier project even though the bounded ERP schedule contract is now /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress
     priority: high
     wave: wave-2
     validation: Project phase records in the ERP align with local phase-granular schedule metadata

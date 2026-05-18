@@ -1,8 +1,8 @@
-# spec-verified: meta/DDC_MAPPING.md 2026-05-12
+# spec-verified: meta/DDC_MAPPING.md 2026-05-18
 tool: ddc
-tool_version: mapping-2026-05-12
+tool_version: mapping-2026-05-18
 canonical_docs: meta/DDC_MAPPING.md
-last_harvested: 2026-05-12
+last_harvested: 2026-05-18
 harvested_by: codex
 
 capabilities:
@@ -52,7 +52,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP BOQ sync
     state: BLOCKED
-    description: Serve POST /v1/erp/boq through the sidecar with a concrete blocker contract until project-scoped Pixeltable reads, bridge writeback, and the upstream ERP create endpoint are all ready.
+    description: Serve POST /v1/erp/boq through the sidecar and fail closed while the live ERP BOQ create contract still rejects unauthenticated requests.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/boq-adapter.py
@@ -67,16 +67,16 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ creation and sync
       - verifier-backed blocker evidence
-    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but POST /api/v1/boq/boqs/ returns 401 Not authenticated, while the route itself is still blocked because project-scoped IFC rows and erp_item_id/unit_cost writeback are not implemented.
-    blocker_resolution_path: Provide ERP auth for the live Portless runtime, add a project_id-addressable Pixeltable read surface, implement bridge writeback for erp_item_id/unit_cost, and re-run the verifier.
+    blocker: Latest live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 and POST /api/v1/boq/boqs/, but the upstream ERP still returns 401 Not authenticated.
+    blocker_resolution_path: Provide ERP auth for the live Portless runtime and rerun the verifier against the same BOQ create contract.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json
 
   - id: boq-read
     surface: route
     name: OpenConstructionERP BOQ read
-    state: BLOCKED
-    description: Serve GET /v1/erp/boq/{project_id} through the sidecar and fail closed when the upstream ERP BOQ contract, auth, or verifier data is not ready.
+    state: ACTIVE
+    description: Serve GET /v1/erp/boq/{project_id} through the sidecar with live verifier-backed proof passing against the bounded ERP BOQ list contract.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/boq-adapter.py
@@ -89,16 +89,14 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ retrieval
       - verifier-backed promotion evidence
-    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project returns 401 Not authenticated.
-    blocker_resolution_path: Provide ERP auth for the live Portless runtime, then re-run the verifier against the same project_id.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-boq-read-proof.json
 
   - id: boq-export
     surface: route
     name: OpenConstructionERP BOQ export
-    state: BLOCKED
-    description: Serve GET /v1/erp/export/{project_id} through the sidecar, stream the generated BOQ artifact, and fail closed when the upstream ERP export contract, auth, or verifier project data is not ready.
+    state: ACTIVE
+    description: Serve GET /v1/erp/export/{project_id} through the sidecar with live verifier-backed proof passing through BOQ resolution and CSV export.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/cost-export.py
@@ -113,8 +111,6 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ export
       - verifier-backed promotion evidence
-    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but the BOQ list prerequisite at GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project returns 401 Not authenticated.
-    blocker_resolution_path: Provide ERP auth for the live Portless runtime, then re-run the verifier against the same project_id.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-boq-export-proof.json
 
@@ -137,8 +133,8 @@ capabilities:
       - OpenConstructionERP integration
       - 4D/5D phase sync
       - verifier-backed blocker evidence
-    blocker: Live Portless proof reaches the bounded schedule surface with GET /api/v2/schedules -> 404 and GET /api/v2/eac/schedule-links -> 405, but the route still cannot pass because local schedule metadata is only project-level in lattice/bridge/marpa_projects and cannot express per-phase assignments.
-    blocker_resolution_path: Add a real phase-granular schedule surface keyed by project_id, join it to project IFC rows for assignment generation, then re-run the verifier against the same bounded Portless phase endpoints.
+    blocker: Latest live Portless proof confirms the bounded ERP schedule contract at /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress, but local proof data still cannot scope IFC rows by project_id in lattice/bridge/ifc/ifc_elements and lattice/bridge/marpa_projects has no rows for the verifier project.
+    blocker_resolution_path: Expose project_id-addressable IFC rows plus project-backed phase metadata that includes schedule_id/task_id assignments, then rerun the verifier against the same bounded Portless phase endpoints.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-phases-sync-proof.json
 
@@ -170,8 +166,8 @@ capabilities:
   - id: cwicr-qdrant-cost-search
     surface: service_adapter
     name: CWICR Qdrant cost search
-    state: ACTIVE
-    description: Use the DDC CWICR cost corpus as a local Qdrant-backed semantic lookup service, then write selected unit-cost results back through LATTICE-controlled Pixeltable flows once schema support exists.
+    state: BLOCKED
+    description: Use the DDC CWICR cost corpus as a local Qdrant-backed semantic lookup service, but keep the capability blocked until the verifier can reach the expected local Qdrant health contract.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/cwicr/README.md
@@ -190,6 +186,8 @@ capabilities:
       - deck.gl cost overlay
       - BOQ unit cost enrichment
       - admin dashboard
+    blocker: Latest live proof still fails before ranked search because localhost:6333 returns 404 for the verifier's expected /health probe.
+    blocker_resolution_path: Expose the expected Qdrant health contract at localhost:6333 or align the verifier with the live health endpoint, then rerun the capability proof.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-17-cwicr-qdrant-cost-search-proof.json
 
