@@ -11,12 +11,14 @@ The ERP adapters and live verifier scripts now resolve their upstream base in th
 
 If neither exists, the ERP stack stays blocked instead of silently falling through to `http://localhost:8080`. On this workstation that raw port is already claimed by `mlx.marpa.localhost`, so `localhost:8080` is not treated as a safe ERP default.
 
+When the resolved ERP URL is `https://*.localhost`, the adapter/verifier HTTP client disables TLS certificate verification by default so Portless local HTTPS can be reached without a workstation-specific CA install. Set `OPENCONSTRUCTIONERP_VERIFY_TLS=1` to force certificate verification back on.
+
 ## What goes where
 
 | Adapter file | What it does |
 |---|---|
-| [`boq-adapter.py`](boq-adapter.py) | For each `ifc_elements` row → `POST /api/boq/create` → write `erp_item_id` + `unit_cost` back to Pixeltable |
-| [`cost-export.py`](cost-export.py) | Pull full BOQ via `GET /api/boq/{project_id}` and export to Excel/CSV via the ERP's export API |
+| [`boq-adapter.py`](boq-adapter.py) | For each `ifc_elements` row → `POST /api/v1/boq/boqs/` → write `erp_item_id` + `unit_cost` back to Pixeltable |
+| [`cost-export.py`](cost-export.py) | Resolve a project BOQ via `GET /api/v1/boq/boqs/?project_id=...` and export it through the ERP export API |
 | [`phase-adapter.py`](phase-adapter.py) | Join `ifc_elements` with the project's Linear schedule, emit 4D/5D phase data into the ERP |
 
 ## LATTICE endpoints these adapters power

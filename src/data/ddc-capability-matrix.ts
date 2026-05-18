@@ -165,8 +165,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "POST /v1/erp/boq",
-    currentState: "Adapter stub",
-    gap: "Project IFC rows into ERP payloads and persist returned ERP identifiers.",
+    currentState: "Verifier-backed route; live Portless proof blocked",
+    gap: "Live Portless proof reaches POST /api/v1/boq/boqs/ but gets 401 Not authenticated, and the route still lacks project-scoped IFC reads plus erp_item_id/unit_cost writeback.",
     priority: "high",
     wave: "wave-2",
     validation: "Every BOQ-attached element has erp_item_id and unit_cost.",
@@ -177,8 +177,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "GET /v1/erp/boq/{project_id}",
-    currentState: "Verifier-backed route; live proof currently failing",
-    gap: "localhost:8080 returns 404 for GET /api/boq/{project_id}; live ERP BOQ contract or verifier project data is not ready.",
+    currentState: "Verifier-backed route; live Portless proof blocked",
+    gap: "Live Portless proof reaches GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated.",
     priority: "high",
     wave: "wave-2",
     validation: "Project BOQ round-trips cleanly through the sidecar endpoint.",
@@ -189,8 +189,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py",
     targetSurface: "GET /v1/erp/export/{project_id}",
-    currentState: "Verifier-backed route; live proof currently failing",
-    gap: "localhost:8080 returns 404 for GET /api/boq/export; live ERP export contract or verifier project data is not ready.",
+    currentState: "Verifier-backed route; live Portless proof blocked",
+    gap: "Live Portless proof reaches the BOQ list prerequisite at GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated before export can run.",
     priority: "medium",
     wave: "wave-2",
     validation: "Export endpoint streams a valid BOQ artifact.",
@@ -201,8 +201,8 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py",
     targetSurface: "POST /v1/erp/phases",
-    currentState: "Verifier-backed route; live proof currently failing",
-    gap: "Local schedule metadata is only project-level in lattice/bridge/marpa_projects, and the configured upstream ERP phase probe returns 404.",
+    currentState: "Verifier-backed route; live Portless proof blocked",
+    gap: "Local schedule metadata is only project-level in lattice/bridge/marpa_projects; the bounded Portless phase probe now shows GET /api/v2/schedules -> 404 and GET /api/v2/eac/schedule-links -> 405.",
     priority: "high",
     wave: "wave-2",
     validation:

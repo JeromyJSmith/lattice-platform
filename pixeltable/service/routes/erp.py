@@ -74,6 +74,14 @@ def _as_boq_read_http_error(exc: Exception, project_id: str) -> HTTPException:
         return HTTPException(status_code=501, detail=str(exc))
     if isinstance(exc, httpx.HTTPStatusError):
         request_path = exc.request.url.path
+        if exc.response.status_code == 401:
+            return HTTPException(
+                status_code=502,
+                detail=(
+                    "upstream ERP returned 401 for "
+                    f"{request_path} (project_id={project_id}); configure ERP authentication"
+                ),
+            )
         if exc.response.status_code == 404:
             return HTTPException(
                 status_code=404,
@@ -93,6 +101,14 @@ def _as_export_http_error(exc: Exception, project_id: str, fmt: str) -> HTTPExce
         return HTTPException(status_code=400, detail=str(exc))
     if isinstance(exc, httpx.HTTPStatusError):
         request_path = exc.request.url.path
+        if exc.response.status_code == 401:
+            return HTTPException(
+                status_code=502,
+                detail=(
+                    "upstream ERP returned 401 for "
+                    f"{request_path} (project_id={project_id}, fmt={fmt}); configure ERP authentication"
+                ),
+            )
         if exc.response.status_code == 404:
             return HTTPException(
                 status_code=404,

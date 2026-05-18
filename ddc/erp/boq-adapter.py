@@ -21,7 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if REPO_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, REPO_ROOT.as_posix())
 
-from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime
+from ddc.erp.runtime import erp_client, require_erp_runtime, resolve_erp_runtime
 
 
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
@@ -123,7 +123,7 @@ def fetch_boq(project_id: str) -> dict:
     """Return one project's current BOQ document from OpenConstructionERP."""
     normalized_project_id = _normalize_project_id(project_id)
     erp_runtime = require_erp_runtime()
-    with httpx.Client(base_url=erp_runtime.base_url, timeout=30.0) as client:
+    with erp_client(base_url=erp_runtime.base_url, timeout=30.0) as client:
         payload = _fetch_project_boqs(client, normalized_project_id)
     return {
         "ok": True,

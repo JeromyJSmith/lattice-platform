@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the live POST /v1/erp/phases proof against current route code and local ERP."""
+"""Run the live POST /v1/erp/phases proof against current route code and OpenConstructionERP."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ if REPO_ROOT.as_posix() not in sys.path:
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
-from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
+from ddc.erp.runtime import erp_request_kwargs, require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.idempotency import IdempotencyStore  # noqa: E402
 from service.routes import erp  # noqa: E402
 
@@ -75,13 +75,19 @@ def _probe_upstream_phase_endpoint(project_id: str) -> dict[str, Any]:
     try:
         schedules_response = httpx.get(
             schedules_url,
-            timeout=REQUEST_TIMEOUT_SECONDS,
-            follow_redirects=True,
+            **erp_request_kwargs(
+                base_url=erp_runtime.base_url,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+                follow_redirects=True,
+            ),
         )
         links_response = httpx.get(
             links_url,
-            timeout=REQUEST_TIMEOUT_SECONDS,
-            follow_redirects=True,
+            **erp_request_kwargs(
+                base_url=erp_runtime.base_url,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+                follow_redirects=True,
+            ),
         )
     except Exception as exc:
         raise RuntimeError(

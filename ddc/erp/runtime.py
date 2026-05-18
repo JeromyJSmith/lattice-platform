@@ -7,6 +7,9 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
+
+import httpx
 
 DEFAULT_PORTLESS_PROXY_PORT = 1355
 DEFAULT_PORTLESS_ROUTES_PATH = Path.home() / ".portless" / "routes.json"
@@ -66,6 +69,13 @@ def _load_routes(routes_path: Path) -> list[dict[str, Any]]:
     if not isinstance(payload, list):
         return []
     return [row for row in payload if isinstance(row, dict)]
+
+
+def _parse_env_bool(name: str) -> bool | None:
+    raw = (os.environ.get(name) or "").strip().lower()
+    if not raw:
+        return None
+    return raw not in {"0", "false", "no", "off"}
 
 
 def resolve_erp_runtime() -> ErpRuntimeResolution:
@@ -141,3 +151,53 @@ def require_erp_runtime() -> ErpRuntimeResolution:
     if runtime.base_url is None or runtime.blocker is not None:
         raise RuntimeError(runtime.blocker or "OpenConstructionERP runtime is not configured.")
     return runtime
+
+
+def erp_tls_verify(base_url: str | None = None) -> bool:
+    """Honor explicit TLS config, otherwise trust portless localhost HTTPS as a local dev surface."""
+
+    configured = _parse_env_bool("OPENCONSTRUCTIONERP_VERIFY_TLS")
+    if configured is not None:
+        return configured
+
+    parsed = urlparse(_normalize_url(base_url) or "")
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme == "https" and (host == "localhost" or host.endswith(".localhost")):
+        return False
+    return True
+
+
+def erp_request_kwargs(
+    *,
+    base_url: str | None = None,
+    timeout: float | None = None,
+    follow_redirects: bool | None = None,
+) -> dict[str, Any]:
+    """Return shared httpx request kwargs for the live ERP runtime."""
+    kwargs: dict[str, Any] = {"verify": erp_tls_verify(base_url)}
+    if timeout is not None:
+        kwargs["timeout"] = timeout
+    if follow_redirects is not None:
+        kwargs["follow_redirects"] = follow_redirects
+    return kwargs
+
+
+def erp_client(*, base_url: str, timeout: float) -> httpx.Client:
+    """Build an ERP httpx client with the runtime TLS policy applied."""
+    return httpx.Client(base_url=base_url, timeout=timeout, verify=erp_tls_verify(base_url))
+
+
+def erp_response_detail(response: httpx.Response) -> str:
+    """Extract the most useful response detail string for blocker evidence."""
+    try:
+        payload = response.json()
+    except ValueError:
+        payload = None
+    if isinstance(payload, dict):
+        detail = payload.get("detail")
+        if isinstance(detail, str) and detail.strip():
+            return detail.strip()
+    text = response.text.strip()
+    if text:
+        return text
+    return response.reason_phrase or f"HTTP {response.status_code}"

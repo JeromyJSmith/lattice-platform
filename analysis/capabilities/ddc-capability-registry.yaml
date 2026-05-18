@@ -67,16 +67,16 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ creation and sync
       - verifier-backed blocker evidence
-    blocker: Live proof fails because project-scoped IFC rows are not yet available to the sync path, bridge writeback is not implemented, and localhost:8080 returns 404 for POST /api/boq/create.
-    blocker_resolution_path: Add a project_id-addressable Pixeltable read surface, implement bridge writeback for erp_item_id/unit_cost, and re-run the verifier once OpenConstructionERP serves POST /api/boq/create.
+    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but POST /api/v1/boq/boqs/ returns 401 Not authenticated, while the route itself is still blocked because project-scoped IFC rows and erp_item_id/unit_cost writeback are not implemented.
+    blocker_resolution_path: Provide ERP auth for the live Portless runtime, add a project_id-addressable Pixeltable read surface, implement bridge writeback for erp_item_id/unit_cost, and re-run the verifier.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-boq-sync-proof.json
 
   - id: boq-read
     surface: route
     name: OpenConstructionERP BOQ read
-    state: ACTIVE
-    description: Serve GET /v1/erp/boq/{project_id} through the sidecar and fail closed when the upstream ERP BOQ contract or verifier data is not ready.
+    state: BLOCKED
+    description: Serve GET /v1/erp/boq/{project_id} through the sidecar and fail closed when the upstream ERP BOQ contract, auth, or verifier data is not ready.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/boq-adapter.py
@@ -89,14 +89,16 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ retrieval
       - verifier-backed promotion evidence
+    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project returns 401 Not authenticated.
+    blocker_resolution_path: Provide ERP auth for the live Portless runtime, then re-run the verifier against the same project_id.
     proof_evidence:
-      latest: meta/harness/docs/sessions/2026-05-17-boq-read-proof.json
+      latest: meta/harness/docs/sessions/2026-05-18-boq-read-proof.json
 
   - id: boq-export
     surface: route
     name: OpenConstructionERP BOQ export
-    state: ACTIVE
-    description: Serve GET /v1/erp/export/{project_id} through the sidecar, stream the generated BOQ artifact, and fail closed when the upstream ERP export contract or verifier project data is not ready.
+    state: BLOCKED
+    description: Serve GET /v1/erp/export/{project_id} through the sidecar, stream the generated BOQ artifact, and fail closed when the upstream ERP export contract, auth, or verifier project data is not ready.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/erp/cost-export.py
@@ -111,8 +113,10 @@ capabilities:
       - OpenConstructionERP integration
       - BOQ export
       - verifier-backed promotion evidence
+    blocker: Live Portless proof reaches https://openconstructionerp.marpa.localhost:1355 but the BOQ list prerequisite at GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project returns 401 Not authenticated.
+    blocker_resolution_path: Provide ERP auth for the live Portless runtime, then re-run the verifier against the same project_id.
     proof_evidence:
-      latest: meta/harness/docs/sessions/2026-05-17-boq-export-proof.json
+      latest: meta/harness/docs/sessions/2026-05-18-boq-export-proof.json
 
   - id: phases-sync
     surface: route
@@ -133,8 +137,8 @@ capabilities:
       - OpenConstructionERP integration
       - 4D/5D phase sync
       - verifier-backed blocker evidence
-    blocker: Live proof fails because the local schedule source is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date), which cannot express per-phase assignments, and localhost:8080 returns 404 for the configured phase probe path.
-    blocker_resolution_path: Add a real phase-granular schedule surface keyed by project_id, join it to project IFC rows for assignment generation, confirm the upstream ERP phase endpoint contract, and rerun the verifier.
+    blocker: Live Portless proof reaches the bounded schedule surface with GET /api/v2/schedules -> 404 and GET /api/v2/eac/schedule-links -> 405, but the route still cannot pass because local schedule metadata is only project-level in lattice/bridge/marpa_projects and cannot express per-phase assignments.
+    blocker_resolution_path: Add a real phase-granular schedule surface keyed by project_id, join it to project IFC rows for assignment generation, then re-run the verifier against the same bounded Portless phase endpoints.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-phases-sync-proof.json
 

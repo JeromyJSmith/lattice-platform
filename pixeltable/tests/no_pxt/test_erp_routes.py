@@ -212,6 +212,24 @@ def test_boq_read_surfaces_upstream_404(tmp_path: Path, monkeypatch):
     assert route_response.json()["detail"] == "upstream ERP returned 404 for /api/boq/proj-404 (project_id=proj-404)"
 
 
+def test_boq_read_surfaces_upstream_401(tmp_path: Path, monkeypatch):
+    """Preserve upstream BOQ auth failures with a concrete blocker message."""
+    request = httpx.Request("GET", "https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/")
+    response = httpx.Response(401, request=request, json={"detail": "Not authenticated"})
+
+    def _fetch(project_id: str):
+        raise httpx.HTTPStatusError("Unauthorized", request=request, response=response)
+
+    monkeypatch.setattr(erp._BOQ_ADAPTER, "fetch_boq", _fetch)
+    client = TestClient(_app(tmp_path))
+    route_response = client.get("/v1/erp/boq/proj-auth")
+    assert route_response.status_code == 502
+    assert (
+        route_response.json()["detail"]
+        == "upstream ERP returned 401 for /api/v1/boq/boqs/ (project_id=proj-auth); configure ERP authentication"
+    )
+
+
 def test_export_streams_generated_file(tmp_path: Path, monkeypatch):
     """Stream generated BOQ exports with the expected media type."""
     export_path = tmp_path / "boq-proj-1.csv"
@@ -260,6 +278,24 @@ def test_export_surfaces_upstream_404(tmp_path: Path, monkeypatch):
     )
 
 
+def test_export_surfaces_upstream_401(tmp_path: Path, monkeypatch):
+    """Preserve upstream export auth failures with a concrete blocker message."""
+    request = httpx.Request("GET", "https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/")
+    response = httpx.Response(401, request=request, json={"detail": "Not authenticated"})
+
+    def _export(project_id: str, fmt: str = "xlsx") -> str:
+        raise httpx.HTTPStatusError("Unauthorized", request=request, response=response)
+
+    monkeypatch.setattr(erp._COST_EXPORT, "export_boq", _export)
+    client = TestClient(_app(tmp_path))
+    route_response = client.get("/v1/erp/export/proj-auth?fmt=csv")
+    assert route_response.status_code == 502
+    assert (
+        route_response.json()["detail"]
+        == "upstream ERP returned 401 for /api/v1/boq/boqs/ (project_id=proj-auth, fmt=csv); configure ERP authentication"
+    )
+
+
 def test_phases_sync_requires_project_id(tmp_path: Path):
     """Reject phase-sync requests that omit the project id."""
     client = TestClient(_app(tmp_path))
@@ -293,7 +329,10 @@ def test_phases_sync_surfaces_schedule_granularity_blocker(tmp_path: Path):
         response.json()["detail"]
         == "phase sync blocked: local schedule metadata is only project-level in "
         "lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express "
-        "per-phase assignments for proj-1."
+        "per-phase assignments for proj-1. The bounded live OpenConstructionERP schedule "
+        "surface is /api/v2/schedules/{schedule_id}/import (CSV upload) plus "
+        "/api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so verifier "
+        "data must include schedule_id/task_id rather than only project_id."
     )
 
 

@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if REPO_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, REPO_ROOT.as_posix())
 
-from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime
+from ddc.erp.runtime import erp_client, require_erp_runtime, resolve_erp_runtime
 
 
 ERP_BOQ_LIST_PATH = "/api/v1/boq/boqs/"
@@ -79,7 +79,7 @@ def export_boq(project_id: str, fmt: str = "xlsx") -> str:
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     output_path = EXPORT_DIR / f"boq-{_filename_project_id_fragment(normalized_project_id)}.{normalized_fmt}"
     erp_runtime = require_erp_runtime()
-    with httpx.Client(base_url=erp_runtime.base_url, timeout=60.0) as client:
+    with erp_client(base_url=erp_runtime.base_url, timeout=60.0) as client:
         boq_id = _resolve_boq_id(client, normalized_project_id)
         response = client.get(
             ERP_BOQ_EXPORT_PATHS[normalized_fmt].format(boq_id=boq_id),

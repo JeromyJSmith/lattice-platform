@@ -2,9 +2,9 @@
   "schema_version": 1,
   "capability_id": "phases-sync",
   "job_id": "phases-sync",
-  "run_id": "phases-sync-2026-05-18T00-21-12.146Z",
-  "started_at": "2026-05-18T00:21:11Z",
-  "completed_at": "2026-05-18T00:21:12Z",
+  "run_id": "phases-sync-2026-05-18T01-40-09-239Z",
+  "started_at": "2026-05-18T01:40:09.239Z",
+  "completed_at": "2026-05-18T01:40:09.515Z",
   "ok": false,
   "command": [
     "uv",
@@ -18,17 +18,17 @@
   "artifact": "meta/harness/docs/sessions/2026-05-18-phases-sync-proof.json",
   "returncode": 1,
   "stdout": "",
-  "stderr": "{\n  \"project_id\": \"ddc-phases-proof-project\",\n  \"erp_base\": \"http://localhost:8080\",\n  \"route\": \"POST /v1/erp/phases\",\n  \"phase_probe_path\": \"/api/phases\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP phase probe returned 404 for http://localhost:8080/api/phases; live ERP phase endpoint contract is not ready at the configured path.\",\n    \"/v1/erp/phases is still blocked: phase sync blocked: local schedule metadata is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express per-phase assignments for ddc-phases-proof-project.\"\n  ]\n}\n",
+  "stderr": "{\n  \"project_id\": \"ddc-phases-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"POST /v1/erp/phases\",\n  \"phase_probe_surface\": {\n    \"schedules_prefix\": \"/api/v2/schedules\",\n    \"schedule_links_prefix\": \"/api/v2/eac/schedule-links\",\n    \"schedule_import_contract\": \"/api/v2/schedules/{schedule_id}/import\",\n    \"task_progress_contract\": \"/api/v2/schedules/tasks/{task_id}/progress\"\n  },\n  \"erp_probe\": {\n    \"project_id\": \"ddc-phases-proof-project\",\n    \"schedules_url\": \"https://openconstructionerp.marpa.localhost:1355/api/v2/schedules\",\n    \"schedules_status_code\": 404,\n    \"schedules_response_kind\": \"application/json\",\n    \"schedule_import_contract\": \"/api/v2/schedules/{schedule_id}/import\",\n    \"links_url\": \"https://openconstructionerp.marpa.localhost:1355/api/v2/eac/schedule-links\",\n    \"links_status_code\": 405,\n    \"links_response_kind\": \"application/json\",\n    \"task_progress_contract\": \"/api/v2/schedules/tasks/{task_id}/progress\"\n  },\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"/v1/erp/phases is still blocked: phase sync blocked: local schedule metadata is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express per-phase assignments for ddc-phases-proof-project. The bounded live OpenConstructionERP schedule surface is /api/v2/schedules/{schedule_id}/import (CSV upload) plus /api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so verifier data must include schedule_id/task_id rather than only project_id.\"\n  ]\n}\n",
   "verification": {
     "status": "failed",
     "message": "Command returned 1, expected 0.",
     "returncode": 1,
     "expected_returncode": 0,
     "stdout": "",
-    "stderr": "{\n  \"project_id\": \"ddc-phases-proof-project\",\n  \"erp_base\": \"http://localhost:8080\",\n  \"route\": \"POST /v1/erp/phases\",\n  \"phase_probe_path\": \"/api/phases\",\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"OpenConstructionERP phase probe returned 404 for http://localhost:8080/api/phases; live ERP phase endpoint contract is not ready at the configured path.\",\n    \"/v1/erp/phases is still blocked: phase sync blocked: local schedule metadata is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express per-phase assignments for ddc-phases-proof-project.\"\n  ]\n}\n"
+    "stderr": "{\n  \"project_id\": \"ddc-phases-proof-project\",\n  \"erp_base\": \"https://openconstructionerp.marpa.localhost:1355\",\n  \"erp_runtime_source\": \"env:OPENCONSTRUCTIONERP_URL\",\n  \"route\": \"POST /v1/erp/phases\",\n  \"phase_probe_surface\": {\n    \"schedules_prefix\": \"/api/v2/schedules\",\n    \"schedule_links_prefix\": \"/api/v2/eac/schedule-links\",\n    \"schedule_import_contract\": \"/api/v2/schedules/{schedule_id}/import\",\n    \"task_progress_contract\": \"/api/v2/schedules/tasks/{task_id}/progress\"\n  },\n  \"erp_probe\": {\n    \"project_id\": \"ddc-phases-proof-project\",\n    \"schedules_url\": \"https://openconstructionerp.marpa.localhost:1355/api/v2/schedules\",\n    \"schedules_status_code\": 404,\n    \"schedules_response_kind\": \"application/json\",\n    \"schedule_import_contract\": \"/api/v2/schedules/{schedule_id}/import\",\n    \"links_url\": \"https://openconstructionerp.marpa.localhost:1355/api/v2/eac/schedule-links\",\n    \"links_status_code\": 405,\n    \"links_response_kind\": \"application/json\",\n    \"task_progress_contract\": \"/api/v2/schedules/tasks/{task_id}/progress\"\n  },\n  \"status\": \"blocked\",\n  \"blockers\": [\n    \"/v1/erp/phases is still blocked: phase sync blocked: local schedule metadata is only project-level in lattice/bridge/marpa_projects (phase/start_date/end_date) and cannot express per-phase assignments for ddc-phases-proof-project. The bounded live OpenConstructionERP schedule surface is /api/v2/schedules/{schedule_id}/import (CSV upload) plus /api/v2/schedules/tasks/{task_id}/progress (task progress JSON), so verifier data must include schedule_id/task_id rather than only project_id.\"\n  ]\n}\n"
   },
   "metrics": {
-    "latency_ms": 307,
+    "latency_ms": 275,
     "cost_usd": 0,
     "model": "deterministic"
   }

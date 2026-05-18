@@ -29,22 +29,28 @@ def test_verify_route_reports_precise_blocker():
         verifier._verify_route("proj-1", idempotency_key="ddc-boq-sync-proof-0001")
 
 
-def test_probe_upstream_create_reports_404_blocker(monkeypatch):
-    """Fail live proof honestly when the upstream BOQ create contract is missing."""
+def test_probe_upstream_create_reports_401_blocker(monkeypatch):
+    """Fail live proof honestly when the Portless ERP requires authentication."""
     verifier = _load_verifier()
     monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     class _Response:
-        status_code = 404
+        status_code = 401
+        text = '{"detail":"Not authenticated"}'
+        reason_phrase = "Unauthorized"
+
+        def json(self):
+            """Return the shaped auth payload used by the verifier."""
+            return {"detail": "Not authenticated"}
 
         def raise_for_status(self):
-            """This branch should stay on the explicit 404 blocker path."""
-            raise AssertionError("raise_for_status should not be called for 404 blocker path")
+            """This branch should stay on the explicit 401 blocker path."""
+            raise AssertionError("raise_for_status should not be called for 401 blocker path")
 
     monkeypatch.setattr(verifier.httpx, "post", lambda *args, **kwargs: _Response())
 
-    with pytest.raises(RuntimeError, match="live ERP create contract is not ready"):
-        verifier._probe_upstream_create("proj-404")
+    with pytest.raises(RuntimeError, match="401 Not authenticated"):
+        verifier._probe_upstream_create("proj-auth")
 
 
 def test_main_reports_combined_blockers(monkeypatch, capsys):

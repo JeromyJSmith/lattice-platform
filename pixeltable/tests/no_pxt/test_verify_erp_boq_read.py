@@ -42,23 +42,22 @@ def test_verify_route_accepts_boq_document(monkeypatch):
     assert result["erp_base"] == verifier.ERP_BASE
 
 
-def test_fetch_upstream_json_reports_404_blocker(monkeypatch):
-    """Fail live proof honestly when the ERP BOQ contract or verifier data is missing."""
+def test_fetch_upstream_json_reports_401_blocker(monkeypatch):
+    """Fail live proof honestly when the Portless ERP requires authentication."""
     verifier = _load_verifier()
     monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="http://erp.test"))
 
     class _Response:
-        status_code = 404
-
-        def raise_for_status(self):
-            """Should never run for the explicit 404 blocker path."""
-            raise AssertionError("raise_for_status should not be called for 404 blocker path")
+        status_code = 401
 
         def json(self):
-            """Return the shaped 404 payload used by the verifier."""
-            return {"detail": "Not Found"}
+            """Return the shaped auth payload used by the verifier."""
+            return {"detail": "Not authenticated"}
+
+        text = '{"detail":"Not authenticated"}'
+        reason_phrase = "Unauthorized"
 
     monkeypatch.setattr(verifier.httpx, "get", lambda *args, **kwargs: _Response())
 
-    with pytest.raises(RuntimeError, match="live dependency or verifier project data is not ready"):
-        verifier._fetch_upstream_json("proj-404")
+    with pytest.raises(RuntimeError, match="401 Not authenticated"):
+        verifier._fetch_upstream_json("proj-auth")

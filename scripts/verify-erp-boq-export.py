@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the live GET /v1/erp/export/{project_id} proof against local OpenConstructionERP."""
+"""Run the live GET /v1/erp/export/{project_id} proof against OpenConstructionERP."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ if REPO_ROOT.as_posix() not in sys.path:
 if PIXELTABLE_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
 
-from ddc.erp.runtime import require_erp_runtime, resolve_erp_runtime  # noqa: E402
+from ddc.erp.runtime import erp_request_kwargs, erp_response_detail, require_erp_runtime, resolve_erp_runtime  # noqa: E402
 from service.routes import erp  # noqa: E402
 
 ERP_RUNTIME = resolve_erp_runtime()
@@ -48,11 +48,20 @@ def _resolve_boq_id(project_id: str, boq_id: str | None) -> tuple[str, str]:
         response = httpx.get(
             list_url,
             params={"project_id": project_id},
-            timeout=REQUEST_TIMEOUT_SECONDS,
-            follow_redirects=True,
+            **erp_request_kwargs(
+                base_url=erp_runtime.base_url,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+                follow_redirects=True,
+            ),
         )
     except Exception as exc:
         raise RuntimeError(f"OpenConstructionERP BOQ export probe failed for {list_url}: {exc!s}") from exc
+    if response.status_code == 401:
+        raise RuntimeError(
+            "OpenConstructionERP BOQ export probe returned 401 "
+            f"{erp_response_detail(response)} for {list_url}?project_id={project_id}; "
+            "live ERP authentication is required before this capability can pass."
+        )
     if response.status_code == 404:
         raise RuntimeError(
             "OpenConstructionERP BOQ export probe returned 404 for "
@@ -86,11 +95,20 @@ def _fetch_upstream_export(project_id: str, boq_id: str | None = None) -> tuple[
     try:
         response = httpx.get(
             url,
-            timeout=REQUEST_TIMEOUT_SECONDS,
-            follow_redirects=True,
+            **erp_request_kwargs(
+                base_url=erp_runtime.base_url,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+                follow_redirects=True,
+            ),
         )
     except Exception as exc:
         raise RuntimeError(f"OpenConstructionERP BOQ export probe failed for {url}: {exc!s}") from exc
+    if response.status_code == 401:
+        raise RuntimeError(
+            "OpenConstructionERP BOQ export probe returned 401 "
+            f"{erp_response_detail(response)} for {url}; "
+            "live ERP authentication is required before this capability can pass."
+        )
     if response.status_code == 404:
         raise RuntimeError(
             "OpenConstructionERP BOQ export probe returned 404 for "

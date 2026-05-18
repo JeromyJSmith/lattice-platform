@@ -63,3 +63,22 @@ def test_resolve_erp_runtime_reports_missing_route_with_collision(tmp_path: Path
     assert resolved.base_url is None
     assert resolved.source == "blocked"
     assert "mlx.marpa.localhost -> localhost:8080" in (resolved.blocker or "")
+
+
+def test_erp_tls_verify_disables_verification_for_portless_localhost(monkeypatch):
+    """Portless localhost HTTPS should be reachable without requiring a trusted local CA."""
+
+    runtime = _load_runtime()
+    monkeypatch.delenv("OPENCONSTRUCTIONERP_VERIFY_TLS", raising=False)
+
+    assert runtime.erp_tls_verify("https://openconstructionerp.marpa.localhost:1355") is False
+    assert runtime.erp_tls_verify("http://openconstructionerp.marpa.localhost:1355") is True
+
+
+def test_erp_tls_verify_honors_explicit_override(monkeypatch):
+    """An explicit env override should win over the localhost heuristic."""
+
+    runtime = _load_runtime()
+    monkeypatch.setenv("OPENCONSTRUCTIONERP_VERIFY_TLS", "1")
+
+    assert runtime.erp_tls_verify("https://openconstructionerp.marpa.localhost:1355") is True

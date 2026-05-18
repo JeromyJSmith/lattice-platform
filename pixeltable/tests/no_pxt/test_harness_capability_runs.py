@@ -66,7 +66,7 @@ def test_boq_export_exposes_run_contract() -> None:
     assert action["job_id"] == "boq-export"
     assert contract is not None
     assert contract["request"]["timeout_seconds"] == 120
-    assert contract["command"] == ["uv", "run", "python", "scripts/verify-erp-boq-export.py"]
+    assert contract["command"] == ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-boq-export.py"]
 
 
 def test_phases_sync_exposes_run_contract() -> None:
@@ -360,7 +360,7 @@ def test_boq_export_run_writes_evidence(
 
     assert calls == [
         {
-            "command": ["uv", "run", "python", "scripts/verify-erp-boq-export.py"],
+            "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-erp-boq-export.py"],
             "cwd": tmp_path,
             "capture_output": True,
             "text": True,

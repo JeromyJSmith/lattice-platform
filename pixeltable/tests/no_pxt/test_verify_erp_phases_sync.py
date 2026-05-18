@@ -44,6 +44,27 @@ def test_probe_upstream_phase_endpoint_reports_404_blocker(monkeypatch):
         verifier._probe_upstream_phase_endpoint("proj-404")
 
 
+def test_probe_upstream_phase_endpoint_accepts_live_404_405_mix(monkeypatch):
+    """Treat the live Portless schedule probe mix as reachable bounded evidence, not an upstream blocker."""
+
+    verifier = _load_verifier()
+    monkeypatch.setattr(verifier, "require_erp_runtime", lambda: SimpleNamespace(base_url="https://erp.test"))
+
+    responses = iter(
+        [
+            SimpleNamespace(status_code=404, headers={"content-type": "application/json"}),
+            SimpleNamespace(status_code=405, headers={"content-type": "application/json"}),
+        ]
+    )
+    monkeypatch.setattr(verifier.httpx, "get", lambda *args, **kwargs: next(responses))
+
+    result = verifier._probe_upstream_phase_endpoint("proj-live")
+
+    assert result["project_id"] == "proj-live"
+    assert result["schedules_status_code"] == 404
+    assert result["links_status_code"] == 405
+
+
 def test_main_reports_combined_blockers(monkeypatch, capsys):
     """Emit structured blocker output when either upstream or route proof is not ready."""
     verifier = _load_verifier()
