@@ -1,6 +1,6 @@
 # CWICR Install — OrbStack Ubuntu VM + Qdrant
 
-Goal: have Qdrant running locally at `localhost:6333` with 55,719 CWICR cost items loaded as embedded points.
+Goal: have Qdrant running locally at `localhost:6333` with 55,719 CWICR cost items loaded into `cwicr` as 3072-dimensional snapshot vectors.
 
 Time budget: ~15 min on Apple Silicon.
 
@@ -34,21 +34,21 @@ OrbStack proxies Docker port 6333 to the Mac host with zero config.
 ./seed-qdrant.sh
 ```
 
-The script:
+The seed contract:
 
-1. Downloads the latest CWICR release tarball from the OpenConstructionEstimate-DDC-CWICR releases page.
-2. Creates a Qdrant collection `cwicr` with `vector_size=768` and cosine distance (matches `sentence-transformers/all-mpnet-base-v2`, the embedding model the LATTICE sidecar already pins).
-3. Encodes each cost item's description + region + unit and POSTs in batches of 256.
+1. Verifies the latest CWICR GitHub release exposes snapshot assets for the live corpus.
+2. Verifies the target Qdrant collection `cwicr` is reachable on `localhost:6333`.
+3. Fails closed unless the local collection reports 55,719 points at vector size 3072.
 
-Expect ~3 minutes on Apple Silicon. The script is idempotent — re-running picks up where it stopped via the `upsert` endpoint.
+This repository does **not** yet prove an automated snapshot restore path. The upstream release currently ships large per-locale `.snapshot` assets built with `text-embedding-3-large` (3072-d). Until a restore/import path is validated here, `seed-qdrant.sh` remains an honest verifier-backed preflight instead of pretending it can reseed the corpus end-to-end.
 
 ## 4. Verify
 
 ```bash
-python3 cost-search.py "concrete slab 10cm reinforced" --region US --top 3
+./seed-qdrant.sh
 ```
 
-Should return three ranked items with `unit_cost`, `unit_currency`, and `unit_cost_region` fields.
+The command exits `0` only when `cwicr` already matches the live release contract. Otherwise it exits non-zero and prints machine-readable blockers describing the observed point-count/vector-size mismatch.
 
 ## 5. Wire into the LATTICE sidecar
 
@@ -71,4 +71,4 @@ Better: import `cost-search.py` directly as a module so we avoid subprocess over
 
 ## 6. Re-seed on CWICR updates
 
-When DDC publishes a new CWICR release, just re-run `./seed-qdrant.sh`. The collection is idempotent on the item's stable ID.
+When DDC publishes a new CWICR release, rerun `./seed-qdrant.sh`. It will only go green once the local collection has been restored or reseeded to match the new release contract.

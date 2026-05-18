@@ -125,11 +125,12 @@ export const ddcCapabilities: Array<DdcCapability> = [
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh",
     targetSurface: "Qdrant collection cwicr",
-    currentState: "Shell stub",
-    gap: "Download, embed, batch load, and verify the CWICR collection.",
+    currentState: "Verifier-backed seed preflight; live proof failing",
+    gap: "Local cwicr collection is only 5 points at 64 dimensions; the release contract expects a 55,719-point 3072-d snapshot-backed collection.",
     priority: "high",
     wave: "wave-1",
-    validation: "Qdrant point count matches the seeded source dataset.",
+    validation:
+      "Qdrant point count is 55,719 and the collection vector size matches the release snapshot contract (3072).",
   },
   {
     id: "cwicr-cost-search",

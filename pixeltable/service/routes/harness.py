@@ -97,6 +97,16 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "expected_returncode": 0,
         "timeout_seconds": 120,
     },
+    "cwicr-seed": {
+        "kind": "script_exit_code",
+        "action_id": "run-cwicr-seed",
+        "job_id": "cwicr-seed",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "python", "scripts/verify-cwicr-seed.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
+    },
     "boq-export": {
         "kind": "script_exit_code",
         "action_id": "run-boq-export",

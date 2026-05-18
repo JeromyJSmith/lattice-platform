@@ -114,6 +114,31 @@ capabilities:
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-17-boq-export-proof.json
 
+  - id: cwicr-seed
+    surface: service_adapter
+    name: CWICR dataset seed contract
+    state: BLOCKED
+    description: Verify that the local Qdrant cwicr collection matches the live CWICR release contract before treating the dataset as seeded or promotable.
+    wired_at:
+      - meta/DDC_MAPPING.md
+      - ddc/cwicr/README.md
+      - ddc/cwicr/INSTALL.md
+      - ddc/cwicr/seed-qdrant.sh
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-cwicr-seed.py
+    invoked_by:
+      - ddc/cwicr/seed-qdrant.sh
+      - POST /v1/harness/capabilities/runs
+      - future /admin DDC dashboard
+    serves:
+      - CWICR collection seeding
+      - deterministic collection verification
+      - verifier-backed blocker evidence
+    blocker: Live proof shows localhost:6333/cwicr is only 5 points at vector size 64, while the latest CWICR release publishes 3072-dimensional snapshot assets and LATTICE expects 55,719 seeded points.
+    blocker_resolution_path: Restore or reseed a real 3072-dimensional CWICR snapshot into the target collection until it reaches 55,719 points, then rerun the verifier.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-cwicr-seed-proof.json
+
   - id: cwicr-qdrant-cost-search
     surface: service_adapter
     name: CWICR Qdrant cost search

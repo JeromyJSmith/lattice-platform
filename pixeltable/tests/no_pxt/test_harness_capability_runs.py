@@ -39,6 +39,21 @@ def test_cwicr_cost_search_exposes_run_contract() -> None:
     assert contract["command"] == ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"]
 
 
+def test_cwicr_seed_exposes_run_contract() -> None:
+    """The CWICR seed verifier row exposes an allowlisted runnable proof contract."""
+    capability = {"id": "cwicr-seed"}
+
+    action = harness.run_action(capability)
+    contract = harness.run_contract(capability)
+
+    assert action is not None
+    assert action["kind"] == "script_exit_code"
+    assert action["job_id"] == "cwicr-seed"
+    assert contract is not None
+    assert contract["request"]["timeout_seconds"] == 120
+    assert contract["command"] == ["uv", "run", "python", "scripts/verify-cwicr-seed.py"]
+
+
 def test_boq_export_exposes_run_contract() -> None:
     """The BOQ export verifier row exposes an allowlisted runnable proof contract."""
     capability = {"id": "boq-export"}
@@ -169,6 +184,64 @@ def test_cwicr_cost_search_run_writes_evidence(
     assert result["verification"]["status"] == "passed"
     assert evidence["capability_id"] == "cwicr-qdrant-cost-search"
     assert evidence["verification"]["returncode"] == 0
+
+
+def test_cwicr_seed_run_writes_evidence(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """The CWICR seed verifier contract persists its proof artifact with the action timeout."""
+    calls: list[dict[str, Any]] = []
+
+    def fake_run(
+        command: list[str],
+        cwd: Path,
+        capture_output: bool,
+        text: bool,
+        check: bool,
+        timeout: int,
+    ) -> SimpleNamespace:
+        """Record the CWICR seed verifier invocation instead of executing a subprocess."""
+        calls.append(
+            {
+                "command": command,
+                "cwd": cwd,
+                "capture_output": capture_output,
+                "text": text,
+                "check": check,
+                "timeout": timeout,
+            }
+        )
+        return SimpleNamespace(returncode=1, stdout="", stderr='{"status":"blocked"}\n')
+
+    monkeypatch.setattr(harness, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(harness.subprocess, "run", fake_run)
+
+    result = harness.run_capability(
+        {
+            "capability_id": "cwicr-seed",
+            "output": "meta/harness/docs/sessions/test-cwicr-seed.json",
+        }
+    )
+
+    evidence_path = tmp_path / "meta/harness/docs/sessions/test-cwicr-seed.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    assert calls == [
+        {
+            "command": ["uv", "run", "python", "scripts/verify-cwicr-seed.py"],
+            "cwd": tmp_path,
+            "capture_output": True,
+            "text": True,
+            "check": False,
+            "timeout": 120,
+        }
+    ]
+    assert result["ok"] is False
+    assert result["artifact"] == "meta/harness/docs/sessions/test-cwicr-seed.json"
+    assert result["verification"]["status"] == "failed"
+    assert evidence["capability_id"] == "cwicr-seed"
+    assert evidence["verification"]["returncode"] == 1
 
 
 def test_boq_export_run_writes_evidence(
