@@ -97,6 +97,16 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "expected_returncode": 0,
         "timeout_seconds": 120,
     },
+    "ifc-cost-enrichment": {
+        "kind": "script_exit_code",
+        "action_id": "run-ifc-cost-enrichment",
+        "job_id": "ifc-cost-enrichment",
+        "label": "Run proof",
+        "endpoint": "POST /v1/harness/capabilities/runs",
+        "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-ifc-cost-enrichment.py"],
+        "expected_returncode": 0,
+        "timeout_seconds": 120,
+    },
     "cwicr-seed": {
         "kind": "script_exit_code",
         "action_id": "run-cwicr-seed",

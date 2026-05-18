@@ -39,6 +39,21 @@ def test_cwicr_cost_search_exposes_run_contract() -> None:
     assert contract["command"] == ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-cwicr-cost-search.py"]
 
 
+def test_ifc_cost_enrichment_exposes_run_contract() -> None:
+    """The IFC cost-enrichment verifier row exposes an allowlisted runnable proof contract."""
+    capability = {"id": "ifc-cost-enrichment"}
+
+    action = harness.run_action(capability)
+    contract = harness.run_contract(capability)
+
+    assert action is not None
+    assert action["kind"] == "script_exit_code"
+    assert action["job_id"] == "ifc-cost-enrichment"
+    assert contract is not None
+    assert contract["request"]["timeout_seconds"] == 120
+    assert contract["command"] == ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-ifc-cost-enrichment.py"]
+
+
 def test_cwicr_seed_exposes_run_contract() -> None:
     """The CWICR seed verifier row exposes an allowlisted runnable proof contract."""
     capability = {"id": "cwicr-seed"}
@@ -198,6 +213,64 @@ def test_cwicr_cost_search_run_writes_evidence(
     assert result["artifact"] == "meta/harness/docs/sessions/test-cwicr-qdrant-cost-search.json"
     assert result["verification"]["status"] == "passed"
     assert evidence["capability_id"] == "cwicr-qdrant-cost-search"
+    assert evidence["verification"]["returncode"] == 0
+
+
+def test_ifc_cost_enrichment_run_writes_evidence(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    """The IFC cost-enrichment verifier contract persists its proof artifact with the action timeout."""
+    calls: list[dict[str, Any]] = []
+
+    def fake_run(
+        command: list[str],
+        cwd: Path,
+        capture_output: bool,
+        text: bool,
+        check: bool,
+        timeout: int,
+    ) -> SimpleNamespace:
+        """Record the IFC cost-enrichment verifier invocation instead of executing a subprocess."""
+        calls.append(
+            {
+                "command": command,
+                "cwd": cwd,
+                "capture_output": capture_output,
+                "text": text,
+                "check": check,
+                "timeout": timeout,
+            }
+        )
+        return SimpleNamespace(returncode=0, stdout='{"status":"passed"}\n', stderr="")
+
+    monkeypatch.setattr(harness, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(harness.subprocess, "run", fake_run)
+
+    result = harness.run_capability(
+        {
+            "capability_id": "ifc-cost-enrichment",
+            "output": "meta/harness/docs/sessions/test-ifc-cost-enrichment.json",
+        }
+    )
+
+    evidence_path = tmp_path / "meta/harness/docs/sessions/test-ifc-cost-enrichment.json"
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    assert calls == [
+        {
+            "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-ifc-cost-enrichment.py"],
+            "cwd": tmp_path,
+            "capture_output": True,
+            "text": True,
+            "check": False,
+            "timeout": 120,
+        }
+    ]
+    assert result["ok"] is True
+    assert result["artifact"] == "meta/harness/docs/sessions/test-ifc-cost-enrichment.json"
+    assert result["verification"]["status"] == "passed"
+    assert evidence["capability_id"] == "ifc-cost-enrichment"
     assert evidence["verification"]["returncode"] == 0
 
 

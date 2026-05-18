@@ -166,8 +166,9 @@ export const ddcCapabilities: Array<DdcCapability> = [
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py",
     targetSurface:
       "lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}",
-    currentState: "Schema columns exist",
-    gap: "Write search results back into owned Pixeltable rows.",
+    currentState:
+      "Bounded project-scoped writeback path exists through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied",
+    gap: "Record live Juniper-scoped proof on actual project rows and hand the enriched rows forward into BOQ sync.",
     priority: "high",
     wave: "wave-2",
     validation:

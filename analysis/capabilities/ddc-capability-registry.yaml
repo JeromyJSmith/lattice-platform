@@ -265,24 +265,29 @@ capabilities:
   - id: ifc-cost-enrichment
     surface: enrichment_writeback
     name: IFC cost enrichment writeback
-    state: BLOCKED
+    state: ACTIVE
     status_color: AMBER
-    description: Persist bounded CWICR search results back into owned Pixeltable IFC rows so the rest of the estimation path can consume governed unit-cost data instead of ephemeral lookup output.
+    description: Persist reliable CWICR search results back into owned Pixeltable IFC rows through the existing cost-search route when a project-scoped IFC target set is explicitly supplied.
     wired_at:
       - pixeltable/migrations/0012_extended_schema.py
       - ddc/capability-matrix.yaml
       - ddc/estimation/README.md
+      - ddc/erp/ifc-cost-enrichment.py
+      - pixeltable/service/routes/erp.py
+      - pixeltable/service/routes/harness.py
+      - scripts/verify-ifc-cost-enrichment.py
     invoked_by:
-      - future POST /v1/erp/cost-search writeback path
+      - POST /v1/erp/cost-search writeback path
+      - POST /v1/harness/capabilities/runs
       - future quantity-takeoff runtime
       - future Juniper Avenue estimation proof
     serves:
       - unit-cost persistence
       - governed estimation path
       - BOQ sync prerequisites
-    blocker: Schema columns exist, but the live search path does not yet write unit_cost, unit_cost_region, and cost_last_updated back into owned IFC rows.
-    blocker_resolution_path: Reuse the passing CWICR lookup output to perform explicit Pixeltable writeback for project-scoped IFC elements, then prove the writeback on Juniper Avenue inputs.
-    proof_evidence: []
+    follow_on: Run the new writeback seam against live Juniper project rows and Qdrant-backed CWICR matches, then feed the enriched scope into BOQ sync for the next governed-estimation gate.
+    proof_evidence:
+      latest: meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json
 
   - id: quantity-takeoff-agent
     surface: orchestration_runtime

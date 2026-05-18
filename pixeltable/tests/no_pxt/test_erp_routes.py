@@ -60,6 +60,7 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
     assert body["trust_contract"]["retrieval_mode"] == "lexical"
     assert body["trust_contract"]["status"] == "passed"
     assert body["trust_contract"]["thresholds"]["verified_gte"] == erp.MIN_RELIABLE_SCORE
+    assert body["writeback"]["status"] == "not_requested"
 
 
 def test_cost_search_rejects_invalid_top_as_bad_request(tmp_path: Path):
@@ -109,6 +110,250 @@ def test_cost_search_marks_review_only_matches(tmp_path: Path, monkeypatch):
     assert body["confidence"]["signal"] == "medium"
     assert body["confidence"]["verdict"] == "review_required"
     assert body["verification"]["status"] == "review_required"
+
+
+def test_cost_search_writeback_updates_targeted_juniper_row(tmp_path: Path, monkeypatch):
+    """Write reliable CWICR matches back into the targeted Juniper IFC row only."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
+
+    class _Query:
+        def __init__(self, rows: list[dict]):
+            self._rows = rows
+
+        def collect(self) -> list[dict]:
+            """Return the filtered fake IFC rows."""
+            return list(self._rows)
+
+    class _Table:
+        project_id = _Column("project_id")
+        source_element_id = _Column("source_element_id")
+
+        def __init__(self):
+            self.rows = [
+                {
+                    "project_id": "918-juniper",
+                    "source_element_id": "ifc-juniper-001",
+                    "name": "Juniper planting bed",
+                    "unit_cost": None,
+                    "unit_cost_region": None,
+                },
+                {
+                    "project_id": "control-project",
+                    "source_element_id": "ifc-juniper-001",
+                    "name": "Control row",
+                    "unit_cost": None,
+                    "unit_cost_region": None,
+                },
+            ]
+
+        def where(self, predicate: _Predicate) -> _Query:
+            """Filter the in-memory rows with the fake predicate."""
+            return _Query([row for row in self.rows if predicate(row)])
+
+        def collect(self) -> list[dict]:
+            """Expose the full fake table row set."""
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply writeback updates to matching fake rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
+
+    class _Pxt:
+        def __init__(self):
+            self.table = _Table()
+
+        def get_table(self, path: str):
+            """Return the fake bridge IFC table."""
+            if path == "lattice/bridge/ifc/ifc_elements":
+                return self.table
+            raise RuntimeError(f"table not found: {path}")
+
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {
+                "item_id": "cwicr-juniper-1",
+                "name": description,
+                "unit_cost": 47.5,
+                "unit_cost_region": region,
+                "score": 0.81,
+                "retrieval_mode": "lexical",
+            }
+        ],
+    )
+    pxt = _Pxt()
+    client = TestClient(_app(tmp_path, pxt=pxt))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={
+            "description": "Juniper planting bed",
+            "region": "US",
+            "top": 3,
+            "project_id": "918-juniper",
+            "source_element_id": "ifc-juniper-001",
+            "writeback": True,
+        },
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["writeback"]["status"] == "passed"
+    assert body["writeback"]["project_id"] == "918-juniper"
+    assert body["writeback"]["rows_updated"] == 1
+    assert pxt.table.rows[0]["unit_cost"] == 47.5
+    assert pxt.table.rows[0]["unit_cost_region"] == "US"
+    assert pxt.table.rows[1]["unit_cost"] is None
+
+
+def test_cost_search_writeback_requires_target_rows(tmp_path: Path, monkeypatch):
+    """Reject writeback requests that omit target IFC row identifiers."""
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {
+                "item_id": "cwicr-juniper-1",
+                "name": description,
+                "unit_cost": 47.5,
+                "unit_cost_region": region,
+                "score": 0.81,
+                "retrieval_mode": "lexical",
+            }
+        ],
+    )
+    client = TestClient(_app(tmp_path))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={
+            "description": "Juniper planting bed",
+            "region": "US",
+            "top": 3,
+            "project_id": "918-juniper",
+            "writeback": True,
+        },
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "source_element_id or source_element_ids required when writeback=true"
+
+
+def test_cost_search_writeback_stays_blocked_for_review_only_match(tmp_path: Path, monkeypatch):
+    """Do not mutate IFC rows when the top CWICR match is only review-grade."""
+
+    class _Predicate:
+        def __init__(self, fn):
+            self._fn = fn
+
+        def __call__(self, row: dict) -> bool:
+            return self._fn(row)
+
+        def __and__(self, other: "_Predicate") -> "_Predicate":
+            return _Predicate(lambda row: self(row) and other(row))
+
+    class _Column:
+        def __init__(self, name: str):
+            self.name = name
+
+        def __eq__(self, other: object) -> _Predicate:  # type: ignore[override]
+            return _Predicate(lambda row: row.get(self.name) == other)
+
+    class _Query:
+        def __init__(self, rows: list[dict]):
+            self._rows = rows
+
+        def collect(self) -> list[dict]:
+            """Return the filtered fake IFC rows."""
+            return list(self._rows)
+
+    class _Table:
+        project_id = _Column("project_id")
+        source_element_id = _Column("source_element_id")
+
+        def __init__(self):
+            self.rows = [
+                {
+                    "project_id": "918-juniper",
+                    "source_element_id": "ifc-juniper-001",
+                    "name": "Juniper planting bed",
+                    "unit_cost": None,
+                }
+            ]
+
+        def where(self, predicate: _Predicate) -> _Query:
+            """Filter the in-memory rows with the fake predicate."""
+            return _Query([row for row in self.rows if predicate(row)])
+
+        def collect(self) -> list[dict]:
+            """Expose the full fake table row set."""
+            return list(self.rows)
+
+        def update(self, values: dict, where: _Predicate | None = None) -> None:
+            """Apply updates to matching fake rows."""
+            for row in self.rows:
+                if where is None or where(row):
+                    row.update(values)
+
+    class _Pxt:
+        def __init__(self):
+            self.table = _Table()
+
+        def get_table(self, path: str):
+            """Return the fake bridge IFC table."""
+            if path == "lattice/bridge/ifc/ifc_elements":
+                return self.table
+            raise RuntimeError(f"table not found: {path}")
+
+    monkeypatch.setattr(
+        erp._COST_SEARCH,
+        "search",
+        lambda description, region, top: [
+            {
+                "item_id": "cwicr-juniper-1",
+                "name": description,
+                "unit_cost": 47.5,
+                "unit_cost_region": region,
+                "score": 0.42,
+                "retrieval_mode": "lexical",
+            }
+        ],
+    )
+    pxt = _Pxt()
+    client = TestClient(_app(tmp_path, pxt=pxt))
+    response = client.post(
+        "/v1/erp/cost-search",
+        json={
+            "description": "Juniper planting bed",
+            "region": "US",
+            "top": 3,
+            "project_id": "918-juniper",
+            "source_element_id": "ifc-juniper-001",
+            "writeback": True,
+        },
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["verification"]["status"] == "review_required"
+    assert body["writeback"]["status"] == "blocked"
+    assert pxt.table.rows[0]["unit_cost"] is None
 
 
 def test_cost_search_marks_weak_matches_failed(tmp_path: Path, monkeypatch):

@@ -51,6 +51,7 @@ def _load_module(name: str, relative_path: str):
 _BOQ_ADAPTER = _load_module("ddc_erp_boq_adapter", "ddc/erp/boq-adapter.py")
 _COST_EXPORT = _load_module("ddc_erp_cost_export", "ddc/erp/cost-export.py")
 _COST_SEARCH = _load_module("ddc_cwicr_cost_search", "ddc/cwicr/cost-search.py")
+_IFC_COST_ENRICHMENT = _load_module("ddc_ifc_cost_enrichment", "ddc/erp/ifc-cost-enrichment.py")
 _PHASE_ADAPTER = _load_module("ddc_erp_phase_adapter", "ddc/erp/phase-adapter.py")
 
 
@@ -216,6 +217,15 @@ def _normalize_optional_string(value: Any, *, field: str) -> str | None:
     return normalized or None
 
 
+def _normalize_optional_project_id(value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise HTTPException(status_code=400, detail="project_id must be a string")
+    normalized = value.strip()
+    return normalized or None
+
+
 def _normalize_required_string(value: Any, *, field: str) -> str:
     normalized = _normalize_optional_string(value, field=field)
     if normalized is None:
@@ -262,6 +272,45 @@ def _normalize_cost_search_rows(rows: Any, region: str) -> list[dict[str, Any]]:
         }
         normalized_rows.append(normalized_row)
     return normalized_rows
+
+
+def _normalize_writeback(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+    raise HTTPException(status_code=400, detail="writeback must be a boolean")
+
+
+def _normalize_writeback_source_element_ids(body: dict[str, Any], *, writeback: bool) -> list[str]:
+    raw_ids = body.get("source_element_ids")
+    raw_single = body.get("source_element_id")
+    candidates: list[str] = []
+    if raw_ids is not None:
+        if not isinstance(raw_ids, list):
+            raise HTTPException(status_code=400, detail="source_element_ids must be an array of strings")
+        for value in raw_ids:
+            if not isinstance(value, str):
+                raise HTTPException(status_code=400, detail="source_element_ids must contain only strings")
+            normalized = value.strip()
+            if normalized:
+                candidates.append(normalized)
+    if raw_single is not None:
+        if not isinstance(raw_single, str):
+            raise HTTPException(status_code=400, detail="source_element_id must be a string")
+        normalized = raw_single.strip()
+        if normalized:
+            candidates.append(normalized)
+    unique_ids = list(dict.fromkeys(candidates))
+    if writeback and not unique_ids:
+        raise HTTPException(status_code=400, detail="source_element_id or source_element_ids required when writeback=true")
+    return unique_ids
 
 
 def _classify_cost_search(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -385,11 +434,16 @@ def get_export(project_id: str, fmt: str = Query(default="xlsx", pattern="^(xlsx
 
 
 @router.post("/cost-search")
-def post_cost_search(body: dict[str, Any] = Body(...)):
+def post_cost_search(body: dict[str, Any] = Body(...), pxt: Any = Depends(get_pxt)):
     """Search CWICR cost rows and classify the returned proof strength."""
     description = _normalize_description(body.get("description"))
     region = _normalize_region(body.get("region"))
     top = _normalize_top(body.get("top"))
+    project_id = _normalize_optional_project_id(body.get("project_id"))
+    writeback_requested = _normalize_writeback(body.get("writeback"))
+    source_element_ids = _normalize_writeback_source_element_ids(body, writeback=writeback_requested)
+    if writeback_requested and project_id is None:
+        raise HTTPException(status_code=400, detail="project_id required when writeback=true")
     try:
         rows = _normalize_cost_search_rows(_COST_SEARCH.search(description, region, top), region)
     except HTTPException:
@@ -402,6 +456,34 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
         "status": confidence["verdict"],
         "message": confidence["message"],
     }
+    writeback: dict[str, Any] = {
+        "requested": writeback_requested,
+        "project_id": project_id,
+        "source_element_ids": source_element_ids,
+        "status": "not_requested",
+    }
+    if writeback_requested:
+        if verification["status"] != "passed":
+            writeback = {
+                **writeback,
+                "status": "blocked",
+                "message": "ifc cost enrichment requires a passed CWICR match before mutating IFC rows.",
+            }
+        else:
+            try:
+                writeback_result = _IFC_COST_ENRICHMENT.write_cost_match(
+                    project_id,
+                    source_element_ids,
+                    rows[0],
+                    pxt=pxt,
+                )
+            except Exception as exc:
+                raise _as_http_error(exc, "ifc cost enrichment failed") from exc
+            writeback = {
+                "requested": True,
+                "status": "passed",
+                **writeback_result,
+            }
     return {
         "ok": confidence["reliable"],
         "description": description,
@@ -412,6 +494,7 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
         "confidence": confidence,
         "verification": verification,
         "trust_contract": _cost_search_trust_contract(verification["status"], retrieval["mode"]),
+        "writeback": writeback,
     }
 
 

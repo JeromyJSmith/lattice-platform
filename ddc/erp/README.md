@@ -45,7 +45,7 @@ These FastAPI routes live in `pixeltable/service/routes/erp.py`.
 | Sidecar endpoint | Adapter called | Purpose |
 |---|---|---|
 | `POST /v1/erp/boq` | `boq-adapter.py` | Create / refresh a BOQ from current Pixeltable element rows |
-| `POST /v1/erp/cost-search` | `../cwicr/cost-search.py` | Semantic cost lookup (CWICR, not ERP) |
+| `POST /v1/erp/cost-search` | `../cwicr/cost-search.py` + `ifc-cost-enrichment.py` | Semantic cost lookup plus optional project-scoped IFC cost writeback when a reliable CWICR match and explicit source rows are supplied |
 | `GET  /v1/erp/boq/{project_id}` | `boq-adapter.py` | Return current BOQ for a project |
 | `GET  /v1/erp/export/{project_id}` | `cost-export.py` | Download Excel/CSV BOQ |
 | `POST /v1/erp/phases` | `phase-adapter.py` | Sync bounded local phase metadata into ERP schedules/tasks and return verifier-backed proof data |
