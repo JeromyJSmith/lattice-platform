@@ -28,7 +28,7 @@ states green, not by adding more DDC references to docs.
 Score DDC health against these conditions:
 
 1. **Governed estimation promotion**: `ddc-estimation-contract` has an explicit goal surface and golden path, and the operational target is `MARPA — 918 Juniper Avenue`
-2. **Dependency-chain truthfulness**: dependent helpers already in play (`cwicr-seed`, `cwicr-qdrant-cost-search`, `boq-sync`, `boq-read`, `boq-export`, `phases-sync`) are named as reused dependencies, while blocking prerequisites (`ifc-cost-enrichment`, `quantity-takeoff-agent`) stay explicit until promoted
+2. **Dependency-chain truthfulness**: the governed Juniper path names its reused dependencies explicitly (`cwicr-seed`, `cwicr-qdrant-cost-search`, `ifc-cost-enrichment`, `boq-sync`, `boq-read`, `boq-export`, `phases-sync`, `quantity-takeoff-agent`) and does not invent any extra hidden prerequisite
 3. **DDC surface integrity**: DDC mapping, CWICR cost search, ERP adapter, and repo-local docs stay aligned with the governed estimation contract instead of drifting into isolated worksheet language
 4. **Evidence-backed green state**: DDC cannot claim estimation green unless Juniper completes the governed promotion path with evidence for dependency reuse, cost writeback, BOQ linkage, and blocker handling
 5. **No fake green**: ROSE Residence may justify lineage and rules, but it never counts as the operational target and never upgrades Juniper readiness by analogy

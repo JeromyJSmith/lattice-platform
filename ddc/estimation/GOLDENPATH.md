@@ -17,15 +17,14 @@ The golden path must reuse these capabilities as dependencies:
 
 1. `cwicr-seed`
 2. `cwicr-qdrant-cost-search`
-3. `boq-sync`
-4. `boq-read`
-5. `boq-export`
-6. `phases-sync`
+3. `ifc-cost-enrichment`
+4. `boq-sync`
+5. `boq-read`
+6. `boq-export`
+7. `phases-sync`
+8. `quantity-takeoff-agent`
 
 It must also confront these blocked prerequisites directly:
-
-1. `ifc-cost-enrichment`
-2. `quantity-takeoff-agent`
 
 No implementation run may present estimation as standalone.
 
@@ -34,13 +33,13 @@ No implementation run may present estimation as standalone.
 0. Capture the current foundation score with `bash scripts/score-ddc.sh --json`
 1. Confirm the run target is Juniper, not ROSE
 2. Confirm Juniper-scoped IFC rows exist for the intended estimating surface
-3. Reuse `cwicr-seed` and `cwicr-qdrant-cost-search` to obtain bounded, verifier-backed unit-cost matches for Juniper quantities
-4. Route those matches through `ifc-cost-enrichment` so cost attribution is written back to owned Juniper-scoped rows
-5. Route the enriched scope through `boq-sync` so ERP-linked BOQ state is created or refreshed for the same Juniper scope
-6. Reuse `boq-read` and `boq-export` to prove the BOQ state can round-trip without dropping scope or linkage
-7. Reuse `phases-sync` so schedule/phase context remains attached to the same estimating surface
-8. Use `quantity-takeoff-agent` to orchestrate quantities, evidence collection, and blocker capture across the whole run
-9. Turn green only after the full chain completes with evidence for the same Juniper scope
+3. Use `quantity-takeoff-agent` to extract governed Juniper quantities and collect the evidence contract for the run
+4. Reuse `cwicr-seed` and `cwicr-qdrant-cost-search` to obtain bounded, verifier-backed unit-cost matches for those Juniper quantities
+5. Route those matches through `ifc-cost-enrichment` so cost attribution is written back to owned Juniper-scoped rows
+6. Route the enriched scope through `boq-sync` so ERP-linked BOQ state is created or refreshed for the same Juniper scope
+7. Reuse `boq-read` and `boq-export` to prove the BOQ state can round-trip without dropping scope or linkage
+8. Reuse `phases-sync` so schedule/phase context remains attached to the same estimating surface
+9. Keep the capability green only while the full chain continues to complete with evidence for the same Juniper scope
 
 ## Loop Rule
 
@@ -81,8 +80,8 @@ Absent evidence is a failed gate, not a warning.
 
 ## Blocker Capture Rules
 
-- If `ifc-cost-enrichment` is unavailable or incomplete, record it as a blocking prerequisite and stop before green
-- If `quantity-takeoff-agent` cannot orchestrate the governed run, record it as a blocking prerequisite and stop before green
+- If `ifc-cost-enrichment` stops writing back governed Juniper rows, record it as a blocking prerequisite and stop before green
+- If `quantity-takeoff-agent` stops orchestrating the governed run, record it as a blocking prerequisite and stop before green
 - Never replace a blocked prerequisite with a manual narrative, isolated worksheet, or ROSE-era artifact
 
 ## Required End State Before Green

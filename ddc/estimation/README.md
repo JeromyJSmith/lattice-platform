@@ -33,15 +33,14 @@ If one of those steps is missing, the estimation capability is still blocked.
 
 - `cwicr-seed`
 - `cwicr-qdrant-cost-search`
+- `ifc-cost-enrichment`
 - `boq-sync`
 - `boq-read`
 - `boq-export`
 - `phases-sync`
+- `quantity-takeoff-agent`
 
 ### Still blocking promotion
-
-- `ifc-cost-enrichment`
-- `quantity-takeoff-agent`
 
 ### Useful later, but not the first gate
 
@@ -53,7 +52,7 @@ If one of those steps is missing, the estimation capability is still blocked.
 
 ## Current state
 
-Current state is **planning slice only**. The contract is now explicit in the repo and BOQ sync is proof-backed green, but the capability stays red until Juniper Avenue completes an end-to-end governed run.
+Current state is **governed and verifier-backed**. Juniper Avenue now completes the bounded end-to-end governed run with explicit dependency reuse, writeback, BOQ linkage, BOQ round-trip, and evidence capture.
 
 ## Green-state rule
 
@@ -64,4 +63,4 @@ This capability turns green only when:
 - blocked prerequisites are either promoted or surfaced as honest blockers
 - evidence exists for the project-scoped run, BOQ linkage, and cost writeback path
 
-Anything less is still amber or red.
+Anything less reopens the contract and drops it out of green.

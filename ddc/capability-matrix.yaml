@@ -88,12 +88,12 @@ capabilities:
     wave: wave-1
     validation: Snapshot-compatible descriptions or CWICR rate codes return region-tagged ranked matches with passed verification
   - id: ifc-cost-enrichment
-    status: amber
+    status: green
     capability: IFC cost enrichment
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
     target_surface: lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}
-    current_state: bounded Juniper-scoped writeback proof is passing through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied
-    gap: Promote the bounded writeback seam onto live Juniper project rows and hand the enriched scope forward into the now-green BOQ sync path
+    current_state: verifier-backed Juniper writeback now persists reliable CWICR matches onto governed IFC rows and feeds the governed BOQ path through the quantity-takeoff orchestrator proof
+    gap: No current proof gap; follow-on work is broadening the same governed writeback seam beyond the bounded Juniper fixture and lifting lexical-only CWICR matching to vector parity
     priority: high
     wave: wave-2
     validation: ifc_elements rows show unit cost, region, and freshness timestamps
@@ -178,22 +178,29 @@ capabilities:
     wave: wave-3
     validation: Cost overlay renders from unit_cost-backed analytics data
   - id: quantity-takeoff-agent
-    status: red
+    status: green
     capability: Quantity takeoff agent
-    local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/quantity_takeoff_runtime.py
     target_surface: runtime agent + evidence ledger
-    current_state: Planned only; blocker verifier now proves the governed runtime is still missing and Juniper still depends on live IFC enrichment before orchestration can turn green
-    gap: Build the governed orchestrator that chains Juniper quantities, cost search, IFC writeback, green BOQ sync, and evidence capture
+    current_state: governed Juniper orchestrator now extracts quantities, reuses cost-search writeback, drives BOQ sync plus BOQ read/export, and captures structured evidence for the same project scope
+    gap: No current proof gap; follow-on work is promoting the same runtime beyond the bounded Juniper fixture and wiring direct operator dispatch onto the same evidence contract
     priority: high
     wave: wave-2
     validation: Agent runs produce BOQ-linked evidence rows end to end
+    supported_by:
+      - cwicr-seed
+      - cwicr-qdrant-cost-search
+      - ifc-cost-enrichment
+      - boq-sync
+      - boq-read
+      - boq-export
   - id: ddc-estimation-contract
-    status: red
+    status: green
     capability: Governed estimation contract
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md
     target_surface: project-scoped estimation run + evidence ledger + /admin planning surface
-    current_state: planning slice only; BOQ sync is now proof-backed green, but Juniper still lacks live IFC enrichment promotion and quantity-takeoff orchestration
-    gap: Turn IFC cost enrichment and quantity-takeoff orchestration into a governed Juniper end-to-end estimation path instead of treating estimation as an isolated worksheet tool
+    current_state: verifier-backed Juniper end-to-end governed estimation proof now passes with dependency reuse, writeback, BOQ linkage, read/export round-trip, and explicit evidence
+    gap: No current proof gap; follow-on work is broadening the same governed estimation contract beyond Juniper and wiring the promoted evidence trail into the admin planning surface
     priority: high
     wave: wave-2
     validation: MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, and explicit blocker capture
@@ -202,13 +209,13 @@ capabilities:
     supported_by:
       - cwicr-seed
       - cwicr-qdrant-cost-search
+      - ifc-cost-enrichment
       - boq-sync
       - boq-read
       - boq-export
       - phases-sync
-    blocked_by:
-      - ifc-cost-enrichment
       - quantity-takeoff-agent
+    blocked_by: []
     future_support:
       - admin-sql
       - admin-route

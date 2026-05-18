@@ -127,16 +127,16 @@
 # The administrative/cost intelligence layer is as important as the 3D viewer.
 # DDC value = the 221 skill patterns + CWICR cost database methods. Not the file converters.
 
-- [~] OpenConstructionERP BOQ — live read/export/sync proofs are passing; the next governed-estimation seam is feeding live Juniper-enriched rows into the now-green BOQ sync path
+- [x] OpenConstructionERP BOQ — live read/export/sync proofs are passing and the governed Juniper estimation path now feeds enriched rows into the green BOQ sync surface
 - [~] OpenConstructionERP 4D/5D — bounded `POST /v1/erp/phases` proof is passing; timeline/operator views still need the broader project-facing surface
 - [~] CWICR cost search — bounded no-key verifier-backed proof is passing against the restored snapshot; IFC writeback and vector-query parity remain follow-on work
 - [ ] DDC skill patterns — extract all 221 SKILL.md patterns from DDC_Skills repo and index them in Pixeltable lattice/bridge/semantic as agent-callable tools
 - [ ] DDC n8n workflow patterns — convert DDC n8n JSON workflow templates into LATTICE FastAPI pipeline equivalents; store as lattice/execution/pipeline_templates
 - [ ] Cost overlay in Context B — deck.gl ColumnLayer showing cost-per-element as height; ColorScale driven by CWICR unit costs joined to ifc_elements
-- [~] BOQ export — bounded export proof is passing; governed element-to-cost-to-BOQ promotion still depends on writeback and sync prerequisites
-- [ ] Quantity takeoff agent — governed LATTICE agent task that reads Juniper ifc_elements, reuses green BOQ sync, and posts explicit evidence/blocker state
+- [x] BOQ export — bounded export proof is passing and the governed Juniper path now reuses the export round-trip after writeback and sync
+- [x] Quantity takeoff agent — governed LATTICE runtime now reads Juniper ifc_elements, reuses green BOQ sync/read/export, and posts explicit evidence for the same project scope
 - [~] Admin dashboard route — src/routes/admin/index.tsx already renders the capability map; the full seven-panel parquet + ERP + evidence surface still needs to land
-- [~] Governed estimation contract — project-agnostic DDC capability slice; `MARPA — 918 Juniper Avenue` is the operational proof target, ROSE Residence stays workbook-era pilot lineage only, and the capability only turns green after a full Juniper end-to-end run
+- [x] Governed estimation contract — project-agnostic DDC capability slice; `MARPA — 918 Juniper Avenue` is the operational proof target, ROSE Residence stays workbook-era pilot lineage only, and the bounded Juniper end-to-end governed run is now verifier-backed green
 - [ ] Cost-per-zone analysis — PostGIS ST_Within query joining ifc_elements to irrigation/planting zones; output to Parquet for DuckDB WASM
 
 ---

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the governed Juniper estimation foundation alignment and blocker truth."""
+"""Verify the governed Juniper quantity-takeoff and estimation proof path."""
 
 from __future__ import annotations
 
@@ -13,6 +13,18 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+PIXELTABLE_ROOT = REPO_ROOT / "pixeltable"
+if REPO_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, REPO_ROOT.as_posix())
+if PIXELTABLE_ROOT.as_posix() not in sys.path:
+    sys.path.insert(0, PIXELTABLE_ROOT.as_posix())
+
+from ddc.estimation.quantity_takeoff_runtime import (  # noqa: E402
+    PROJECT_TARGET,
+    SUPPORTED_BY as QUANTITY_SUPPORTED_BY,
+    run_quantity_takeoff_proof,
+)
+
 MATRIX_PATH = REPO_ROOT / "ddc" / "capability-matrix.yaml"
 REGISTRY_PATH = REPO_ROOT / "analysis" / "capabilities" / "ddc-capability-registry.yaml"
 TS_MATRIX_PATH = REPO_ROOT / "src" / "data" / "ddc-capability-matrix.ts"
@@ -21,19 +33,27 @@ ESTIMATION_GOAL_PATH = REPO_ROOT / "ddc" / "estimation" / "GOAL.md"
 ESTIMATION_GOLDENPATH_PATH = REPO_ROOT / "ddc" / "estimation" / "GOLDENPATH.md"
 ESTIMATION_README_PATH = REPO_ROOT / "ddc" / "estimation" / "README.md"
 DDC_MAPPING_PATH = REPO_ROOT / "meta" / "DDC_MAPPING.md"
-BOQ_SYNC_PROOF_PATH = REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-boq-sync-proof.json"
-IFC_ENRICHMENT_PROOF_PATH = REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-ifc-cost-enrichment-proof.json"
-
-SUPPORTED_IDS = [
-    "cwicr-seed",
-    "cwicr-qdrant-cost-search",
-    "boq-sync",
-    "boq-read",
-    "boq-export",
-    "phases-sync",
-]
-BLOCKED_IDS = ["ifc-cost-enrichment", "quantity-takeoff-agent"]
-PROJECT_TARGET = "MARPA — 918 Juniper Avenue"
+PROOF_PATHS = {
+    "cwicr-seed": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-cwicr-seed-proof.json",
+    "cwicr-qdrant-cost-search": REPO_ROOT
+    / "meta"
+    / "harness"
+    / "docs"
+    / "sessions"
+    / "2026-05-18-cwicr-qdrant-cost-search-proof.json",
+    "ifc-cost-enrichment": REPO_ROOT
+    / "meta"
+    / "harness"
+    / "docs"
+    / "sessions"
+    / "2026-05-18-ifc-cost-enrichment-proof.json",
+    "boq-sync": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-boq-sync-proof.json",
+    "boq-read": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-boq-read-proof.json",
+    "boq-export": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-boq-export-proof.json",
+    "phases-sync": REPO_ROOT / "meta" / "harness" / "docs" / "sessions" / "2026-05-18-phases-sync-proof.json",
+}
+CONTRACT_SUPPORTED_IDS = [*QUANTITY_SUPPORTED_BY, "phases-sync", "quantity-takeoff-agent"]
+BLOCKED_IDS: list[str] = []
 ROSE_LINEAGE = "ROSE Residence"
 FARBER_LINEAGE = "Farber-Haines 2521 IFC source lineage"
 
@@ -139,8 +159,7 @@ def _collect_goal_helpers(text: str) -> list[str]:
         stripped = line.strip()
         if not stripped.startswith(marker):
             continue
-        helper_slice = stripped.split("while blocking prerequisites", 1)[0]
-        return re.findall(r"`([^`]+)`", helper_slice)
+        return re.findall(r"`([^`]+)`", stripped)
     raise RuntimeError(f"marker {marker!r} missing")
 
 
@@ -163,11 +182,11 @@ def _verify_alignment() -> list[str]:
     if FARBER_LINEAGE not in " ".join(contract_registry.get("proof_lineage", [])):
         blockers.append("Farber-Haines repo-local lineage drifted out of the capability registry.")
 
-    if contract_matrix.get("supported_by") != SUPPORTED_IDS:
+    if contract_matrix.get("supported_by") != CONTRACT_SUPPORTED_IDS:
         blockers.append("ddc/capability-matrix.yaml supported_by no longer matches the canonical helper set.")
-    if contract_registry.get("supported_by") != SUPPORTED_IDS:
+    if contract_registry.get("supported_by") != CONTRACT_SUPPORTED_IDS:
         blockers.append("analysis/capabilities/ddc-capability-registry.yaml supported_by no longer matches the canonical helper set.")
-    if _ts_array(contract_ts, "supportedBy") != SUPPORTED_IDS:
+    if _ts_array(contract_ts, "supportedBy") != CONTRACT_SUPPORTED_IDS:
         blockers.append("src/data/ddc-capability-matrix.ts supportedBy no longer matches the canonical helper set.")
 
     if contract_matrix.get("blocked_by") != BLOCKED_IDS:
@@ -213,7 +232,7 @@ def _verify_alignment() -> list[str]:
         ("ddc/estimation/GOLDENPATH.md helper list", goldenpath_helpers),
         ("meta/DDC_MAPPING.md helper list", mapping_helpers),
     ):
-        if actual != SUPPORTED_IDS:
+        if actual != CONTRACT_SUPPORTED_IDS:
             blockers.append(f"{label} no longer matches the canonical helper set.")
 
     for label, actual in (
@@ -229,9 +248,9 @@ def _verify_alignment() -> list[str]:
         blockers.append("TypeScript matrix status drifted from ddc/capability-matrix.yaml for ddc-estimation-contract.")
     if _ts_status(quantity_ts) != str(quantity_matrix.get("status")):
         blockers.append("TypeScript matrix status drifted from ddc/capability-matrix.yaml for quantity-takeoff-agent.")
-    if str(quantity_registry.get("state")) != "BLOCKED":
+    if str(quantity_registry.get("state")) != "ACTIVE":
         blockers.append("Registry state drifted for quantity-takeoff-agent.")
-    if str(contract_registry.get("state")) != "BLOCKED":
+    if str(contract_registry.get("state")) != "ACTIVE":
         blockers.append("Registry state drifted for ddc-estimation-contract.")
     return blockers
 
@@ -241,24 +260,44 @@ def _quantity_report() -> tuple[int, dict[str, Any]]:
     registry_row = _yaml_capability(REGISTRY_PATH, "quantity-takeoff-agent")
     blockers = _verify_alignment()
     dependency_status = {
+        "cwicr-seed": _yaml_capability(MATRIX_PATH, "cwicr-seed").get("status"),
+        "cwicr-qdrant-cost-search": _yaml_capability(MATRIX_PATH, "cwicr-qdrant-cost-search").get("status"),
         "ifc-cost-enrichment": _yaml_capability(MATRIX_PATH, "ifc-cost-enrichment").get("status"),
         "boq-sync": _yaml_capability(MATRIX_PATH, "boq-sync").get("status"),
+        "boq-read": _yaml_capability(MATRIX_PATH, "boq-read").get("status"),
+        "boq-export": _yaml_capability(MATRIX_PATH, "boq-export").get("status"),
         "quantity-takeoff-agent": matrix_row.get("status"),
     }
-    if dependency_status["ifc-cost-enrichment"] != "green":
-        blockers.append("ifc-cost-enrichment is not green yet, so governed quantity orchestration still lacks a promotable live Juniper writeback input.")
-    if dependency_status["boq-sync"] != "green":
-        blockers.append("boq-sync is not green yet, so governed quantity orchestration still lacks a promotable BOQ linkage surface.")
-    blockers.append(str(registry_row.get("blocker")))
+    for capability_id, status in dependency_status.items():
+        if capability_id != "quantity-takeoff-agent" and status != "green":
+            blockers.append(f"{capability_id} is not green yet, so governed quantity orchestration cannot stay promotable.")
+    if matrix_row.get("status") != "green":
+        blockers.append("quantity-takeoff-agent is not green in ddc/capability-matrix.yaml.")
+    proof: dict[str, Any] | None = None
+    if not blockers:
+        try:
+            proof = run_quantity_takeoff_proof(REPO_ROOT)
+        except Exception as exc:
+            blockers.append(str(exc))
+    if blockers:
+        report = {
+            "capability_id": "quantity-takeoff-agent",
+            "status": "blocked",
+            "matrix_status": matrix_row.get("status"),
+            "registry_state": registry_row.get("state"),
+            "dependency_status": dependency_status,
+            "blockers": blockers,
+        }
+        return 1, report
     report = {
+        **(proof or {}),
         "capability_id": "quantity-takeoff-agent",
-        "status": "blocked",
+        "status": "passed",
         "matrix_status": matrix_row.get("status"),
         "registry_state": registry_row.get("state"),
         "dependency_status": dependency_status,
-        "blockers": blockers,
     }
-    return 1, report
+    return 0, report
 
 
 def _contract_report() -> tuple[int, dict[str, Any]]:
@@ -267,34 +306,55 @@ def _contract_report() -> tuple[int, dict[str, Any]]:
     blockers = _verify_alignment()
     dependency_status = {
         capability_id: _yaml_capability(MATRIX_PATH, capability_id).get("status")
-        for capability_id in ("ifc-cost-enrichment", "boq-sync", "quantity-takeoff-agent")
+        for capability_id in CONTRACT_SUPPORTED_IDS + ["ddc-estimation-contract"]
     }
-    proof_status = {
-        "boq-sync": _proof_status(BOQ_SYNC_PROOF_PATH),
-        "ifc-cost-enrichment": _proof_status(IFC_ENRICHMENT_PROOF_PATH),
-    }
-    if dependency_status["ifc-cost-enrichment"] != "green":
-        blockers.append("ifc-cost-enrichment is still not green on live Juniper rows.")
-    if dependency_status["quantity-takeoff-agent"] != "green":
-        blockers.append("quantity-takeoff-agent is still not green, so end-to-end governed orchestration is missing.")
-    if proof_status["boq-sync"] != "passed":
-        blockers.append("boq-sync proof artifact is not passing.")
-    if proof_status["ifc-cost-enrichment"] != "passed":
-        blockers.append("ifc-cost-enrichment proof artifact is not passing.")
-    blockers.append(str(registry_row.get("blocker")))
+    helper_proof_status: dict[str, str] = {}
+    for capability_id, path in PROOF_PATHS.items():
+        try:
+            helper_proof_status[capability_id] = _proof_status(path)
+        except Exception as exc:
+            blockers.append(str(exc))
+    for capability_id, status in dependency_status.items():
+        if capability_id != "ddc-estimation-contract" and status != "green":
+            blockers.append(f"{capability_id} is not green, so end-to-end governed orchestration is still incomplete.")
+    for capability_id, status in helper_proof_status.items():
+        if status != "passed":
+            blockers.append(f"{capability_id} proof artifact is not passing.")
+    if matrix_row.get("status") != "green":
+        blockers.append("ddc-estimation-contract is not green in ddc/capability-matrix.yaml.")
+    quantity_proof: dict[str, Any] | None = None
+    if not blockers:
+        try:
+            quantity_proof = run_quantity_takeoff_proof(REPO_ROOT, idempotency_key="ddc-estimation-contract-proof-0001")
+        except Exception as exc:
+            blockers.append(str(exc))
+    if blockers:
+        report = {
+            "capability_id": "ddc-estimation-contract",
+            "status": "blocked",
+            "matrix_status": matrix_row.get("status"),
+            "registry_state": registry_row.get("state"),
+            "dependency_status": dependency_status,
+            "proof_status": helper_proof_status,
+            "project_target": matrix_row.get("project_target"),
+            "supported_by": matrix_row.get("supported_by"),
+            "blocked_by": matrix_row.get("blocked_by"),
+            "blockers": blockers,
+        }
+        return 1, report
     report = {
         "capability_id": "ddc-estimation-contract",
-        "status": "blocked",
+        "status": "passed",
         "matrix_status": matrix_row.get("status"),
         "registry_state": registry_row.get("state"),
         "dependency_status": dependency_status,
-        "proof_status": proof_status,
+        "proof_status": helper_proof_status,
         "project_target": matrix_row.get("project_target"),
         "supported_by": matrix_row.get("supported_by"),
         "blocked_by": matrix_row.get("blocked_by"),
-        "blockers": blockers,
+        "quantity_takeoff_proof": quantity_proof,
     }
-    return 1, report
+    return 0, report
 
 
 def main() -> int:

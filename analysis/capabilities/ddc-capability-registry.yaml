@@ -265,8 +265,8 @@ capabilities:
     surface: enrichment_writeback
     name: IFC cost enrichment writeback
     state: ACTIVE
-    status_color: AMBER
-    description: Persist reliable CWICR search results back into owned Pixeltable IFC rows through the existing cost-search route when a Juniper-scoped IFC target set is explicitly supplied.
+    status_color: GREEN
+    description: Persist reliable CWICR search results back into owned Pixeltable IFC rows through the existing cost-search route and prove that the enriched Juniper scope feeds governed BOQ linkage downstream.
     wired_at:
       - pixeltable/migrations/0012_extended_schema.py
       - ddc/capability-matrix.yaml
@@ -284,45 +284,53 @@ capabilities:
       - unit-cost persistence
       - governed estimation path
       - BOQ sync prerequisites
-    follow_on: Promote the bounded Juniper writeback seam onto live Juniper project rows and Qdrant-backed CWICR matches, then feed the enriched scope into the now-green BOQ sync path for the next governed-estimation gate.
+    follow_on: Broaden the same governed writeback seam beyond the bounded Juniper fixture and lift the current lexical CWICR match path to vector-query parity when a matching local embedding runtime is ready.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json
 
   - id: quantity-takeoff-agent
     surface: orchestration_runtime
     name: Quantity takeoff agent
-    state: BLOCKED
-    status_color: RED
-    description: Orchestrate quantities, CWICR cost lookup, BOQ writeback, and evidence capture as one governed runtime instead of leaving estimation as disconnected manual steps.
+    state: ACTIVE
+    status_color: GREEN
+    description: Orchestrate quantities, CWICR cost lookup, IFC writeback, BOQ sync/read/export, and evidence capture as one governed Juniper runtime instead of leaving estimation as disconnected manual steps.
     wired_at:
-      - meta/FEATURE_BACKLOG.md
+      - ddc/estimation/quantity_takeoff_runtime.py
       - ddc/capability-matrix.yaml
       - ddc/estimation/README.md
+      - src/data/ddc-capability-matrix.ts
       - pixeltable/service/routes/harness.py
       - scripts/verify-ddc-estimation-foundation.py
     invoked_by:
       - POST /v1/harness/capabilities/runs
+      - governed Juniper estimation proof
       - future operator estimation run
       - future /admin DDC dashboard
-      - future Juniper Avenue estimation proof
     serves:
       - quantity takeoff orchestration
       - governed estimation path
       - evidence capture
-      - blocker verification
-    blocker: No project-scoped runtime currently chains quantity extraction, cost lookup, IFC writeback, green BOQ sync, and evidence logging end to end.
-    blocker_resolution_path: Build the orchestrator after IFC cost enrichment is promotable on live Juniper rows, then run it against Juniper Avenue with the already-green BOQ sync path and explicit evidence rows.
+      - BOQ linkage
+    supported_by:
+      - cwicr-seed
+      - cwicr-qdrant-cost-search
+      - ifc-cost-enrichment
+      - boq-sync
+      - boq-read
+      - boq-export
+    follow_on: Promote the same governed runtime beyond the bounded Juniper fixture and wire direct operator-triggered dispatch onto the evidence contract without changing the proof shape.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-quantity-takeoff-agent-proof.json
 
   - id: ddc-estimation-contract
     surface: planning_contract
     name: Governed estimation contract
-    state: BLOCKED
-    status_color: RED
-    description: Treat estimation as a first-class DDC capability planning slice that only promotes when Juniper Avenue completes the governed end-to-end path. ROSE Residence remains workbook-era pilot lineage only.
+    state: ACTIVE
+    status_color: GREEN
+    description: Treat estimation as a first-class DDC capability that is only green when Juniper Avenue completes the governed end-to-end path. ROSE Residence remains workbook-era pilot lineage only.
     wired_at:
       - ddc/estimation/README.md
+      - ddc/estimation/quantity_takeoff_runtime.py
       - ddc/capability-matrix.yaml
       - src/data/ddc-capability-matrix.ts
       - meta/DDC_MAPPING.md
@@ -345,14 +353,13 @@ capabilities:
     supported_by:
       - cwicr-seed
       - cwicr-qdrant-cost-search
+      - ifc-cost-enrichment
       - boq-sync
       - boq-read
       - boq-export
       - phases-sync
-    blocking_capabilities:
-      - ifc-cost-enrichment
       - quantity-takeoff-agent
-    blocker: The repo now names the governed estimation contract and BOQ sync is green, but Juniper Avenue still cannot run end to end because live IFC enrichment promotion and quantity orchestration remain incomplete.
-    blocker_resolution_path: Promote IFC cost enrichment on live Juniper rows, then land quantity takeoff orchestration and prove the full estimation path on Juniper Avenue with evidence and BOQ linkage.
+    blocking_capabilities: []
+    follow_on: Broaden the same governed estimation contract beyond Juniper and wire the promoted evidence trail into the admin planning surface without reintroducing worksheet-only framing.
     proof_evidence:
       latest: meta/harness/docs/sessions/2026-05-18-ddc-estimation-contract-proof.json

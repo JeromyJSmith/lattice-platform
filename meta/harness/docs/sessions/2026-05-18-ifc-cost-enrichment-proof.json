@@ -2,9 +2,9 @@
   "schema_version": 1,
   "capability_id": "ifc-cost-enrichment",
   "job_id": "ifc-cost-enrichment",
-  "run_id": "ifc-cost-enrichment-2026-05-18T06-37-15.957Z",
-  "started_at": "2026-05-18T06:37:15Z",
-  "completed_at": "2026-05-18T06:37:15Z",
+  "run_id": "ifc-cost-enrichment-2026-05-18T07-11-46.779Z",
+  "started_at": "2026-05-18T07:11:46Z",
+  "completed_at": "2026-05-18T07:11:46Z",
   "ok": true,
   "command": [
     "uv",
@@ -17,18 +17,18 @@
   "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
   "artifact": "meta/harness/docs/sessions/2026-05-18-ifc-cost-enrichment-proof.json",
   "returncode": 0,
-  "stdout": "{\n  \"capability_id\": \"ifc-cost-enrichment\",\n  \"route\": \"POST /v1/erp/cost-search\",\n  \"project_id\": \"918-juniper\",\n  \"source_element_id\": \"ifc-juniper-001\",\n  \"proof\": {\n    \"route\": \"/v1/erp/cost-search\",\n    \"project_id\": \"918-juniper\",\n    \"source_element_id\": \"ifc-juniper-001\",\n    \"status_code\": 200,\n    \"writeback\": {\n      \"requested\": true,\n      \"status\": \"passed\",\n      \"project_id\": \"918-juniper\",\n      \"ifc_surface\": \"lattice/bridge/ifc/ifc_elements\",\n      \"rows_updated\": 1,\n      \"source_element_ids\": [\n        \"ifc-juniper-001\"\n      ],\n      \"unit_cost\": 47.5,\n      \"unit_cost_region\": \"US\",\n      \"cost_last_updated\": \"2026-05-18T06:37:15.923807Z\"\n    },\n    \"top_item_id\": \"CWICR-JUNIPER-001\"\n  },\n  \"status\": \"passed\"\n}\n",
+  "stdout": "{\n  \"capability_id\": \"ifc-cost-enrichment\",\n  \"route\": \"POST /v1/erp/cost-search\",\n  \"project_id\": \"918-juniper\",\n  \"source_element_id\": \"ifc-juniper-001\",\n  \"proof\": {\n    \"route\": \"/v1/erp/cost-search\",\n    \"project_id\": \"918-juniper\",\n    \"source_element_id\": \"ifc-juniper-001\",\n    \"status_code\": 200,\n    \"writeback\": {\n      \"requested\": true,\n      \"status\": \"passed\",\n      \"project_id\": \"918-juniper\",\n      \"ifc_surface\": \"lattice/bridge/ifc/ifc_elements\",\n      \"rows_updated\": 1,\n      \"source_element_ids\": [\n        \"ifc-juniper-001\"\n      ],\n      \"unit_cost\": 47.5,\n      \"unit_cost_region\": \"US\",\n      \"cost_last_updated\": \"2026-05-18T07:11:46.725592Z\"\n    },\n    \"top_item_id\": \"CWICR-JUNIPER-001\"\n  },\n  \"status\": \"passed\"\n}\n",
   "stderr": "",
   "verification": {
     "status": "passed",
     "message": "Command returned expected exit code 0.",
     "returncode": 0,
     "expected_returncode": 0,
-    "stdout": "{\n  \"capability_id\": \"ifc-cost-enrichment\",\n  \"route\": \"POST /v1/erp/cost-search\",\n  \"project_id\": \"918-juniper\",\n  \"source_element_id\": \"ifc-juniper-001\",\n  \"proof\": {\n    \"route\": \"/v1/erp/cost-search\",\n    \"project_id\": \"918-juniper\",\n    \"source_element_id\": \"ifc-juniper-001\",\n    \"status_code\": 200,\n    \"writeback\": {\n      \"requested\": true,\n      \"status\": \"passed\",\n      \"project_id\": \"918-juniper\",\n      \"ifc_surface\": \"lattice/bridge/ifc/ifc_elements\",\n      \"rows_updated\": 1,\n      \"source_element_ids\": [\n        \"ifc-juniper-001\"\n      ],\n      \"unit_cost\": 47.5,\n      \"unit_cost_region\": \"US\",\n      \"cost_last_updated\": \"2026-05-18T06:37:15.923807Z\"\n    },\n    \"top_item_id\": \"CWICR-JUNIPER-001\"\n  },\n  \"status\": \"passed\"\n}\n",
+    "stdout": "{\n  \"capability_id\": \"ifc-cost-enrichment\",\n  \"route\": \"POST /v1/erp/cost-search\",\n  \"project_id\": \"918-juniper\",\n  \"source_element_id\": \"ifc-juniper-001\",\n  \"proof\": {\n    \"route\": \"/v1/erp/cost-search\",\n    \"project_id\": \"918-juniper\",\n    \"source_element_id\": \"ifc-juniper-001\",\n    \"status_code\": 200,\n    \"writeback\": {\n      \"requested\": true,\n      \"status\": \"passed\",\n      \"project_id\": \"918-juniper\",\n      \"ifc_surface\": \"lattice/bridge/ifc/ifc_elements\",\n      \"rows_updated\": 1,\n      \"source_element_ids\": [\n        \"ifc-juniper-001\"\n      ],\n      \"unit_cost\": 47.5,\n      \"unit_cost_region\": \"US\",\n      \"cost_last_updated\": \"2026-05-18T07:11:46.725592Z\"\n    },\n    \"top_item_id\": \"CWICR-JUNIPER-001\"\n  },\n  \"status\": \"passed\"\n}\n",
     "stderr": ""
   },
   "metrics": {
-    "latency_ms": 254,
+    "latency_ms": 392,
     "cost_usd": 0,
     "model": "deterministic"
   }

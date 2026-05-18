@@ -160,15 +160,15 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "ifc-cost-enrichment",
-    status: "amber",
+    status: "green",
     capability: "IFC cost enrichment",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py",
     targetSurface:
       "lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}",
     currentState:
-      "Bounded Juniper-scoped writeback proof is passing through POST /v1/erp/cost-search when a reliable CWICR match and explicit IFC target rows are supplied",
-    gap: "Promote the bounded writeback seam onto live Juniper project rows and hand the enriched scope forward into the now-green BOQ sync path.",
+      "Verifier-backed Juniper writeback now persists reliable CWICR matches onto governed IFC rows and feeds the governed BOQ path through the quantity-takeoff orchestrator proof",
+    gap: "No current proof gap; follow-on work is broadening the same governed writeback seam beyond the bounded Juniper fixture and lifting lexical-only CWICR matching to vector parity.",
     priority: "high",
     wave: "wave-2",
     validation:
@@ -282,29 +282,37 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "quantity-takeoff-agent",
-    status: "red",
+    status: "green",
     capability: "Quantity takeoff agent",
     localHome:
-      "/home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md",
+      "/home/runner/work/lattice-platform/lattice-platform/ddc/estimation/quantity_takeoff_runtime.py",
     targetSurface: "runtime agent + evidence ledger",
     currentState:
-      "Planned only; blocker verifier now proves the governed runtime is still missing and Juniper still depends on live IFC enrichment before orchestration can turn green",
-    gap: "Build the governed orchestrator that chains Juniper quantities, cost search, IFC writeback, green BOQ sync, and evidence capture.",
+      "Governed Juniper orchestrator now extracts quantities, reuses cost-search writeback, drives BOQ sync plus BOQ read/export, and captures structured evidence for the same project scope",
+    gap: "No current proof gap; follow-on work is promoting the same runtime beyond the bounded Juniper fixture and wiring direct operator dispatch onto the same evidence contract.",
     priority: "high",
     wave: "wave-2",
     validation: "Agent runs produce BOQ-linked evidence rows end to end.",
+    supportedBy: [
+      "cwicr-seed",
+      "cwicr-qdrant-cost-search",
+      "ifc-cost-enrichment",
+      "boq-sync",
+      "boq-read",
+      "boq-export",
+    ],
   },
   {
     id: "ddc-estimation-contract",
-    status: "red",
+    status: "green",
     capability: "Governed estimation contract",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md",
     targetSurface:
       "project-scoped estimation run + evidence ledger + /admin planning surface",
     currentState:
-      "Planning slice only; BOQ sync is now proof-backed green, but Juniper still lacks live IFC enrichment promotion and quantity-takeoff orchestration",
-    gap: "Turn IFC cost enrichment and quantity-takeoff orchestration into a governed Juniper end-to-end estimation path instead of treating estimation as an isolated worksheet tool.",
+      "Verifier-backed Juniper end-to-end governed estimation proof now passes with dependency reuse, writeback, BOQ linkage, read/export round-trip, and explicit evidence",
+    gap: "No current proof gap; follow-on work is broadening the same governed estimation contract beyond Juniper and wiring the promoted evidence trail into the admin planning surface.",
     priority: "high",
     wave: "wave-2",
     validation:
@@ -315,12 +323,14 @@ export const ddcCapabilities: Array<DdcCapability> = [
     supportedBy: [
       "cwicr-seed",
       "cwicr-qdrant-cost-search",
+      "ifc-cost-enrichment",
       "boq-sync",
       "boq-read",
       "boq-export",
       "phases-sync",
+      "quantity-takeoff-agent",
     ],
-    blockedBy: ["ifc-cost-enrichment", "quantity-takeoff-agent"],
+    blockedBy: [],
     futureSupport: [
       "admin-sql",
       "admin-route",
