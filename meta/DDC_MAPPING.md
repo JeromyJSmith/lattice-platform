@@ -93,7 +93,7 @@ What it contains:
 
 How LATTICE uses it:
 - Run in OrbStack Ubuntu VM (shares Mac filesystem)
-- POST /search with element description → get unit costs back
+- Local no-key lookup uses Qdrant payload text indices plus exact CWICR rate codes to get unit costs back from the restored snapshot
 - Results written to Pixeltable ifc_elements.unit_cost column
 - Powers the deck.gl cost overlay in Context B
 - Powers the BOQ cost lookup in admin dashboard

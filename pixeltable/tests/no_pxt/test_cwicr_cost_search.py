@@ -19,8 +19,8 @@ def _load_cost_search():
     return module
 
 
-def test_search_reports_missing_openai_embedding_runtime(monkeypatch) -> None:
-    """Fail closed with the live 3072d blocker instead of stale client or health errors."""
+def test_search_falls_back_to_lexical_lookup_without_openai_runtime(monkeypatch) -> None:
+    """Use the no-key lexical path when the restored collection lacks a matching local embed runtime."""
     cost_search = _load_cost_search()
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setattr(
@@ -28,9 +28,27 @@ def test_search_reports_missing_openai_embedding_runtime(monkeypatch) -> None:
         "_fetch_collection_contract",
         lambda: {"collection": "cwicr", "vector_size": 3072, "status": "green"},
     )
+    monkeypatch.setattr(
+        cost_search,
+        "_search_lexical",
+        lambda client, description, region, top: [
+            {
+                "item_id": "TOLI_KATO_KAKATO_KANE",
+                "name": description,
+                "unit": "ea",
+                "unit_cost": 23733.64,
+                "unit_currency": "EUR",
+                "unit_cost_region": region,
+                "score": 1.0,
+                "retrieval_mode": "lexical",
+            }
+        ],
+    )
 
-    with pytest.raises(NotImplementedError, match="OPENAI_API_KEY is not configured"):
-        cost_search.search("concrete slab 10cm reinforced", "US", 3)
+    rows = cost_search.search("TOLI_KATO_KAKATO_KANE", "US", 3)
+
+    assert rows[0]["item_id"] == "TOLI_KATO_KAKATO_KANE"
+    assert rows[0]["retrieval_mode"] == "lexical"
 
 
 def test_normalize_hit_maps_live_cwicr_payload() -> None:
@@ -56,7 +74,7 @@ def test_normalize_hit_maps_live_cwicr_payload() -> None:
             },
         }
 
-    row = cost_search._normalize_hit(_Hit(), "US")
+    row = cost_search._normalize_hit(_Hit(), "US", retrieval_mode="vector")
 
     assert row == {
         "item_id": "RATE-1",
@@ -66,4 +84,5 @@ def test_normalize_hit_maps_live_cwicr_payload() -> None:
         "unit_currency": cost_search.DEFAULT_UNIT_CURRENCY,
         "unit_cost_region": "US",
         "score": 0.81,
+        "retrieval_mode": "vector",
     }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Semantic cost search against the local Qdrant CWICR collection.
+"""Cost search against the local Qdrant CWICR collection.
 
 Usage:
     python3 cost-search.py "<element description>" [--region US] [--top 5]
@@ -17,6 +17,10 @@ Score interpretation used by the LATTICE ERP route:
 This helper returns ranked hits only. API-layer callers should apply
 confidence classification before presenting the result as proof.
 
+The preferred path is vector search when a matching local embedding runtime
+exists. The bounded no-key fallback uses Qdrant payload text and exact
+CWICR code fields from the restored snapshot.
+
 Tracked in meta/FEATURE_BACKLOG.md § DDC INTEGRATION → "CWICR cost search".
 
 Stub. See INSTALL.md and the acceptance criteria on the matching GitHub issue
@@ -28,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from urllib import error, request
 
@@ -37,6 +42,8 @@ OPENAI_EMBED_MODEL = "text-embedding-3-large"
 EMBED_MODEL = os.environ.get("CWICR_EMBED_MODEL", OPENAI_EMBED_MODEL)
 DEFAULT_UNIT_CURRENCY = os.environ.get("CWICR_UNIT_CURRENCY", "EUR")
 REQUEST_TIMEOUT_SECONDS = 30.0
+LEXICAL_SCROLL_LIMIT = 24
+MAX_LEXICAL_TOKENS = 8
 
 _MODEL = None
 
@@ -114,6 +121,19 @@ def _encode_query(description: str, *, expected_dimensions: int) -> list[float]:
     return vector
 
 
+def _normalize_text(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return " ".join(value.strip().lower().split())
+
+
+def _query_tokens(description: str) -> list[str]:
+    normalized = _normalize_text(description)
+    if not normalized:
+        return []
+    return [token for token in re.split(r"\s+", normalized) if token][:MAX_LEXICAL_TOKENS]
+
+
 def _first_string(*values: object) -> str | None:
     for value in values:
         if isinstance(value, str):
@@ -137,7 +157,7 @@ def _first_number(*values: object) -> float | None:
     return None
 
 
-def _normalize_hit(hit: object, region: str) -> dict:
+def _normalize_hit(hit: object, region: str, *, score: float | None = None, retrieval_mode: str) -> dict:
     payload = getattr(hit, "payload", None)
     if not isinstance(payload, dict):
         payload = {}
@@ -163,8 +183,137 @@ def _normalize_hit(hit: object, region: str) -> dict:
         "unit_cost": _first_number(cost_summary.get("total_cost_position")),
         "unit_currency": DEFAULT_UNIT_CURRENCY,
         "unit_cost_region": region,
-        "score": getattr(hit, "score", None),
+        "score": getattr(hit, "score", None) if score is None else score,
+        "retrieval_mode": retrieval_mode,
     }
+
+
+def _lexical_candidate_score(description: str, hit: object) -> float:
+    payload = getattr(hit, "payload", None)
+    if not isinstance(payload, dict):
+        payload = {}
+    metadata = payload.get("metadata")
+    if not isinstance(metadata, dict):
+        metadata = {}
+    payload_full = payload.get("payload_full")
+    if not isinstance(payload_full, dict):
+        payload_full = {}
+    query = _normalize_text(description)
+    if not query:
+        return 0.0
+    code = _normalize_text(_first_string(payload_full.get("rate_code"), metadata.get("rsts"), metadata.get("doc_id")))
+    name = _normalize_text(_first_string(payload_full.get("rate_name"), metadata.get("names")))
+    content = _normalize_text(payload.get("content"))
+    if query == code:
+        return 1.0
+    if query == name:
+        return 0.95
+    if query and query in name:
+        return 0.9
+    if query and query in content:
+        return 0.8
+    tokens = _query_tokens(query)
+    if not tokens:
+        return 0.0
+    name_hits = sum(1 for token in tokens if token in name)
+    content_hits = sum(1 for token in tokens if token in content)
+    code_hits = sum(1 for token in tokens if token in code)
+    coverage = max(name_hits, content_hits, code_hits) / len(tokens)
+    if coverage == 0:
+        return 0.0
+    lexical_score = 0.2 + (coverage * 0.45)
+    if name_hits == len(tokens):
+        lexical_score += 0.15
+    if content_hits == len(tokens):
+        lexical_score += 0.05
+    if code_hits:
+        lexical_score += 0.1
+    return min(lexical_score, 0.89)
+
+
+def _search_lexical(client: object, description: str, region: str, top: int) -> list[dict]:
+    from qdrant_client import models
+
+    seen_ids: set[str] = set()
+    candidates: list[object] = []
+
+    def collect_points(filter_condition: object) -> None:
+        """Add unique Qdrant points for one lexical filter probe."""
+        points, _next_page_offset = client.scroll(
+            collection_name=COLLECTION,
+            scroll_filter=filter_condition,
+            limit=max(LEXICAL_SCROLL_LIMIT, top),
+            with_payload=True,
+            with_vectors=False,
+        )
+        for point in points:
+            point_id = str(getattr(point, "id", ""))
+            if point_id in seen_ids:
+                continue
+            seen_ids.add(point_id)
+            candidates.append(point)
+
+    exact_query = description.strip()
+    if exact_query:
+        collect_points(
+            models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="metadata.rsts",
+                        match=models.MatchValue(value=exact_query),
+                    )
+                ]
+            )
+        )
+
+    normalized_query = _normalize_text(description)
+    if normalized_query:
+        for field in ("metadata.names", "content"):
+            collect_points(
+                models.Filter(
+                    must=[
+                        models.FieldCondition(
+                            key=field,
+                            match=models.MatchText(text=normalized_query),
+                        )
+                    ]
+                )
+            )
+
+    for token in _query_tokens(description):
+        for field in ("metadata.names", "content"):
+            collect_points(
+                models.Filter(
+                    must=[
+                        models.FieldCondition(
+                            key=field,
+                            match=models.MatchText(text=token),
+                        )
+                    ]
+                )
+            )
+
+    ranked_rows: list[dict] = []
+    for candidate in candidates:
+        lexical_score = _lexical_candidate_score(description, candidate)
+        if lexical_score <= 0:
+            continue
+        ranked_rows.append(
+            _normalize_hit(
+                candidate,
+                region,
+                score=lexical_score,
+                retrieval_mode="lexical",
+            )
+        )
+    ranked_rows.sort(
+        key=lambda row: (
+            -(float(row["score"]) if isinstance(row.get("score"), (int, float)) else 0.0),
+            str(row.get("item_id") or ""),
+            str(row.get("name") or ""),
+        )
+    )
+    return ranked_rows[:top]
 
 
 def search(description: str, region: str, top: int) -> list[dict]:
@@ -175,12 +324,16 @@ def search(description: str, region: str, top: int) -> list[dict]:
         raise ValueError("top must be >= 1")
 
     from qdrant_client import QdrantClient
+
     collection_contract = _fetch_collection_contract()
     vector_size = collection_contract["vector_size"]
     if not isinstance(vector_size, int):
         raise RuntimeError(f"collection {COLLECTION!r} did not report an integer vector size")
-    vector = _encode_query(description, expected_dimensions=vector_size)
     client = QdrantClient(url=QDRANT_URL)
+    try:
+        vector = _encode_query(description, expected_dimensions=vector_size)
+    except NotImplementedError:
+        return _search_lexical(client, description, region, top)
     response = client.query_points(
         collection_name=COLLECTION,
         query=vector,
@@ -189,7 +342,7 @@ def search(description: str, region: str, top: int) -> list[dict]:
         with_vectors=False,
     )
     hits = response.points if hasattr(response, "points") else []
-    return [_normalize_hit(hit, region) for hit in hits]
+    return [_normalize_hit(hit, region, retrieval_mode="vector") for hit in hits]
 
 
 def main() -> int:

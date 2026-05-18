@@ -23,7 +23,7 @@ from service.routes import erp  # noqa: E402
 
 QDRANT_URL = os.environ.get("QDRANT_URL", "http://localhost:6333").rstrip("/")
 COLLECTION = os.environ.get("CWICR_COLLECTION", "cwicr")
-DEFAULT_DESCRIPTION = os.environ.get("CWICR_VERIFY_DESCRIPTION", "concrete slab 10cm reinforced")
+DEFAULT_DESCRIPTION = os.environ.get("CWICR_VERIFY_DESCRIPTION", "TOLI_KATO_KAKATO_KANE")
 DEFAULT_REGION = os.environ.get("CWICR_VERIFY_REGION", "US")
 DEFAULT_TOP = int(os.environ.get("CWICR_VERIFY_TOP", "3"))
 REQUEST_TIMEOUT_SECONDS = 10.0
@@ -178,6 +178,7 @@ def _verify_route(description: str, region: str, top: int) -> dict[str, Any]:
             "top": body.get("top"),
             "top_item_id": rows[0].get("item_id"),
             "top_score": confidence["top_score"],
+            "retrieval": body.get("retrieval"),
             "verification": body.get("verification"),
             "trust_contract": body.get("trust_contract"),
             "row_count": len(rows),

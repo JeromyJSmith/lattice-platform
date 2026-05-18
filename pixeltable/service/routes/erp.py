@@ -257,6 +257,8 @@ def _normalize_cost_search_rows(rows: Any, region: str) -> list[dict[str, Any]]:
             )
             or region,
             "score": _coerce_score(row),
+            "retrieval_mode": _normalize_optional_string(row.get("retrieval_mode"), field="retrieval_mode")
+            or "unknown",
         }
         normalized_rows.append(normalized_row)
     return normalized_rows
@@ -298,10 +300,22 @@ def _classify_cost_search(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def _cost_search_trust_contract(verification_status: str) -> dict[str, Any]:
+def _summarize_cost_search_retrieval(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    mode = "none"
+    if rows:
+        mode = rows[0].get("retrieval_mode") or "unknown"
+    return {
+        "backend": "qdrant",
+        "mode": mode,
+        "kind": "payload_text" if mode == "lexical" else "vector_query" if mode == "vector" else "unknown",
+    }
+
+
+def _cost_search_trust_contract(verification_status: str, retrieval_mode: str) -> dict[str, Any]:
     return {
         "surface": "POST /v1/erp/cost-search",
-        "evidence_kind": "cwicr_semantic_match",
+        "evidence_kind": "cwicr_text_match" if retrieval_mode == "lexical" else "cwicr_semantic_match",
+        "retrieval_mode": retrieval_mode,
         "verified_statuses": ["passed"],
         "review_statuses": ["review_required", "unverified"],
         "thresholds": {
@@ -383,6 +397,7 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
     except Exception as exc:
         raise _as_http_error(exc, "cost search failed") from exc
     confidence = _classify_cost_search(rows)
+    retrieval = _summarize_cost_search_retrieval(rows)
     verification = {
         "status": confidence["verdict"],
         "message": confidence["message"],
@@ -393,9 +408,10 @@ def post_cost_search(body: dict[str, Any] = Body(...)):
         "region": region,
         "top": top,
         "rows": rows,
+        "retrieval": retrieval,
         "confidence": confidence,
         "verification": verification,
-        "trust_contract": _cost_search_trust_contract(verification["status"]),
+        "trust_contract": _cost_search_trust_contract(verification["status"], retrieval["mode"]),
     }
 
 

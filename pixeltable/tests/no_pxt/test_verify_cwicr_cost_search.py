@@ -126,6 +126,7 @@ def test_main_passes_when_route_proof_passes(monkeypatch, capsys) -> None:
             "proof": {
                 "top_item_id": "RATE-1",
                 "top_score": 0.81,
+                "retrieval": {"mode": "lexical", "backend": "qdrant"},
                 "row_count": 3,
             },
         },
@@ -136,3 +137,4 @@ def test_main_passes_when_route_proof_passes(monkeypatch, capsys) -> None:
     assert payload["status"] == "passed"
     assert payload["qdrant"]["count"] == 49600
     assert payload["proof"]["top_item_id"] == "RATE-1"
+    assert payload["proof"]["retrieval"]["mode"] == "lexical"

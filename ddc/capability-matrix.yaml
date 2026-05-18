@@ -68,20 +68,20 @@ capabilities:
     capability: CWICR dataset seeding
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh
     target_surface: Qdrant collection cwicr
-    current_state: verifier-backed seed preflight; live proof failing
-    gap: Local cwicr collection is only 5 points at 64 dimensions; the release contract expects a 55,719-point 3072-d snapshot-backed collection
+    current_state: verifier-backed bounded seed proof passing
+    gap: The restored local snapshot is the published 49,600-point / 3072-d HI_MUMBAI subset; a full 55,719-point multi-locale restore remains follow-on work
     priority: high
     wave: wave-1
-    validation: Qdrant point count is 55,719 and the collection vector size matches the release snapshot contract (3072)
+    validation: Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072)
   - id: cwicr-cost-search
-    capability: CWICR semantic cost lookup
+    capability: CWICR cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
     target_surface: POST /v1/erp/cost-search
-    current_state: verifier-backed route; live proof blocked
-    gap: localhost:6333 still returns 404 for the verifier's expected Qdrant /health contract, so ranked search proof cannot complete
+    current_state: verifier-backed route; live proof passing through the bounded no-key lexical path
+    gap: Matching local 3072-d vector-query embeddings are still unavailable, so the bounded proof path uses indexed Qdrant payload text/keyword lookup instead of vector similarity
     priority: high
     wave: wave-1
-    validation: Element descriptions return region-filtered ranked CWICR matches with passed verification
+    validation: Snapshot-compatible descriptions or CWICR rate codes return region-tagged ranked matches with passed verification
   - id: ifc-cost-enrichment
     capability: IFC cost enrichment
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py

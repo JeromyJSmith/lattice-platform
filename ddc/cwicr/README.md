@@ -2,7 +2,7 @@
 
 55,719 construction cost items across 30 regions, 27 languages. Provided by the OpenConstructionEstimate-DDC-CWICR repo (https://github.com/datadrivenconstruction/OpenConstructionEstimate-DDC-CWICR). The bounded local seed path currently restores the smallest published 3072-d snapshot (`HI_MUMBAI...snapshot`) at 49,600 points.
 
-LATTICE uses CWICR as the **unit-cost source** for every `lattice/bridge/ifc/ifc_elements` row. Semantic search via Qdrant: element description → top-k cost items → write `unit_cost` + `unit_cost_region` back to Pixeltable.
+LATTICE uses CWICR as the **unit-cost source** for every `lattice/bridge/ifc/ifc_elements` row. The bounded no-key local runtime queries Qdrant's indexed `metadata.rsts`, `metadata.names`, and `content` payload fields for deterministic code/text lookup, then writes the ranked `unit_cost` + `unit_cost_region` results back to Pixeltable. A matching local 3072-d vector-query runtime for the published OpenAI snapshot remains future work.
 
 ## Files in this directory
 
@@ -31,5 +31,7 @@ LATTICE sidecar (Mac, port 7770)
 OrbStack maps `localhost:6333` from the VM to the Mac host transparently — no port forwarding setup beyond `orb start`.
 
 The verifier-backed seed contract lives at [`../../scripts/verify-cwicr-seed.py`](../../scripts/verify-cwicr-seed.py). Today it restores and proves the bounded HI_MUMBAI snapshot only when the local `cwicr` collection reaches 49,600 points and exposes the same 3072-dimensional vector contract as the published snapshot asset. The full 55,719-point corpus remains a larger follow-on target; if the collection is still a demo stub or the restore path has not been run yet, the proof artifact stays red with explicit blockers instead of claiming a green seed.
+
+The live cost-search verifier now passes without API keys by using an exact CWICR code from the restored snapshot (`TOLI_KATO_KAKATO_KANE`) as the bounded proof query. That proof is recorded at [`../../meta/harness/docs/sessions/2026-05-18-cwicr-qdrant-cost-search-proof.json`](../../meta/harness/docs/sessions/2026-05-18-cwicr-qdrant-cost-search-proof.json).
 
 Tracked in [`../../meta/FEATURE_BACKLOG.md`](../../meta/FEATURE_BACKLOG.md) § DDC INTEGRATION → "CWICR cost search".

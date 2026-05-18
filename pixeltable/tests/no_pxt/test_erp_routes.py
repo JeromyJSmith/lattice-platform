@@ -35,7 +35,13 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
         erp._COST_SEARCH,
         "search",
         lambda description, region, top: [
-            {"item_id": "cwicr-1", "name": description, "unit_cost_region": region, "score": top}
+            {
+                "item_id": "cwicr-1",
+                "name": description,
+                "unit_cost_region": region,
+                "score": top,
+                "retrieval_mode": "lexical",
+            }
         ],
     )
     client = TestClient(_app(tmp_path))
@@ -49,7 +55,9 @@ def test_cost_search_returns_rows(tmp_path: Path, monkeypatch):
     assert body["rows"][0]["item_id"] == "cwicr-1"
     assert body["confidence"]["signal"] == "high"
     assert body["verification"]["status"] == "passed"
+    assert body["retrieval"]["mode"] == "lexical"
     assert body["trust_contract"]["surface"] == "POST /v1/erp/cost-search"
+    assert body["trust_contract"]["retrieval_mode"] == "lexical"
     assert body["trust_contract"]["status"] == "passed"
     assert body["trust_contract"]["thresholds"]["verified_gte"] == erp.MIN_RELIABLE_SCORE
 
