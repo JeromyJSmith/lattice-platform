@@ -1,15 +1,26 @@
 {
   "project_id": "918-juniper",
-  "project_name": "MARPA — 918 Juniper Avenue",
+  "project_name": "MARPA - 918 Juniper Avenue",
   "operational_target": true,
   "pilot_lineage_only": [
     "ROSE Residence",
     "Luke Spreadsheet Prototype"
   ],
-  "workbook_refs": ["juniper-workbook-v1"],
-  "source_artifact_ids": ["source-juniper-ifc-lineage", "proof-estimation-contract"],
+  "workbook_refs": [
+    "sd-budget-md!128",
+    "sd-budget-md!133",
+    "sd-budget-md!137"
+  ],
+  "source_artifact_ids": [
+    "source-artifact:juniper:sd-budget-md",
+    "source-juniper-ifc-lineage",
+    "ddc/estimation/kernel/plant-category-bridge.json"
+  ],
   "operational_gaps": [
-    "Operational fixture is intentionally partial and currently models the bounded planting-bed estimating surface only.",
-    "Juniper workbook extraction is represented through governed mapping rows rather than a committed workbook file."
+    "All 17 IFC species now map to governed Juniper PLANTING trade categories backed by existing budget unit costs.",
+    "The Thymus praecox ‘Minus’ groundcover mapping honestly converts 528 IFC elements into 16.5 flats using the documented 32-elements-per-flat formula.",
+    "Pinus densiflora 'Globosa' remains a real scope mismatch: IFC shows 5 elements while the budget line still carries qty 2.",
+    "The governed contract fixture remains a representative Juniper workbook row because the full operational workbook export is not array-shaped in the governed schema.",
+    "Live Pixeltable Juniper project rows are not present on the bridge surfaces, so this run still proves the bounded contract path rather than project-addressable bridge rows."
   ]
 }

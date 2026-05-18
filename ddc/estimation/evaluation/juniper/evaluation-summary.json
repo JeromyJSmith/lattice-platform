@@ -1,0 +1,121 @@
+{
+  "project_id": "918-juniper",
+  "project_name": "MARPA - 918 Juniper Avenue",
+  "run_status": "promotable",
+  "ifc_quantity_takeoff": {
+    "total_elements": 1028,
+    "species_count": 17,
+    "matched_species_count": 17,
+    "unmatched_species_count": 0,
+    "excluded_placeholder_rows": 6
+  },
+  "estimation_workbook": {
+    "total_line_items": 176,
+    "ifc_backed_line_items": 13,
+    "budget_only_line_items": 163,
+    "planting_line_items": 16,
+    "planting_ifc_backed_line_items": 13,
+    "planting_budget_only_line_items": 3,
+    "total_contract_value": 1225964.336995
+  },
+  "plant_category_bridge": {
+    "artifact": "ddc/estimation/kernel/plant-category-bridge.json",
+    "mapped_species_count": 17,
+    "category_line_items_backed": 9,
+    "confidence_breakdown": {
+      "high": 15,
+      "medium": 2
+    },
+    "thymus_flat_conversion_documented": true
+  },
+  "schema_validation": {
+    "all_valid_examples_pass": true,
+    "fixtures": {
+      "fixtures/rose_residence/worksheet.raw.json": "pass",
+      "fixtures/rose_residence/worksheet.normalized.json": "pass",
+      "fixtures/rose_residence/estimate-project.json": "pass",
+      "fixtures/rose_residence/estimate-pricebook-item.json": "pass",
+      "fixtures/rose_residence/estimate-line-item.json": "pass",
+      "fixtures/rose_residence/estimate-audit-run.json": "pass",
+      "fixtures/juniper_avenue/worksheet.raw.json": "pass",
+      "fixtures/juniper_avenue/worksheet.normalized.json": "pass",
+      "fixtures/juniper_avenue/estimate-project.json": "pass",
+      "fixtures/juniper_avenue/estimate-pricebook-item.json": "pass",
+      "fixtures/juniper_avenue/estimate-line-item.json": "pass",
+      "fixtures/juniper_avenue/estimate-audit-run.json": "pass"
+    }
+  },
+  "verifiers": {
+    "quantity_takeoff_agent": {
+      "status": "passed",
+      "capability_id": "quantity-takeoff-agent",
+      "evidence_path": "ddc/estimation/evaluation/juniper/quantity-takeoff-verifier.json"
+    },
+    "ddc_estimation_contract": {
+      "status": "passed",
+      "capability_id": "ddc-estimation-contract",
+      "evidence_path": "ddc/estimation/evaluation/juniper/ddc-estimation-contract-verifier.json"
+    },
+    "ifc_cost_enrichment": {
+      "status": "passed",
+      "capability_id": "ifc-cost-enrichment",
+      "evidence_path": "ddc/estimation/evaluation/juniper/ifc-cost-enrichment-verifier.json",
+      "entrypoint": "scripts/verify-ifc-cost-enrichment.py"
+    }
+  },
+  "scores": {
+    "before": 100,
+    "after": 100,
+    "after_artifact": "ddc/estimation/evaluation/juniper/score-after-bridge.json"
+  },
+  "governed_fixtures": {
+    "estimate_project_status": true,
+    "estimate_audit_status": "passed"
+  },
+  "promotion": {
+    "decision": "promotable",
+    "matched_species_count": 17,
+    "unmatched_species_count": 0,
+    "ifc_backed_sections": {
+      "full": [],
+      "partial": [
+        "PLANTING"
+      ],
+      "budget_only": [
+        "ADD_OPTIONS_SUMMARY",
+        "AUTO_GATE",
+        "BASE_SUMMARY",
+        "BOULDERS",
+        "DRAINAGE",
+        "DRIVEWAY",
+        "FENCING",
+        "FENCING_FRONT_YARD",
+        "FIRE_PIT",
+        "FLATWORK_PAVING",
+        "FURNISHINGS",
+        "GENERAL_ALLOWANCES",
+        "GRADING",
+        "GROUNDCOVERS",
+        "IRRIGATION",
+        "LIGHTING",
+        "OUTDOOR_KITCHEN",
+        "POOL",
+        "RAISED_PLANTERS",
+        "SITE_PREP",
+        "SPA",
+        "TRENCH_DRAIN",
+        "WALLS",
+        "WALLS_STONE_FASCIA"
+      ]
+    },
+    "remaining_non_blocking_gaps": [
+      "Pinus densiflora 'Globosa' remains a real 5 IFC vs 2 budget quantity mismatch on Character Pine by Marpa (6’ H), even though the category unit cost is now defensibly backed."
+    ]
+  },
+  "blockers": [],
+  "notes": [
+    "The governed plant-category bridge resolved the prior Juniper promotion blocker by backing all 17 IFC species with existing budget category unit costs.",
+    "Thymus praecox ‘Minus’ stays honest: 528 IFC elements are converted to 16.5 flats with the documented 32-elements-per-flat rule in the bridge and workbook traceability.",
+    "IFC cost enrichment was re-verified with scripts/verify-ifc-cost-enrichment.py because scripts/verify-ddc-estimation-foundation.py does not support that capability id in this repository."
+  ]
+}

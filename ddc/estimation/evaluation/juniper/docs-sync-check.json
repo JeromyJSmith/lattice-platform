@@ -1,0 +1,5 @@
+{
+  "exit_code": 0,
+  "stdout": "\ud83d\udd0d LATTICE pre-commit: running docs-sync check...\naudit-dead-dna: OK\n  registries=32\n  active=207\n  deferred=174\n  blocked=13\n  bootstrap_empty=4\ncheck-python-docstrings: OK (0 changed/new files)\n\u2705 docs-sync check passed \u2014 safe to commit",
+  "stderr": null
+}

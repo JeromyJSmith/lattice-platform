@@ -1,0 +1,137 @@
+{
+  "capability_id": "quantity-takeoff-agent",
+  "status": "passed",
+  "project_id": "918-juniper",
+  "project_target": "MARPA \u2014 918 Juniper Avenue",
+  "erp_project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+  "erp_project_id_source": "erp:list-projects",
+  "proof_lineage": [
+    "ROSE Residence workbook pilot proof (external to this repo)",
+    "Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo"
+  ],
+  "supported_by": [
+    "cwicr-seed",
+    "cwicr-qdrant-cost-search",
+    "ifc-cost-enrichment",
+    "boq-sync",
+    "boq-read",
+    "boq-export"
+  ],
+  "blockers": [],
+  "steps": {
+    "quantity_extract": {
+      "project_id": "918-juniper",
+      "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+      "row_count": 2,
+      "total_quantity": 15.5,
+      "rows": [
+        {
+          "source_element_id": "ifc-juniper-001",
+          "name": "Juniper planting bed",
+          "quantity": 3.0,
+          "quantity_unit": "ea"
+        },
+        {
+          "source_element_id": "ifc-juniper-002",
+          "name": "Juniper decomposed granite path",
+          "quantity": 12.5,
+          "quantity_unit": "m2"
+        }
+      ]
+    },
+    "cost_search_writeback": [
+      {
+        "source_element_id": "ifc-juniper-001",
+        "item_id": "CWICR-JUNIPER-001",
+        "unit_cost": 47.5,
+        "verification": "passed",
+        "writeback": {
+          "requested": true,
+          "status": "passed",
+          "project_id": "918-juniper",
+          "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+          "rows_updated": 1,
+          "source_element_ids": [
+            "ifc-juniper-001"
+          ],
+          "unit_cost": 47.5,
+          "unit_cost_region": "US",
+          "cost_last_updated": "2026-05-18T21:36:57.804603Z"
+        }
+      },
+      {
+        "source_element_id": "ifc-juniper-002",
+        "item_id": "CWICR-JUNIPER-002",
+        "unit_cost": 18.25,
+        "verification": "passed",
+        "writeback": {
+          "requested": true,
+          "status": "passed",
+          "project_id": "918-juniper",
+          "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+          "rows_updated": 1,
+          "source_element_ids": [
+            "ifc-juniper-002"
+          ],
+          "unit_cost": 18.25,
+          "unit_cost_region": "US",
+          "cost_last_updated": "2026-05-18T21:36:57.805832Z"
+        }
+      }
+    ],
+    "boq_sync": {
+      "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+      "result": {
+        "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+        "erp_base": "https://openconstructionerp.marpa.localhost:1355",
+        "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+        "boq_id": "363b284c-375c-40f7-99e5-d8d658d2413c",
+        "rows_seen": 2,
+        "rows_updated": 2,
+        "rows_skipped": 0
+      }
+    },
+    "boq_read": {
+      "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+      "boq_count": 29,
+      "erp_base": "https://openconstructionerp.marpa.localhost:1355"
+    },
+    "boq_export": {
+      "project_id": "4be4dd90-fd17-4104-bc0a-53fa2ed47e47",
+      "content_type": "text/csv; charset=utf-8",
+      "content_length": 883,
+      "filename": "boq-4be4dd90-fd17-4104-bc0a-53fa2ed47e47.csv"
+    }
+  },
+  "evidence": {
+    "ifc_rows": [
+      {
+        "source_element_id": "ifc-juniper-001",
+        "quantity": 3.0,
+        "quantity_unit": "ea",
+        "unit_cost": 47.5,
+        "unit_cost_region": "US",
+        "erp_item_id": "b810cabd-85a1-481d-a5e5-2ee8b8c40c3f"
+      },
+      {
+        "source_element_id": "ifc-juniper-002",
+        "quantity": 12.5,
+        "quantity_unit": "m2",
+        "unit_cost": 18.25,
+        "unit_cost_region": "US",
+        "erp_item_id": "695ea192-d561-4ece-bbd1-62f9d4976916"
+      }
+    ]
+  },
+  "matrix_status": "green",
+  "registry_state": "ACTIVE",
+  "dependency_status": {
+    "cwicr-seed": "green",
+    "cwicr-qdrant-cost-search": "green",
+    "ifc-cost-enrichment": "green",
+    "boq-sync": "green",
+    "boq-read": "green",
+    "boq-export": "green",
+    "quantity-takeoff-agent": "green"
+  }
+}

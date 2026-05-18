@@ -1,0 +1,27 @@
+{
+  "exit_code": 0,
+  "stdout": {
+    "erp_base": "https://openconstructionerp.marpa.localhost:1355",
+    "erp_runtime_source": "portless:openconstructionerp.marpa.localhost",
+    "route": "POST /v1/erp/boq",
+    "project_id": "e7d28c24-c7f9-4a8e-a219-da2d52b82a73",
+    "project_id_source": "proof:meta/harness/docs/sessions/2026-05-18-boq-read-proof.json",
+    "erp_probe": {
+      "url": "https://openconstructionerp.marpa.localhost:1355/api/v1/boq/boqs/",
+      "status_code": 201,
+      "request_contract": {
+        "project_id": "e7d28c24-c7f9-4a8e-a219-da2d52b82a73",
+        "name": "LATTICE verifier BOQ",
+        "description": "LATTICE verifier BOQ sync probe"
+      },
+      "response_kind": "object"
+    },
+    "route_probe": {
+      "route": "/v1/erp/boq",
+      "status_code": 200,
+      "result_kind": "object"
+    },
+    "status": "passed"
+  },
+  "stderr": null
+}

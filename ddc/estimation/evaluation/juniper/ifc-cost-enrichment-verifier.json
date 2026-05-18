@@ -1,0 +1,27 @@
+{
+  "capability_id": "ifc-cost-enrichment",
+  "route": "POST /v1/erp/cost-search",
+  "project_id": "918-juniper",
+  "source_element_id": "ifc-juniper-001",
+  "proof": {
+    "route": "/v1/erp/cost-search",
+    "project_id": "918-juniper",
+    "source_element_id": "ifc-juniper-001",
+    "status_code": 200,
+    "writeback": {
+      "requested": true,
+      "status": "passed",
+      "project_id": "918-juniper",
+      "ifc_surface": "lattice/bridge/ifc/ifc_elements",
+      "rows_updated": 1,
+      "source_element_ids": [
+        "ifc-juniper-001"
+      ],
+      "unit_cost": 47.5,
+      "unit_cost_region": "US",
+      "cost_last_updated": "2026-05-18T21:36:58.821359Z"
+    },
+    "top_item_id": "CWICR-JUNIPER-001"
+  },
+  "status": "passed"
+}

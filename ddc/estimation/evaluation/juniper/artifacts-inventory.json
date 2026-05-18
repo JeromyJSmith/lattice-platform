@@ -1,0 +1,139 @@
+{
+  "artifacts": [
+    {
+      "path": "ddc/estimation/kernel/plant-category-bridge.json",
+      "exists": true,
+      "size_bytes": 8422
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/score-before.json",
+      "exists": true,
+      "size_bytes": 5366
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/ifc-quantity-takeoff.json",
+      "exists": true,
+      "size_bytes": 44299
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/ifc-budget-crossref.json",
+      "exists": true,
+      "size_bytes": 58475
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/cost-enrichment.json",
+      "exists": true,
+      "size_bytes": 10991
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/estimate-anomalies.json",
+      "exists": true,
+      "size_bytes": 3510
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/schema-validation.json",
+      "exists": true,
+      "size_bytes": 3953
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/ifc-cost-enrichment-verifier.json",
+      "exists": true,
+      "size_bytes": 745
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/quantity-takeoff-verifier.json",
+      "exists": true,
+      "size_bytes": 4090
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/boq-sync-foundation-invocation.json",
+      "exists": true,
+      "size_bytes": 369
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/boq-sync-verifier.json",
+      "exists": true,
+      "size_bytes": 882
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/ddc-estimation-contract-verifier.json",
+      "exists": true,
+      "size_bytes": 5023
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/score-after.json",
+      "exists": true,
+      "size_bytes": 5366
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/score-after-bridge.json",
+      "exists": true,
+      "size_bytes": 5366
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/docs-sync-check.json",
+      "exists": true,
+      "size_bytes": 320
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/evaluation-summary.json",
+      "exists": true,
+      "size_bytes": 4282
+    },
+    {
+      "path": "ddc/estimation/evaluation/juniper/artifacts-inventory.json",
+      "exists": true,
+      "size_bytes": 3727
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/worksheet.raw.json",
+      "exists": true,
+      "size_bytes": 1122
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/worksheet.normalized.json",
+      "exists": true,
+      "size_bytes": 499
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-project.json",
+      "exists": true,
+      "size_bytes": 1247
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-line-item.json",
+      "exists": true,
+      "size_bytes": 491
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-pricebook-item.json",
+      "exists": true,
+      "size_bytes": 297
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-audit-run.json",
+      "exists": true,
+      "size_bytes": 1196
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-line-items.json",
+      "exists": true,
+      "size_bytes": 307794
+    },
+    {
+      "path": "ddc/estimation/fixtures/juniper_avenue/estimate-pricebook-items.json",
+      "exists": true,
+      "size_bytes": 65872
+    },
+    {
+      "path": "ddc/estimation/promotion/juniper-readiness-summary.json",
+      "exists": true,
+      "size_bytes": 1641
+    },
+    {
+      "path": "ddc/estimation/promotion/juniper-promotion-decision.md",
+      "exists": true,
+      "size_bytes": 2065
+    }
+  ]
+}

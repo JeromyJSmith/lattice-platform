@@ -1,34 +1,36 @@
 {
-  "workbook_id": "juniper-workbook-v1",
+  "workbook_id": "juniper-workbook-v2",
   "workbook_name": "Juniper Avenue governed operational workbook mapping",
-  "project_name": "MARPA — 918 Juniper Avenue",
+  "project_name": "MARPA - 918 Juniper Avenue",
   "lineage_role": "operational",
   "source_artifacts": [
+    {
+      "artifact_id": "source-artifact:juniper:sd-budget-md",
+      "kind": "workbook",
+      "location": "juniper_ave/MARPA_CONSTRUCTION_ESTIMATING/markdown_output/2026-04.22_Farber-Haines_SD_Budget1.md",
+      "lineage_role": "operational"
+    },
     {
       "artifact_id": "source-juniper-ifc-lineage",
       "kind": "ifc",
       "location": "repo-lineage:Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo",
       "lineage_role": "operational"
-    },
-    {
-      "artifact_id": "luke-spreadsheet-prototype",
-      "kind": "notes",
-      "location": "external:Luke Spreadsheet Prototype (Notion)",
-      "lineage_role": "external_lineage_only"
     }
   ],
   "sheets": [
     {
-      "sheet_name": "Estimate",
+      "sheet_name": "sd-budget-md",
       "rows": [
         {
-          "row_id": "juniper-row-001",
-          "row_number": 7,
-          "description": "Juniper planting bed",
-          "quantity": 3.0,
+          "row_id": "juniper-row-002",
+          "row_number": 133,
+          "description": "Trees - Deciduous (2\u201d Caliper, 6-8\u2019 H)",
+          "quantity": 26.0,
           "unit": "ea",
-          "unit_price": 47.5,
-          "formula_refs": ["ext-price", "juniper-bed-ext-price"]
+          "unit_price": 930.0,
+          "formula_refs": [
+            "ext-price"
+          ]
         }
       ]
     }

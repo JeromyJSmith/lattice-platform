@@ -1,0 +1,51 @@
+{
+  "project_id": "918-juniper",
+  "decision": "promotable",
+  "matched_species_count": 17,
+  "unmatched_species_count": 0,
+  "ifc_backed_sections": {
+    "full": [],
+    "partial": [
+      "PLANTING"
+    ],
+    "budget_only": [
+      "ADD_OPTIONS_SUMMARY",
+      "AUTO_GATE",
+      "BASE_SUMMARY",
+      "BOULDERS",
+      "DRAINAGE",
+      "DRIVEWAY",
+      "FENCING",
+      "FENCING_FRONT_YARD",
+      "FIRE_PIT",
+      "FLATWORK_PAVING",
+      "FURNISHINGS",
+      "GENERAL_ALLOWANCES",
+      "GRADING",
+      "GROUNDCOVERS",
+      "IRRIGATION",
+      "LIGHTING",
+      "OUTDOOR_KITCHEN",
+      "POOL",
+      "RAISED_PLANTERS",
+      "SITE_PREP",
+      "SPA",
+      "TRENCH_DRAIN",
+      "WALLS",
+      "WALLS_STONE_FASCIA"
+    ]
+  },
+  "green_capabilities": {
+    "ifc-cost-enrichment": "passed",
+    "quantity-takeoff-agent": "passed",
+    "ddc-estimation-contract": "passed",
+    "boq-sync": "carried-forward passed dependency proof"
+  },
+  "gaps": [],
+  "notes": [
+    "All 17 IFC species are matched to governed budget categories backed by existing Juniper unit costs.",
+    "Thymus praecox ‘Minus’ stays honest: 528 IFC elements are converted to 16.5 flats with the documented 32-elements-per-flat rule in the bridge and workbook traceability.",
+    "Pinus densiflora 'Globosa' remains a real 5 IFC vs 2 budget quantity mismatch on Character Pine by Marpa (6’ H), even though the category unit cost is now defensibly backed.",
+    "IFC cost enrichment was re-verified with scripts/verify-ifc-cost-enrichment.py because scripts/verify-ddc-estimation-foundation.py does not support that capability id in this repository."
+  ]
+}

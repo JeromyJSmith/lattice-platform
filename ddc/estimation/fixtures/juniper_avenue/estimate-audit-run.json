@@ -1,5 +1,5 @@
 {
-  "audit_run_id": "juniper-audit-001",
+  "audit_run_id": "juniper-audit-002",
   "project_id": "918-juniper",
   "status": "passed",
   "verified_capabilities": [
@@ -9,14 +9,20 @@
     "ddc-estimation-contract"
   ],
   "source_artifact_ids": [
+    "source-artifact:juniper:sd-budget-md",
     "source-juniper-ifc-lineage",
+    "ddc/estimation/kernel/plant-category-bridge.json",
     "proof-ifc-cost-enrichment",
     "proof-quantity-takeoff",
     "proof-estimation-contract"
   ],
-  "line_item_ids": ["juniper-line-item-001"],
+  "line_item_ids": [
+    "juniper-line-item-002"
+  ],
   "findings": [
-    "Juniper operational fixture is partial but valid.",
-    "Traceability is present from operational line item back to workbook mapping, formulas, and source artifacts."
+    "Representative governed fixture now points at real Juniper extracted budget rows that stay budget-priced while IFC-backed audit fields capture category scope.",
+    "The governed plant-category bridge resolved 17 of 17 IFC species to existing Juniper PLANTING category line items without inventing unit costs.",
+    "The Thymus praecox ‘Minus’ mapping records the 528 elements to 16.5 flats conversion explicitly in the governed bridge and workbook traceability.",
+    "Pinus densiflora 'Globosa' still carries an honest 5 IFC vs 2 budget quantity mismatch even though its category unit cost is now defensibly backed."
   ]
 }

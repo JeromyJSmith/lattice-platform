@@ -1,0 +1,5 @@
+{
+  "exit_code": 2,
+  "stdout": null,
+  "stderr": "usage: verify-ddc-estimation-foundation.py [-h] --capability\n                                           {quantity-takeoff-agent,ddc-estimation-contract}\nverify-ddc-estimation-foundation.py: error: argument --capability: invalid choice: 'boq-sync' (choose from 'quantity-takeoff-agent', 'ddc-estimation-contract')"
+}

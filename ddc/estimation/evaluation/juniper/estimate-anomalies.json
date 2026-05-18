@@ -1,0 +1,99 @@
+[
+  {
+    "id": "estimate-anomaly:918-juniper:ifc-placeholder-category-rows",
+    "entityType": "EstimateAnomaly",
+    "estimateProjectId": "918-juniper",
+    "failure_class": "IFC_PLACEHOLDER_CATEGORY_ROW",
+    "severity": "warning",
+    "description": "Six IfcGeographicElement rows are category placeholders and were excluded from the governed Juniper takeoff.",
+    "details": {
+      "excluded_count": 6,
+      "excluded_preview": [
+        {
+          "ifc_element_id": "3JuHS1FdbEKQt2WH_Vg4Im",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        },
+        {
+          "ifc_element_id": "3ps5Vpk7j3fez$jtENm38m",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        },
+        {
+          "ifc_element_id": "0rvq2VwEbCDwI__NWfc0yv",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        },
+        {
+          "ifc_element_id": "0wJUsKQO9FvemD7yRzmezx",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        },
+        {
+          "ifc_element_id": "1wrhIMmgXBs9MVvT9W$ow$",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        },
+        {
+          "ifc_element_id": "2DwTeQH7102O_ETrt6oU8_",
+          "species_name": "Latin Name",
+          "botanical_name": "Common Name",
+          "local_name": "Common Name",
+          "object_type": "Category",
+          "type_names": [
+            "Quercus robur 'Fastigiata'"
+          ],
+          "anomaly_type": "IFC_PLACEHOLDER_CATEGORY_ROW"
+        }
+      ]
+    }
+  },
+  {
+    "id": "estimate-anomaly:918-juniper:budget-quantity-mismatch:pinus-densiflora-globosa",
+    "entityType": "EstimateAnomaly",
+    "estimateProjectId": "918-juniper",
+    "failure_class": "IFC_BUDGET_QTY_MISMATCH",
+    "severity": "warning",
+    "species_name": "Pinus densiflora 'Globosa'",
+    "description": "The governed bridge backs Pinus densiflora 'Globosa' to Character Pine by Marpa (6’ H), but the IFC scope is 5 while the budget line remains 2.",
+    "details": {
+      "budget_line_item_id": "estimate-line-item:marpa-918-juniper-farber-haines-2026:planting:character-pine-by-marpa-6-h",
+      "budget_description": "Character Pine by Marpa (6’ H)",
+      "ifc_qty": 5,
+      "budget_qty": 2.0,
+      "unit": "ea",
+      "unit_cost": 4000.0,
+      "status": "documented_non_blocking_scope_gap"
+    }
+  }
+]

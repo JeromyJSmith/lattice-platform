@@ -1,0 +1,94 @@
+{
+  "score": 100,
+  "foundation_path": "juniper-estimation-plugin",
+  "matrix_path": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge/ddc/capability-matrix.yaml",
+  "counts": {
+    "green": 9,
+    "amber": 0,
+    "red": 0,
+    "total": 9
+  },
+  "targets": [
+    {
+      "id": "cwicr-seed",
+      "status": "green",
+      "weight": 10,
+      "contribution": 10,
+      "current_state": "verifier-backed bounded seed proof passing",
+      "gap": "The restored local snapshot is the published 49,600-point / 3072-d HI_MUMBAI subset; a full 55,719-point multi-locale restore remains follow-on work",
+      "validation": "Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072)"
+    },
+    {
+      "id": "cwicr-qdrant-cost-search",
+      "status": "green",
+      "weight": 15,
+      "contribution": 15,
+      "current_state": "verifier-backed route; live proof passing through the bounded no-key lexical path",
+      "gap": "Matching local 3072-d vector-query embeddings are still unavailable, so the bounded proof path uses indexed Qdrant payload text/keyword lookup instead of vector similarity",
+      "validation": "Snapshot-compatible descriptions or CWICR rate codes return region-tagged ranked matches with passed verification"
+    },
+    {
+      "id": "ifc-cost-enrichment",
+      "status": "green",
+      "weight": 15,
+      "contribution": 15,
+      "current_state": "verifier-backed Juniper writeback now persists reliable CWICR matches onto governed IFC rows and feeds the governed BOQ path through the quantity-takeoff orchestrator proof",
+      "gap": "No current proof gap; follow-on work is broadening the same governed writeback seam beyond the bounded Juniper fixture and lifting lexical-only CWICR matching to vector parity",
+      "validation": "ifc_elements rows show unit cost, region, and freshness timestamps"
+    },
+    {
+      "id": "boq-sync",
+      "status": "green",
+      "weight": 20,
+      "contribution": 20,
+      "current_state": "verifier-backed route; latest live Portless proof passed through ERP BOQ create plus sidecar sync",
+      "gap": "No current proof gap; the next governed-estimation step is feeding live Juniper-enriched rows into this green BOQ sync path",
+      "validation": "Every BOQ-attached element has erp_item_id and unit_cost"
+    },
+    {
+      "id": "boq-read",
+      "status": "green",
+      "weight": 10,
+      "contribution": 10,
+      "current_state": "verifier-backed route; latest live Portless proof passed",
+      "gap": "No current proof gap; GET /v1/erp/boq/{project_id} now round-trips against the bounded ERP BOQ list contract",
+      "validation": "Project BOQ round-trips cleanly through the sidecar endpoint"
+    },
+    {
+      "id": "boq-export",
+      "status": "green",
+      "weight": 5,
+      "contribution": 5,
+      "current_state": "verifier-backed route; latest live Portless proof passed",
+      "gap": "No current proof gap; export proof resolves a live BOQ and streams the CSV artifact successfully",
+      "validation": "Export endpoint streams a valid BOQ artifact"
+    },
+    {
+      "id": "phases-sync",
+      "status": "green",
+      "weight": 10,
+      "contribution": 10,
+      "current_state": "verifier-backed route; latest live Portless proof passed",
+      "gap": "No current proof gap; the bounded implementation now seeds a proof-project IFC shadow seam when bridge rows are not project-addressable, stores schedule_id/task_id in lattice/bridge/marpa_projects.raw_event, and exercises /api/v2/schedules/{schedule_id}/import plus /api/v2/schedules/tasks/{task_id}/progress against a real ERP verifier project",
+      "validation": "Project phase records in the ERP align with local phase-granular schedule metadata"
+    },
+    {
+      "id": "quantity-takeoff-agent",
+      "status": "green",
+      "weight": 10,
+      "contribution": 10,
+      "current_state": "governed Juniper orchestrator now extracts quantities, reuses cost-search writeback, drives BOQ sync plus BOQ read/export, captures structured evidence for the same project scope, and is backed by a bounded estimation contract package with traceability-aware fixtures",
+      "gap": "No current runtime proof gap; follow-on work is broadening the same contract-backed runtime beyond the bounded Juniper fixture and wiring direct operator dispatch onto the same evidence contract",
+      "validation": "Agent runs produce BOQ-linked evidence rows end to end"
+    },
+    {
+      "id": "ddc-estimation-contract",
+      "status": "green",
+      "weight": 5,
+      "contribution": 5,
+      "current_state": "verifier-backed Juniper end-to-end governed estimation proof now passes with dependency reuse, writeback, BOQ linkage, read/export round-trip, explicit evidence, and a dual contract package covering workbook evidence, operational entities, fixtures, expected failures, and traceability",
+      "gap": "No current proof gap; follow-on work is broadening the same governed estimation contract beyond Juniper, extending the partial Juniper fixture set, and wiring the promoted evidence trail into the admin planning surface",
+      "validation": "MARPA \u2014 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, explicit blocker capture, and passing contract-package validation"
+    }
+  ]
+}

@@ -1,15 +1,20 @@
 {
-  "workbook_id": "juniper-workbook-v1",
+  "workbook_id": "juniper-workbook-v2",
   "normalized_rows": [
     {
-      "normalized_id": "juniper-normalized-001",
-      "description": "Juniper planting bed",
-      "quantity": 3.0,
+      "normalized_id": "juniper-normalized-002",
+      "description": "Trees - Deciduous (2\u201d Caliper, 6-8\u2019 H)",
+      "quantity": 26.0,
       "unit": "ea",
-      "unit_price": 47.5,
-      "workbook_row_ref": "Estimate!7",
-      "formula_refs": ["ext-price", "juniper-bed-ext-price"],
-      "source_artifact_ids": ["source-juniper-ifc-lineage", "luke-spreadsheet-prototype"]
+      "unit_price": 930.0,
+      "workbook_row_ref": "sd-budget-md!133",
+      "formula_refs": [
+        "ext-price"
+      ],
+      "source_artifact_ids": [
+        "source-artifact:juniper:sd-budget-md",
+        "source-juniper-ifc-lineage"
+      ]
     }
   ]
 }
