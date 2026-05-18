@@ -109,6 +109,7 @@ The platform learns *what things cost* and *what's been built*.
 - [ ] OpenConstructionERP BOQ adapter: every `ifc_elements` row gets an `erp_item_id` + `unit_cost` after `POST /v1/erp/boq`
 - [ ] `/admin` route renders all 7 panels with real data (per [`meta/DDC_MAPPING.md`](DDC_MAPPING.md) § ADMIN DASHBOARD)
 - [ ] BOQ Excel export works end-to-end via `GET /v1/erp/export/{project_id}`
+- [ ] Governed estimation contract turns green only after `MARPA — 918 Juniper Avenue` completes the end-to-end estimation path; ROSE Residence remains pilot-proof lineage only
 - [ ] DDC cost overlay live in Context B's deck.gl analytical view (ColumnLayer driven by `unit_cost`)
 - [ ] 221 DDC skills indexed in `lattice/bridge/semantic/semantic_sidecars` with embeddings; agent can search "find skill for quantity takeoff"
 

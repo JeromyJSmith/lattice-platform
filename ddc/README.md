@@ -1,6 +1,6 @@
 # DataDrivenConstruction (DDC) — LATTICE Integration
 
-LATTICE wraps four pieces of the DDC ecosystem:
+LATTICE wraps four pieces of the DDC ecosystem plus the governed estimation contract that ties them together:
 
 | Piece | LATTICE home | What it gives us |
 |---|---|---|
@@ -8,11 +8,14 @@ LATTICE wraps four pieces of the DDC ecosystem:
 | CWICR cost database | [`cwicr/`](cwicr/) | 55,719 cost items × 30 regions, semantic-searchable via Qdrant |
 | OpenConstructionERP | [`erp/`](erp/) | BOQ, 4D/5D scheduling, AI cost estimation, REST API |
 | n8n workflow patterns | [`n8n/`](n8n/) | Visual process logic to translate into LATTICE FastAPI pipelines |
+| Governed estimation contract | [`estimation/`](estimation/) | Project-agnostic planning slice; Juniper Avenue is the operational proof target |
 
 Plus an admin dashboard data layer ([`admin/`](admin/)) and Linux fallback converters ([`converters/`](converters/)) for edge cases IfcOpenShell can't handle.
 
 **The DDC philosophy for LATTICE:** the value is the *patterns and cost data*, not the file converters. LATTICE handles IFC/DXF natively on Mac via IfcOpenShell + ezdxf. DDC's Linux converters are fallbacks only, and we never touch `ddc-rvtconverter` or `ddc-dgnconverter` (no Revit, no DGN in LATTICE).
 
 The canonical machine-readable DDC harvest now lives at [`capability-matrix.yaml`](capability-matrix.yaml), and the operator-facing map is rendered at `/admin`.
+
+The estimation contract is deliberately **dependency-governed**. ROSE Residence remains workbook-era pilot lineage only; `MARPA — 918 Juniper Avenue` is the first operational proving target inside this repository.
 
 For the full repo-by-repo map see [`../meta/DDC_MAPPING.md`](../meta/DDC_MAPPING.md).

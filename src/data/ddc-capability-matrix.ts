@@ -1,5 +1,6 @@
 export type DdcPriority = "high" | "medium" | "low";
 export type DdcWave = "wave-1" | "wave-2" | "wave-3" | "wave-4";
+export type DdcStatus = "green" | "amber" | "red";
 
 export type DdcSurface = {
   id: string;
@@ -11,6 +12,7 @@ export type DdcSurface = {
 
 export type DdcCapability = {
   id: string;
+  status: DdcStatus;
   capability: string;
   localHome: string;
   targetSurface: string;
@@ -19,6 +21,11 @@ export type DdcCapability = {
   priority: DdcPriority;
   wave: DdcWave;
   validation: string;
+  projectTarget?: string;
+  proofLineage?: string;
+  supportedBy?: Array<string>;
+  blockedBy?: Array<string>;
+  futureSupport?: Array<string>;
 };
 
 export type DdcPipelineStage = {
@@ -81,6 +88,7 @@ export const ddcSurfaces: Array<DdcSurface> = [
 export const ddcCapabilities: Array<DdcCapability> = [
   {
     id: "skills-harvest",
+    status: "red",
     capability: "Skill corpus harvest",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/skills/",
@@ -95,6 +103,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "skills-semantic-index",
+    status: "amber",
     capability: "Skill semantic indexing",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/contracts/bridge-semantic.v1.yaml",
@@ -108,6 +117,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "skills-search-api",
+    status: "amber",
     capability: "Skill search API",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/service/routes/semantic.py",
@@ -121,32 +131,36 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "cwicr-seed",
+    status: "green",
     capability: "CWICR dataset seeding",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh",
     targetSurface: "Qdrant collection cwicr",
-    currentState: "Verifier-backed seed preflight; live proof failing",
-    gap: "Local cwicr collection is only 5 points at 64 dimensions; the release contract expects a 55,719-point 3072-d snapshot-backed collection.",
+    currentState: "Verifier-backed bounded seed proof passing",
+    gap: "The restored local snapshot is the published 49,600-point / 3072-d HI_MUMBAI subset; a full 55,719-point multi-locale restore remains follow-on work.",
     priority: "high",
     wave: "wave-1",
     validation:
-      "Qdrant point count is 55,719 and the collection vector size matches the release snapshot contract (3072).",
+      "Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072).",
   },
   {
     id: "cwicr-cost-search",
-    capability: "CWICR semantic cost lookup",
+    status: "green",
+    capability: "CWICR cost lookup",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py",
     targetSurface: "POST /v1/erp/cost-search",
-    currentState: "Verifier-backed route; live proof currently failing",
-    gap: "localhost:6333 is not serving the expected Qdrant /health contract for live proof.",
+    currentState:
+      "Verifier-backed route; live proof passing through the bounded no-key lexical path",
+    gap: "Matching local 3072-d vector-query embeddings are still unavailable, so the bounded proof path uses indexed Qdrant payload text/keyword lookup instead of vector similarity.",
     priority: "high",
     wave: "wave-1",
     validation:
-      "Element descriptions return region-filtered ranked CWICR matches with passed verification.",
+      "Snapshot-compatible descriptions or CWICR rate codes return region-tagged ranked matches with passed verification.",
   },
   {
     id: "ifc-cost-enrichment",
+    status: "amber",
     capability: "IFC cost enrichment",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py",
@@ -161,6 +175,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "boq-sync",
+    status: "amber",
     capability: "BOQ creation and sync",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
@@ -173,30 +188,33 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "boq-read",
+    status: "green",
     capability: "BOQ retrieval",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py",
     targetSurface: "GET /v1/erp/boq/{project_id}",
-    currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Live Portless proof reaches GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated.",
+    currentState: "Verifier-backed route; latest live Portless proof passed",
+    gap: "No current proof gap; GET /v1/erp/boq/{project_id} now round-trips against the bounded ERP BOQ list contract.",
     priority: "high",
     wave: "wave-2",
     validation: "Project BOQ round-trips cleanly through the sidecar endpoint.",
   },
   {
     id: "boq-export",
+    status: "green",
     capability: "BOQ export",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py",
     targetSurface: "GET /v1/erp/export/{project_id}",
-    currentState: "Verifier-backed route; live Portless proof blocked",
-    gap: "Live Portless proof reaches the BOQ list prerequisite at GET /api/v1/boq/boqs/?project_id=ddc-boq-proof-project but gets 401 Not authenticated before export can run.",
+    currentState: "Verifier-backed route; latest live Portless proof passed",
+    gap: "No current proof gap; export proof resolves a live BOQ and streams the CSV artifact successfully.",
     priority: "medium",
     wave: "wave-2",
     validation: "Export endpoint streams a valid BOQ artifact.",
   },
   {
     id: "phases-sync",
+    status: "green",
     capability: "4D/5D phase sync",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py",
@@ -210,6 +228,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "admin-sql",
+    status: "amber",
     capability: "DDC admin SQL layer",
     localHome: "/home/runner/work/lattice-platform/lattice-platform/ddc/admin/",
     targetSurface: "DuckDB WASM parquet queries",
@@ -222,18 +241,20 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "admin-route",
+    status: "amber",
     capability: "Admin dashboard route",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/src/routes/admin/index.tsx",
     targetSurface: "/admin",
-    currentState: "Mapped in UI",
-    gap: "Replace capability-only rendering with live parquet and ERP data panels.",
+    currentState: "Capability map rendered; live data panels still pending",
+    gap: "Replace the static capability matrix with live parquet, ERP, and evidence-backed operator panels.",
     priority: "high",
     wave: "wave-3",
     validation: "The operator UI renders the mapped DDC surface in one place.",
   },
   {
     id: "cost-per-zone",
+    status: "red",
     capability: "Cost per zone analysis",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/admin/README.md",
@@ -246,6 +267,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "cost-overlay",
+    status: "red",
     capability: "deck.gl cost overlay",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md",
@@ -258,18 +280,54 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "quantity-takeoff-agent",
+    status: "red",
     capability: "Quantity takeoff agent",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md",
     targetSurface: "runtime agent + evidence ledger",
-    currentState: "Planned only",
+    currentState: "Planned only; no governed runtime path yet",
     gap: "Orchestrate quantities, cost search, BOQ writeback, and evidence capture.",
     priority: "high",
     wave: "wave-2",
     validation: "Agent runs produce BOQ-linked evidence rows end to end.",
   },
   {
+    id: "estimation-contract",
+    status: "red",
+    capability: "Governed estimation contract",
+    localHome:
+      "/home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md",
+    targetSurface:
+      "project-scoped estimation run + evidence ledger + /admin planning surface",
+    currentState:
+      "Planning slice only; Juniper Avenue is the first operational proof target",
+    gap: "Turn IFC cost enrichment, BOQ sync, and quantity-takeoff orchestration into a governed end-to-end estimation path instead of treating estimation as an isolated worksheet tool.",
+    priority: "high",
+    wave: "wave-2",
+    validation:
+      "MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, and explicit blocker capture.",
+    projectTarget: "MARPA — 918 Juniper Avenue",
+    proofLineage:
+      "ROSE Residence workbook pilot proof (external) plus the repo-local Farber-Haines 2521 IFC source lineage attached to the Juniper fixture",
+    supportedBy: [
+      "cwicr-seed",
+      "cwicr-cost-search",
+      "boq-read",
+      "boq-export",
+      "phases-sync",
+    ],
+    blockedBy: ["ifc-cost-enrichment", "boq-sync", "quantity-takeoff-agent"],
+    futureSupport: [
+      "admin-sql",
+      "admin-route",
+      "cost-per-zone",
+      "cost-overlay",
+      "skills-search-api",
+    ],
+  },
+  {
     id: "n8n-harvest",
+    status: "red",
     capability: "n8n workflow harvest",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/n8n/workflows/",
@@ -282,6 +340,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "n8n-translation",
+    status: "red",
     capability: "n8n to FastAPI translation",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/n8n/pipeline-templates/",
@@ -294,6 +353,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "fallback-ifc",
+    status: "red",
     capability: "Fallback IFC converter",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md",
@@ -306,6 +366,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "fallback-dwg",
+    status: "red",
     capability: "Fallback DWG converter",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md",
@@ -318,6 +379,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "mirror-ddc-health",
+    status: "red",
     capability: "Mirror-state ERP sync health",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/reality/mirror/README.md",
@@ -331,6 +393,7 @@ export const ddcCapabilities: Array<DdcCapability> = [
   },
   {
     id: "ddc-evidence",
+    status: "amber",
     capability: "DDC evidence and logging",
     localHome:
       "/home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py",
@@ -367,6 +430,7 @@ export const ddcPipelineStages: Array<DdcPipelineStage> = [
       "boq-export",
       "phases-sync",
       "quantity-takeoff-agent",
+      "estimation-contract",
       "n8n-translation",
     ],
   },
@@ -400,6 +464,12 @@ export const ddcCapabilityArtifactPath = "ddc/capability-matrix.yaml";
 export const ddcSummary = {
   capabilityCount: ddcCapabilities.length,
   surfaceCount: ddcSurfaces.length,
+  greenCount: ddcCapabilities.filter((capability) => capability.status === "green")
+    .length,
+  amberCount: ddcCapabilities.filter((capability) => capability.status === "amber")
+    .length,
+  redCount: ddcCapabilities.filter((capability) => capability.status === "red")
+    .length,
   highPriorityCount: ddcCapabilities.filter(
     (capability) => capability.priority === "high",
   ).length,

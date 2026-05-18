@@ -38,6 +38,7 @@ surfaces:
 
 capabilities:
   - id: skills-harvest
+    status: red
     capability: Skill corpus harvest
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/skills/
     target_surface: /home/runner/work/lattice-platform/lattice-platform/skills/ddc/
@@ -47,6 +48,7 @@ capabilities:
     wave: wave-1
     validation: Skill count and metadata completeness match the harvested inventory
   - id: skills-semantic-index
+    status: amber
     capability: Skill semantic indexing
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/contracts/bridge-semantic.v1.yaml
     target_surface: lattice/bridge/semantic/semantic_sidecars
@@ -56,6 +58,7 @@ capabilities:
     wave: wave-1
     validation: Semantic search returns DDC skill matches for construction intents
   - id: skills-search-api
+    status: amber
     capability: Skill search API
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/service/routes/semantic.py
     target_surface: POST /v1/semantic/search
@@ -65,6 +68,7 @@ capabilities:
     wave: wave-3
     validation: DDC skill queries resolve against semantic_sidecars with usable rankings
   - id: cwicr-seed
+    status: green
     capability: CWICR dataset seeding
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/seed-qdrant.sh
     target_surface: Qdrant collection cwicr
@@ -74,6 +78,7 @@ capabilities:
     wave: wave-1
     validation: Qdrant point count is 49,600 and the collection vector size matches the bounded release snapshot contract (3072)
   - id: cwicr-cost-search
+    status: green
     capability: CWICR cost lookup
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/cwicr/cost-search.py
     target_surface: POST /v1/erp/cost-search
@@ -83,6 +88,7 @@ capabilities:
     wave: wave-1
     validation: Snapshot-compatible descriptions or CWICR rate codes return region-tagged ranked matches with passed verification
   - id: ifc-cost-enrichment
+    status: amber
     capability: IFC cost enrichment
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
     target_surface: lattice/bridge/ifc/ifc_elements.{unit_cost,unit_cost_region,cost_last_updated}
@@ -92,6 +98,7 @@ capabilities:
     wave: wave-2
     validation: ifc_elements rows show unit cost, region, and freshness timestamps
   - id: boq-sync
+    status: amber
     capability: BOQ creation and sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: POST /v1/erp/boq
@@ -101,6 +108,7 @@ capabilities:
     wave: wave-2
     validation: Every BOQ-attached element has erp_item_id and unit_cost
   - id: boq-read
+    status: green
     capability: BOQ retrieval
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/boq-adapter.py
     target_surface: GET /v1/erp/boq/{project_id}
@@ -110,6 +118,7 @@ capabilities:
     wave: wave-2
     validation: Project BOQ round-trips cleanly through the sidecar endpoint
   - id: boq-export
+    status: green
     capability: BOQ export
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/cost-export.py
     target_surface: GET /v1/erp/export/{project_id}
@@ -119,6 +128,7 @@ capabilities:
     wave: wave-2
     validation: Export endpoint streams a valid BOQ artifact
   - id: phases-sync
+    status: green
     capability: 4D/5D phase sync
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/erp/phase-adapter.py
     target_surface: POST /v1/erp/phases
@@ -128,6 +138,7 @@ capabilities:
     wave: wave-2
     validation: Project phase records in the ERP align with local phase-granular schedule metadata
   - id: admin-sql
+    status: amber
     capability: DDC admin SQL layer
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/
     target_surface: DuckDB WASM parquet queries
@@ -137,15 +148,17 @@ capabilities:
     wave: wave-3
     validation: Admin panels resolve against parquet exports without ad-hoc SQL
   - id: admin-route
+    status: amber
     capability: Admin dashboard route
     local_home: /home/runner/work/lattice-platform/lattice-platform/src/routes/admin/index.tsx
     target_surface: /admin
-    current_state: Planned only
-    gap: Render the DDC capability map and dashboard surface in the UI
+    current_state: capability map rendered; live data panels still pending
+    gap: Replace the static capability matrix with live parquet, ERP, and evidence-backed operator panels
     priority: high
     wave: wave-3
     validation: The operator UI renders the mapped DDC surface in one place
   - id: cost-per-zone
+    status: red
     capability: Cost per zone analysis
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/admin/README.md
     target_surface: /analysis and /admin
@@ -155,6 +168,7 @@ capabilities:
     wave: wave-3
     validation: Zone-level cost totals can be queried from parquet exports
   - id: cost-overlay
+    status: red
     capability: deck.gl cost overlay
     local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
     target_surface: Context B /analysis
@@ -164,15 +178,45 @@ capabilities:
     wave: wave-3
     validation: Cost overlay renders from unit_cost-backed analytics data
   - id: quantity-takeoff-agent
+    status: red
     capability: Quantity takeoff agent
     local_home: /home/runner/work/lattice-platform/lattice-platform/meta/FEATURE_BACKLOG.md
     target_surface: runtime agent + evidence ledger
-    current_state: Planned only
+    current_state: Planned only; no governed runtime path yet
     gap: Orchestrate quantities, cost search, BOQ writeback, and evidence capture
     priority: high
     wave: wave-2
     validation: Agent runs produce BOQ-linked evidence rows end to end
+  - id: estimation-contract
+    status: red
+    capability: Governed estimation contract
+    local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/estimation/README.md
+    target_surface: project-scoped estimation run + evidence ledger + /admin planning surface
+    current_state: planning slice only; Juniper Avenue is the first operational proof target
+    gap: Turn IFC cost enrichment, BOQ sync, and quantity-takeoff orchestration into a governed end-to-end estimation path instead of treating estimation as an isolated worksheet tool
+    priority: high
+    wave: wave-2
+    validation: MARPA — 918 Juniper Avenue runs end to end through the governed estimation path with dependency evidence, BOQ linkage, and explicit blocker capture
+    project_target: MARPA — 918 Juniper Avenue
+    proof_lineage: ROSE Residence workbook pilot proof (external) plus the repo-local Farber-Haines 2521 IFC source lineage attached to the Juniper fixture
+    supported_by:
+      - cwicr-seed
+      - cwicr-cost-search
+      - boq-read
+      - boq-export
+      - phases-sync
+    blocked_by:
+      - ifc-cost-enrichment
+      - boq-sync
+      - quantity-takeoff-agent
+    future_support:
+      - admin-sql
+      - admin-route
+      - cost-per-zone
+      - cost-overlay
+      - skills-search-api
   - id: n8n-harvest
+    status: red
     capability: n8n workflow harvest
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/workflows/
     target_surface: upstream workflow JSON mirrors
@@ -182,6 +226,7 @@ capabilities:
     wave: wave-1
     validation: Expected workflow templates exist under ddc/n8n/workflows
   - id: n8n-translation
+    status: red
     capability: n8n to FastAPI translation
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/n8n/pipeline-templates/
     target_surface: pixeltable/service/routes/*
@@ -191,6 +236,7 @@ capabilities:
     wave: wave-2
     validation: Priority workflow templates are callable without n8n
   - id: fallback-ifc
+    status: red
     capability: Fallback IFC converter
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md
     target_surface: OrbStack operator path
@@ -200,6 +246,7 @@ capabilities:
     wave: wave-4
     validation: Operators can invoke the fallback parse path on demand
   - id: fallback-dwg
+    status: red
     capability: Fallback DWG converter
     local_home: /home/runner/work/lattice-platform/lattice-platform/ddc/converters/INSTALL.md
     target_surface: OrbStack operator path
@@ -209,6 +256,7 @@ capabilities:
     wave: wave-4
     validation: Operators can invoke the fallback DWG parse path on demand
   - id: mirror-ddc-health
+    status: red
     capability: Mirror-state ERP sync health
     local_home: /home/runner/work/lattice-platform/lattice-platform/reality/mirror/README.md
     target_surface: lattice/reality/mirror_state
@@ -218,6 +266,7 @@ capabilities:
     wave: wave-4
     validation: Mirror state reflects DDC freshness alongside the other platform layers
   - id: ddc-evidence
+    status: amber
     capability: DDC evidence and logging
     local_home: /home/runner/work/lattice-platform/lattice-platform/pixeltable/migrations/0012_extended_schema.py
     target_surface: lattice/execution/evidence and runtime ledger
@@ -246,6 +295,7 @@ pipeline:
       - boq-export
       - phases-sync
       - quantity-takeoff-agent
+      - estimation-contract
       - n8n-translation
   - stage: wave-3
     name: Operator surface

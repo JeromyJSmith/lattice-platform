@@ -19,6 +19,14 @@ const priorityClassName: Record<string, string> = {
   low: "border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
 };
 
+const statusClassName: Record<string, string> = {
+  green:
+    "border-emerald-300/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200",
+  amber:
+    "border-amber-300/60 bg-amber-500/10 text-amber-700 dark:text-amber-200",
+  red: "border-rose-300/60 bg-rose-500/10 text-rose-700 dark:text-rose-200",
+};
+
 function AdminPage() {
   return (
     <main className="page-wrap space-y-6 px-4 pb-8 pt-14">
@@ -45,12 +53,12 @@ function AdminPage() {
               value={String(ddcSummary.surfaceCount)}
             />
             <SummaryCard
-              label="High priority"
-              value={String(ddcSummary.highPriorityCount)}
+              label="Green now"
+              value={String(ddcSummary.greenCount)}
             />
             <SummaryCard
-              label="Waves mapped"
-              value={String(ddcPipelineStages.length)}
+              label="Amber / red"
+              value={`${ddcSummary.amberCount} / ${ddcSummary.redCount}`}
             />
           </div>
         </div>
@@ -89,6 +97,7 @@ function AdminPage() {
               <tr>
                 {[
                   "Capability",
+                  "Status",
                   "Priority",
                   "Wave",
                   "Current state",
@@ -118,6 +127,33 @@ function AdminPage() {
                     <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
                       {capability.targetSurface}
                     </div>
+                    {capability.projectTarget ? (
+                      <div className="mt-2 text-xs text-[var(--sea-ink-soft)]">
+                        Target: {capability.projectTarget}
+                      </div>
+                    ) : null}
+                    {capability.proofLineage ? (
+                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                        Lineage: {capability.proofLineage}
+                      </div>
+                    ) : null}
+                    {capability.supportedBy?.length ? (
+                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                        Helping now: {capability.supportedBy.join(", ")}
+                      </div>
+                    ) : null}
+                    {capability.blockedBy?.length ? (
+                      <div className="mt-1 text-xs text-[var(--sea-ink-soft)]">
+                        Blocking now: {capability.blockedBy.join(", ")}
+                      </div>
+                    ) : null}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase ${statusClassName[capability.status]}`}
+                    >
+                      {capability.status}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -192,6 +228,11 @@ function AdminPage() {
           <p className="mt-5 text-xs text-[var(--sea-ink-soft)]">
             Canonical structured artifact:{" "}
             <code>{ddcCapabilityArtifactPath}</code>
+          </p>
+          <p className="mt-2 text-xs text-[var(--sea-ink-soft)]">
+            Green = verifier-backed or operational now. Amber = partially wired
+            and useful but still blocking the end-to-end path. Red = planned or
+            dependency-missing.
           </p>
         </article>
       </section>

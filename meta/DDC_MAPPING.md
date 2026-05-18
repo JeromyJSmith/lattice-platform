@@ -191,6 +191,24 @@ The /admin route in LATTICE consolidates all DDC data into one view:
 
 ---
 
+## GOVERNED ESTIMATION CONTRACT
+
+LATTICE treats estimation as a **dependency-governed capability**, not as an isolated worksheet or one-off app.
+
+- **Operational target:** `MARPA — 918 Juniper Avenue`
+- **Pilot proof lineage only:** `ROSE Residence` workbook contract
+- **Repo-local source lineage feeding Juniper:** `Farber-Haines [2521]` IFC fixture attached to the Juniper project registry entry
+
+The contract depends on:
+
+- already helping now: `cwicr-seed`, `cwicr-cost-search`, `boq-read`, `boq-export`, `phases-sync`
+- still blocking promotion: `ifc-cost-enrichment`, `boq-sync`, `quantity-takeoff-agent`
+- useful later but not the first gate: `admin-sql`, `admin-route`, `cost-per-zone`, `cost-overlay`, `skills-search-api`
+
+This capability turns green only when Juniper Avenue runs end to end through the governed estimation path with explicit evidence, BOQ linkage, and blocker capture. Until then, estimation remains a planning slice with honest blockers surfaced.
+
+---
+
 ## DDC PIXELTABLE SCHEMA ADDITIONS
 
 Add these columns to lattice/bridge/ifc_elements:

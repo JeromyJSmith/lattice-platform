@@ -406,14 +406,17 @@ LATTICE wraps four pieces of the DataDrivenConstruction ecosystem (full detail i
 
 | Piece | LATTICE home | Status |
 |---|---|---|
-| 221 SKILL.md patterns | `skills/ddc/` + indexed in `lattice/bridge/semantic/semantic_sidecars` | Backlog (#172) |
-| CWICR cost database | `ddc/cwicr/` (Qdrant in OrbStack VM) | Backlog (#168) |
-| OpenConstructionERP | `ddc/erp/` + `pixeltable/service/routes/erp.py` | Backlog (#169) |
-| n8n workflow patterns | `ddc/n8n/` (translated to FastAPI handlers) | Backlog (#171) |
-| `/admin` dashboard | `ddc/admin/` (DuckDB WASM SQL + ERP REST) | Backlog (#170) |
+| 221 SKILL.md patterns | `skills/ddc/` + indexed in `lattice/bridge/semantic/semantic_sidecars` | Amber — priority subset still unsynced |
+| CWICR cost database | `ddc/cwicr/` (Qdrant in OrbStack VM) | Green — bounded seed + cost-search proofs passing |
+| OpenConstructionERP | `ddc/erp/` + `pixeltable/service/routes/erp.py` | Amber — read/export/phases green, BOQ sync still blocked on auth |
+| n8n workflow patterns | `ddc/n8n/` (translated to FastAPI handlers) | Red — docs/reference only |
+| `/admin` dashboard | `ddc/admin/` (DuckDB WASM SQL + ERP REST) | Amber — capability map live, data panels still pending |
+| Governed estimation contract | `ddc/estimation/` + future runtime agent + `/admin` | Red — Juniper Avenue is the operational proof target |
 | Linux .deb converters | `ddc/converters/` (OrbStack Ubuntu VM, fallback only) | On-demand |
 
 The DDC philosophy for LATTICE: **the value is the patterns + cost data, not the file converters.** LATTICE handles IFC/DXF natively via IfcOpenShell + ezdxf on Mac. The Linux .deb converters are fallbacks for edge cases.
+
+For promotion planning, `ROSE Residence` remains pilot-proof lineage only. `MARPA — 918 Juniper Avenue` is the operational proving ground, with the repo-local `Farber-Haines [2521]` IFC fixture acting as source lineage attached to the Juniper project surface.
 
 ---
 

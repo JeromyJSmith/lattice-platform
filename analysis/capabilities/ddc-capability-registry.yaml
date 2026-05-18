@@ -10,6 +10,7 @@ capabilities:
     surface: skill_patterns
     name: DDC skills process patterns
     state: ACTIVE
+    status_color: RED
     description: Adapt the DDC construction-agent SKILL.md patterns into LATTICE-native quantity takeoff, cost estimation, scheduling, validation, reporting, specification, and procurement workflows.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -30,6 +31,7 @@ capabilities:
     surface: adapter
     name: OpenConstructionERP BOQ adapter
     state: ACTIVE
+    status_color: AMBER
     description: Bridge LATTICE IFC element rows into OpenConstructionERP BOQ, cost export, and phase adapter calls without vendoring the ERP runtime into this repository.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -52,6 +54,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP BOQ sync
     state: BLOCKED
+    status_color: AMBER
     description: Serve POST /v1/erp/boq through the sidecar and fail closed while the live ERP BOQ create contract still rejects unauthenticated requests.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -76,6 +79,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP BOQ read
     state: ACTIVE
+    status_color: GREEN
     description: Serve GET /v1/erp/boq/{project_id} through the sidecar with live verifier-backed proof passing against the bounded ERP BOQ list contract.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -96,6 +100,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP BOQ export
     state: ACTIVE
+    status_color: GREEN
     description: Serve GET /v1/erp/export/{project_id} through the sidecar with live verifier-backed proof passing through BOQ resolution and CSV export.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -118,6 +123,7 @@ capabilities:
     surface: route
     name: OpenConstructionERP phases sync
     state: ACTIVE
+    status_color: GREEN
     description: Serve POST /v1/erp/phases through the sidecar with live verifier-backed proof passing through a bounded project seam plus the ERP schedule import/task-progress write path.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -141,6 +147,7 @@ capabilities:
     surface: service_adapter
     name: CWICR dataset seed contract
     state: ACTIVE
+    status_color: GREEN
     description: Verify that the local Qdrant cwicr collection matches the bounded published CWICR snapshot contract before treating the dataset as locally seeded or promotable.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -165,6 +172,7 @@ capabilities:
     surface: service_adapter
     name: CWICR Qdrant cost search
     state: ACTIVE
+    status_color: GREEN
     description: Use the DDC CWICR cost corpus as a local Qdrant-backed cost lookup service. The bounded no-key runtime now proves against the restored 49,600-point / 3072d snapshot by querying indexed payload text and exact CWICR codes, while matching 3072d vector-query embeddings remain follow-on work.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -192,6 +200,7 @@ capabilities:
     surface: workflow_reference
     name: n8n workflow pattern extraction
     state: ACTIVE
+    status_color: RED
     description: Treat DDC n8n workflow JSON as reference process logic and translate useful DAG patterns into LATTICE FastAPI pipelines, not a production n8n runtime.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -213,6 +222,7 @@ capabilities:
     surface: fallback_policy
     name: DDC IFC/DWG converter fallback policy
     state: ACTIVE
+    status_color: GREEN
     description: Keep DDC Linux converters as explicit fallback tooling for IfcOpenShell or ezdxf failures only; never accept Revit or DGN paths into LATTICE.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -233,6 +243,7 @@ capabilities:
     surface: analytics_sql
     name: DDC admin SQL/reporting stubs
     state: ACTIVE
+    status_color: AMBER
     description: Seed the admin dashboard query surface for DDC cost summary, element counts, BOQ status, skill execution logs, CWICR search history, and schedule reporting over future Pixeltable exports.
     wired_at:
       - meta/DDC_MAPPING.md
@@ -249,4 +260,86 @@ capabilities:
       - DuckDB WASM analytics
       - BOQ reporting
       - DDC execution observability
+    proof_evidence: []
+
+  - id: ifc-cost-enrichment
+    surface: enrichment_writeback
+    name: IFC cost enrichment writeback
+    state: BLOCKED
+    status_color: AMBER
+    description: Persist bounded CWICR search results back into owned Pixeltable IFC rows so the rest of the estimation path can consume governed unit-cost data instead of ephemeral lookup output.
+    wired_at:
+      - pixeltable/migrations/0012_extended_schema.py
+      - ddc/capability-matrix.yaml
+      - ddc/estimation/README.md
+    invoked_by:
+      - future POST /v1/erp/cost-search writeback path
+      - future quantity-takeoff runtime
+      - future Juniper Avenue estimation proof
+    serves:
+      - unit-cost persistence
+      - governed estimation path
+      - BOQ sync prerequisites
+    blocker: Schema columns exist, but the live search path does not yet write unit_cost, unit_cost_region, and cost_last_updated back into owned IFC rows.
+    blocker_resolution_path: Reuse the passing CWICR lookup output to perform explicit Pixeltable writeback for project-scoped IFC elements, then prove the writeback on Juniper Avenue inputs.
+    proof_evidence: []
+
+  - id: quantity-takeoff-agent
+    surface: orchestration_runtime
+    name: Quantity takeoff agent
+    state: BLOCKED
+    status_color: RED
+    description: Orchestrate quantities, CWICR cost lookup, BOQ writeback, and evidence capture as one governed runtime instead of leaving estimation as disconnected manual steps.
+    wired_at:
+      - meta/FEATURE_BACKLOG.md
+      - ddc/capability-matrix.yaml
+      - ddc/estimation/README.md
+    invoked_by:
+      - future operator estimation run
+      - future /admin DDC dashboard
+      - future Juniper Avenue estimation proof
+    serves:
+      - quantity takeoff orchestration
+      - governed estimation path
+      - evidence capture
+    blocker: No project-scoped runtime currently chains quantity extraction, cost lookup, BOQ mutation, and evidence logging end to end.
+    blocker_resolution_path: Build the orchestrator after IFC cost enrichment and BOQ sync are promotable, then run it against Juniper Avenue with explicit evidence rows.
+    proof_evidence: []
+
+  - id: ddc-estimation-contract
+    surface: planning_contract
+    name: Governed estimation contract
+    state: BLOCKED
+    status_color: RED
+    description: Treat estimation as a first-class DDC capability planning slice that only promotes when Juniper Avenue completes the governed end-to-end path. ROSE Residence remains workbook-era pilot lineage only.
+    wired_at:
+      - ddc/estimation/README.md
+      - ddc/capability-matrix.yaml
+      - src/data/ddc-capability-matrix.ts
+      - meta/DDC_MAPPING.md
+      - meta/ROADMAP.md
+    invoked_by:
+      - future quantity-takeoff runtime
+      - future /admin DDC dashboard
+      - future Juniper Avenue estimation proof
+    serves:
+      - project-agnostic estimation contract
+      - Juniper Avenue operational proof target
+      - explicit dependency governance
+    project_target: MARPA — 918 Juniper Avenue
+    proof_lineage:
+      - ROSE Residence workbook pilot proof (external to this repo)
+      - Farber-Haines 2521 IFC source lineage attached to the Juniper fixture in this repo
+    supported_by:
+      - cwicr-seed
+      - cwicr-qdrant-cost-search
+      - boq-read
+      - boq-export
+      - phases-sync
+    blocking_capabilities:
+      - ifc-cost-enrichment
+      - boq-sync
+      - quantity-takeoff-agent
+    blocker: The repo now names the governed estimation contract, but Juniper Avenue still cannot run end to end because writeback and orchestration prerequisites remain incomplete.
+    blocker_resolution_path: Promote IFC cost enrichment, BOQ sync, and quantity takeoff orchestration, then prove the full estimation path on Juniper Avenue with evidence and BOQ linkage.
     proof_evidence: []

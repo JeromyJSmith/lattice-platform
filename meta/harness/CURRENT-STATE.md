@@ -30,7 +30,7 @@ Snapshot date: 2026-05-12.
 | uv single-file agents | `meta/harness/single-file-harness-agents.md` |
 | Ephemeral library pattern | `meta/harness/agentics-library.md`, `meta/harness/library.yaml` |
 | Model-fit loop | `meta/harness/model-fit.md`, `meta/harness/benchmarking.md` |
-| DDC capability registry | `analysis/capabilities/ddc-capability-registry.yaml` with six contract-only rows |
+| DDC capability registry | `analysis/capabilities/ddc-capability-registry.yaml` now includes proof-backed green rows plus amber/red estimation-path dependencies and the Juniper Avenue estimation contract |
 | Capability operator surface | `/harness/capabilities`, `/harness/benchmarks`, `pixeltable/service/routes/harness.py` |
 
 ## What Is Still Stubbed Or Not Live
@@ -48,7 +48,7 @@ Snapshot date: 2026-05-12.
 | DuckDB WASM analytical surface over harness data | Not implemented |
 | Legacy Python uplift | Not implemented beyond changed-file docstring ratchet |
 | Standalone Meta-Harness extraction | Not started |
-| DDC proof promotion | Registry exists; no DDC row is proof-backed yet |
+| DDC proof promotion | CWICR seed/search plus BOQ read/export and phases sync are proof-backed; IFC cost enrichment, BOQ sync, quantity takeoff, and governed estimation remain blocked |
 
 ## Important Directional Decisions
 
