@@ -1,0 +1,57 @@
+prompt_schema_version: "1.0.0"
+prompt_id: "PROMPT-YYYYMMDD-XXXX"
+target_agent:
+  name: "copilot"
+  surface: "gh_copilot_p"
+  invocation: "gh copilot -p"
+mode:
+  execution_style: "heavy_bounded_run"
+  autonomy: "high"
+  permission_model: "no_intermediate_permission"
+mission:
+  objective: ""
+  repo_scope: ""
+  task_scope: ""
+current_verified_state:
+  facts:
+    - ""
+    - ""
+hard_rules:
+  environment:
+    - "Use uv for all Python environment, dependency, script, and test execution."
+    - "Do not use pip or create ad hoc venv/virtualenv environments unless uv is first proven insufficient in this runtime."
+  safety:
+    - "Do not broaden into unrelated capability work."
+    - "Do not create proof-only routes."
+  truthfulness:
+    - "No fake green path."
+    - "If it still cannot pass, keep the blocked state honest with exact live evidence."
+allowed_paths:
+  paths:
+    - ""
+disallowed_paths:
+  paths:
+    - ""
+tasks:
+  ordered_steps:
+    - ""
+    - ""
+    - ""
+validation_loop:
+  checks:
+    - "Run only targeted tests."
+    - "Run the live verifier."
+    - "Refresh the proof artifact."
+    - "Run bash scripts/pre-commit-docs-check.sh if files changed."
+  rerun_policy: "Repeat the fix/test/proof loop until the bounded task passes or the remaining blocker is proven real."
+success_criteria:
+  best_case: ""
+  acceptable_fallback: ""
+report_contract:
+  required_fields:
+    - "pass or blocked status"
+    - "proof artifact path and verification status"
+    - "exact live evidence used in the conclusion"
+    - "files changed"
+    - "targeted test/proof results"
+    - "commit hash if created"

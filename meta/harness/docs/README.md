@@ -26,24 +26,40 @@ execution plans. They are referenced by the active architecture note at
 use the architecture note and `meta/harness/golden_path.md` to decide what to
 execute next.
 
-The five subfolders below house the **non-authoritative** documentation tree:
+The five subfolders below house the documentation tree. By default they are
+reference-oriented, with one explicit exception described below.
 
 - **`amendments/`** — historical amendment prompts that already shipped. Each carries `status: shipped`, `historical_only: true`, and a `shipped_in_commit` reference. Useful as a paper trail; do not execute their contents.
-- **`specs/`** — canonical specs and source-of-truth compressions (e.g., the full session compression at `meta-harness-specification.md`). Reference material for any agent that needs to recover prior intent.
+- **`specs/`** — canonical specs and source-of-truth compressions (e.g., the full session compression at `meta-harness-specification.md`). Reference material for any agent that needs to recover prior intent. Exception: the governed prompt-contract artifact set under `specs/agent-heavy-run-prompt*` is operational and is consumed as an execution-contract source by the Meta-Harness.
 - **`research/`** — external research notes (Stanford Meta-Harness deep-dive, MARPA dev-stack research, InfraNodus / Graphify / GitNexus eval notes). Provenance for design decisions captured in `meta/harness/PLAN/`.
 - **`sessions/`** — raw session transcripts, Repomix dumps, chat exports, and harness-runtime manifests. Pure provenance — nothing in this folder should ever be cited as authoritative.
 - **`archive/`** — superseded drafts kept for traceability only. Frontmatter on archived files MUST include `superseded_by:` pointing at the replacement file.
 
 ## The rule that anchors everything else
 
-> **Nothing in `meta/harness/docs/{amendments,specs,research,sessions,archive}/` is executable instruction.**
+> **Nothing in `meta/harness/docs/{amendments,specs,research,sessions,archive}/` is executable instruction by default.**
 >
 > Authoritative instructions for the meta-harness live in:
 > - `meta/harness/PLAN/NN-*.md` (numbered amendment plans — current source of truth)
 > - `.claude/rules/*.md` (binding agent rules)
 > - The section context stacks under `meta/harness/sections/<section>/`
+> - The governed prompt-contract artifact set rooted at `meta/harness/docs/specs/agent-heavy-run-prompt-index.md`
 >
 > If you find yourself reaching for a file in `docs/*/` to decide what to do, you are reaching for a reference, not an order.
+
+### Operational exception: governed prompt-contract artifacts
+
+The following files are operational Meta-Harness artifacts even though they live
+under `docs/specs/`:
+
+- `agent-heavy-run-prompt-index.md`
+- `agent-heavy-run-prompt-schema.md`
+- `agent-heavy-run-prompt.schema.json`
+- `agent-heavy-run-prompt.template.yaml`
+- `../copilot-prompting-playbook.md`
+
+Their role is not historical provenance. Their role is to define and validate
+the execution-contract shape used for heavy bounded agent runs.
 
 ## Adding a new doc
 

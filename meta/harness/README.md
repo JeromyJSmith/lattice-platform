@@ -29,6 +29,7 @@ LATTICE is the enclosing system. Pi, Claude CLI, Codex, Copilot, Symphony, GitHu
 | `meta/harness/pixeltable-operational-substrate.md` | Pixeltable substrate doctrine and staged integration |
 | `meta/harness/docs/capability-lifecycle.md` | Harvest to matrix to manifest to registry lifecycle |
 | `meta/harness/library.yaml` | Portable catalog of harness prompts, capabilities, references, and jobs |
+| `meta/harness/docs/specs/agent-heavy-run-prompt-index.md` | Canonical entrypoint for governed heavy-run prompt contracts, schema, and template |
 | `meta/verification/VERIFIER.md` | Verifier contract and deterministic core |
 
 ## Core Checks
@@ -53,3 +54,27 @@ Use `uv run python scripts/check-python-docstrings.py --all` only for a delibera
 ## Near-Term Direction
 
 The current branch is still the body-cell incubation surface. Before the first dry run, reconcile the outer wrapper contract, documentation mirror contract, Pixeltable docs substrate, and `domain_spec.md` so the run has the right enclosure and a scored evaluation target. The target architecture is a portable Meta-Harness repo that can snap into LATTICE or another repository through config, library references, capability manifests, and Pixeltable-backed evidence.
+
+## Governed Prompt Contracts
+
+Heavy-run prompt contracts are part of the operational Meta-Harness, not just
+adjacent documentation.
+
+The canonical local entrypoint is:
+
+- `meta/harness/docs/specs/agent-heavy-run-prompt-index.md`
+
+That index governs the linked prompt-contract artifact set:
+
+- human-readable method/spec
+- machine-readable JSON schema
+- fill-in YAML template
+- Copilot-specific playbook for the current execution window
+
+These artifacts are intended to standardize bounded agent execution across
+Copilot, Codex, Claude, and similar surfaces while preserving:
+
+- `uv`-first Python execution
+- honest blocked states
+- proof-backed validation loops
+- no default paid-model API-key runtime path

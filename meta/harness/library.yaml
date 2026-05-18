@@ -26,6 +26,15 @@ library:
     - name: meta-harness-entrypoint
       description: Top-level orientation for current Meta-Harness doctrine, checks, and entrypoints.
       source: meta/harness/README.md
+    - name: governed-prompt-contract-index
+      description: Canonical entrypoint for the operational Meta-Harness prompt-contract artifact set.
+      source: meta/harness/docs/specs/agent-heavy-run-prompt-index.md
+    - name: governed-prompt-contract-spec
+      description: Human-readable FRE-aligned prompt-contract method/spec for heavy bounded runs.
+      source: meta/harness/docs/specs/agent-heavy-run-prompt-schema.md
+    - name: copilot-prompting-playbook
+      description: Copilot-specific heavy-run playbook with uv-first Python policy and honest blocked-state doctrine.
+      source: meta/harness/docs/copilot-prompting-playbook.md
     - name: meta-harness-current-state
       description: Current inventory of harness docs, registries, verification scripts, and open gaps.
       source: meta/harness/CURRENT-STATE.md

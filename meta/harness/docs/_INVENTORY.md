@@ -138,3 +138,26 @@ Current capability registry audit:
 | Bootstrap-empty registries | 4 |
 
 The four bootstrap-empty registries are `claude-code`, `deck-gl`, `pixeltable`, and `web-ifc`; they remain high-priority coverage gaps before the Meta-Harness can claim full capability awareness.
+
+## 2026-05-18 addendum — Governed agent prompt contracts promoted into the Meta-Harness
+
+This pass promoted the FRE-aligned prompt-contract work from ad hoc prompting
+into an operational Meta-Harness artifact set. Unlike most files under
+`meta/harness/docs/specs/`, these files are operational and intended to govern
+bounded agent execution.
+
+| File | Type | Purpose | Status |
+|---|---|---|---|
+| `meta/harness/docs/copilot-prompting-playbook.md` | Operational playbook | Copilot-specific heavy-run execution doctrine for the current pricing window, including `uv`-first Python policy and no paid API-key-default policy | operational |
+| `meta/harness/docs/specs/agent-heavy-run-prompt-index.md` | Operational index | Single local entrypoint describing the prompt-contract artifact set and Meta-Harness usage path | operational |
+| `meta/harness/docs/specs/agent-heavy-run-prompt-schema.md` | Operational spec | Human-readable method/spec for governed heavy-run prompt contracts | operational |
+| `meta/harness/docs/specs/agent-heavy-run-prompt.schema.json` | Operational schema | Machine-readable validation schema for heavy-run prompt instances | operational |
+| `meta/harness/docs/specs/agent-heavy-run-prompt.template.yaml` | Operational template | Fill-in template for new prompt-contract instances | operational |
+
+Operational doctrine note:
+
+- These prompt-contract artifacts are governed by FRE and cross-linked from the
+  FRE Notion method/spec/schema pages.
+- They are exceptions to the general `docs/specs` historical-reference default
+  because they define the actual execution-contract shape used by the
+  Meta-Harness.
