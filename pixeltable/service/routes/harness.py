@@ -93,7 +93,7 @@ RUNNABLE_CAPABILITY_TASKS: dict[str, dict[str, Any]] = {
         "job_id": "cwicr-qdrant-cost-search",
         "label": "Run proof",
         "endpoint": "POST /v1/harness/capabilities/runs",
-        "command": ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"],
+        "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-cwicr-cost-search.py"],
         "expected_returncode": 0,
         "timeout_seconds": 120,
     },

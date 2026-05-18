@@ -167,7 +167,7 @@ capabilities:
     surface: service_adapter
     name: CWICR Qdrant cost search
     state: BLOCKED
-    description: Use the DDC CWICR cost corpus as a local Qdrant-backed semantic lookup service, but keep the capability blocked until the verifier can reach the expected local Qdrant health contract.
+    description: Use the DDC CWICR cost corpus as a local Qdrant-backed semantic lookup service, but keep the capability blocked until the verifier can drive the real 3072d OpenAI snapshot contract end to end.
     wired_at:
       - meta/DDC_MAPPING.md
       - ddc/cwicr/README.md
@@ -186,10 +186,10 @@ capabilities:
       - deck.gl cost overlay
       - BOQ unit cost enrichment
       - admin dashboard
-    blocker: Latest live proof still fails before ranked search because localhost:6333 returns 404 for the verifier's expected /health probe.
-    blocker_resolution_path: Expose the expected Qdrant health contract at localhost:6333 or align the verifier with the live health endpoint, then rerun the capability proof.
+    blocker: Latest live proof reaches the restored 49,600-point / 3072d collection, but the bounded snapshot uses OpenAI 3072d embeddings and this local runtime has no OPENAI_API_KEY-backed query embedding path yet.
+    blocker_resolution_path: Provide the matching OpenAI 3072d query embedding runtime for /v1/erp/cost-search, then rerun the verifier against the restored local collection.
     proof_evidence:
-      latest: meta/harness/docs/sessions/2026-05-17-cwicr-qdrant-cost-search-proof.json
+      latest: meta/harness/docs/sessions/2026-05-18-cwicr-qdrant-cost-search-proof.json
 
   - id: ddc-n8n-workflow-pattern-extraction
     surface: workflow_reference

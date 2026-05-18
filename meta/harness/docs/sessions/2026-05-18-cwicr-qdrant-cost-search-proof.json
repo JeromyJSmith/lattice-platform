@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "capability_id": "cwicr-qdrant-cost-search",
+  "job_id": "cwicr-qdrant-cost-search",
+  "run_id": "cwicr-qdrant-cost-search-2026-05-18T03-05-22.092Z",
+  "started_at": "2026-05-18T03:05:21Z",
+  "completed_at": "2026-05-18T03:05:22Z",
+  "ok": false,
+  "command": [
+    "uv",
+    "run",
+    "--project",
+    "pixeltable",
+    "python",
+    "scripts/verify-cwicr-cost-search.py"
+  ],
+  "cwd": "/Volumes/PixelTable/VW_iTWIN_Bridge/VW_iTwin_Bridge",
+  "artifact": "meta/harness/docs/sessions/2026-05-18-cwicr-qdrant-cost-search-proof.json",
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "{\n  \"status\": \"blocked\",\n  \"collection\": \"cwicr\",\n  \"qdrant\": {\n    \"root\": {\n      \"title\": \"qdrant - vector search engine\",\n      \"version\": \"1.17.1\",\n      \"commit\": \"eabee371fda447974a94d29fbaa675a6a596cc7b\"\n    },\n    \"health\": {\n      \"status\": \"ok\",\n      \"raw\": \"healthz check passed\"\n    },\n    \"health_endpoint\": \"/healthz\",\n    \"health_404_fallback\": true,\n    \"collection\": \"cwicr\",\n    \"count\": 49600,\n    \"vector_size\": 3072,\n    \"status\": \"green\"\n  },\n  \"request\": {\n    \"description\": \"concrete slab 10cm reinforced\",\n    \"region\": \"US\",\n    \"top\": 3\n  },\n  \"route\": {\n    \"status\": \"blocked\",\n    \"status_code\": 501,\n    \"detail\": \"CWICR cost search blocked: live collection 'cwicr' uses OpenAI 3072d embeddings but OPENAI_API_KEY is not configured.\",\n    \"body\": {\n      \"detail\": \"CWICR cost search blocked: live collection 'cwicr' uses OpenAI 3072d embeddings but OPENAI_API_KEY is not configured.\"\n    }\n  }\n}\n",
+  "verification": {
+    "status": "failed",
+    "message": "Command returned 1, expected 0.",
+    "returncode": 1,
+    "expected_returncode": 0,
+    "stdout": "",
+    "stderr": "{\n  \"status\": \"blocked\",\n  \"collection\": \"cwicr\",\n  \"qdrant\": {\n    \"root\": {\n      \"title\": \"qdrant - vector search engine\",\n      \"version\": \"1.17.1\",\n      \"commit\": \"eabee371fda447974a94d29fbaa675a6a596cc7b\"\n    },\n    \"health\": {\n      \"status\": \"ok\",\n      \"raw\": \"healthz check passed\"\n    },\n    \"health_endpoint\": \"/healthz\",\n    \"health_404_fallback\": true,\n    \"collection\": \"cwicr\",\n    \"count\": 49600,\n    \"vector_size\": 3072,\n    \"status\": \"green\"\n  },\n  \"request\": {\n    \"description\": \"concrete slab 10cm reinforced\",\n    \"region\": \"US\",\n    \"top\": 3\n  },\n  \"route\": {\n    \"status\": \"blocked\",\n    \"status_code\": 501,\n    \"detail\": \"CWICR cost search blocked: live collection 'cwicr' uses OpenAI 3072d embeddings but OPENAI_API_KEY is not configured.\",\n    \"body\": {\n      \"detail\": \"CWICR cost search blocked: live collection 'cwicr' uses OpenAI 3072d embeddings but OPENAI_API_KEY is not configured.\"\n    }\n  }\n}\n"
+  },
+  "metrics": {
+    "latency_ms": 692,
+    "cost_usd": 0,
+    "model": "deterministic"
+  }
+}

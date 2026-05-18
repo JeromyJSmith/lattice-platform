@@ -36,7 +36,7 @@ def test_cwicr_cost_search_exposes_run_contract() -> None:
     assert action["job_id"] == "cwicr-qdrant-cost-search"
     assert contract is not None
     assert contract["request"]["timeout_seconds"] == 120
-    assert contract["command"] == ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"]
+    assert contract["command"] == ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-cwicr-cost-search.py"]
 
 
 def test_cwicr_seed_exposes_run_contract() -> None:
@@ -186,7 +186,7 @@ def test_cwicr_cost_search_run_writes_evidence(
 
     assert calls == [
         {
-            "command": ["uv", "run", "python", "scripts/verify-cwicr-cost-search.py"],
+            "command": ["uv", "run", "--project", "pixeltable", "python", "scripts/verify-cwicr-cost-search.py"],
             "cwd": tmp_path,
             "capture_output": True,
             "text": True,
