@@ -42,7 +42,7 @@
     "@tanstack/react-virtual": "3.13.24",
     "@tanstack/router-plugin": "1.167.35",
     "@tanstack/store": "0.11.0",
-    "better-auth": "^1.5.3",
+    "better-auth": "^1.6.22",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "echarts": "^6.0.0",
